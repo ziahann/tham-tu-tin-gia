@@ -77,9 +77,10 @@ Intro trên nền vịnh Hạ Long chuyển động (`js/bay.js`), chọn mẫu 
 | Phông chữ VT323 (Peter Hull) | Google Fonts | SIL Open Font License 1.1 |
 | Tileset, sprite, xe cộ, chân dung | Tự tạo bằng code (`tools/gen-assets.mjs`, `tools/gen-portraits.mjs`) | Của nhóm |
 | Hiệu ứng và âm thanh môi trường | Tự tạo bằng WebAudio (`js/audio.js`) | Của nhóm |
-| Nhạc nền (`assets/audio/*.ogg`) | Juhani Junkala (SubspaceAudio), *JRPG Music Pack* #2 Towns, #3 Evil, #4 Calm — opengameart.org | CC0 1.0 (tác giả xin ghi công, không bắt buộc) |
+| Nhạc nền (`assets/audio/*.mp3`) | Kevin MacLeod (incompetech.com) | Creative Commons: By Attribution 4.0 (bắt buộc ghi công; ghi ở nút Nguồn trong game) |
 
-Nhạc theo mốc: `title` = Calm1 *A Place I Call Home*; `office` = Calm3 *Peaceful Days*; `street` = Calm4 *Sand Castles*; `archive` = Town2 *Where Time Stands Still*; `cafe` = Town1 *Home Town*; `boss` = Evil5 *Whispers From Beyond*; `ending` = Calm6 *Innocence*. Đổi bài: thay file cùng tên, hoặc sửa thuộc tính `music` của bản đồ trong `tools/gen-assets.mjs`.
+Nhạc theo mốc (mỗi bài: "Tên bài" Kevin MacLeod (incompetech.com), Licensed under Creative Commons: By Attribution 4.0 License, https://creativecommons.org/licenses/by/4.0/):
+`title` = *Night on the Docks - Sax*; `office` (Báo Thanh Niên) = *Hard Boiled*; `street` = *Bass Walker*; `archive` (Tin Vịnh) = *I Knew a Guy*; `cafe` = *Lobby Time*; `agency` (Phòng xác minh) = *Spy Glass*; `boss` = *Crypto*; `ending` = *Past Sadness*. Danh sách máy đọc ở `data/sources.json → music`. Đổi bài: thay file cùng tên và sửa danh sách đó.
 
 ## Lưu dữ liệu
 

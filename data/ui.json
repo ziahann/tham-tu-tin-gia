@@ -46,7 +46,7 @@
     "warningMore": "Đọc cảnh báo đầy đủ và cách chơi"
   },
   "hud": {
-    "musicUnsupported": "trình duyệt này không phát được nhạc OGG",
+    "musicUnsupported": "trình duyệt này không phát được nhạc MP3",
     "track": "{npc} · {place}",
     "trackNone": "Chưa theo dõi hồ sơ nào — bấm J"
   },
@@ -151,13 +151,14 @@
   "sourcesPanel": {
     "title": "Nguồn tham khảo",
     "unverified": "link chưa kiểm tra",
-    "missing": "chưa có link"
+    "missing": "chưa có link",
+    "music": "Nhạc nền"
   },
   "settingsPanel": {
     "title": "Cài đặt",
     "hideSensitive": "Ẩn hình ảnh nhạy cảm",
     "mute": "Tắt hiệu ứng âm thanh (bước chân, giọng nói, thiết bị)",
-    "music": "Nhạc nền (CC0, Juhani Junkala)",
+    "music": "Nhạc nền (Kevin MacLeod, CC BY 4.0)",
     "reduceMotion": "Giảm chuyển động (hiện chữ ngay)",
     "home": "Về màn hình chính",
     "ambience": "Âm thanh môi trường (mưa, gió, sóng, xe cộ)"
