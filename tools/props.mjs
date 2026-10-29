@@ -481,6 +481,16 @@ function barrierNS() {
   R(0, 18, 6, 3, '#c9a24a'); R(0, 21, 6, 9, '#3a4150');
   return img;
 }
+/** Phao cứu sinh treo trên cột (bến tàu). */
+function lifeRing() {
+  const img = new Img(20, 40), { R, E } = brush(img);
+  shadow(img, 10, 37, 7);
+  R(9, 8, 3, 30, '#3a4150'); R(5, 36, 11, 2, '#2b303b');
+  for (let y = 5; y <= 23; y++) for (let x = 1; x <= 19; x++) { const d = Math.hypot(x - 10, y - 14); if (d >= 4.5 && d <= 8.5) img.set(x, y, d < 6 ? '#b84c1c' : '#e0662a'); }
+  R(2, 13, 3, 2, '#e8ecf2'); R(16, 13, 3, 2, '#e8ecf2'); R(9, 6, 3, 2, '#e8ecf2'); R(9, 21, 3, 2, '#e8ecf2');
+  R(9, 8, 3, 2, '#3a4150');
+  return outline(img);
+}
 /** Tờ giấy rơi trên đất (manh mối đánh lừa): hình nhìn từ trên, nằm phẳng. */
 function flyer() {
   const img = new Img(22, 16), { R } = brush(img);
@@ -1072,6 +1082,7 @@ export function allProps() {
   add('bollard', bollard(), { base: [8, 6] });
   add('barrier', barrier(), { base: [30, 32], lights: [[16, 6, 0xffa040, 40, 0.9]] });
   add('barrier_ns', barrierNS(), { base: [8, 96] });
+  add('life_ring', lifeRing(), { base: [8, 6] });
   add('flyer', flyer(), { base: [0, 0], flat: true });
   add('planter', planter(), { base: [64, 16] });
   add('market_stall', marketStall(), { base: [76, 20] });
