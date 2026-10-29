@@ -572,14 +572,15 @@ function building(o) {
   // bảng hiệu (chữ do game vẽ bằng Phaser): dải tối có viền đèn
   let sign = null;
   if (o.sign) {
-    const sw = Math.min(W - 16, Math.max(120, o.cols * 22)), sx = Math.round((W - sw) / 2), sy = gy - 30;
-    R(sx - 2, sy - 2, sw + 4, 26, o.signGlow || '#7fe3ff'); R(sx, sy, sw, 22, '#0e1015');
-    sign = { x: sx, y: sy, w: sw, h: 22 };
-    lights.push([sx + sw / 2, sy + 11, parseInt((o.signGlow || '#7fe3ff').slice(1), 16), 90, 0.9]);
+    const sw = Math.min(W - 16, Math.max(132, o.cols * 22)), sh = 32, sx = Math.round((W - sw) / 2), sy = gy - sh - 8;
+    R(sx - 2, sy - 2, sw + 4, sh + 4, o.signGlow || '#7fe3ff'); R(sx, sy, sw, sh, '#0e1015');
+    sign = { x: sx, y: sy, w: sw, h: sh };
+    lights.push([sx + sw / 2, sy + sh / 2, parseInt((o.signGlow || '#7fe3ff').slice(1), 16), 90, 0.9]);
   }
   // bậc thềm
   R(0, H - 2, W, 2, '#2b303b');
-  return { img, meta: { base: [W, 40], lights, sign, door: doorX != null ? doorX + 32 : null } };
+  // chân đế phủ gần hết ảnh: không ai đi "vào trong" mặt tiền; lớp nhà phía sau vẫn nhô lên sau mái
+  return { img, meta: { base: [W - 4, H - 10], lights, sign, door: doorX != null ? doorX + 32 : null } };
 }
 
 // ---------------------------------------------------------------- danh mục

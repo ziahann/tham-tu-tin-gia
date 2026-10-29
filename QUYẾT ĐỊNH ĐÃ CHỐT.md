@@ -125,3 +125,7 @@
 | Màn bonus | Trang mạo danh một quỹ thiện nguyện hư cấu ("Quỹ Thiện nguyện Hải Đăng") |
 | Nhạc | Nhạc noir / bí ẩn của Kevin MacLeod (incompetech.com), CC BY 4.0, ghi công ở nút Nguồn và README |
 | Đồ họa | Kiến trúc lạnh, u tối; đồ vật đúng tỉ lệ với người (props nhiều ô); thành phố rộng hơn, có tòa nhà trang trí và biển ghi chức năng |
+| Trải nghiệm | Bấm icon bằng chuột xong vẫn đi lại ngay; balo mở được cạnh khung thoại khi đang trả lời |
+
+**Kết quả đợt 5:** đã làm đủ 7 bước (commit 3918e6d → bước cuối). Tên các tòa nhà trang trí (Chung cư Hải Âu, Khách sạn Vịnh Đêm, Nhà nghỉ Sương Mù, Kho hàng Bến Cảng…) đều hư cấu — nhóm xem lại. Nhạc ~53 MB (8 file mp3).
+

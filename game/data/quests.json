@@ -2005,11 +2005,13 @@
   "areas": {
     "corridor": "Hành lang",
     "lobby": "Sảnh",
-    "street": "Phố ven vịnh",
+    "street": "Phố chính",
     "pier": "Bến tàu du lịch",
     "newsroom": "Tòa soạn Tin Vịnh",
     "agency": "Phòng xác minh (GIẢ LẬP)",
-    "park": "Công viên ven vịnh"
+    "park": "Công viên ven vịnh",
+    "market": "Phố đi bộ",
+    "coast": "Đường ven vịnh"
   },
   "intro": {
     "skip": "Bỏ qua",
