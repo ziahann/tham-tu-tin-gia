@@ -15,28 +15,7 @@
   },
   "settings": {
     "minCardsForBoss": 8,
-    "scoring": {
-      "firstTry": 10,
-      "hintPenaltyPerLevel": 2,
-      "minAfterHints": 4,
-      "partial": 5,
-      "bossPhase": 15
-    },
-    "titles": [
-      {
-        "min": 0,
-        "title": "Thực tập sinh kiểm chứng"
-      },
-      {
-        "min": 80,
-        "title": "Thẩm định viên"
-      },
-      {
-        "min": 140,
-        "title": "Cây bút kiểm chứng"
-      }
-    ],
-    "scoreDisclaimer": "Điểm chỉ để chơi, KHÔNG phải bằng chứng thật/giả của tin.",
+    "scoreDisclaimer": "Huy hiệu chỉ để chơi, KHÔNG phải bằng chứng thật/giả của tin.",
     "contentWarning": "Game dựa trên vụ lật tàu có thật với người thiệt mạng. Không dùng ảnh nạn nhân/trẻ em; ảnh giả chỉ là mô phỏng pixel trừu tượng, gắn nhãn ẢNH GIẢ.",
     "hideSensitiveToggle": true
   },
@@ -49,7 +28,11 @@
         "q1_stop",
         "q2_event"
       ],
-      "place": "Trụ sở Báo Thanh Niên"
+      "place": "Trụ sở Báo Thanh Niên",
+      "badge": {
+        "name": "Dừng lại trước khi chia sẻ",
+        "learned": "Tách nội dung đang lan truyền khỏi kết luận vội, rồi xác lập sự kiện thật từ nguồn báo chí."
+      }
     },
     {
       "id": "S4",
@@ -61,7 +44,11 @@
         "q5_crosscheck",
         "q6_detector"
       ],
-      "place": "Trụ sở Báo Thanh Niên"
+      "place": "Trụ sở Báo Thanh Niên",
+      "badge": {
+        "name": "Soi ảnh",
+        "learned": "Tìm ngược ảnh, soi dấu hiệu bất thường, đối chiếu ảnh dùng lại; công cụ phát hiện AI chỉ là bằng chứng bổ trợ."
+      }
     },
     {
       "id": "S5",
@@ -70,7 +57,11 @@
       "npc": "npc3",
       "quests": [
         "q7_oldclips"
-      ]
+      ],
+      "badge": {
+        "name": "Truy gốc clip cũ",
+        "learned": "Video và ảnh có thật vẫn có thể bị gắn sai thời điểm, địa điểm; đối chiếu báo chí để tìm nguồn gốc."
+      }
     },
     {
       "id": "S6",
@@ -79,7 +70,11 @@
       "npc": "npc3",
       "quests": [
         "q8_timeline"
-      ]
+      ],
+      "badge": {
+        "name": "Dựng dòng thời gian",
+        "learned": "Xếp các mốc theo ngày đăng và nói rõ điều chưa biết."
+      }
     },
     {
       "id": "S7",
@@ -89,7 +84,11 @@
         "q9_impact",
         "q10_intent"
       ],
-      "place": "Trụ sở Báo Thanh Niên"
+      "place": "Trụ sở Báo Thanh Niên",
+      "badge": {
+        "name": "Cân tác động và chủ đích",
+        "learned": "Tách điều đã ghi nhận khỏi điều mới là nguy cơ; không kết luận động cơ khi chưa có dữ liệu."
+      }
     },
     {
       "id": "S8",
@@ -100,7 +99,11 @@
         "q12_response",
         "q13_platform"
       ],
-      "place": "Trụ sở Báo Thanh Niên"
+      "place": "Trụ sở Báo Thanh Niên",
+      "badge": {
+        "name": "Phân loại và ứng xử",
+        "learned": "Phân loại theo từng nhóm nội dung và chọn cách ứng xử có trách nhiệm."
+      }
     },
     {
       "id": "CAFE",
@@ -110,7 +113,11 @@
       "quests": [
         "q10b_interview"
       ],
-      "optional": true
+      "optional": true,
+      "badge": {
+        "name": "Phỏng vấn kiểm chứng",
+        "learned": "Hỏi lại cụ thể và tìm chỗ mâu thuẫn trong lời kể."
+      }
     },
     {
       "id": "S9",
@@ -118,7 +125,11 @@
       "place": "Trụ sở Báo Thanh Niên (tầng thượng)",
       "npc": "boss",
       "quests": [],
-      "boss": true
+      "boss": true,
+      "badge": {
+        "name": "Gỡ mặt nạ Kẻ Dệt Chuyện",
+        "learned": "Phản bác bằng bằng chứng và giữ đúng giới hạn của dữ liệu."
+      }
     },
     {
       "id": "BONUS",
@@ -128,7 +139,11 @@
       "quests": [
         "bonus_impersonation"
       ],
-      "optional": true
+      "optional": true,
+      "badge": {
+        "name": "Nhận diện mạo danh",
+        "learned": "Kiểm tra tên trang, dấu xác minh, tuổi trang, tài khoản nhận tiền và đường link trước khi tin."
+      }
     }
   ],
   "quests": [
@@ -2311,8 +2326,8 @@
     "sources": "Xem nguồn",
     "keepPlaying": "Tiếp tục khám phá (màn bonus)",
     "cards": "Thẻ evidence",
-    "score": "Điểm",
-    "rank": "Danh hiệu"
+    "badges": "Huy hiệu kỹ năng",
+    "closed": "Hồ sơ đã khép"
   },
   "building": {
     "note": "Trụ sở Báo Thanh Niên (tên thật theo yêu cầu của nhóm). Nhân vật và sự việc trong tòa nhà là GIẢ LẬP. Mỗi tầng là một bản đồ; đi bằng thang máy.",
