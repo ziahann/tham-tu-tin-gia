@@ -121,12 +121,22 @@ export class WorldScene extends Phaser.Scene {
   placeNpc(id) {
     const npc = this.npcs.get(id);
     const st = (data.npcs.stations?.[id] || []).find(s => (s.requires || []).every(hasFlag));
+    npc.stationKey = st?.station || 'home';
     if (st) {
       npc.teleport(this.points[st.station]);
       npc.patrol(this.paths[st.patrol]);
     } else {
       npc.patrol(this.paths[npc.homePatrol]);
     }
+  }
+
+  /** NPC chuyển sang trạm mới khi tiến độ đổi (trừ khi đang dẫn đường hoặc đang nói chuyện). */
+  updateStations() {
+    this.npcs.forEach((npc, id) => {
+      if (npc.mode === 'lead' || npc.talking) return;
+      const st = (data.npcs.stations?.[id] || []).find(s => (s.requires || []).every(hasFlag));
+      if ((st?.station || 'home') !== npc.stationKey) this.placeNpc(id);
+    });
   }
 
   /** Cập nhật cửa phòng và dấu ! sau mỗi thay đổi tiến độ. */
@@ -141,6 +151,7 @@ export class WorldScene extends Phaser.Scene {
       }
     }
     this.doors.setCollisionByProperty({ collides: true });
+    this.updateStations();
     this.npcs.forEach((npc, id) => npc.marker.setVisible(story.hasStoryFor(id)));
   }
 

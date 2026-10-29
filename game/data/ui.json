@@ -68,7 +68,10 @@
     "doorBuilding": "{room} chưa mở trong bản dựng thử này.",
     "exitBuilding": "Khu phố ven vịnh chưa mở trong bản dựng thử này.",
     "inspectSpeaker": "Bạn quan sát",
-    "reopenSources": "Mở lại nguồn"
+    "reopenSources": "Mở lại nguồn",
+    "youPicked": "Bạn chọn: {text}",
+    "matchRight": "Đúng, ô {n} chính là cùng một ảnh.",
+    "matchWrong": "Chưa đúng ô. So kỹ hình dạng và màu sắc với khung mẫu."
   },
   "backpack": {
     "title": "Balo",
@@ -128,5 +131,33 @@
     "fake": "ẢNH GIẢ",
     "old": "VIDEO CŨ",
     "phoneAlt": "Mô phỏng điện thoại với các bài đăng lan truyền; ảnh giả hiển thị dạng khối trừu tượng có nhãn ẢNH GIẢ."
+  },
+  "exhibit": {
+    "fakeTag": "ẢNH GIẢ",
+    "sim": "MÔ PHỎNG",
+    "frame": "Khung {n}",
+    "cell": "Ô {n}",
+    "ref": "Khung {n} của M.P.V. để so sánh",
+    "blurNote": "mờ",
+    "submitMarks": "Nộp các khung đã đánh dấu",
+    "emptyMarks": "Bạn chưa đánh dấu khung nào.",
+    "site": "Trang",
+    "kind": "Loại kết quả",
+    "query": "Truy vấn",
+    "marked": "đã đánh dấu",
+    "frameAlt": "Khung {n} mô phỏng: {desc}",
+    "desc": {
+      "sea": "mặt biển và mây",
+      "boat": "một con tàu (hình dạng {hull})",
+      "storm": "trời tối nhiều mây",
+      "karst": "đảo đá vôi",
+      "shirt": "chiếc áo có chữ",
+      "vest": "hai chiếc áo phao màu {tone}",
+      "blur": "bị mờ, không nhìn rõ"
+    },
+    "tone": {
+      "orange": "cam",
+      "red": "đỏ"
+    }
   }
 }
