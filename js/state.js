@@ -37,12 +37,13 @@ export function newRunId() {
 }
 
 /** Tạo tiến trình rỗng cho một lượt mới. */
-function freshProgress(heroName) {
+function freshProgress(heroName, heroLook = 'm') {
   return {
     schema: SCHEMA,
     runId: newRunId(),
     startedAt: new Date().toISOString(),
     heroName,
+    heroLook,
     screen: 'S1',
     room: null,
     flags: [],
@@ -78,8 +79,8 @@ export function saveSettings() {
 }
 
 /** Bắt đầu lượt mới (xóa tiến trình cũ, giữ cài đặt). */
-export function startNewProgress(heroName) {
-  state.progress = freshProgress(heroName);
+export function startNewProgress(heroName, heroLook) {
+  state.progress = freshProgress(heroName, heroLook);
   saveProgress();
   return state.progress;
 }

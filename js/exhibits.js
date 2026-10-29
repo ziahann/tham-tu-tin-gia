@@ -159,10 +159,31 @@ export function sourceRow(ids) {
   return row;
 }
 
+/** Bảng định nghĩa khung Information Disorder. */
+function wardlePanel() {
+  const ex = data.quests.exhibits.wardle;
+  const wrap = el('figure', 'exhibit tool-panel wardle-panel');
+  wrap.append(el('figcaption', null, ex.title));
+  const table = el('table');
+  ex.rows.forEach(([term, def]) => { const tr = el('tr'); tr.append(el('td', null, term), el('td', null, def)); table.append(tr); });
+  wrap.append(table, el('p', null, ex.footer), el('p', 'cite', `Nguồn: ${ex.sources.map(s => shortCite(sourceById(s))).join('; ')}`));
+  return wrap;
+}
+
+/** Trang mạo danh GIẢ LẬP cho màn bonus. */
+function fakePage() {
+  const ex = data.quests.exhibits.fakepage;
+  const wrap = el('figure', 'exhibit fakepage');
+  wrap.append(el('span', 'tag', t('simulated')), el('div', 'fp-name', ex.name), el('div', 'fp-meta', ex.meta), el('div', 'fp-post', ex.post), el('p', 'fp-meta', ex.note));
+  return wrap;
+}
+
 /** Dựng tư liệu cho một bước nhiệm vụ (hoặc null). */
 export function exhibitFor(step) {
   const parts = [];
   if (step.exhibit === 'lens' || step.exhibit === 'hive') parts.push(toolPanel(step.exhibit));
+  else if (step.exhibit === 'wardle') parts.push(wardlePanel());
+  else if (step.exhibit === 'fakepage') parts.push(fakePage());
   else if (step.exhibit && step.type !== 'flaws' && step.type !== 'match') parts.push(frameGrid(step.exhibit));
   if (step.resources) parts.push(sourceRow(step.resources));
   if (!parts.length) return null;

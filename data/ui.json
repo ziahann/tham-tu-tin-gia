@@ -32,7 +32,10 @@
     "controlsTitle": "Cách chơi",
     "controls": "Đi lại: WASD hoặc phím mũi tên (điện thoại: phím ảo). Nói chuyện / xem đồ vật / tiếp lời thoại: E, Space hoặc Enter (điện thoại: nút A). Mở balo: B. Đóng: Esc.",
     "firstHint": "Gặp chị Tuệ Lâm ở quầy lễ tân để nhận vụ án.",
-    "bayAlt": "Hình nền chuyển động: vịnh Hạ Long với các đảo đá vôi, mặt nước gợn sóng, mây và chim bay. Hình minh họa."
+    "bayAlt": "Hình nền chuyển động: vịnh Hạ Long với các đảo đá vôi, mặt nước gợn sóng, mây và chim bay. Hình minh họa.",
+    "lookLabel": "Chọn mẫu thám tử",
+    "lookM": "Nam",
+    "lookF": "Nữ"
   },
   "hud": {
     "musicSoon": "Nhạc nền sẽ có ở bản sau."
@@ -71,7 +74,25 @@
     "reopenSources": "Mở lại nguồn",
     "youPicked": "Bạn chọn: {text}",
     "matchRight": "Đúng, ô {n} chính là cùng một ảnh.",
-    "matchWrong": "Chưa đúng ô. So kỹ hình dạng và màu sắc với khung mẫu."
+    "matchWrong": "Chưa đúng ô. So kỹ hình dạng và màu sắc với khung mẫu.",
+    "orderPick": "Bấm các mốc theo thứ tự",
+    "orderReset": "Xếp lại",
+    "orderSubmit": "Nộp thứ tự",
+    "orderWrong": "Chưa đúng thứ tự. Các mốc đúng vị trí: {n}/{total}.",
+    "sortSubmit": "Nộp phân loại",
+    "sortMissing": "Hãy xếp tất cả các mục trước khi nộp.",
+    "sortRight": "✓ {item}: {feedback}",
+    "sortWrong": "✗ {item}: chưa đúng nhóm.",
+    "multiMissing": "Còn thiếu {n} lựa chọn đúng.",
+    "openSubmit": "Gửi ý kiến",
+    "openShort": "Viết thêm một chút nhé.",
+    "openIdeas": "Bạn đã nêu: {list}.",
+    "openNoIdea": "Ý kiến của bạn đã được ghi lại.",
+    "openMore": "Một vài hướng khác: {list}.",
+    "interviewDone": "Đã hỏi hết các câu.",
+    "doorStreet": "Ra phố ven vịnh",
+    "enterBuilding": "Vào {place}",
+    "bossLocked": "Cửa Phòng họp đang khóa. Hoàn thành các phòng điều tra và thu thập ít nhất 8 thẻ evidence."
   },
   "backpack": {
     "title": "Balo",
@@ -159,5 +180,18 @@
       "orange": "cam",
       "red": "đỏ"
     }
+  },
+  "boss": {
+    "barLabel": "Uy tín lập luận của {name}",
+    "phase": "Pha {n}/3: {name}",
+    "pick": "Chọn thẻ evidence để phản bác",
+    "submit": "Phản bác",
+    "guessNote": "Bạn vừa nhặt được hai \"thẻ suy đoán\" từ mạng xã hội. Chúng nằm chung trong túi thẻ.",
+    "unmask": "Bạn gỡ chiếc mặt nạ gương…",
+    "blank": "Phía sau chỉ là một khung trống.",
+    "replay": "Thử lại pha cuối"
+  },
+  "results": {
+    "disclaimer": "Điểm số và chiến thắng chỉ đo kết quả chơi, không chứng minh thông tin đúng hay sai."
   }
 }

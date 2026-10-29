@@ -1,6 +1,6 @@
 // Chấm đáp án, tính điểm, trạng thái mở khóa của nhiệm vụ và phòng.
 import { data, questById } from './data.js';
-import { isQuestDone } from './state.js';
+import { state, isQuestDone, hasFlag } from './state.js';
 import { normalize, containsPhrase, levenshtein } from './text.js';
 
 // Kiểu chơi đã dựng trong hội thoại. Phòng có kiểu khác hiện "Đang xây dựng".
@@ -39,6 +39,7 @@ export function questPoints(qs) {
 
 /** Nhiệm vụ đã mở khóa chưa (nhiệm vụ đầu tiên, hoặc có nhiệm vụ đã xong mở khóa nó). */
 export function isUnlocked(q) {
+  if (q.unlockFlags) return q.unlockFlags.every(hasFlag);
   if (q.order === 1) return true;
   return data.quests.quests.some(o => isQuestDone(o.id) && (o.unlocks || []).includes(q.id));
 }
@@ -47,6 +48,7 @@ export function isUnlocked(q) {
 export function roomStatus(roomId, flags = []) {
   const room = data.quests.rooms.find(r => r.id === roomId);
   if (!room) return 'building';
+  if (room.boss) return bossStatus(flags);
   const quests = room.quests.map(questById);
   if (quests.some(q => !isPlayable(q))) return 'building';
   if (quests.filter(q => q.required !== false).every(q => isQuestDone(q.id))) return 'done';
@@ -56,7 +58,16 @@ export function roomStatus(roomId, flags = []) {
 
 /** Trạng thái một nhiệm vụ để hiển thị: done | active | locked | building. */
 export function questStatus(q) {
-  if (!isPlayable(q) || roomStatus(q.room) === 'building') return 'building';
+  if (!isPlayable(q) || (roomStatus(q.room) === 'building' && data.quests.rooms.some(r => r.id === q.room))) return 'building';
   if (isQuestDone(q.id)) return 'done';
   return isUnlocked(q) ? 'active' : 'locked';
+}
+
+/** Phòng Boss: mở khi xong mọi nhiệm vụ bắt buộc và đủ số thẻ evidence; done khi đã thắng. */
+export function bossStatus(flags = []) {
+  if (flags.includes('boss_done')) return 'done';
+  const req = data.quests.boss.requires;
+  const cards = (state.progress?.evidenceCards || []).filter(id => !data.quests.boss.guessCards.includes(id));
+  const ready = req.requiredQuests.every(isQuestDone) && cards.length >= req.minCards;
+  return ready ? 'open' : 'locked';
 }
