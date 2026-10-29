@@ -28,3 +28,24 @@
 | NPC | Giữ 6 NPC trong `npc_dialogues.json`, đã có phiếu nhân vật đề xuất — chờ nhóm duyệt |
 | Hosting | GitHub Pages (xem `game/README.md`) |
 | Đánh số phòng | Theo tài liệu giao diện: S3 Hồ sơ, S4 Phân tích ảnh, S5 Lưu trữ báo chí, S6 Dòng thời gian, S7 Tác động và chủ đích, S8 Phân loại và xử lý, S9 Boss |
+
+## Chốt ngày 29/10/2026 (đợt 2 — chuyển sang game nhập vai đi lại được)
+
+> Thay thế các mục tương ứng ở đợt 1 (âm thanh, độ phân giải, chat, bố cục).
+
+| Mục | Quyết định |
+|---|---|
+| Kiểu game | Nhập vai góc nhìn từ trên xuống: người chơi đi lại trên bản đồ tràn toàn khung trình duyệt, nói chuyện với NPC |
+| Engine | Phaser 3 (MIT) + bản đồ Tiled (JSON), nhóm có thể sửa bản đồ bằng Tiled |
+| Đồ họa | Pixel art độ chi tiết cao; dùng gói asset CC0 cho nền/nội thất, Claude vẽ bổ sung nhân vật chính, NPC, boss (sprite 4 hướng có hoạt ảnh đi) |
+| Nhạc | Nhạc CC0 có sẵn, đổi theo mốc (intro, văn phòng, ngoài trời, phòng điều tra, boss, kết thúc); ghi nguồn, luôn có nút tắt |
+| Bối cảnh ngoài trời | Phố ven vịnh, quán cà phê, tòa soạn báo hư cấu, bến tàu du lịch (cảnh bình thường, không có tàu gặp nạn) |
+| Intro | Hoạt cảnh pixel chạy trong game, có nút Bỏ qua; xong thì hiện nút Bắt đầu → nhận nhiệm vụ (có giới thiệu bối cảnh vụ án) |
+| Điều khiển | Máy tính: WASD/mũi tên + E/Space. Điện thoại: phím ảo D-pad + nút hành động |
+| Hội thoại | Khung thoại kiểu game cốt truyện ở cạnh dưới; giao nhiệm vụ, tra nguồn, trả lời, chấm đúng/sai, gợi ý đều diễn ra trong hội thoại |
+| Trả lời | Kết hợp: chủ yếu chọn đáp án trong khung thoại; dữ kiện tự tra (ngày, tên tàu, nguyên nhân) thì gõ vào ô trong khung thoại |
+| Gõ tự do với NPC | Bỏ (thay quyết định đợt 1) |
+| Balo (khung dọc bên phải) | Sổ tay + thẻ evidence; lịch sử trò chuyện chia theo NPC; bảng ghim; bản đồ khu vực + danh sách nhiệm vụ |
+| Thanh trên | Cài đặt và Nguồn dùng biểu tượng thay chữ |
+| NPC | Đi tuần theo lộ trình, quay mặt về người chơi khi nói chuyện; ở mốc cốt truyện thì đi trước dẫn đường |
+| Thời hạn | Trên 3 tuần |

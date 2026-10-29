@@ -23,9 +23,12 @@ Game pixel-art HTML/CSS/JS (không backend) cho bài tập mục 08, môn Thẩm
 8. Phân loại Disinformation/Misinformation/Malinformation theo từng nhóm đối tượng, không gộp.
 
 ## Kỹ thuật
-- HTML/CSS/JS thuần, nội dung ở JSON; lưu tiến trình và chat bằng localStorage (`tfd_chat_log`, ...).
-- Pixel: canvas 320x180, ô 16x16, `image-rendering: pixelated`, font hỗ trợ tiếng Việt có dấu.
-- Hosting: GitHub Pages hoặc Netlify. Code trong `game/`.
+- Game nhập vai góc nhìn từ trên xuống: Phaser 3.80.1 (MIT, lưu sẵn ở `game/vendor/`) vẽ bản đồ; giao diện (khung thoại, balo, thanh trên) là HTML/CSS phủ lên. Nội dung ở JSON; lưu bằng localStorage (`tfd_progress`, `tfd_settings`, `tfd_chat_log`).
+- Bản đồ Tiled JSON ở `game/maps/`; ô 32x32, sprite nhân vật 32x48 (3 khung x 4 hướng). Asset hiện là bản TẠM do `node tools/gen-assets.mjs` sinh ra — chạy lại script sẽ ghi đè bản đồ và sprite.
+- Phông VT323 (có tiếng Việt). Pixelify Sans thiếu ký tự tiếng Việt, đừng dùng.
+- Nhiệm vụ chạy trong hội thoại (`js/story.js`); kiểu chơi đã dựng: G1, G2 (`js/grading.js → SUPPORTED_MODES`).
+- Test: `cd game && python -m http.server 8000`; thêm `?debug` vào URL để lộ `window.__game` cho công cụ test.
+- Hosting: GitHub Pages. Code trong `game/`.
 
 ## Cách làm việc
 - Việc lớn: dùng plan mode trước, làm từng bước nhỏ, commit thường xuyên.
