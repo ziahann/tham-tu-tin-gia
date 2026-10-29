@@ -8,6 +8,7 @@ import { roomStatus } from './grading.js';
 import * as story from './story.js';
 import { setPlace, updateMeters } from './hud.js';
 import { tickPressure, isLight, caseOpen } from './obstacles.js';
+import { buildGrid, findPath } from './pathfind.js';
 import { playMusic } from './music.js';
 import { buildGraph, guideTarget, updateTrackLine, GuideArrow } from './guide.js';
 import { Weather } from './weather.js';
@@ -151,6 +152,11 @@ export class WorldScene extends Phaser.Scene {
     // Camera
     const cam = this.cameras.main;
     cam.startFollow(this.player.view, true, 0.2, 0.2);
+
+    // Nháy chuột / chạm vào nền để đi tới; vào người / đồ vật thì đi tới rồi tương tác (Cài đặt → tắt được)
+    this.walkPath = null;
+    this.grid = null;
+    this.input.on('pointerdown', p => this.onClick(p));
     cam.setRoundPixels(true);
     this.fitCamera();
     this.scale.on('resize', () => this.fitCamera());
@@ -382,6 +388,7 @@ export class WorldScene extends Phaser.Scene {
       }
     }
     this.doors.setCollisionByProperty({ collides: true });
+    this.grid = null; // cửa đổi trạng thái: dựng lại lưới tìm đường khi cần
     this.updateStations();
     // Dấu trên đầu NPC: vàng "!" = có việc; xanh "▼" = người giao hồ sơ đang theo dõi.
     const tgt = story.trackTarget();
@@ -400,6 +407,94 @@ export class WorldScene extends Phaser.Scene {
     this.decoys?.forEach(d => d.marker.setVisible(!hasFlag(`seen_${d.id}`) && caseOpen(data.npcs.decoys?.[d.id]?.room)));
     updateMeters();
     updateTrackLine();
+  }
+
+  /** Toạ độ màn hình (isometric) → toạ độ logic trên nền. */
+  toLogical(X, Y) {
+    const a = X - iso.ox;
+    return { x: (a + 2 * Y) / 2, y: (2 * Y - a) / 2 };
+  }
+
+  /** Thứ có thể tương tác tại điểm bấm (cùng dạng với findTarget), hoặc null. */
+  clickTarget(X, Y, lx, ly) {
+    let hit = null;
+    this.npcs.forEach((npc, id) => {
+      const v = npc.sprite.view;
+      if (!hit && v?.visible && v.getBounds().contains(X, Y)) hit = { kind: 'npc', id, x: npc.sprite.x, y: npc.sprite.y };
+    });
+    if (hit) return hit;
+    const PAD = 14;
+    const at = (o, extra) => ({ x: o.x + o.width / 2, y: o.y + o.height, ...extra });
+    const lift = this.elevators.find(o => inRect(o, lx, ly, PAD));
+    if (lift) return at(lift, { kind: 'elevator' });
+    const dev = this.devices.find(d => inRect(d.obj, lx, ly, PAD));
+    if (dev) return at(dev.obj, { kind: 'device', id: dev.id });
+    const dc = this.decoys.find(d => inRect(d.obj, lx, ly, PAD));
+    if (dc) return at(dc.obj, { kind: 'decoy', id: dc.id });
+    const ins = this.inspects.find(o => inRect(o, lx, ly, 4));
+    if (ins) return at(ins, { kind: 'inspect', key: propOf(ins, 'text') });
+    const portal = this.portals.find(o => inRect(o, lx, ly, PAD));
+    if (portal) return at(portal, { kind: 'portal', portal });
+    return null;
+  }
+
+  /** Người chơi nháy chuột / chạm vào bản đồ. */
+  onClick(p) {
+    if (state.settings.clickMove === false || this.leaving || story.isBusy() || window.uiBlocked?.()) return;
+    const { x: lx, y: ly } = this.toLogical(p.worldX, p.worldY);
+    const goal = this.clickTarget(p.worldX, p.worldY, lx, ly);
+    // đi tới trước mặt đồ vật (phía nam vùng tương tác), tới cạnh NPC
+    const dest = goal ? { x: goal.x, y: goal.kind === 'npc' ? goal.y + 20 : goal.y + 14 } : { x: lx, y: ly };
+    this.grid ||= buildGrid(this.map, [this.walls, this.doors], this.propBodies.getChildren().map(b => b.body));
+    const path = findPath(this.grid, this.player.x, this.player.y, dest.x, dest.y);
+    this.showClickMark(dest, !!path);
+    if (!path) { this.walkPath = null; return; }
+    this.walkPath = path;
+    this.walkGoal = goal;
+    this.walkBest = Infinity;
+    this.walkCheck = this.time.now;
+  }
+
+  /** Dấu nhỏ ở điểm đến (đỏ = không tới được). */
+  showClickMark(d, ok) {
+    const q = iso.P(d.x, d.y);
+    const g = this.add.ellipse(q.x, q.y, 22, 11).setStrokeStyle(2, ok ? 0xf2d36b : 0xc8323c).setDepth(-4);
+    this.tweens.add({ targets: g, scale: 0.4, alpha: 0, duration: 550, onComplete: () => g.destroy() });
+  }
+
+  /** Đi theo đường đã tìm: trả về hướng màn hình (x, y) cho khung hình này, hoặc null khi xong / kẹt. */
+  followPath(time) {
+    const p = this.player;
+    const g = this.walkGoal;
+    // tới gần thứ cần tương tác: dừng, quay mặt, tương tác
+    if (g && Phaser.Math.Distance.Between(p.x, p.y, g.x, g.y) < (g.kind === 'npc' ? 34 : 26)) return this.arriveGoal();
+    let wp = this.walkPath[0];
+    if (Math.hypot(wp.x - p.x, wp.y - p.y) < 5) {
+      this.walkPath.shift();
+      if (!this.walkPath.length) return this.arriveGoal();
+      wp = this.walkPath[0];
+    }
+    // kẹt (NPC, xe chắn đường): bỏ
+    const left = this.walkPath.reduce((s, w, i, a) => s + (i ? Math.hypot(w.x - a[i - 1].x, w.y - a[i - 1].y) : Math.hypot(w.x - p.x, w.y - p.y)), 0);
+    if (left < this.walkBest - 4) { this.walkBest = left; this.walkCheck = time; }
+    else if (time - this.walkCheck > 900) { this.walkPath = null; return null; }
+    const sd = iso.toScreenDir(wp.x - p.x, wp.y - p.y);
+    const l = Math.hypot(sd.x, sd.y) || 1;
+    return { x: sd.x / l, y: sd.y / l };
+  }
+
+  /** Tới nơi: nếu bấm vào người / đồ vật thì quay mặt về đó và tương tác. */
+  arriveGoal() {
+    const g = this.walkGoal;
+    this.walkPath = null;
+    this.walkGoal = null;
+    if (!g) return null;
+    const sd = iso.toScreenDir(g.x - this.player.x, g.kind === 'npc' ? g.y - this.player.y : -1);
+    this.facing = dirFrom(sd.x, sd.y);
+    this.player.setFrame(idleFrame(this.facing));
+    this.target = g;
+    this.interact();
+    return null;
   }
 
   /** Kẻ tung tin bắt kịp người chơi. */
@@ -618,6 +713,9 @@ export class WorldScene extends Phaser.Scene {
     const frozen = this.leaving || story.isBusy() || window.uiBlocked?.() || time < (this.stunUntil || 0);
     let { x, y } = frozen ? { x: 0, y: 0 } : direction();
     if (x && y) { x *= Math.SQRT1_2; y *= Math.SQRT1_2; }
+    // đi theo đường nháy chuột (bấm phím thì hủy)
+    if (x || y || frozen) { if (x || y) this.walkPath = null; }
+    else if (this.walkPath) ({ x, y } = this.followPath(time) || { x: 0, y: 0 });
     // phím theo hướng màn hình → vận tốc logic (lên màn hình = lùi chéo về tây bắc trên lưới)
     const lv = iso.toLogicalDir(x, y);
     const ll = Math.hypot(lv.x, lv.y) || 1;
