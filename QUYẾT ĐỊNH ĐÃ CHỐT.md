@@ -162,3 +162,14 @@
 | Hậu quả | Thanh "Độ tin cậy" theo từng hồ sơ, bắt đầu 100; về 0 thì làm lại hồ sơ đó từ bước đầu. Huy hiệu vẫn là phần thưởng chính, không có điểm |
 | Hạn chót | Chỉ chạy khi đang đi lại và có hồ sơ đang theo dõi; dừng khi hội thoại, đọc báo, mở menu; trả lời đúng một bước giảm áp lực |
 | Chế độ Nhẹ | Cài đặt "Thử thách: Đầy đủ / Nhẹ". Nhẹ: không hạn chót, kẻ tung tin không đuổi, không mất độ tin cậy, xe vẫn dừng cho người chơi, thang máy không phải chờ |
+
+## Chốt ngày 29/10/2026 (đợt 10)
+
+| Mục | Quyết định |
+|---|---|
+| Điều khiển | Thêm nháy chuột / chạm để đi (bật mặc định, tắt trong Cài đặt); bấm vào người / đồ vật thì tự đi tới và tương tác |
+| Mở đầu | Sau khi nhận nhiệm vụ ở màn hình chính: cảnh xe buýt chở nhân vật tới Hạ Long, dừng ở trạm trước Trụ sở Báo Thanh Niên (bỏ qua được) |
+| Bến tàu | Làm lại: bãi gỗ dọc bờ, hai tàu tham quan neo sát bến có cầu lên tàu, quầy vé, cọc neo, phao cứu sinh, đèn, thùng hàng |
+| Đồ trên bàn | Màn hình, giấy, đèn bàn, cốc là khối 3D riêng trên mặt bàn; tủ / kệ áp tường quay mặt vào trong phòng |
+| Nhận diện | Nhân vật đeo balo Văn Lang (đỏ – xanh than, khiên trắng) và thẻ sinh viên dây xanh ngọc; Sổ tay có thẻ sinh viên mô phỏng (tên, ngành Quan hệ công chúng – Truyền thông, uy tín) |
+| Hướng dẫn | Lần đầu dùng mỗi thiết bị ở Phòng xác minh: hướng dẫn ngắn; xem lại bằng nút "Xem hướng dẫn" |
