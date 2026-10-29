@@ -4,6 +4,7 @@ import { state, questState, saveProgress, setFlag, hasFlag, addEvidence, isQuest
 import * as dlg from './dialogue.js';
 import { matchField, checkCards, questPoints, isUnlocked, roomStatus } from './grading.js';
 import { exhibitFor, frameGrid, singleFrame } from './exhibits.js';
+import { normalize, containsPhrase } from './text.js';
 import { sfx } from './audio.js';
 import { toast } from './ui.js';
 
@@ -246,6 +247,7 @@ async function runSteps(q, qs, npc) {
         if (await helpMenu(q, qs, npc, false, step) === 'later') return 'later';
         continue;
       }
+      if (r === 'again') continue;
       if (r === 'ok') {
         qs.stepOk[step.id] = true;
         saveProgress();
@@ -351,6 +353,155 @@ const STEP_RUNNERS = {
   }
 };
 
+/** Xáo trộn một mảng (bản sao). */
+const shuffled = arr => arr.map(x => [Math.random(), x]).sort((a, b) => a[0] - b[0]).map(x => x[1]);
+
+/** Tạo phần tử với class và chữ. */
+function el(tag, cls, text) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text != null) e.textContent = text;
+  return e;
+}
+
+Object.assign(STEP_RUNNERS, {
+  /** Lời thoại chen ngang (nhiều nhân vật), không cần trả lời. */
+  async say(step) {
+    for (const line of step.lines) await dlg.say(line.npc, line.text);
+    return 'ok';
+  },
+
+  /** Chọn nhiều thẻ: đúng khi chọn đủ thẻ đúng và không chọn thẻ sai. */
+  async multi(step, npc, qs) {
+    const r = await dlg.multi(step.cards, { speaker: npc, text: step.ask, exhibit: exhibitFor(step), picked: qs.answers[step.id] || [] });
+    if (r.help) return 'help';
+    qs.answers[step.id] = r.ids;
+    const res = checkCards(step, r.ids);
+    for (const c of res.wrong) await dlg.say(npc, `✗ ${c.text} — ${c.feedback}`);
+    if (res.status === 'correct') {
+      sfx('partial');
+      await dlg.say(npc, t('result.correct'));
+      return 'ok';
+    }
+    if (!res.wrong.length && res.missing) await dlg.say(npc, `? ${t('dialog.multiMissing', { n: res.missing })}`);
+    return res.status;
+  },
+
+  /** Xếp thứ tự: bấm lần lượt các mốc từ sớm đến muộn. */
+  async order(step, npc, qs) {
+    const pool = shuffled(step.items);
+    const r = await dlg.interactive({ speaker: npc, text: step.ask, exhibit: exhibitFor(step), wide: true }, (box, done, help) => {
+      const seq = [];
+      const out = el('ol', 'order-seq');
+      const left = el('div', 'order-pool');
+      const render = () => {
+        out.innerHTML = '';
+        seq.forEach(it => out.append(el('li', null, it.text)));
+        left.innerHTML = '';
+        pool.filter(it => !seq.includes(it)).forEach(it => {
+          left.append(dlg.makeButton('btn', it.text, () => { seq.push(it); sfx('click'); render(); }));
+        });
+        left.querySelector('button')?.focus();
+      };
+      render();
+      box.append(el('p', 'muted', t('dialog.orderPick')), left, out, actionRow(
+        dlg.makeButton('btn-primary', t('dialog.orderSubmit'), () => {
+          if (seq.length < step.items.length) { toast(t('dialog.sortMissing')); return; }
+          done({ ids: seq.map(it => it.id), log: seq.map((it, i) => `${i + 1}. ${it.text}`).join('\n') });
+        }),
+        dlg.makeButton('btn', t('dialog.orderReset'), () => { seq.length = 0; render(); }),
+        dlg.makeButton('btn', t('dialog.help'), help)
+      ));
+    });
+    if (r.help) return 'help';
+    qs.answers[step.id] = r.ids;
+    const ok = r.ids.filter((id, i) => step.answer[i] === id).length;
+    if (ok === step.answer.length) {
+      sfx('partial');
+      await dlg.say(npc, t('result.correct'));
+      return 'ok';
+    }
+    await dlg.say(npc, `✗ ${t('dialog.orderWrong', { n: ok, total: step.answer.length })}`);
+    return ok > 0 ? 'partial' : 'wrong';
+  },
+
+  /** Phân nhóm: mỗi mục chọn một nhóm; một mục có thể chấp nhận nhiều nhóm. */
+  async sort(step, npc, qs) {
+    const choice = { ...(qs.answers[step.id] || {}) };
+    const r = await dlg.interactive({ speaker: npc, text: step.ask, exhibit: exhibitFor(step), wide: true }, (box, done, help) => {
+      for (const item of step.items) {
+        const row = el('div', 'sort-item');
+        const btns = el('div', 'sort-cats');
+        btns.setAttribute('role', 'group');
+        btns.setAttribute('aria-label', item.text);
+        const sync = () => btns.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(choice[item.id] === b.dataset.cat)));
+        for (const cat of step.categories) {
+          const b = dlg.makeButton('', cat.label, () => { choice[item.id] = cat.id; sfx('click'); sync(); });
+          b.dataset.cat = cat.id;
+          btns.append(b);
+        }
+        sync();
+        row.append(el('p', null, item.text), btns);
+        box.append(row);
+      }
+      box.append(actionRow(
+        dlg.makeButton('btn-primary', t('dialog.sortSubmit'), () => {
+          if (step.items.some(it => !choice[it.id])) { toast(t('dialog.sortMissing')); return; }
+          const label = id => step.categories.find(c => c.id === id).label;
+          done({ choice, log: step.items.map(it => `${it.text} → ${label(choice[it.id])}`).join('\n') });
+        }),
+        dlg.makeButton('btn', t('dialog.help'), help)
+      ));
+    });
+    if (r.help) return 'help';
+    qs.answers[step.id] = r.choice;
+    let ok = 0;
+    for (const item of step.items) {
+      if (item.accept.includes(r.choice[item.id])) {
+        ok++;
+        await dlg.say(npc, t('dialog.sortRight', { item: item.text, feedback: item.feedback }));
+      } else {
+        await dlg.say(npc, t('dialog.sortWrong', { item: item.text }));
+      }
+    }
+    if (ok === step.items.length) return 'ok';
+    return ok > 0 ? 'partial' : 'wrong';
+  },
+
+  /** Câu hỏi mở: không chấm đúng sai, chỉ nhận xét các ý đã nêu. */
+  async open(step, npc, qs) {
+    const r = await dlg.input({ speaker: npc, text: step.ask, label: step.ask, placeholder: step.placeholder });
+    if (r.help) return 'help';
+    const norm = normalize(r.value);
+    if (norm.length < 8) {
+      await dlg.say(npc, t('dialog.openShort'));
+      return 'again';
+    }
+    qs.answers[step.id] = r.value;
+    const hit = step.ideas.filter(i => i.keywords.some(k => containsPhrase(norm, normalize(k))));
+    const miss = step.ideas.filter(i => !hit.includes(i));
+    await dlg.say(npc, hit.length ? t('dialog.openIdeas', { list: hit.map(i => i.text).join(', ') }) : t('dialog.openNoIdea'));
+    if (miss.length) await dlg.say(npc, t('dialog.openMore', { list: miss.map(i => i.text).join(', ') }));
+    return 'ok';
+  },
+
+  /** Thẩm vấn: hỏi lần lượt các câu (theo thứ tự tùy chọn), NPC trả lời. */
+  async interview(step, npc, qs) {
+    const asked = new Set(qs.answers[step.id] || []);
+    while (asked.size < step.questions.length) {
+      const left = step.questions.filter(x => !asked.has(x.id));
+      const c = await dlg.choose([...left.map(x => ({ id: x.id, text: x.text, x })), { id: '_help', text: t('dialog.help'), silent: true }],
+        { speaker: npc, text: step.ask });
+      if (c.id === '_help') return 'help';
+      await dlg.say(npc, c.x.answer);
+      asked.add(c.id);
+      qs.answers[step.id] = [...asked];
+      saveProgress();
+    }
+    return 'ok';
+  }
+});
+
 /** Hoàn thành nhiệm vụ: điểm, thẻ evidence, kết luận nhỏ, lời kết phòng. */
 async function completeQuest(q, qs, npc) {
   const points = questPoints(qs);
@@ -414,4 +565,110 @@ export function objective() {
     return t('backpack.objectiveQuest', { title: q.title, npc: npcById(e.npc)?.name || e.npc, place: room?.name || '' });
   }
   return t('backpack.objectiveWait');
+}
+
+// ---------------------------------------------------------------- boss
+
+let onEnding = () => {};
+
+/** Hàm gọi khi thắng boss (hiện màn kết quả). */
+export function setOnEnding(fn) { onEnding = fn; }
+
+/** Thanh "uy tín lập luận" của boss: số pha còn lại / tổng số pha. */
+function bossBar(left, total) {
+  const bar = document.getElementById('boss-bar');
+  if (left == null) { bar.hidden = true; return; }
+  const b = data.quests.boss;
+  bar.hidden = false;
+  bar.querySelector('.boss-name').textContent = t('boss.barLabel', { name: b.name });
+  const meter = bar.querySelector('.boss-meter');
+  meter.innerHTML = '';
+  for (let i = 0; i < total; i++) meter.append(Object.assign(document.createElement('span'), { className: i < left ? 'on' : '' }));
+  meter.setAttribute('aria-label', `${left}/${total}`);
+}
+
+/** Chấm một pha: trả về { ok, trap, msg } theo thẻ đã chọn. */
+function judgePhase(ph, picked) {
+  const b = data.quests.boss;
+  if (picked.some(id => b.trapB.cards.includes(id))) return { trap: true };
+  const core = picked.filter(id => ph.core.includes(id));
+  const support = picked.filter(id => (ph.support || []).includes(id));
+  if (!core.length && support.length && ph.soloSupport) return { msg: ph.soloSupport };
+  if (core.length < ph.min) return { msg: ph.weak };
+  if (ph.need && !ph.need.every(id => picked.includes(id))) return { msg: ph.missingLimit };
+  return { ok: true };
+}
+
+/** Đối đầu Kẻ Dệt Chuyện: 3 pha, mỗi pha chọn thẻ evidence để phản bác. */
+export async function runBoss() {
+  const b = data.quests.boss;
+  const p = state.progress;
+  if (hasFlag('boss_done')) {
+    await notice(t('boss.blank'));
+    return;
+  }
+  p.boss ||= { phase: 0, fails: 0, endingB: 0 };
+  b.guessCards.forEach(addEvidence);
+  saveProgress();
+  let won = false;
+  await conversation('boss', async () => {
+    if (!hasFlag('boss_intro')) {
+      await playScene('boss_intro');
+      await dlg.say('system', t('boss.guessNote'));
+      setFlag('boss_intro');
+      saveProgress();
+    }
+    for (let i = p.boss.phase; i < b.phases.length; i++) {
+      const ph = b.phases[i];
+      bossBar(b.phases.length - i, b.phases.length);
+      await dlg.say('system', t('boss.phase', { n: i + 1, name: ph.name }));
+      for (;;) {
+        const cards = p.evidenceCards.map(evidenceById).filter(Boolean).map(ev => ({ id: ev.id, text: `${ev.fact} · ${ev.title}` }));
+        const r = await dlg.multi(cards, { speaker: 'boss', text: ph.claim, submitLabel: t('boss.submit') });
+        if (r.help) { await dlg.say('npc1', ph.explain); continue; }
+        const res = judgePhase(ph, r.ids);
+        if (res.trap) {
+          p.boss.endingB++;
+          saveProgress();
+          sfx('wrong');
+          await dlg.say('boss', data.npcs.dialogues.boss_trap_b?.[0]?.text || b.trapB.feedback);
+          await dlg.say('system', `${b.endings.B.title}: ${b.endings.B.text}`);
+          await dlg.say('npc1', b.trapB.feedback);
+          continue;
+        }
+        if (!res.ok) {
+          p.boss.fails++;
+          saveProgress();
+          sfx('wrong');
+          await dlg.say('boss', res.msg);
+          continue;
+        }
+        sfx('correct');
+        const pts = Math.max(5, data.quests.settings.scoring.bossPhase - 5 * p.boss.fails);
+        p.boss.fails = 0;
+        p.boss.phase = i + 1;
+        p.score += pts;
+        saveProgress();
+        onChange();
+        bossBar(b.phases.length - i - 1, b.phases.length);
+        await dlg.say('boss', ph.defeat);
+        await dlg.say('system', `${ph.explain} ${t('dialog.points', { n: pts })}`);
+        break;
+      }
+    }
+    // Kết thúc A: gỡ mặt nạ — gương mặt trống
+    await dlg.say('system', t('boss.unmask'));
+    world?.bossUnmask();
+    sfx('unlock');
+    await dlg.say('system', t('boss.blank'));
+    for (const line of data.npcs.dialogues.boss_endings?.A || []) await dlg.say(line.npc, line.text);
+    await dlg.say('system', `${b.endings.A.title}: ${b.endings.A.text}`);
+    p.evidenceCards = p.evidenceCards.filter(id => !b.guessCards.includes(id));
+    setFlag('boss_done');
+    saveProgress();
+    won = true;
+  });
+  bossBar(null);
+  world?.refresh();
+  if (won) onEnding();
 }

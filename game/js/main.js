@@ -5,7 +5,7 @@ import { state, loadState, saveSettings, startNewProgress } from './state.js';
 import { initInput, on, releaseAll } from './input.js';
 import * as dlg from './dialogue.js';
 import * as backpack from './backpack.js';
-import { setOnChange } from './story.js';
+import { setOnChange, setOnEnding } from './story.js';
 import { updateScore } from './hud.js';
 import { WorldScene } from './world.js';
 import { applyUiText, toast, openModal, closeModal, confirmBox } from './ui.js';
@@ -24,11 +24,13 @@ function el(tag, cls, text) {
 const modalOpen = () => $('modal').open;
 const titleOpen = () => !$('title').hidden;
 const introOpen = () => !$('intro').hidden;
+const resultsOpen = () => !$('results').hidden;
+let heroLook = 'm';
 let bay = null;
 let introIdx = 0;
 
 // Bản đồ dừng người chơi khi đang ở màn hình chính, intro hoặc hộp thoại phụ.
-window.uiBlocked = () => titleOpen() || introOpen() || modalOpen() || dlg.isOpen();
+window.uiBlocked = () => titleOpen() || introOpen() || resultsOpen() || modalOpen() || dlg.isOpen();
 
 /** Bật/tắt class theo cài đặt. */
 function applySettings() {
@@ -208,6 +210,38 @@ function openSettings() {
   openModal(t('settingsPanel.title'), wrap);
 }
 
+// ---------------------------------------------------------------- S10: kết quả
+
+/** Danh hiệu theo điểm (chỉ để chơi). */
+function rankFor(score) {
+  return data.quests.settings.titles.filter(x => score >= x.min).pop()?.title || '';
+}
+
+/** Màn kết quả sau khi thắng boss. */
+function showResults() {
+  const r = data.quests.results;
+  const p = state.progress;
+  $('results-title').textContent = r.title;
+  const stats = $('results-stats');
+  stats.innerHTML = '';
+  [[r.rank, rankFor(p.score)], [r.score, p.score], [r.cards, p.evidenceCards.length]].forEach(([k, v]) => {
+    const span = el('span', null, `${k}: `);
+    span.append(el('strong', null, String(v)));
+    stats.append(span);
+  });
+  $('results-verified-title').textContent = `✓ ${r.verifiedTitle}`;
+  $('results-unsure-title').textContent = `? ${r.unsureTitle}`;
+  const fill = (id, items) => { const ul = $(id); ul.innerHTML = ''; items.forEach(x => ul.append(el('li', null, x))); };
+  fill('results-verified', r.verified);
+  fill('results-unsure', r.unsure);
+  $('results-takeaway').textContent = r.takeaway;
+  $('results-continue').textContent = r.keepPlaying;
+  $('results-sources').textContent = r.sources;
+  $('results-replay').textContent = r.replay;
+  $('results').hidden = false;
+  $('results-continue').focus();
+}
+
 // ---------------------------------------------------------------- khởi động
 
 /** Gắn sự kiện cho nút và phím. */
@@ -218,8 +252,19 @@ function bindEvents() {
   $('intro-name').addEventListener('submit', e => {
     e.preventDefault();
     const name = $('intro-name-input').value.replace(/\s+/g, ' ').trim().slice(0, 20) || data.quests.hero.displayName;
-    startNewProgress(name);
+    startNewProgress(name, heroLook);
     startGame(true);
+  });
+  document.querySelectorAll('.look').forEach(b => b.addEventListener('click', () => {
+    heroLook = b.dataset.look;
+    document.querySelectorAll('.look').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+  }));
+  $('results-continue').addEventListener('click', () => { $('results').hidden = true; });
+  $('results-sources').addEventListener('click', openSources);
+  $('results-replay').addEventListener('click', async () => {
+    if (!(await confirmBox(t('title.restart'), t('title.restartConfirm')))) return;
+    try { localStorage.removeItem('tfd_progress'); } catch { /* bỏ qua */ }
+    location.reload();
   });
   $('title-continue').addEventListener('click', () => startGame(false));
   $('title-restart').addEventListener('click', async () => {
@@ -232,7 +277,7 @@ function bindEvents() {
   $('modal-close').addEventListener('click', closeModal);
 
   on('action', () => {
-    if (titleOpen() || modalOpen()) return;
+    if (titleOpen() || modalOpen() || resultsOpen()) return;
     if (introOpen()) { if ($('intro-final').hidden) nextIntro(); return; }
     if (dlg.isOpen()) { dlg.advance(); return; }
     game?.scene.getScene('world')?.interact();
@@ -267,6 +312,7 @@ async function boot() {
   dlg.initDialog();
   backpack.initBackpack(() => game?.scene.getScene('world') || null);
   setOnChange(refreshUi);
+  setOnEnding(showResults);
   bindEvents();
   showTitle();
   if (state.lostSave) toast(t('lostSave'));

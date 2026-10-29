@@ -24,9 +24,9 @@ Game pixel-art HTML/CSS/JS (không backend) cho bài tập mục 08, môn Thẩm
 
 ## Kỹ thuật
 - Game nhập vai góc nhìn từ trên xuống: Phaser 3.80.1 (MIT, lưu sẵn ở `game/vendor/`) vẽ bản đồ; giao diện (khung thoại, balo, thanh trên) là HTML/CSS phủ lên. Nội dung ở JSON; lưu bằng localStorage (`tfd_progress`, `tfd_settings`, `tfd_chat_log`).
-- Bản đồ Tiled JSON ở `game/maps/`; ô 32x32, sprite nhân vật 32x48 (3 khung x 4 hướng). Asset hiện là bản TẠM do `node tools/gen-assets.mjs` sinh ra — chạy lại script sẽ ghi đè bản đồ và sprite.
+- 5 bản đồ Tiled JSON ở `game/maps/` (office, street, newsroom, cafe, boss), chung tileset `assets/tiles/tiles.png`; ô 32x32, sprite nhân vật 32x48 (3 khung x 4 hướng); thám tử có 2 mẫu `hero_m` / `hero_f`. Asset hiện là bản TẠM do `node tools/gen-assets.mjs` sinh ra — chạy lại script sẽ ghi đè bản đồ và sprite.
 - Phông VT323 (có tiếng Việt). Pixelify Sans thiếu ký tự tiếng Việt, đừng dùng.
-- Nhiệm vụ chạy trong hội thoại (`js/story.js`). Dạng mới: `steps` trong quests.json, mỗi bước `choice | input | flaws | match` có `ask`, `hints`, `walkthrough`, tư liệu `exhibit` (`lens`, `hive`, `mpv12`, `mco9` trong `quests.json → exhibits`, vẽ bởi `js/exhibits.js`). Q1/Q2 dùng dạng cũ G2/G1. Phòng có nhiệm vụ chưa dựng hiện "Đang xây dựng" (`js/grading.js → isPlayable`).
+- Nhiệm vụ chạy trong hội thoại (`js/story.js`). Dạng mới: `steps` trong quests.json, mỗi bước `choice | input | flaws | match | multi | order | sort | open | interview | say` có `ask`, `hints`, `walkthrough`, tư liệu `exhibit` (`lens`, `hive`, `mpv12`, `mco9` trong `quests.json → exhibits`, vẽ bởi `js/exhibits.js`). Q1/Q2 dùng dạng cũ G2/G1. Phòng có nhiệm vụ chưa dựng hiện "Đang xây dựng" (`js/grading.js → isPlayable`).
 - Mọi đáp án phải tra được: từ link nguồn đã đọc nội dung (`sources.json → urlStatus: verified`) hoặc từ tư liệu trong game có trích báo cáo.
 - Test: `cd game && python -m http.server 8000`; thêm `?debug` vào URL để lộ `window.__game` cho công cụ test.
 - Hosting: GitHub Pages. Code trong `game/`.
