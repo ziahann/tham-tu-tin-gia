@@ -763,8 +763,9 @@ export function allProps() {
   add('planter', planter(), { base: [64, 16] });
   add('market_stall', marketStall(), { base: [76, 20] });
   add('tour_boat', extrude(tourBoat(), 22), { base: [290, 34], ox: 160 / 342, lights: [[160, 70, 0xffe2a0, 120, 0.8]] });
-  add('karst_big', karstIsland(true), { base: [150, 30] });
-  add('karst', karstIsland(false), { base: [90, 20] });
+  // đảo đá giả 3D: đỉnh phủ cây nhìn từ trên, vách hông tối
+  { const k = extrude(karstIsland(true), 24); add('karst_big', k, { base: [150, 30], ox: 90 / k.w }); }
+  { const k = extrude(karstIsland(false), 16); add('karst', k, { base: [90, 20], ox: 55 / k.w }); }
   // tòa nhà: tương tác (có biển, cửa) và trang trí
   const B = {
     bld_thanhnien: { cols: 12, floors: 5, style: 'glass', door: 'center', sign: true, signGlow: '#c8323c', depth: 52, roof: ['antenna', 'solar', 'ac', 'ac', 'skylight'] },
