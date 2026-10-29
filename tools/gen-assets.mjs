@@ -307,10 +307,30 @@ function drawTile(img, name, ox, oy, rnd) {
   }
 }
 
+/**
+ * Chỉnh màu kiểu trinh thám cho cả tileset: giảm bão hòa, kéo về xanh than, tối nhẹ.
+ * Nhân vật không qua bước này nên nổi lên trên nền.
+ */
+function noirGrade(img) {
+  const tint = [58, 78, 118];
+  for (let i = 0; i < img.px.length; i += 4) {
+    if (!img.px[i + 3]) continue;
+    const [r, g, b] = [img.px[i], img.px[i + 1], img.px[i + 2]];
+    const l = 0.3 * r + 0.59 * g + 0.11 * b;
+    const ch = [r, g, b].map((c, k) => {
+      const desat = c + (l - c) * 0.5;            // giảm 50% bão hòa
+      const toned = desat * 0.78 + tint[k] * 0.22; // ám xanh than
+      return Math.max(0, Math.min(255, Math.round(toned * 0.92)));
+    });
+    img.px[i] = ch[0]; img.px[i + 1] = ch[1]; img.px[i + 2] = ch[2];
+  }
+}
+
 function buildTileset() {
   const cols = 8, rows = Math.ceil(TILES.length / cols);
   const img = new Img(cols * T, rows * T);
   TILES.forEach((name, i) => drawTile(img, name, (i % cols) * T, Math.floor(i / cols) * T, seeded(i + 7)));
+  noirGrade(img);
   img.save(path.join(ROOT, 'assets/tiles/tiles.png'));
   return { cols, rows };
 }

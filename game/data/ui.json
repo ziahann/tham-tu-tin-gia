@@ -17,7 +17,8 @@
     "backpack": "Balo (B)",
     "sources": "Nguồn tham khảo",
     "settings": "Cài đặt",
-    "cases": "Hồ sơ vụ án (J)"
+    "cases": "Hồ sơ vụ án (J)",
+    "weather": "Thời tiết (T)"
   },
   "title": {
     "warningTitle": "Cảnh báo nội dung",
@@ -31,12 +32,18 @@
     "nameHint": "Không cần dùng tên thật.",
     "nameConfirm": "Vào văn phòng",
     "controlsTitle": "Cách chơi",
-    "controls": "Đi lại: WASD hoặc phím mũi tên (điện thoại: phím ảo). Nói chuyện / xem đồ vật / tiếp lời thoại: E, Space hoặc Enter (điện thoại: nút A). Mở balo: B. Chọn hồ sơ để theo dõi: J (mũi tên vàng chỉ đường). Đóng: Esc.",
+    "controls": "Đi lại: WASD hoặc phím mũi tên (điện thoại: phím ảo). Nói chuyện / xem đồ vật / tiếp lời thoại: E, Space hoặc Enter (điện thoại: nút A). Mở balo: B. Chọn hồ sơ để theo dõi: J (mũi tên vàng chỉ đường). Đổi thời tiết: T. Đóng: Esc.",
     "firstHint": "Mọi hồ sơ đều đã mở. Bấm J (hoặc nút Hồ sơ) để chọn hồ sơ muốn điều tra; mũi tên vàng sẽ chỉ đường.",
     "bayAlt": "Hình nền chuyển động: vịnh Hạ Long với các đảo đá vôi, mặt nước gợn sóng, mây và chim bay. Hình minh họa.",
     "lookLabel": "Chọn mẫu thám tử",
     "lookM": "Nam",
-    "lookF": "Nữ"
+    "lookF": "Nữ",
+    "course": "Môn Thẩm định tin tức · Trường Đại học Văn Lang",
+    "caseLabel": "HỒ SƠ VỤ ÁN",
+    "caseSub": "Ảnh AI giả quanh vụ lật tàu Vịnh Xanh 58 · vịnh Hạ Long, 19/7/2025",
+    "stamp": "ĐANG ĐIỀU TRA",
+    "warningShort": "Dựa trên một vụ tai nạn có thật. Không có hình ảnh nạn nhân; nhân vật, tổ chức và công cụ là GIẢ LẬP.",
+    "warningMore": "Đọc cảnh báo đầy đủ và cách chơi"
   },
   "hud": {
     "musicUnsupported": "trình duyệt này không phát được nhạc OGG",
@@ -260,5 +267,11 @@
     "readInGame": "Đọc trong game",
     "tool": "Công cụ",
     "report": "Tài liệu của nhóm"
+  },
+  "weather": {
+    "clear": "☀ Trời quang",
+    "rain": "☂ Mưa",
+    "fog": "≋ Sương mù",
+    "night": "☾ Ban đêm"
   }
 }
