@@ -616,15 +616,28 @@ function drawCharFrame(spec, dir, frame) {
   if (spec.badge && dir !== 'up') R(dir === 'right' ? 18 : 19, 25 + y0, 2, 2, '#c9d1dc');
   if (spec.camera && dir === 'down') { R(13, 27 + y0, 6, 4, '#2b2f3a'); R(15, 28 + y0, 2, 2, '#5fb3d9'); }
 
-  // Thẻ sinh viên Văn Lang (dây xanh than, thẻ trắng dải đỏ)
-  if (spec.press && dir === 'down') { R(13, 21 + y0, 1, 6, '#1f2a44'); R(18, 21 + y0, 1, 6, '#1f2a44'); R(13, 27 + y0, 6, 5, '#ffffff'); R(13, 27 + y0, 6, 1, '#c8323c'); R(14, 29 + y0, 4, 1, '#5b5d6e'); }
-  if (spec.press && dir === 'right') { R(19, 26 + y0, 2, 4, '#ffffff'); }
+  // Thẻ sinh viên Văn Lang (dây xanh ngọc, thẻ đỏ, ô ảnh)
+  if (spec.press && dir === 'down') { R(13, 21 + y0, 1, 6, '#1fa39a'); R(18, 21 + y0, 1, 6, '#1fa39a'); R(13, 27 + y0, 6, 5, '#d8283f'); R(13, 27 + y0, 6, 1, '#ffffff'); R(14, 29 + y0, 2, 2, '#1fa39a'); }
+  if (spec.press && dir === 'right') { R(19, 26 + y0, 2, 4, '#d8283f'); }
   // Balo: quai đeo phía trước, thân balo phía sau / bên hông
   if (spec.backpack) {
     const bp = spec.backpack, bpD = shade(bp, -0.3);
-    if (dir === 'down') { R(10, 20 + y0, 2, 9, bpD); R(20, 20 + y0, 2, 9, bpD); }
-    if (dir === 'up') { R(10, 21 + y0, 12, 12, bp); R(10, 21 + y0, 12, 3, shade(bp, 0.15)); R(13, 26 + y0, 6, 4, bpD); }
-    if (dir === 'right') { R(8, 21 + y0, 4, 11, bp); R(8, 21 + y0, 4, 2, shade(bp, 0.15)); R(12, 20 + y0, 1, 8, bpD); }
+    if (spec.vlu) {
+      // balo Văn Lang: thân đỏ, viền xanh than trên / dưới, khiên trắng có chữ V đỏ ở mặt sau
+      const navy = '#2e3170', navyL = '#3d4290';
+      if (dir === 'down') { R(10, 20 + y0, 2, 9, navy); R(20, 20 + y0, 2, 9, navy); R(10, 20 + y0, 2, 1, bp); R(20, 20 + y0, 2, 1, bp); }
+      if (dir === 'up') {
+        R(9, 20 + y0, 14, 14, bp); R(9, 20 + y0, 14, 2, navyL); R(9, 32 + y0, 14, 2, navy); R(21, 22 + y0, 2, 10, shade(bp, -0.2));
+        R(11, 23 + y0, 1, 7, shade(bp, 0.15));
+        R(14, 24 + y0, 5, 4, '#ffffff'); R(15, 28 + y0, 3, 1, '#ffffff'); R(16, 29 + y0, 1, 1, '#ffffff');
+        R(15, 25 + y0, 1, 1, bp); R(17, 25 + y0, 1, 1, bp); R(16, 26 + y0, 1, 1, bp);
+      }
+      if (dir === 'right') { R(7, 21 + y0, 5, 12, bp); R(7, 21 + y0, 5, 2, navyL); R(7, 31 + y0, 5, 2, navy); R(12, 20 + y0, 1, 8, navy); R(8, 25 + y0, 2, 2, '#ffffff'); }
+    } else {
+      if (dir === 'down') { R(10, 20 + y0, 2, 9, bpD); R(20, 20 + y0, 2, 9, bpD); }
+      if (dir === 'up') { R(10, 21 + y0, 12, 12, bp); R(10, 21 + y0, 12, 3, shade(bp, 0.15)); R(13, 26 + y0, 6, 4, bpD); }
+      if (dir === 'right') { R(8, 21 + y0, 4, 11, bp); R(8, 21 + y0, 4, 2, shade(bp, 0.15)); R(12, 20 + y0, 1, 8, bpD); }
+    }
   }
 
   // Tay (đung đưa ngược chân)

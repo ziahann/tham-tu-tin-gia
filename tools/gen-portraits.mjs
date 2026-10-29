@@ -73,16 +73,16 @@ function drawBody(f, s) {
     for (let x = -7; x <= 7; x++) R(CX + x, 58 + Math.round(Math.abs(x) < 6 ? 2 - (x * x) / 18 : 0), 1, 2, dark);
   }
   if (s.backpack) {
-    const st = shade(s.backpack, -0.3);
+    const st = s.vlu ? '#2e3170' : shade(s.backpack, -0.3);
     R(CX - 22, 60, 5, 28, st); R(CX + 17, 60, 5, 28, st);
     R(CX - 22, 60, 5, 1, shade(s.backpack, 0.1)); R(CX + 17, 60, 5, 1, shade(s.backpack, 0.1));
     R(CX - 21, 78, 3, 2, '#c9d1dc'); R(CX + 18, 78, 3, 2, '#c9d1dc');
   }
   if (s.press) {
-    // dây xanh than + thẻ sinh viên (dải đỏ)
-    for (let y = 58; y < 72; y++) { R(CX - 8 + Math.floor((y - 58) / 3), y, 1, 1, '#1f2a44'); R(CX + 8 - Math.floor((y - 58) / 3), y, 1, 1, '#1f2a44'); }
-    R(CX - 6, 72, 13, 15, '#ffffff'); R(CX - 6, 72, 13, 3, '#c8323c');
-    R(CX - 4, 77, 4, 5, '#b4b8c5'); R(CX + 1, 77, 5, 1, '#5b5d6e'); R(CX + 1, 79, 4, 1, '#5b5d6e'); R(CX - 4, 84, 9, 1, '#5b5d6e');
+    // dây xanh ngọc + thẻ sinh viên Văn Lang (thẻ đỏ, ô ảnh xanh ngọc, sọc xanh bên phải)
+    for (let y = 58; y < 72; y++) { R(CX - 8 + Math.floor((y - 58) / 3), y, 1, 1, '#1fa39a'); R(CX + 8 - Math.floor((y - 58) / 3), y, 1, 1, '#1fa39a'); }
+    R(CX - 6, 72, 13, 15, '#d8283f'); R(CX + 5, 72, 2, 15, '#1fa39a'); R(CX - 5, 73, 4, 1, '#ffffff');
+    R(CX - 4, 76, 4, 5, '#1fa39a'); R(CX - 3, 77, 2, 2, '#f1c7a0'); R(CX - 4, 83, 7, 1, '#ffffff'); R(CX - 4, 85, 5, 1, '#f4b8c0');
   }
   if (s.lanyard) {
     for (let y = 58; y < 74; y++) { R(CX - 8 + Math.floor((y - 58) / 3), y, 1, 1, '#c8323c'); R(CX + 8 - Math.floor((y - 58) / 3), y, 1, 1, '#c8323c'); }
