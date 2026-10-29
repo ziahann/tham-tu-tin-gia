@@ -4,6 +4,10 @@ import { t } from './data.js';
 /** Điền chữ cho mọi phần tử có data-ui="đường.dẫn". */
 export function applyUiText(root = document) {
   root.querySelectorAll('[data-ui]').forEach(n => { n.textContent = t(n.dataset.ui); });
+  root.querySelectorAll('[data-ui-label]').forEach(n => {
+    n.setAttribute('aria-label', t(n.dataset.uiLabel));
+    n.title = t(n.dataset.uiLabel);
+  });
 }
 
 let toastTimer = null;
