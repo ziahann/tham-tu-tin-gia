@@ -164,7 +164,8 @@
     "music": "Nhạc nền (Kevin MacLeod, CC BY 4.0)",
     "reduceMotion": "Giảm chuyển động (hiện chữ ngay)",
     "home": "Về màn hình chính",
-    "ambience": "Âm thanh môi trường (mưa, gió, sóng, xe cộ)"
+    "ambience": "Âm thanh môi trường (mưa, gió, sóng, xe cộ)",
+    "clickMove": "Di chuyển bằng nháy chuột / chạm: bấm vào nền để đi tới, bấm vào người hoặc đồ vật để đi tới và tương tác"
   },
   "result": {
     "correct": "✓ Đúng.",
