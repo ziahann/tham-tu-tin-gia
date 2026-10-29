@@ -48,9 +48,6 @@
         "q1_stop",
         "q2_event"
       ],
-      "requires": [
-        "s1_done"
-      ],
       "place": "Văn phòng Ban Hải Đăng"
     },
     {
@@ -63,9 +60,6 @@
         "q5_crosscheck",
         "q6_detector"
       ],
-      "requires": [
-        "done_S3"
-      ],
       "place": "Văn phòng Ban Hải Đăng"
     },
     {
@@ -75,9 +69,6 @@
       "npc": "npc3",
       "quests": [
         "q7_oldclips"
-      ],
-      "requires": [
-        "done_S4"
       ]
     },
     {

@@ -16,7 +16,8 @@
   "icons": {
     "backpack": "Balo (B)",
     "sources": "Nguồn tham khảo",
-    "settings": "Cài đặt"
+    "settings": "Cài đặt",
+    "cases": "Hồ sơ vụ án (J)"
   },
   "title": {
     "warningTitle": "Cảnh báo nội dung",
@@ -30,15 +31,17 @@
     "nameHint": "Không cần dùng tên thật.",
     "nameConfirm": "Vào văn phòng",
     "controlsTitle": "Cách chơi",
-    "controls": "Đi lại: WASD hoặc phím mũi tên (điện thoại: phím ảo). Nói chuyện / xem đồ vật / tiếp lời thoại: E, Space hoặc Enter (điện thoại: nút A). Mở balo: B. Đóng: Esc.",
-    "firstHint": "Gặp chị Tuệ Lâm ở quầy lễ tân để nhận vụ án.",
+    "controls": "Đi lại: WASD hoặc phím mũi tên (điện thoại: phím ảo). Nói chuyện / xem đồ vật / tiếp lời thoại: E, Space hoặc Enter (điện thoại: nút A). Mở balo: B. Chọn hồ sơ để theo dõi: J (mũi tên vàng chỉ đường). Đóng: Esc.",
+    "firstHint": "Mọi hồ sơ đều đã mở. Bấm J (hoặc nút Hồ sơ) để chọn hồ sơ muốn điều tra; mũi tên vàng sẽ chỉ đường.",
     "bayAlt": "Hình nền chuyển động: vịnh Hạ Long với các đảo đá vôi, mặt nước gợn sóng, mây và chim bay. Hình minh họa.",
     "lookLabel": "Chọn mẫu thám tử",
     "lookM": "Nam",
     "lookF": "Nữ"
   },
   "hud": {
-    "musicUnsupported": "trình duyệt này không phát được nhạc OGG"
+    "musicUnsupported": "trình duyệt này không phát được nhạc OGG",
+    "track": "{npc} · {place}",
+    "trackNone": "Chưa theo dõi hồ sơ nào — bấm J"
   },
   "dialog": {
     "continueHint": "E / Space ▸",
@@ -92,21 +95,25 @@
     "interviewDone": "Đã hỏi hết các câu.",
     "doorStreet": "Ra phố ven vịnh",
     "enterBuilding": "Vào {place}",
-    "bossLocked": "Cửa Phòng họp đang khóa. Hoàn thành các phòng điều tra và thu thập ít nhất 8 thẻ evidence."
+    "bossLocked": "Cửa Phòng họp đang khóa. Hoàn thành các phòng điều tra và thu thập ít nhất 8 thẻ evidence.",
+    "pickCase": "Bạn muốn làm hồ sơ nào?",
+    "caseOption": "{room}: {title}",
+    "notNow": "Để sau",
+    "tracking": "Đang theo dõi: {title}"
   },
   "backpack": {
     "title": "Balo",
     "tabNotebook": "Sổ tay",
-    "tabQuests": "Nhiệm vụ",
+    "tabQuests": "Hồ sơ",
     "tabPinboard": "Bảng ghim",
     "tabHistory": "Lịch sử",
     "questions": "Câu hỏi xác minh",
     "cards": "Thẻ evidence",
     "noCards": "Chưa có thẻ nào.",
     "objective": "Mục tiêu hiện tại",
-    "objectiveMeetNpc1": "Gặp chị Tuệ Lâm ở quầy lễ tân, sảnh tầng trệt.",
+    "objectiveMeetNpc1": "Chọn một hồ sơ bên dưới để theo dõi — mũi tên sẽ chỉ tới người giao việc.",
     "objectiveQuest": "{title} — gặp {npc} ở {place}.",
-    "objectiveWait": "Đã xong các nhiệm vụ đang mở. Các phòng khác sẽ mở ở bản sau.",
+    "objectiveWait": "Đã xong mọi hồ sơ đang mở.",
     "questList": "Danh sách nhiệm vụ",
     "statusDone": "✓ Đã xong",
     "statusActive": "▶ Đang làm",
@@ -120,7 +127,17 @@
     "clear": "Xóa dữ liệu của tôi",
     "clearConfirm": "Xóa toàn bộ tiến trình và lịch sử trò chuyện trên trình duyệt này?",
     "notes": "Ghi chú quan sát",
-    "you": "Bạn"
+    "you": "Bạn",
+    "cases": "Hồ sơ vụ án",
+    "caseProgress": "{done}/{total}",
+    "track": "Theo dõi",
+    "tracking": "◉ Đang theo dõi",
+    "caseDone": "✓ Đã khép",
+    "optional": "tùy chọn",
+    "giver": "{npc} · {place}",
+    "bossCase": "Phòng họp — Kẻ Dệt Chuyện",
+    "bossLocked": "Xuất hiện khi xong mọi hồ sơ bắt buộc ({done}/{total} nhiệm vụ, {cards}/{minCards} thẻ evidence).",
+    "bossOpen": "Cửa Phòng họp đã mở."
   },
   "sourcesPanel": {
     "title": "Nguồn tham khảo",

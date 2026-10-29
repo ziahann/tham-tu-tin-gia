@@ -96,6 +96,14 @@ input:not([type]), input[type="text"] {
 .hud-title { color: var(--straw); white-space: nowrap; }
 .hud-place { color: var(--paper); background: rgb(15 14 23 / 0.6); padding: 0 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .hud-score { background: rgb(15 14 23 / 0.6); padding: 0 8px; white-space: nowrap; }
+.hud-track {
+  font: inherit; color: var(--ink); background: var(--straw); border: 2px solid var(--ink);
+  padding: 0 8px; min-height: 32px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 40vw; cursor: pointer;
+}
+.hud-track::before { content: "➤ "; }
+.hud-track.is-off { background: rgb(15 14 23 / 0.6); color: var(--muted); border-color: transparent; }
+.hud-track.is-off::before { content: ""; }
+@media (max-width: 700px) { .hud-title, .hud-place { display: none; } .hud-track { max-width: 46vw; } }
 .icon-btn {
   flex: none;
   width: 44px; height: 44px; padding: 6px;
@@ -171,6 +179,15 @@ input:not([type]), input[type="text"] {
 .quest-row.done .st { color: var(--green); }
 .quest-row.active .st { color: var(--straw); }
 .objective { border-left: 6px solid var(--straw); padding-left: 10px; }
+.case { border: 2px solid var(--grey-dark); padding: 6px 10px; margin: 8px 0; background: rgb(15 14 23 / 0.35); }
+.case.is-tracked { border-color: var(--straw); box-shadow: inset 4px 0 0 var(--straw); }
+.case.is-done { opacity: 0.7; }
+.case-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.case-head h4 { margin: 0; font-weight: normal; color: var(--paper); font-size: 1.05em; }
+.case-meta { color: var(--muted); font-size: 0.85em; }
+.case-bar { height: 8px; background: var(--ink); margin: 4px 0; }
+.case-bar > span { display: block; height: 100%; background: var(--teal); }
+.case .quest-row { font-size: 0.9em; }
 .minimap { width: 100%; image-rendering: pixelated; border: var(--px) solid var(--ink); background: var(--ink); }
 .cork { background: #a5774f; border: var(--px) solid #5b3b28; padding: 10px; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; min-height: 160px; }
 .cork .note { background: var(--paper); color: var(--ink); padding: 6px 8px; font-size: 0.85em; position: relative; box-shadow: 2px 3px 0 rgb(0 0 0 / 0.3); }

@@ -11,3 +11,10 @@ export function setPlace(text) {
 export function updateScore() {
   document.getElementById('hud-score').textContent = state.progress ? `${t('score')}: ${state.progress.score}` : '';
 }
+
+/** Dòng "đang theo dõi": người giao hồ sơ và nơi gặp. on = có hồ sơ đang theo dõi. */
+export function setTrack(text, on) {
+  const el = document.getElementById('hud-track');
+  el.textContent = text;
+  el.classList.toggle('is-off', !on);
+}
