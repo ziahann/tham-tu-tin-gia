@@ -22,7 +22,7 @@
   "title": {
     "warningTitle": "Cảnh báo nội dung",
     "warning": "Game dựa trên một vụ tai nạn có thật. Nội dung nhắc đến thiệt hại về người. Game không hiển thị hình ảnh nạn nhân; ảnh giả chỉ là mô phỏng pixel trừu tượng có nhãn ẢNH GIẢ. Bạn có thể thoát bất cứ lúc nào.",
-    "simulatedNote": "Nhân vật, tình huống và công cụ mô phỏng đều là GIẢ LẬP. Nhân vật và sự việc trong tòa nhà là GIẢ LẬP, không đại diện cho Báo Thanh Niên. Dữ kiện về vụ việc lấy từ báo chí, có ghi nguồn.",
+    "simulatedNote": "Mọi nhân vật, cuộc trò chuyện, tổ chức và công cụ trong game là GIẢ LẬP. Tòa nhà mang tên Báo Thanh Niên chỉ là bối cảnh: nhân vật và sự việc bên trong đều hư cấu, không đại diện cho Báo Thanh Niên. Dữ kiện về vụ việc lấy từ báo chí, có ghi nguồn.",
     "start": "Bắt đầu",
     "continue": "Chơi tiếp",
     "restart": "Chơi lại từ đầu",
@@ -31,7 +31,7 @@
     "nameHint": "Không cần dùng tên thật.",
     "nameConfirm": "Vào văn phòng",
     "controlsTitle": "Cách chơi",
-    "controls": "Đi lại: WASD hoặc phím mũi tên (điện thoại: phím ảo). Nói chuyện / xem đồ vật / tiếp lời thoại: E, Space hoặc Enter (điện thoại: nút A). Mở balo: B. Chọn hồ sơ để theo dõi: J (mũi tên vàng chỉ đường). Đổi thời tiết: T. Đóng: Esc.",
+    "controls": "Đi lại: WASD hoặc phím mũi tên, hoặc nháy chuột vào nơi muốn tới (điện thoại: phím ảo hoặc chạm). Nói chuyện / xem đồ vật / tiếp lời thoại: E, Space hoặc Enter (điện thoại: nút A). Mở balo: B. Chọn hồ sơ để theo dõi: J (mũi tên vàng chỉ đường). Thu nhỏ khung thoại: nút — trên khung. Đóng: Esc.",
     "firstHint": "Mọi hồ sơ đều đã mở. Bấm J (hoặc nút Hồ sơ) để chọn hồ sơ muốn điều tra; mũi tên vàng sẽ chỉ đường.",
     "bayAlt": "Hình nền chuyển động: vịnh Hạ Long với các đảo đá vôi, mặt nước gợn sóng, mây và chim bay. Hình minh họa.",
     "lookLabel": "Chọn mẫu nhân vật",
@@ -41,8 +41,11 @@
     "caseLabel": "HỒ SƠ VỤ ÁN",
     "caseSub": "Ảnh AI giả quanh vụ lật tàu Vịnh Xanh 58 · vịnh Hạ Long, 19/7/2025",
     "stamp": "ĐANG ĐIỀU TRA",
-    "warningShort": "Dựa trên một vụ tai nạn có thật. Không có hình ảnh nạn nhân; nhân vật, tổ chức và công cụ là GIẢ LẬP.",
-    "warningMore": "Đọc cảnh báo đầy đủ và cách chơi"
+    "warningShort": "Dựa trên một vụ tai nạn có thật. Không có hình ảnh nạn nhân. Nhân vật, tổ chức, cuộc trò chuyện và công cụ trong game là GIẢ LẬP.",
+    "warningMore": "Đọc cảnh báo đầy đủ và cách chơi",
+    "authors": "Tác giả: Trần Huỳnh Gia Hân và Đào Thị Mai Chi",
+    "namePlaceholder": "Nhập tên nhân vật",
+    "nameRequired": "Hãy nhập tên nhân vật để bắt đầu."
   },
   "hud": {
     "musicUnsupported": "trình duyệt này không phát được nhạc MP3",
@@ -155,7 +158,9 @@
     "title": "Nguồn tham khảo",
     "unverified": "link chưa kiểm tra",
     "missing": "chưa có link",
-    "music": "Nhạc nền"
+    "music": "Nhạc nền",
+    "authors": "Tác giả game",
+    "authorsList": "Trần Huỳnh Gia Hân và Đào Thị Mai Chi"
   },
   "settingsPanel": {
     "title": "Cài đặt",
@@ -184,7 +189,7 @@
     "fake": "ẢNH GIẢ",
     "old": "VIDEO CŨ",
     "phoneAlt": "Mô phỏng điện thoại với các bài đăng lan truyền; ảnh giả hiển thị dạng khối trừu tượng có nhãn ẢNH GIẢ.",
-    "busCaption": "Thành phố Hạ Long · trạm xe buýt trước Trụ sở Báo Thanh Niên (nhân vật, sự việc GIẢ LẬP)\nBấm phím bất kỳ để bỏ qua"
+    "busCaption": "Thành phố Hạ Long · trạm xe buýt trước Trụ sở Báo Thanh Niên\nBấm phím bất kỳ để bỏ qua"
   },
   "exhibit": {
     "fakeTag": "ẢNH GIẢ",
@@ -240,7 +245,7 @@
       "name": "Máy tính tìm ngược ảnh",
       "app": "Tìm bằng hình ảnh · bản ghi kết quả",
       "tutorial": [
-        "Hướng dẫn · Máy tính tìm ngược ảnh: máy đưa ảnh cần kiểm tra lên công cụ tìm bằng hình ảnh và ghi lại các nơi ảnh từng xuất hiện (bản ghi mô phỏng).",
+        "Hướng dẫn · Máy tính tìm ngược ảnh: máy đưa ảnh cần kiểm tra lên công cụ tìm bằng hình ảnh và ghi lại các nơi ảnh từng xuất hiện.",
         "Đọc bản ghi: xem ai đăng, đăng ở đâu, có phải hãng tin, phóng viên hay nhân chứng tại hiện trường không. Kết quả trùng nhiều chưa chắc là bản gốc.",
         "Trả lời bằng các nút bên dưới. Bí thì bấm \"Trợ giúp\" để xin gợi ý hoặc mở lại nguồn."
       ]
@@ -258,7 +263,7 @@
       "name": "Màn hình theo dõi mạng xã hội",
       "app": "Trình xem trang mạng",
       "tutorial": [
-        "Hướng dẫn · Màn hình mạng xã hội: xem lại các bài đăng được lưu (mô phỏng), không mở trang thật.",
+        "Hướng dẫn · Màn hình mạng xã hội: xem lại các bài đăng được lưu, không mở trang thật.",
         "So sánh từng ô ảnh với ảnh cần kiểm tra, chú ý góc chụp và chi tiết nhỏ; chọn ô khớp rồi trả lời."
       ]
     },
@@ -339,7 +344,7 @@
     "rumorAsk": "Điều gì khiến bạn dừng lại trước tin này?",
     "rumorWin": "Kẻ tung tin lẩm bẩm rồi bỏ đi tìm người khác.",
     "rumorLose": "Bạn bị cuốn theo tin giật tít.",
-    "decoyTitle": "Manh mối (GIẢ LẬP)",
+    "decoyTitle": "Manh mối",
     "decoyAsk": "Làm gì với manh mối này?",
     "decoyAdd": "Đưa ngay vào hồ sơ \"{room}\"",
     "decoyCheck": "Kiểm tra nguồn trước",
@@ -351,7 +356,7 @@
     "gotCard": "Đã nhận thẻ khách (dùng cho thang máy).",
     "elevatorBusy": "Thang máy đang ở tầng {n}, chờ một chút…",
     "carHit": "Suýt bị xe đâm! Qua đường ở vạch kẻ: xe chỉ dừng cho người trên vạch.",
-    "barrier": "Vỉa hè đang thi công (GIẢ LẬP). Đi vòng qua vạch kẻ đường sang bên kia.",
+    "barrier": "Vỉa hè đang thi công. Đi vòng qua vạch kẻ đường sang bên kia.",
     "challenge": "Thử thách",
     "challengeFull": "Đầy đủ: hạn chót, kẻ tung tin đuổi theo, mất độ tin cậy",
     "challengeLight": "Nhẹ: không hạn chót, kẻ tung tin không đuổi, không mất độ tin cậy (hợp khi trình chiếu)"
@@ -361,7 +366,7 @@
     "school": "VAN LANG UNIVERSITY",
     "kind": "STUDENT CARD",
     "faculty": "Quan hệ công chúng – Truyền thông",
-    "sim": "Thẻ mô phỏng trong game · GIẢ LẬP",
+    "sim": "",
     "trust": "Uy tín",
     "trustNote": "Trung bình độ tin cậy của các hồ sơ (bị trừ khi trả lời sai, bị lừa hoặc đăng vội).",
     "badges": "Huy hiệu",

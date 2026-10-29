@@ -9,10 +9,10 @@
     {
       "id": "npc1",
       "name": "Chị Tuệ Lâm",
-      "role": "Biên tập viên phụ trách kiểm chứng (nhân vật hư cấu)",
+      "role": "Biên tập viên phụ trách kiểm chứng",
       "room": "Trụ sở Báo Thanh Niên: tầng Hồ sơ, Tác động, Phân loại",
       "age": 38,
-      "job": "Biên tập viên phụ trách nhóm kiểm chứng tại Trụ sở Báo Thanh Niên (nhân vật GIẢ LẬP)",
+      "job": "Biên tập viên phụ trách nhóm kiểm chứng tại Trụ sở Báo Thanh Niên",
       "personality": "Điềm tĩnh, chu đáo, làm việc theo quy trình",
       "voice": "Trang trọng, nhẹ nhàng khi nhắc đến người bị nạn",
       "catchphrase": "Nguồn nào nói vậy?",
@@ -25,10 +25,10 @@
     {
       "id": "npc2",
       "name": "Khải",
-      "role": "Phóng viên ảnh (nhân vật hư cấu)",
+      "role": "Phóng viên ảnh",
       "room": "Trụ sở Báo Thanh Niên: tầng Phân tích ảnh",
       "age": 27,
-      "job": "Phóng viên ảnh, phụ trách phân tích ảnh (nhân vật GIẢ LẬP)",
+      "job": "Phóng viên ảnh, phụ trách phân tích ảnh",
       "personality": "Kỹ tính, mê chi tiết, nói ngắn",
       "voice": "Nhanh, chính xác, hay dùng từ kỹ thuật rồi tự giải thích",
       "catchphrase": "Phóng to thêm chút nữa.",
@@ -57,10 +57,10 @@
     {
       "id": "npc4",
       "name": "Phát Vội",
-      "role": "Biên tập viên đăng tin vội (bẫy)",
+      "role": "Biên tập viên đăng tin vội",
       "room": "Tòa soạn Tin Vịnh",
       "age": 24,
-      "job": "Biên tập viên một trang tin hư cấu (nhân vật bẫy)",
+      "job": "Biên tập viên một trang tin hư cấu",
       "personality": "Hối hả, sốt sắng, chạy theo lượt xem",
       "voice": "Nói nhanh, nhiều dấu chấm than",
       "catchphrase": "Đăng trước, sửa sau!",
@@ -73,10 +73,10 @@
     {
       "id": "npc5",
       "name": "Bông Mây",
-      "role": "Nghệ sĩ hư cấu (bẫy)",
+      "role": "Nghệ sĩ hư cấu",
       "room": "Phố ven vịnh",
       "age": 29,
-      "job": "Ca sĩ hư cấu (nhân vật bẫy)",
+      "job": "Ca sĩ hư cấu",
       "personality": "Tốt bụng, giàu cảm xúc",
       "voice": "Thân thiện, dễ xúc động",
       "catchphrase": "Thương quá, mình chia sẻ liền.",
@@ -121,7 +121,7 @@
     {
       "id": "amb_guard",
       "name": "Chú Bảo Vệ Tấn",
-      "role": "Bảo vệ tòa nhà (GIẢ LẬP)",
+      "role": "Bảo vệ tòa nhà",
       "room": "Trụ sở Báo Thanh Niên",
       "sprite": "amb_guard",
       "isFictional": true,
@@ -130,7 +130,7 @@
     {
       "id": "amb_worker",
       "name": "Anh Văn Phòng",
-      "role": "Nhân viên tòa soạn (GIẢ LẬP)",
+      "role": "Nhân viên tòa soạn",
       "room": "Trụ sở Báo Thanh Niên",
       "sprite": "amb_worker",
       "isFictional": true,
@@ -139,7 +139,7 @@
     {
       "id": "amb_barista",
       "name": "Chị Pha Chế",
-      "role": "Pha chế quán Gió Biển (GIẢ LẬP)",
+      "role": "Pha chế quán Gió Biển",
       "room": "Quán cà phê Gió Biển",
       "sprite": "amb_barista",
       "isFictional": true,
@@ -148,7 +148,7 @@
     {
       "id": "amb_vendor",
       "name": "Cô Bán Báo",
-      "role": "Chủ sạp báo đầu phố (GIẢ LẬP)",
+      "role": "Chủ sạp báo đầu phố",
       "room": "Phố ven vịnh",
       "sprite": "amb_vendor",
       "isFictional": true,
@@ -157,7 +157,7 @@
     {
       "id": "amb_tourist",
       "name": "Bạn Du Khách",
-      "role": "Du khách tham quan vịnh (GIẢ LẬP)",
+      "role": "Du khách tham quan vịnh",
       "room": "Phố ven vịnh",
       "sprite": "amb_tourist",
       "isFictional": true,
@@ -166,7 +166,7 @@
     {
       "id": "amb_fisher",
       "name": "Chú Câu Cá",
-      "role": "Người câu cá ở cầu tàu (GIẢ LẬP)",
+      "role": "Người câu cá ở cầu tàu",
       "room": "Bến tàu",
       "sprite": "amb_fisher",
       "isFictional": true,
@@ -175,7 +175,7 @@
     {
       "id": "amb_student",
       "name": "Em Học Sinh",
-      "role": "Học sinh đi học về (GIẢ LẬP)",
+      "role": "Học sinh đi học về",
       "room": "Phố ven vịnh",
       "sprite": "amb_student",
       "isFictional": true,
@@ -184,7 +184,7 @@
     {
       "id": "amb_elder",
       "name": "Ông Ngồi Ghế Đá",
-      "role": "Cụ ông hay ngồi công viên (GIẢ LẬP)",
+      "role": "Cụ ông hay ngồi công viên",
       "room": "Công viên ven vịnh",
       "sprite": "amb_elder",
       "isFictional": true,
@@ -193,7 +193,7 @@
     {
       "id": "amb_jogger",
       "name": "Chị Chạy Bộ",
-      "role": "Người chạy bộ ven vịnh (GIẢ LẬP)",
+      "role": "Người chạy bộ ven vịnh",
       "room": "Lối dạo ven vịnh",
       "sprite": "amb_jogger",
       "isFictional": true,
@@ -202,7 +202,7 @@
     {
       "id": "amb_doctor",
       "name": "Bác sĩ Trực",
-      "role": "Bác sĩ trung tâm y tế (GIẢ LẬP)",
+      "role": "Bác sĩ trung tâm y tế",
       "room": "Trung tâm y tế",
       "sprite": "amb_doctor",
       "isFictional": true,
@@ -211,7 +211,7 @@
     {
       "id": "amb_nurse",
       "name": "Chị Điều Dưỡng",
-      "role": "Điều dưỡng trung tâm y tế (GIẢ LẬP)",
+      "role": "Điều dưỡng trung tâm y tế",
       "room": "Trung tâm y tế",
       "sprite": "amb_nurse",
       "isFictional": true,
@@ -220,7 +220,7 @@
     {
       "id": "amb_patient",
       "name": "Ông Chờ Khám",
-      "role": "Người đến khám (GIẢ LẬP)",
+      "role": "Người đến khám",
       "room": "Trung tâm y tế",
       "sprite": "amb_patient",
       "isFictional": true,
@@ -229,7 +229,7 @@
     {
       "id": "amb_clerk",
       "name": "Anh Nhân Viên",
-      "role": "Nhân viên văn phòng (GIẢ LẬP)",
+      "role": "Nhân viên văn phòng",
       "room": "Cao ốc văn phòng",
       "sprite": "amb_clerk",
       "isFictional": true,
@@ -238,7 +238,7 @@
     {
       "id": "amb_clerk2",
       "name": "Chị Truyền Thông",
-      "role": "Nhân viên truyền thông nội bộ (GIẢ LẬP)",
+      "role": "Nhân viên truyền thông nội bộ",
       "room": "Cao ốc văn phòng",
       "sprite": "amb_clerk2",
       "isFictional": true,
@@ -247,7 +247,7 @@
     {
       "id": "amb_barista2",
       "name": "Anh Pha Chế Sớm",
-      "role": "Pha chế quán Sương Sớm (GIẢ LẬP)",
+      "role": "Pha chế quán Sương Sớm",
       "room": "Cà phê Sương Sớm",
       "sprite": "amb_barista2",
       "isFictional": true,
@@ -256,7 +256,7 @@
     {
       "id": "amb_patron",
       "name": "Bạn Đọc Báo",
-      "role": "Khách quen của quán (GIẢ LẬP)",
+      "role": "Khách quen của quán",
       "room": "Cà phê Sương Sớm",
       "sprite": "amb_patron",
       "isFictional": true,
@@ -265,7 +265,7 @@
     {
       "id": "amb_rumor",
       "name": "Kẻ Tung Tin Áo Đỏ",
-      "role": "Người đi rong phát tán tin giật tít (GIẢ LẬP)",
+      "role": "Người đi rong phát tán tin giật tít",
       "room": "Khu phố",
       "sprite": "amb_rumor",
       "isFictional": true,
@@ -274,7 +274,7 @@
     {
       "id": "amb_rumor2",
       "name": "Kẻ Tung Tin Áo Tím",
-      "role": "Người đi rong phát tán tin giật tít (GIẢ LẬP)",
+      "role": "Người đi rong phát tán tin giật tít",
       "room": "Khu phố",
       "sprite": "amb_rumor2",
       "isFictional": true,
@@ -285,7 +285,7 @@
     "boss_intro": [
       {
         "npc": "boss",
-        "text": "Hừ… ngươi đã lần theo được đến đây. (Nhân vật hư cấu, đại diện hành vi lan tin giả.)"
+        "text": "Hừ… ngươi đã lần theo được đến đây."
       },
       {
         "npc": "boss",
@@ -342,15 +342,26 @@
       "lines": [
         {
           "id": "s1_intro_l1",
-          "text": "Chào {hero}, bạn là sinh viên Quan hệ công chúng – Truyền thông Văn Lang đến hỗ trợ kiểm chứng phải không? Tôi là Tuệ Lâm, phụ trách nhóm kiểm chứng. Nhân vật và sự việc ở đây đều là GIẢ LẬP."
+          "text": "Chào bạn! Bạn là {hero}, bạn sinh viên Văn Lang gọi tới tòa soạn hôm qua phải không?",
+          "mood": "happy"
+        },
+        {
+          "id": "s1_intro_l1b",
+          "npc": "hero",
+          "text": "Dạ đúng ạ. Em đọc thấy mấy bài đăng về vụ lật tàu lan khắp nơi, nên muốn tới tận nơi xem cái nào là thật."
+        },
+        {
+          "id": "s1_intro_l1c",
+          "text": "Chị là Tuệ Lâm, phụ trách nhóm kiểm chứng. Rất vui vì em tới. Bọn chị đang cần thêm người có con mắt tỉnh táo như vậy."
         },
         {
           "id": "s1_intro_l2",
-          "text": "Bạn đã xem qua hồ sơ. Những bức ảnh và câu chuyện về \"nạn nhân\" đang lan khắp nơi mà không ai trích được nguồn."
+          "text": "Những bức ảnh và câu chuyện về \"nạn nhân\" đang lan khắp nơi, mà chưa ai chỉ ra được nguồn."
         },
         {
           "id": "s1_intro_l3",
-          "text": "Bộ ảnh đang kèm lời nhắn \"chia sẻ ngay\". Bạn sẽ làm gì trước tiên?"
+          "text": "Chị hỏi thử trước nhé: bộ ảnh đang kèm lời nhắn \"chia sẻ ngay\". Em sẽ làm gì trước tiên?",
+          "mood": "thinking"
         }
       ],
       "choices": [
@@ -970,7 +981,7 @@
       "lines": [
         {
           "id": "cafe_q10b_intro_l1",
-          "text": "Cô cậu hỏi gì thì hỏi lẹ, tui còn uống cà phê. (Nhân vật GIẢ LẬP.)"
+          "text": "Cô cậu hỏi gì thì hỏi lẹ, tui còn uống cà phê."
         }
       ],
       "choices": [],
@@ -983,7 +994,7 @@
       "lines": [
         {
           "id": "bonus_intro_l1",
-          "text": "Có người báo một trang lạ mạo danh \"Quỹ Thiện nguyện Hải Đăng\" (hư cấu) để kêu gọi quyên góp. Bạn xem giúp tôi."
+          "text": "Có người báo một trang lạ mạo danh \"Quỹ Thiện nguyện Hải Đăng\" để kêu gọi quyên góp. Bạn xem giúp tôi."
         }
       ],
       "choices": [],
@@ -996,7 +1007,7 @@
       "lines": [
         {
           "id": "boss_intro_l1",
-          "text": "Hừ… ngươi lần theo được tới đây. (Ta là nhân vật hư cấu, đại diện cho hành vi lan tin giả.)"
+          "text": "Hừ… ngươi lần theo được tới đây."
         },
         {
           "id": "boss_intro_l2",
@@ -1030,7 +1041,7 @@
         },
         {
           "id": "boss_appears_l2",
-          "text": "Cửa Phòng họp cuối sảnh vừa mở. Mang theo các thẻ evidence của bạn. (Phòng Boss là GIẢ LẬP.)"
+          "text": "Cửa Phòng họp cuối sảnh vừa mở. Mang theo các thẻ evidence của bạn."
         }
       ]
     }
@@ -1355,14 +1366,14 @@
   },
   "inspect": {
     "inspect_notice": [
-      "Bảng tin của tòa soạn (GIẢ LẬP): lịch trực, nội quy, và một tờ giấy ghi \"Dừng lại trước khi chia sẻ\".",
+      "Bảng tin của tòa soạn: lịch trực, nội quy, và một tờ giấy ghi \"Dừng lại trước khi chia sẻ\".",
       "Kẹp bên cạnh là một bài báo in ra. Bạn đọc thử."
     ],
     "inspect_window": [
       "Ngoài cửa sổ là vịnh Hạ Long về đêm. Mặt nước yên lặng."
     ],
     "inspect_reception": [
-      "Quầy lễ tân. Có một chồng phiếu \"Yêu cầu kiểm chứng\" (GIẢ LẬP)."
+      "Quầy lễ tân. Có một chồng phiếu \"Yêu cầu kiểm chứng\"."
     ],
     "inspect_pinboard": [
       "Bảng ghim của Phòng Hồ sơ. Các mảnh giấy được nối bằng dây đỏ, chờ thêm bằng chứng."
@@ -1377,7 +1388,7 @@
       "Hai màn hình lớn hiển thị bản ghi kết quả công cụ. Một tờ giấy dán: \"Không tải lại ảnh giả lên công cụ.\""
     ],
     "inspect_timeline": [
-      "Bảng dòng thời gian bằng gỗ, ghim đầy giấy note. Có chỗ trống ghi: \"Bài đăng đầu tiên: ???\"",
+      "Bảng dòng thời gian bằng gỗ, ghim đầy giấy note. Có chỗ trống ghi: \"Bài đăng đầu tiên:???\"",
       "Dưới bảng có kẹp mấy bài báo, mỗi bài một ngày đăng."
     ],
     "inspect_archive": [
@@ -1389,7 +1400,7 @@
       "Bên cạnh là hai bài báo đã đăng về vụ việc. Bạn đọc thử."
     ],
     "inspect_pier_sign": [
-      "Bảng thông tin bến tàu (GIẢ LẬP): lịch tàu tham quan, số điện thoại cứu hộ, lời nhắc mặc áo phao.",
+      "Bảng thông tin bến tàu: lịch tàu tham quan, số điện thoại cứu hộ, lời nhắc mặc áo phao.",
       "Góc bảng có dán một bản tin về họp báo của tỉnh. Bạn đọc thử."
     ],
     "inspect_sea": [
@@ -1399,23 +1410,23 @@
       "Thực đơn: cà phê muối, trà chanh, nước dừa. Tờ giấy dán quầy: \"Đọc kỹ trước khi chia sẻ\"."
     ],
     "inspect_office_sign": [
-      "Biển hiệu: \"BÁO THANH NIÊN — Trụ sở\". Nhân vật và sự việc trong tòa nhà là GIẢ LẬP, không đại diện cho Báo Thanh Niên."
+      "Biển hiệu: \"BÁO THANH NIÊN — Trụ sở\"."
     ],
     "inspect_news_sign": [
-      "Biển hiệu: Tòa soạn Tin Vịnh (GIẢ LẬP)."
+      "Biển hiệu: Tòa soạn Tin Vịnh."
     ],
     "inspect_cafe_sign": [
-      "Biển hiệu: Quán cà phê Gió Biển (GIẢ LẬP)."
+      "Biển hiệu: Quán cà phê Gió Biển."
     ],
     "inspect_agency_sign": [
-      "Biển hiệu: \"PHÒNG XÁC MINH — thiết bị thẩm định\". Bên trong có máy tìm ngược ảnh, bàn soi, máy dò ảnh AI, kho báo và bảng dòng thời gian. (GIẢ LẬP)"
+      "Biển hiệu: \"PHÒNG XÁC MINH — thiết bị thẩm định\". Bên trong có máy tìm ngược ảnh, bàn soi, máy dò ảnh AI, kho báo và bảng dòng thời gian."
     ],
     "inspect_tv": [
       "TV ở sảnh đang phát bản tin. Dòng chữ chạy: \"Cảnh giác với video gắn nhãn sai về vụ 19/7\".",
       "Bạn xem tóm tắt bài báo được nhắc trong bản tin."
     ],
     "inspect_whiteboard": [
-      "Bảng trắng ghi: \"Phân loại theo TỪNG nhóm nội dung — không gộp!\" (GIẢ LẬP)"
+      "Bảng trắng ghi: \"Phân loại theo TỪNG nhóm nội dung — không gộp!\""
     ],
     "inspect_cooler": [
       "Bình nước của hành lang. Có tờ giấy dán: \"Uống nước trước, chia sẻ sau.\""
@@ -1424,13 +1435,13 @@
       "Sạp báo đầu phố, mấy tờ báo in kẹp ngay ngắn. Bạn đọc thử."
     ],
     "inspect_busstop": [
-      "Áp phích ở trạm xe buýt: \"Dừng lại — Kiểm tra — Rồi mới chia sẻ.\" (GIẢ LẬP)"
+      "Áp phích ở trạm xe buýt: \"Dừng lại — Kiểm tra — Rồi mới chia sẻ.\""
     ],
     "inspect_stall": [
       "Sạp chợ nhỏ bán trái cây. Cô chủ đang xem điện thoại, lẩm bẩm: \"Ảnh này ai đăng vậy ta?\""
     ],
     "inspect_boat": [
-      "Tàu tham quan (hư cấu) neo sát bến, cầu lên tàu có tay vịn. Cảnh bình thường của một bến tàu du lịch."
+      "Tàu tham quan neo sát bến, cầu lên tàu có tay vịn. Cảnh bình thường của một bến tàu du lịch."
     ],
     "inspect_news_tv": [
       "Màn hình tòa soạn chiếu lại một bản tin. Bạn đọc tóm tắt bài báo liên quan."
@@ -1439,10 +1450,10 @@
       "TV của quán đang phát bản tin về các video gắn nhãn sai. Bạn đọc tóm tắt bài báo."
     ],
     "inspect_barrier": [
-      "Rào chắn: \"Vỉa hè đang thi công\" (GIẢ LẬP). Muốn đi tiếp thì sang đường ở vạch kẻ, đi vỉa hè bên kia."
+      "Rào chắn: \"Vỉa hè đang thi công\". Muốn đi tiếp thì sang đường ở vạch kẻ, đi vỉa hè bên kia."
     ],
     "inspect_ticket": [
-      "Quầy vé tàu tham quan (GIẢ LẬP): \"Mỗi hành khách một áo phao. Tàu chỉ rời bến khi thời tiết cho phép.\""
+      "Quầy vé tàu tham quan: \"Mỗi hành khách một áo phao. Tàu chỉ rời bến khi thời tiết cho phép.\""
     ]
   },
   "inspectSources": {
@@ -1701,5 +1712,122 @@
       "title": "Tờ giấy ai đó dán: \"Mọi tin sai đều là tin giả cố ý.\"",
       "why": "Phải phân biệt thông tin sai vô tình (misinformation), cố ý (disinformation) và thông tin thật dùng để gây hại (malinformation), theo từng nhóm đối tượng."
     }
+  },
+  "greetings": {
+    "npc4": [
+      {
+        "text": "Ồ, có khách à? Tôi là Phát, biên tập ở Tin Vịnh. Ở đây tin nào nóng là lên trang trước, tính sau!",
+        "mood": "happy"
+      },
+      {
+        "npc": "hero",
+        "text": "Chào anh, em là {hero}, sinh viên Văn Lang."
+      }
+    ],
+    "npc5": [
+      {
+        "text": "Chào bạn! Mình là Bông Mây, hay hát ở mấy quán ven vịnh. Dạo này ai cũng hỏi mình về mấy bài đăng trên mạng.",
+        "mood": "happy"
+      },
+      {
+        "npc": "hero",
+        "text": "Chào bạn, mình là {hero}."
+      }
+    ],
+    "npc6": [
+      {
+        "text": "Chào cô cậu. Tui là Sáu, quản trị một nhóm trên mạng. Chiều nào tui cũng ngồi đây uống cà phê."
+      },
+      {
+        "npc": "hero",
+        "text": "Chào chú, cháu là {hero}, sinh viên Văn Lang."
+      }
+    ],
+    "amb_guard": [
+      {
+        "text": "Chào cháu. Chú là Tấn, bảo vệ tòa nhà. Có hẹn với ai trên tầng thì báo chú một tiếng nhé."
+      }
+    ],
+    "amb_worker": [
+      {
+        "text": "Chào bạn, mình làm ở tòa soạn này. Bạn tới gặp chị Tuệ Lâm hả? Chị ấy hay đi lại giữa các tầng lắm."
+      }
+    ],
+    "amb_barista": [
+      {
+        "text": "Chào bạn, quán Gió Biển đây! Uống gì cứ gọi nhé.",
+        "mood": "happy"
+      }
+    ],
+    "amb_vendor": [
+      {
+        "text": "Chào cháu! Cô bán báo ở đầu phố này cũng chục năm rồi."
+      }
+    ],
+    "amb_tourist": [
+      {
+        "text": "Chào bạn! Mình đi du lịch vịnh mấy hôm. Bạn là người ở đây à?",
+        "mood": "happy"
+      }
+    ],
+    "amb_fisher": [
+      {
+        "text": "Chào cháu. Chú câu cá ở bến này mỗi sáng sớm."
+      }
+    ],
+    "amb_student": [
+      {
+        "text": "Em chào ạ! Em vừa tan học về.",
+        "mood": "happy"
+      }
+    ],
+    "amb_elder": [
+      {
+        "text": "Chào cháu. Chiều nào ông cũng ra ghế đá này hóng gió."
+      }
+    ],
+    "amb_jogger": [
+      {
+        "text": "Chào bạn! Chạy dọc vịnh buổi chiều là dễ chịu nhất.",
+        "mood": "happy"
+      }
+    ],
+    "amb_doctor": [
+      {
+        "text": "Chào bạn, tôi là bác sĩ trực hôm nay. Bạn cần khám gì không?"
+      }
+    ],
+    "amb_nurse": [
+      {
+        "text": "Chào bạn, mời bạn lấy số thứ tự rồi ngồi chờ một chút nhé."
+      }
+    ],
+    "amb_patient": [
+      {
+        "text": "Chào cháu. Ông đang chờ tới lượt khám."
+      }
+    ],
+    "amb_clerk": [
+      {
+        "text": "Chào bạn, bạn tìm ai ở công ty mình?"
+      }
+    ],
+    "amb_clerk2": [
+      {
+        "text": "Chào bạn! Mình làm truyền thông nội bộ ở đây.",
+        "mood": "happy"
+      }
+    ],
+    "amb_barista2": [
+      {
+        "text": "Chào buổi sáng! Quán Sương Sớm mở cửa từ sớm lắm.",
+        "mood": "happy"
+      }
+    ],
+    "amb_patron": [
+      {
+        "text": "Chào bạn, ngồi đây đọc báo cùng mình không?"
+      }
+    ]
   }
 }

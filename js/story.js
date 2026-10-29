@@ -129,6 +129,13 @@ export async function talkTo(npcId, room = null) {
   await conversation(npcId, async () => {
     const e = interactionFor(npcId);
     // Người qua đường: nói lần lượt từng câu (không giao nhiệm vụ)
+    // Lần đầu gặp: chào hỏi, làm quen
+    const greet = data.npcs.greetings?.[npcId];
+    if (greet && !hasFlag(`met_${npcId}`)) {
+      for (const g of greet) await dlg.say(g.npc || npcId, g.text, { mood: g.mood });
+      setFlag(`met_${npcId}`);
+      saveProgress();
+    }
     if (npcId === 'amb_guard' && !hasFlag('visitor_card')) {
       await dlg.say(npcId, t('obstacles.guardCard'), { mood: 'happy' });
       setFlag('visitor_card');
@@ -155,6 +162,7 @@ export async function talkTo(npcId, room = null) {
       // Cảnh cốt truyện (không phải câu chào thường) xong thì chuyển sang chọn hồ sơ.
       if (e.idle) return;
     }
+    await roomIntro(npcId);
     // Nhiệm vụ: làm liên tiếp trong cùng hồ sơ nếu người chơi không dừng giữa chừng.
     let q = await pickQuest(npcId, room);
     while (q) {
@@ -835,7 +843,7 @@ export async function rumorEncounter(id) {
   world?.setTalking(id, true);
   await conversation(id, async () => {
     await dlg.say(id, t('obstacles.rumorIntro'), { mood: 'happy' });
-    await dlg.say(id, `[GIẢ LẬP] ${r.headline}`, { mood: 'happy' });
+    await dlg.say(id, r.headline, { mood: 'happy' });
     const opts = shuffle(r.options.map((o, k) => ({ id: String(k), text: o.text })));
     const c = await dlg.choose(opts, { speaker: id, text: t('obstacles.rumorAsk') });
     const o = r.options[+c.id];
@@ -888,15 +896,20 @@ export function notice(text) {
   return conversation('system', () => dlg.say('system', text));
 }
 
-/** Người chơi bước vào phòng lần đầu: phát lời giới thiệu, rồi NPC tiếp lời nếu có. */
-export async function onZoneEnter(roomId) {
-  const zs = data.npcs.zoneScenes?.[roomId];
-  if (!zs || hasFlag(`zone_${roomId}`) || busy) return;
+/**
+ * Người chơi bước vào phòng: không tự bắt chuyện nữa (người chơi phải chủ động nói chuyện với NPC).
+ * Lời giới thiệu phòng phát lần đầu người chơi nói chuyện với người phụ trách phòng đó (roomIntro).
+ */
+export async function onZoneEnter() {}
+
+/** Lời giới thiệu phòng đang đứng (một lần), khi người chơi nói chuyện với người phụ trách phòng. */
+async function roomIntro(npcId) {
+  const roomId = world?.zoneRoom?.();
+  const zs = roomId && data.npcs.zoneScenes?.[roomId];
+  if (!zs || zs.thenTalk !== npcId || hasFlag(`zone_${roomId}`)) return;
   setFlag(`zone_${roomId}`);
   saveProgress();
-  const scene = sceneById(zs.scene);
-  await conversation(scene.npc, () => playScene(zs.scene));
-  if (zs.thenTalk && interactionFor(zs.thenTalk)) await talkTo(zs.thenTalk, roomId);
+  await playScene(zs.scene);
 }
 
 /** Mục tiêu hiện tại (hiện trong balo): nhiệm vụ đang theo dõi. */
