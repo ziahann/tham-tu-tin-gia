@@ -14,7 +14,7 @@ Game pixel-art HTML/CSS/JS (không backend) cho bài tập mục 08, môn Thẩm
 
 ## Quy tắc không được vi phạm
 1. Chỉ dùng sự thật F1–F16 trong tài liệu 02; không bịa số liệu. Số 49 người/10 được cứu có cờ `verifyBeforeRelease`: đối chiếu nguồn chính thức trước khi phát hành.
-2. Điểm game chỉ để chơi, không phải bằng chứng thật/giả. Detector AI (Hive) chỉ là bằng chứng bổ trợ.
+2. Không còn điểm số: mỗi hồ sơ khép lại trao một huy hiệu kỹ năng (`quests.json → rooms[].badge`); huy hiệu chỉ để chơi, không phải bằng chứng thật/giả. Detector AI (Hive) chỉ là bằng chứng bổ trợ.
 3. Mọi tình huống/NPC bịa gắn nhãn GIẢ LẬP. NPC đều hư cấu, không dùng tên người/ca sĩ thật.
 4. Nhân đạo: không ảnh nạn nhân/trẻ em; ảnh giả chỉ là mô phỏng pixel trừu tượng gắn "ẢNH GIẢ"; có cảnh báo nội dung khi bắt đầu và nút "Ẩn hình ảnh nhạy cảm".
 5. Không doxxing, không kết luận động cơ tiền bạc/danh tính khi chưa có dữ liệu (F13). Không tư vấn pháp lý.

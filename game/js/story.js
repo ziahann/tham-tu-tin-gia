@@ -2,7 +2,7 @@
 import { data, t, fill, questById, evidenceById, sceneById, npcById, sourceById, shortCite } from './data.js';
 import { state, questState, saveProgress, setFlag, hasFlag, addEvidence, isQuestDone } from './state.js';
 import * as dlg from './dialogue.js';
-import { matchField, checkCards, questPoints, isUnlocked, isPlayable, roomStatus, bossStatus, nextQuestIn } from './grading.js';
+import { matchField, checkCards, isUnlocked, isPlayable, roomStatus, bossStatus, nextQuestIn } from './grading.js';
 import { exhibitFor, frameGrid, singleFrame } from './exhibits.js';
 import { normalize, containsPhrase } from './text.js';
 import { sfx } from './audio.js';
@@ -674,12 +674,19 @@ Object.assign(STEP_RUNNERS, {
   }
 });
 
-/** Hoàn thành nhiệm vụ: điểm, thẻ evidence, kết luận nhỏ, lời kết phòng. */
+/** Trao huy hiệu kỹ năng của một hồ sơ (phòng) khi khép lại. */
+async function awardBadge(roomId) {
+  const b = data.quests.rooms.find(r => r.id === roomId)?.badge;
+  if (!b) return;
+  sfx('unlock');
+  onChange();
+  toast(t('dialog.badge', { name: b.name, learned: '' }));
+  await dlg.say('system', t('dialog.badge', b));
+}
+
+/** Hoàn thành nhiệm vụ: thẻ evidence, kết luận nhỏ, lời kết phòng, huy hiệu khi khép hồ sơ. */
 async function completeQuest(q, qs, npc) {
-  const points = questPoints(qs);
   qs.status = 'done';
-  qs.points = points;
-  state.progress.score += points;
   (q.evidenceCards || []).forEach(addEvidence);
   saveProgress();
   onChange();
@@ -691,7 +698,6 @@ async function completeQuest(q, qs, npc) {
     toast(t('dialog.newCard', { fact: ev.fact, title: ev.title }));
     await dlg.say('system', t('dialog.newCard', { fact: ev.fact, title: ev.title }));
   }
-  await dlg.say('system', t('dialog.points', { n: points }));
   world?.emote('hero', '♪');
   const room = q.room;
   if (state.progress.tracked === q.id) track(nextQuestIn(room)?.id || null, true);
@@ -699,6 +705,7 @@ async function completeQuest(q, qs, npc) {
     setFlag(`done_${room}`);
     saveProgress();
     if (sceneById(`${room.toLowerCase()}_done`)) await playScene(`${room.toLowerCase()}_done`);
+    await awardBadge(room);
   }
   // Xong mọi hồ sơ bắt buộc: Kẻ Dệt Chuyện xuất hiện, mũi tên chỉ tới Phòng họp.
   if (bossStatus(state.progress.flags) === 'open' && !hasFlag('boss_announced')) {
@@ -833,15 +840,13 @@ export async function runBoss() {
           continue;
         }
         sfx('correct');
-        const pts = Math.max(5, data.quests.settings.scoring.bossPhase - 5 * p.boss.fails);
         p.boss.fails = 0;
         p.boss.phase = i + 1;
-        p.score += pts;
         saveProgress();
         onChange();
         bossBar(b.phases.length - i - 1, b.phases.length);
         await dlg.say('boss', ph.defeat, { mood: 'cracked' });
-        await dlg.say('system', `${ph.explain} ${t('dialog.points', { n: pts })}`);
+        await dlg.say('system', ph.explain);
         break;
       }
     }
@@ -856,6 +861,7 @@ export async function runBoss() {
     p.evidenceCards = p.evidenceCards.filter(id => !b.guessCards.includes(id));
     setFlag('boss_done');
     saveProgress();
+    await awardBadge('S9');
     won = true;
   });
   bossBar(null);

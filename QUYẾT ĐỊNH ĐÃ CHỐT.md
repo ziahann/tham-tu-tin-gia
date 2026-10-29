@@ -129,3 +129,9 @@
 
 **Kết quả đợt 5:** đã làm đủ 7 bước (commit 3918e6d → bước cuối). Chỉ 4 tòa vào được (Báo Thanh Niên, Tin Vịnh, Phòng xác minh, Cà phê Gió Biển) có biển hiệu; tòa trang trí không có biển. Nhạc ~53 MB (8 file mp3).
 
+
+## Chốt ngày 29/10/2026 (đợt 6)
+
+| Mục | Quyết định |
+|---|---|
+| Điểm số | Bỏ điểm và danh hiệu theo điểm (thay mục "Điểm" của đợt 1). Mỗi hồ sơ khép lại trao một **huy hiệu kỹ năng** kèm câu tóm tắt điều đã học; thanh trên hiện số huy hiệu và "Hồ sơ đã khép n/6"; gợi ý, hướng dẫn không bị trừ gì. Màn kết quả hiện bộ huy hiệu |

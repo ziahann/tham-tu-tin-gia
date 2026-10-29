@@ -134,17 +134,27 @@ function reception() {
   return outline(img);
 }
 
-/** Cây trong chậu: 'big' cao 1,7 ô, 'small' 1,1 ô. */
+/** Cây trong chậu: 'big' cao 1,9 ô, 'small' 1,2 ô. Thân và cuống lá mọc liền từ chậu, tán lá dày. */
 function plant(big) {
-  const w = big ? 36 : 28, h = big ? 60 : 40, img = new Img(w, h), { R, E } = brush(img);
-  shadow(img, w / 2, h - 3, w / 2 - 3);
-  R(w / 2 - 8, h - 18, 16, 15, '#3a3f4d'); R(w / 2 - 8, h - 18, 16, 2, '#5b6170');
-  const leaves = big ? 9 : 6;
-  for (let i = 0; i < leaves; i++) {
-    const a = (i / leaves) * Math.PI - Math.PI, r = big ? 13 : 9;
-    E(w / 2 + Math.cos(a) * r * 0.9, h - 22 + Math.sin(a) * r * (big ? 2.2 : 1.6), big ? 6 : 5, big ? 4 : 3, i % 2 ? '#2f5d47' : '#3c7458');
+  const w = big ? 40 : 28, h = big ? 62 : 40, img = new Img(w, h), { R, E } = brush(img);
+  const cx = w / 2, potH = big ? 16 : 12, potW = big ? 18 : 14, potTop = h - 3 - potH;
+  shadow(img, cx, h - 3, potW / 2 + 4);
+  // cuống lá: từ miệng chậu toả lên
+  const stems = big ? [[-12, 18], [-6, 30], [0, 38], [7, 30], [13, 20]] : [[-8, 12], [0, 20], [8, 13]];
+  for (const [dx, up] of stems) for (let i = 0; i <= up; i++) R(cx + Math.round(dx * i / up), potTop - i, 2, 1, '#2a4a3a');
+  // lá: các phiến dài nghiêng theo cuống, sẫm ở dưới, sáng ở trên
+  const leaf = (x, y, rx, ry, c) => E(x, y, rx, ry, c);
+  for (const [dx, up] of stems) {
+    const x = cx + dx, y = potTop - up;
+    leaf(x, y + 3, big ? 8 : 6, big ? 5 : 4, '#24443a');
+    leaf(x - 1, y + 1, big ? 7 : 5, big ? 4 : 3, '#2f5a48');
+    leaf(x - 2, y, big ? 3 : 2, 2, '#3f7058');
   }
-  E(w / 2, h - (big ? 44 : 28), big ? 6 : 4, big ? 6 : 4, '#4a8a66');
+  if (big) { leaf(cx - 7, potTop - 8, 7, 4, '#2f5a48'); leaf(cx + 8, potTop - 6, 7, 4, '#2a5040'); leaf(cx, potTop - 20, 6, 4, '#2f5a48'); }
+  leaf(cx, potTop - 2, potW / 2 + 1, 3, '#24443a');
+  // chậu gốm xám, có vành
+  R(cx - potW / 2, potTop, potW, potH, '#3a3f4d'); R(cx - potW / 2 - 1, potTop, potW + 2, 3, '#4a5060');
+  R(cx - potW / 2 + 2, potTop + 4, 2, potH - 6, '#4a5060'); R(cx - potW / 2 + 1, h - 5, potW - 2, 2, '#2b2f3a');
   return outline(img);
 }
 
