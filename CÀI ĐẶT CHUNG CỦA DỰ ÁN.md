@@ -12,7 +12,7 @@
 | Trường / khoa                                     | Trường Đại học Văn Lang, Khoa Quan hệ công chúng và Truyền thông                   |
 | Môn học                                           | Thẩm định tin tức                                                                  |
 | Giảng viên                                        | Nguyễn Trần Duy                                                                    |
-| Đề tài nền (báo cáo giữa kỳ)                      | Thẩm định tin giả sử dụng hình ảnh AI về vụ lật tàu Vịnh Xanh 58 trên vịnh Hạ Long |
+| Đề tài nền (báo cáo cuối kỳ)                      | Thẩm định tin giả sử dụng hình ảnh AI về vụ lật tàu Vịnh Xanh 58 trên vịnh Hạ Long |
 | Nhóm thực hiện _(theo báo cáo mới, kiểm tra lại)_ | Trần Huỳnh Gia Hân, Đào Thị Mai Chi                                                |
 | Lớp học phần _(theo báo cáo mới, kiểm tra lại)_   | 261_72NEPR40352_01                                                                 |
 | Hạn nộp                                           | Chưa biết (Không cần thêm vào)                                                     |
