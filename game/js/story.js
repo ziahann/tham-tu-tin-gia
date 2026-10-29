@@ -125,6 +125,16 @@ export async function talkTo(npcId, room = null) {
   world?.setTalking(npcId, true);
   await conversation(npcId, async () => {
     const e = interactionFor(npcId);
+    // Người qua đường: nói lần lượt từng câu (không giao nhiệm vụ)
+    const amb = data.npcs.ambientLines?.[npcId];
+    if (!e && amb) {
+      const said = (state.progress.ambientSaid ||= {});
+      const i = said[npcId] || 0;
+      said[npcId] = i + 1;
+      saveProgress();
+      await dlg.say(npcId, amb[i % amb.length]);
+      return;
+    }
     if (!e) return;
     if (e.scene) {
       await playScene(e.scene);
@@ -655,6 +665,7 @@ async function completeQuest(q, qs, npc) {
     await dlg.say('system', t('dialog.newCard', { fact: ev.fact, title: ev.title }));
   }
   await dlg.say('system', t('dialog.points', { n: points }));
+  world?.emote('hero', '♪');
   const room = q.room;
   if (state.progress.tracked === q.id) track(nextQuestIn(room)?.id || null, true);
   if (roomStatus(room, state.progress.flags) === 'done' && !hasFlag(`done_${room}`)) {
