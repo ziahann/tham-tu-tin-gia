@@ -33,6 +33,34 @@ function outline(img) {
   return out;
 }
 
+/**
+ * Đẩy khối giả 3D cho một đồ vật vẽ chính diện: mỗi điểm đặc được kéo lùi theo hướng (+1, -1) thêm s px.
+ * Điểm ở mép trên thành mặt trên (sáng hơn), điểm ở mép phải thành mặt hông (tối hơn); phần giữa bị mặt trước che.
+ * Bỏ qua điểm bán trong suốt (bóng đổ). Trả về ảnh mới rộng / cao thêm s, mặt trước nằm ở đáy trái.
+ */
+function extrude(src, s, fromY = 0) {
+  const out = new Img(src.w + s, src.h + s);
+  // chỉ đẩy khối phần thân từ hàng fromY trở xuống (đồ đặt trên mặt bàn giữ nguyên)
+  const solid = (x, y) => x >= 0 && y >= fromY && x < src.w && y < src.h && src.get(x, y)[3] > 200;
+  const isOut = c => c[0] === 11 && c[1] === 15 && c[2] === 24; // màu viền OUT
+  const hex = c => `#${c.slice(0, 3).map(v => v.toString(16).padStart(2, '0')).join('')}`;
+  for (let k = s; k >= 1; k--) {
+    for (let y = 0; y < src.h; y++) for (let x = 0; x < src.w; x++) {
+      if (!solid(x, y)) continue;
+      const top = !solid(x, y - 1), right = !solid(x + 1, y);
+      if (!top && !right) continue;
+      // màu lấy từ điểm bên trong nếu đang là viền
+      let c = src.get(x, y);
+      if (isOut(c)) c = top && solid(x, y + 1) ? src.get(x, y + 1) : solid(x - 1, y) ? src.get(x - 1, y) : c;
+      if (isOut(c)) continue;
+      const col = top ? shade(hex(c), k === s ? 0.18 : 0.06) : shade(hex(c), -0.42);
+      out.set(x + k, y + s - k, col);
+    }
+  }
+  out.blit(src, 0, 0, src.w, src.h, 0, s);
+  return outline(out);
+}
+
 /** Bóng đổ mềm dưới chân đồ vật. */
 const shadow = (img, cx, cy, rx, ry = 3) => img.ellipse(cx, cy, rx, ry, '#00000048');
 
@@ -670,7 +698,14 @@ function building(o) {
   meta.lights = meta.lights.map(([x, y, c, r, k]) => [x, y + s, c, r, k]);
   if (meta.sign) meta.sign = { ...meta.sign, y: meta.sign.y + s };
   meta.ox = (W / 2) / (W + s);
-  return { img, meta };
+  // bóng đổ chéo xuống mặt đất bên phải tòa nhà (ảnh riêng, nằm dưới chân nhân vật)
+  const L = Math.round(s * 1.3), shadowImg = new Img(W + s + L, s);
+  for (let r = 0; r < s; r++) {
+    const x0 = W + (s - r);
+    for (let k = 0; k < L; k++) shadowImg.set(x0 + k, r, `#000000${Math.round(0x50 * (1 - k / L)).toString(16).padStart(2, '0')}`);
+  }
+  for (let x = 0; x < W; x++) shadowImg.set(x, s - 1, '#00000030');
+  return { img, meta, shadowImg };
 }
 
 // ---------------------------------------------------------------- danh mục
@@ -745,7 +780,26 @@ export function allProps() {
     bld_warehouse: { cols: 12, floors: 1, style: 'warehouse', door: 4, shop: 'shutter', sign: false, signGlow: '#c9a24a', roof: ['vent', 'vent', 'skylight'] },
     bld_tenement: { cols: 6, floors: 4, style: 'brick', door: 1, fireEscape: true, sign: false, roof: ['tank', 'ac', 'antenna'] }
   };
-  for (const [k, o] of Object.entries(B)) { const { img, meta } = building(o); P[k] = { img, meta: { ...meta, building: true } }; }
+  for (const [k, o] of Object.entries(B)) {
+    const { img, meta, shadowImg } = building(o);
+    P[k] = { img, meta: { ...meta, building: true } };
+    P[`${k}_shadow`] = { img: shadowImg, meta: { base: [0, 0], flat: true, shadow: true } };
+  }
+  // đồ vật thành khối giả 3D (mặt trên + mặt hông); độ sâu theo kích thước thật
+  const DEPTH = {
+    desk_pc: [14, 22], desk_papers: [14, 22], desk_lab: [14, 22], cabinet: 12, bookshelf: 12, reception: [16, 16], printer: 10, filing_boxes: 8,
+    meeting_table: [16, 16], archive_shelf: 14, cafe_counter: [14, 22], coffee_table: [8, 8], sofa: 12, water_cooler: [8, 24], trash: 6,
+    dev_computer: [14, 22], dev_detector: 10, dev_archive: [10, 30], dev_magnifier: [12, 28], dev_monitor: 8,
+    kiosk: 16, bus_stop: 12, market_stall: 12, street_bin: 6, planter: 10, bench: 6
+  };
+  for (const [k, v] of Object.entries(DEPTH)) {
+    const p = P[k];
+    if (!p) continue;
+    const [d, fromY] = Array.isArray(v) ? v : [v, 0];
+    const img = extrude(p.img, d, fromY);
+    p.meta = { ...p.meta, ox: (p.img.w / 2) / img.w, lights: (p.meta.lights || []).map(([x, y, c, r, i]) => [x, y + d, c, r, i]) };
+    p.img = img;
+  }
   return P;
 }
 

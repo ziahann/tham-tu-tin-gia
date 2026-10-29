@@ -135,3 +135,4 @@
 | Mục | Quyết định |
 |---|---|
 | Điểm số | Bỏ điểm và danh hiệu theo điểm (thay mục "Điểm" của đợt 1). Mỗi hồ sơ khép lại trao một **huy hiệu kỹ năng** kèm câu tóm tắt điều đã học; thanh trên hiện số huy hiệu và "Hồ sơ đã khép n/6"; gợi ý, hướng dẫn không bị trừ gì. Màn kết quả hiện bộ huy hiệu |
+| Đồ họa giả 3D | Giữ góc nhìn từ trên xuống nhưng vẽ khối kiểu 3/4: tòa nhà có mái, mặt hông, đồ trên mái, bóng đổ chéo; đồ vật trong nhà và ngoài phố có mặt trên + mặt hông; đỉnh tường dày. Không chuyển hẳn sang isometric (chi phí cao) |
