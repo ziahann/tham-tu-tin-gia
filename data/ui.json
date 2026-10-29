@@ -1,115 +1,118 @@
 {
-  "version": 1,
+  "version": 2,
   "note": "Chữ hiển thị trên giao diện. Sửa nội dung ở đây, không sửa trong code.",
   "gameTitle": "Thám tử tin giả",
   "simulated": "GIẢ LẬP",
   "fakeImage": "ẢNH GIẢ",
-  "simulation": "MÔ PHỎNG",
   "scoreDisclaimer": "Điểm số và chiến thắng chỉ đo kết quả chơi, không chứng minh thông tin đúng hay sai.",
   "loading": "Đang tải hồ sơ…",
-  "loadError": "Không tải được dữ liệu game. Nếu bạn mở file trực tiếp, hãy chạy qua một máy chủ web (xem README).",
+  "loadError": "Không tải được dữ liệu game. Hãy chạy qua một máy chủ web (xem README).",
   "lostSave": "Dữ liệu lưu không đọc được nên game bắt đầu lại từ đầu.",
-  "topbar": {
-    "notebook": "Sổ tay",
-    "sources": "Nguồn",
-    "chatLog": "Nhật ký",
-    "settings": "Cài đặt",
-    "map": "Bản đồ",
-    "score": "Điểm"
+  "system": "Thông báo",
+  "score": "Điểm",
+  "close": "Đóng",
+  "yes": "Đồng ý",
+  "no": "Hủy",
+  "icons": {
+    "backpack": "Balo (B)",
+    "sources": "Nguồn tham khảo",
+    "settings": "Cài đặt"
   },
-  "S0": {
+  "title": {
     "warningTitle": "Cảnh báo nội dung",
     "warning": "Game dựa trên một vụ tai nạn có thật. Nội dung nhắc đến thiệt hại về người. Game không hiển thị hình ảnh nạn nhân; ảnh giả chỉ là mô phỏng pixel trừu tượng có nhãn ẢNH GIẢ. Bạn có thể thoát bất cứ lúc nào.",
     "simulatedNote": "Nhân vật, tổ chức, văn phòng điều tra và công cụ mô phỏng đều là GIẢ LẬP. Dữ kiện về vụ việc lấy từ báo chí, có ghi nguồn.",
     "start": "Bắt đầu",
     "continue": "Chơi tiếp",
     "restart": "Chơi lại từ đầu",
-    "restartConfirm": "Bắt đầu lượt chơi mới? Tiến trình hiện tại sẽ bị xóa (nhật ký chat cũ vẫn được giữ).",
-    "howTo": "Hướng dẫn",
-    "howToText": "Bạn là thẩm định viên. Ở mỗi phòng: đọc câu hỏi, mở nguồn (tab mới), tự tìm bằng chứng rồi điền vào hồ sơ và bấm Kiểm tra. Đúng thì nhận thẻ evidence vào Sổ tay. Gợi ý có 3 cấp, mỗi cấp trừ ít điểm. Bạn có thể hỏi NPC bằng cách bấm câu có sẵn hoặc gõ câu hỏi."
-  },
-  "S1": {
-    "title": "Nhận vụ án",
+    "restartConfirm": "Bắt đầu lượt chơi mới? Tiến trình hiện tại sẽ bị xóa (lịch sử trò chuyện cũ vẫn được giữ).",
     "nameLabel": "Tên thám tử của bạn",
     "nameHint": "Không cần dùng tên thật.",
-    "nameConfirm": "Nhận vụ án",
-    "questionsTitle": "Ba câu hỏi xác minh",
-    "toMap": "Đến bản đồ văn phòng"
+    "nameConfirm": "Vào văn phòng",
+    "controlsTitle": "Cách chơi",
+    "controls": "Đi lại: WASD hoặc phím mũi tên (điện thoại: phím ảo). Nói chuyện / xem đồ vật / tiếp lời thoại: E, Space hoặc Enter (điện thoại: nút A). Mở balo: B. Đóng: Esc.",
+    "firstHint": "Gặp chị Tuệ Lâm ở quầy lễ tân để nhận vụ án."
   },
-  "S2": {
-    "title": "Bản đồ văn phòng",
-    "intro": "Chọn phòng để điều tra. Phòng mở dần theo tiến độ.",
-    "statusDone": "✓ Đã xong",
-    "statusOpen": "▶ Đang mở",
-    "statusLocked": "🔒 Chưa mở",
-    "statusBuilding": "⚙ Đang xây dựng",
-    "progress": "{done}/{total} nhiệm vụ"
+  "hud": {
+    "musicSoon": "Nhạc nền sẽ có ở bản sau."
   },
-  "room": {
-    "back": "← Bản đồ",
-    "materials": "Tư liệu",
-    "investigation": "Điều tra",
-    "openSource": "Mở nguồn",
-    "opened": "đã mở",
-    "backup": "Tóm tắt dự phòng",
-    "backupNote": "Dùng khi link không mở được. Trích theo báo cáo.",
-    "check": "Kiểm tra",
-    "hint": "Gợi ý",
-    "hintLevel": "Gợi ý {n}/3",
-    "noMoreHints": "Đã dùng hết gợi ý.",
+  "dialog": {
+    "continueHint": "E / Space ▸",
+    "submit": "Trả lời",
+    "help": "Cần trợ giúp",
+    "retry": "Thử lại",
+    "hint": "Xin gợi ý ({n}/3, −2 điểm)",
+    "noMoreHints": "Tôi đã đưa hết gợi ý rồi. Bạn có thể chọn \"Tôi không tìm được\" để xem hướng dẫn từng bước.",
+    "hintLine": "Gợi ý {n}/3: {text}",
     "cantFind": "Tôi không tìm được",
-    "walkthroughTitle": "Hướng dẫn từng bước",
-    "empty": "Hãy chọn hoặc điền ít nhất một ô trước khi kiểm tra.",
-    "continue": "Tiếp tục",
-    "questDone": "Đã hoàn thành",
-    "roomDone": "Bạn đã hoàn thành phòng này.",
-    "nextRoomsBuilding": "Các phòng tiếp theo đang được dựng.",
-    "unsupported": "Kiểu chơi này chưa được dựng.",
-    "conclusion": "Kết luận nhỏ",
-    "newCard": "Thẻ evidence mới",
-    "points": "+{n} điểm",
-    "almost": "gần đúng"
+    "walkthrough": "Làm theo từng bước nhé: {text}",
+    "later": "Để sau",
+    "laterLine": "Được. Khi nào sẵn sàng thì quay lại gặp tôi, tôi vẫn giữ những gì bạn đã trả lời.",
+    "backToAnswer": "Quay lại trả lời",
+    "openSourcesLine": "Mở nguồn bên dưới (tab mới) và tự tìm thông tin. Đọc xong thì báo tôi.",
+    "openSource": "Mở nguồn: {outlet}",
+    "unverified": "link chưa kiểm tra",
+    "backup": "Xem tóm tắt dự phòng",
+    "backupLine": "Tóm tắt dự phòng (dùng khi link không mở được): {text}",
+    "doneReading": "Tôi đã đọc xong",
+    "fieldRight": "Đúng, khớp với nguồn.",
+    "fieldAlmost": "Gần đúng, tôi ghi nhận: {answer}.",
+    "fieldWrong": "Chưa khớp với nguồn. Đọc lại đoạn liên quan nhé.",
+    "emptyPick": "Bạn chưa chọn thẻ nào.",
+    "missingCards": "Còn thiếu {n} nhóm nội dung.",
+    "conclusion": "Kết luận nhỏ: {text}",
+    "newCard": "Bạn nhận thẻ evidence {fact}: {title}",
+    "points": "+{n} điểm. (Điểm chỉ để chơi.)",
+    "doorLocked": "Cửa đang khóa. Hãy làm xong các nhiệm vụ trước.",
+    "doorBuilding": "{room} chưa mở trong bản dựng thử này.",
+    "exitBuilding": "Khu phố ven vịnh chưa mở trong bản dựng thử này.",
+    "inspectSpeaker": "Bạn quan sát"
   },
-  "result": {
-    "correct": "✓ Đúng",
-    "partial": "◐ Một phần",
-    "wrong": "✗ Chưa đạt",
-    "insufficient": "? Chưa đủ căn cứ"
-  },
-  "chat": {
-    "title": "Trò chuyện",
-    "placeholder": "Gõ câu hỏi cho NPC…",
-    "send": "Gửi",
-    "toggle": "Chat",
-    "you": "Bạn",
-    "next": "Tiếp ▸"
-  },
-  "notebook": {
-    "title": "Sổ tay thám tử",
+  "backpack": {
+    "title": "Balo",
+    "tabNotebook": "Sổ tay",
+    "tabQuests": "Nhiệm vụ",
+    "tabPinboard": "Bảng ghim",
+    "tabHistory": "Lịch sử",
     "questions": "Câu hỏi xác minh",
     "cards": "Thẻ evidence",
-    "empty": "Chưa có thẻ nào."
+    "noCards": "Chưa có thẻ nào.",
+    "objective": "Mục tiêu hiện tại",
+    "objectiveMeetNpc1": "Gặp chị Tuệ Lâm ở quầy lễ tân, sảnh tầng trệt.",
+    "objectiveQuest": "{title} — gặp {npc} ở {place}.",
+    "objectiveWait": "Đã xong các nhiệm vụ đang mở. Các phòng khác sẽ mở ở bản sau.",
+    "questList": "Danh sách nhiệm vụ",
+    "statusDone": "✓ Đã xong",
+    "statusActive": "▶ Đang làm",
+    "statusLocked": "🔒 Chưa mở",
+    "statusBuilding": "⚙ Đang xây dựng",
+    "map": "Bản đồ khu vực",
+    "youAreHere": "Bạn đang ở: {place}",
+    "pinboardNote": "Các thẻ evidence bạn thu được được ghim ở đây. Nối thẻ với mệnh đề và gắn nhãn sẽ có ở các phòng sau.",
+    "historyEmpty": "Chưa có cuộc trò chuyện nào.",
+    "export": "Xuất lịch sử (JSON)",
+    "clear": "Xóa dữ liệu của tôi",
+    "clearConfirm": "Xóa toàn bộ tiến trình và lịch sử trò chuyện trên trình duyệt này?",
+    "notes": "Ghi chú quan sát",
+    "you": "Bạn"
   },
   "sourcesPanel": {
     "title": "Nguồn tham khảo",
     "unverified": "link chưa kiểm tra",
     "missing": "chưa có link"
   },
-  "chatLogPanel": {
-    "title": "Nhật ký chat",
-    "export": "Xuất nhật ký (JSON)",
-    "clear": "Xóa dữ liệu của tôi",
-    "clearConfirm": "Xóa toàn bộ tiến trình và nhật ký chat trên trình duyệt này?",
-    "run": "Lượt chơi",
-    "empty": "Chưa có tin nhắn."
-  },
   "settingsPanel": {
     "title": "Cài đặt",
     "hideSensitive": "Ẩn hình ảnh nhạy cảm",
-    "mute": "Tắt âm thanh",
-    "reduceMotion": "Giảm chuyển động"
+    "mute": "Tắt hiệu ứng âm thanh",
+    "music": "Nhạc nền",
+    "reduceMotion": "Giảm chuyển động (hiện chữ ngay)",
+    "home": "Về màn hình chính"
   },
-  "close": "Đóng",
-  "yes": "Đồng ý",
-  "no": "Hủy"
+  "result": {
+    "correct": "✓ Đúng.",
+    "partial": "◐ Một phần.",
+    "wrong": "✗ Chưa đạt.",
+    "insufficient": "? Chưa đủ căn cứ."
+  }
 }

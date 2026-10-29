@@ -2,115 +2,107 @@
 <html lang="vi">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Thám tử tin giả</title>
-  <meta name="description" content="Game pixel về thẩm định ảnh AI giả quanh vụ lật tàu Vịnh Xanh 58. Tình huống, nhân vật là GIẢ LẬP.">
+  <meta name="description" content="Game pixel nhập vai về thẩm định ảnh AI giả quanh vụ lật tàu Vịnh Xanh 58. Tình huống, nhân vật là GIẢ LẬP.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body class="hide-sensitive">
-  <a class="skip" href="#app">Bỏ qua tới nội dung</a>
+  <!-- Bản đồ Phaser tràn toàn khung -->
+  <div id="game" aria-label="Bản đồ trò chơi" role="application"></div>
 
-  <header class="topbar">
-    <div class="topbar-title">
-      <span data-ui="gameTitle"></span>
+  <!-- Thanh trên -->
+  <header id="hud" class="hud" hidden>
+    <div class="hud-left">
+      <span class="hud-title" data-ui="gameTitle"></span>
       <span class="tag tag-sim" data-ui="simulated"></span>
+      <span id="hud-place" class="hud-place" aria-live="polite"></span>
     </div>
-    <div class="topbar-room" id="topbar-room" aria-live="polite"></div>
-    <div class="topbar-score" id="topbar-score"></div>
-    <nav class="topbar-actions" aria-label="Công cụ">
-      <button type="button" id="btn-map" class="btn-small" data-ui="topbar.map" hidden></button>
-      <button type="button" id="btn-notebook" class="btn-small" data-ui="topbar.notebook"></button>
-      <button type="button" id="btn-sources" class="btn-small" data-ui="topbar.sources"></button>
-      <button type="button" id="btn-chatlog" class="btn-small" data-ui="topbar.chatLog"></button>
-      <button type="button" id="btn-settings" class="btn-small" data-ui="topbar.settings"></button>
-    </nav>
+    <div class="hud-right">
+      <span id="hud-score" class="hud-score"></span>
+      <button type="button" id="btn-backpack" class="icon-btn" data-ui-label="icons.backpack">
+        <svg viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M6 1h4v1h1v2h1v1h1v9h-1v1H4v-1H3V5h1V4h1V2h1zm1 1v2h2V2zM5 6v7h6V6zm1 2h4v2H6z"/></svg>
+      </button>
+      <button type="button" id="btn-sources" class="icon-btn" data-ui-label="icons.sources">
+        <svg viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M2 2h5v1h2V2h5v11H9v1H7v-1H2zm1 1v9h4V4H6V3zm6 0v1H9v8h4V3zM4 5h2v1H4zm6 0h2v1h-2zM4 7h2v1H4zm6 0h2v1h-2z"/></svg>
+      </button>
+      <button type="button" id="btn-settings" class="icon-btn" data-ui-label="icons.settings">
+        <svg viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M7 1h2v2h1v1h1V3h2v2h-1v1h1v1h2v2h-2v1h-1v1h1v2h-2v-1h-1v1H9v2H7v-2H6v-1H5v1H3v-2h1v-1H3V9H1V7h2V6h1V5H3V3h2v1h1V3h1zm0 4v1H6v4h1v1h2v-1h1V6H9V5z"/></svg>
+      </button>
+    </div>
   </header>
 
-  <main id="app" tabindex="-1">
-    <p id="loading" class="loading" data-ui="loading">Đang tải hồ sơ…</p>
-
-    <!-- S0: Trang chủ + cảnh báo -->
-    <section id="screen-S0" class="screen" hidden>
-      <div class="stage"><canvas class="scene" width="320" height="180" data-scene="S0"></canvas></div>
-      <h1 class="case-title" id="s0-case-title"></h1>
-      <div class="panel warning" role="note">
-        <h2 data-ui="S0.warningTitle"></h2>
-        <p data-ui="S0.warning"></p>
-        <p class="muted" data-ui="S0.simulatedNote"></p>
-      </div>
-      <div class="actions">
-        <button type="button" id="s0-start" class="btn-primary" data-ui="S0.start"></button>
-        <button type="button" id="s0-continue" class="btn-primary" data-ui="S0.continue" hidden></button>
-        <button type="button" id="s0-restart" class="btn" data-ui="S0.restart" hidden></button>
-        <button type="button" id="s0-howto" class="btn" data-ui="S0.howTo"></button>
-      </div>
-    </section>
-
-    <!-- S1: Nhận vụ án -->
-    <section id="screen-S1" class="screen" hidden>
-      <div class="stage"><canvas class="scene" width="320" height="180" data-scene="S1"></canvas></div>
-      <h1 data-ui="S1.title"></h1>
-      <form id="s1-name-form" class="panel">
-        <label for="s1-name" data-ui="S1.nameLabel"></label>
-        <input id="s1-name" name="heroName" maxlength="20" autocomplete="off">
-        <p class="muted" data-ui="S1.nameHint"></p>
-        <button type="submit" class="btn-primary" data-ui="S1.nameConfirm"></button>
-      </form>
-      <div id="s1-questions" class="panel" hidden>
-        <h2 data-ui="S1.questionsTitle"></h2>
-        <ol id="s1-question-list"></ol>
-        <button type="button" id="s1-to-map" class="btn-primary" data-ui="S1.toMap"></button>
-      </div>
-    </section>
-
-    <!-- S2: Bản đồ văn phòng -->
-    <section id="screen-S2" class="screen" hidden>
-      <div class="stage"><canvas class="scene" width="320" height="180" data-scene="S2"></canvas></div>
-      <h1 data-ui="S2.title"></h1>
-      <p data-ui="S2.intro"></p>
-      <ul id="room-list" class="room-list"></ul>
-    </section>
-
-    <!-- S3-S8: Phòng điều tra (dựng từ quests.json) -->
-    <section id="screen-room" class="screen" hidden>
-      <div class="room-layout">
-        <div class="room-materials">
-          <button type="button" id="room-back" class="btn-small" data-ui="room.back"></button>
-          <div class="stage"><canvas class="scene" width="320" height="180" id="room-canvas"></canvas></div>
-          <h2 data-ui="room.materials"></h2>
-          <div id="room-resources"></div>
-        </div>
-        <div class="room-investigation">
-          <h1 id="room-title"></h1>
-          <div id="room-quests"></div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <aside id="chat" class="chat" aria-label="Trò chuyện với NPC">
-    <button type="button" id="chat-toggle" class="chat-toggle" aria-expanded="true" aria-controls="chat-body">
-      <span data-ui="chat.title"></span>
-    </button>
-    <div id="chat-body" class="chat-body">
-      <ol id="chat-messages" class="chat-messages" aria-live="polite"></ol>
-      <div id="chat-choices" class="chat-choices"></div>
-      <form id="chat-form" class="chat-form">
-        <label class="sr-only" for="chat-input" data-ui="chat.placeholder"></label>
-        <input id="chat-input" autocomplete="off" maxlength="200">
-        <button type="submit" class="btn-small" data-ui="chat.send"></button>
-      </form>
+  <!-- Khung thoại kiểu game cốt truyện -->
+  <section id="dialog" class="dialog" hidden aria-label="Hội thoại">
+    <div class="dialog-portrait" id="dialog-portrait" aria-hidden="true"></div>
+    <div class="dialog-main">
+      <div class="dialog-name"><span id="dialog-name"></span> <span id="dialog-tag" class="tag tag-sim"></span></div>
+      <p id="dialog-text" class="dialog-text"></p>
+      <div id="dialog-extra" class="dialog-extra"></div>
+      <div id="dialog-next" class="dialog-next" aria-hidden="true"></div>
     </div>
+    <div id="dialog-live" class="sr-only" aria-live="polite"></div>
+  </section>
+
+  <!-- Balo: khung dọc bên phải -->
+  <aside id="backpack" class="backpack" hidden aria-labelledby="backpack-title">
+    <div class="backpack-head">
+      <h2 id="backpack-title" data-ui="backpack.title"></h2>
+      <button type="button" id="backpack-close" class="btn-small" data-ui="close"></button>
+    </div>
+    <div class="tabs" role="tablist">
+      <button type="button" role="tab" data-tab="notebook" data-ui="backpack.tabNotebook"></button>
+      <button type="button" role="tab" data-tab="quests" data-ui="backpack.tabQuests"></button>
+      <button type="button" role="tab" data-tab="pinboard" data-ui="backpack.tabPinboard"></button>
+      <button type="button" role="tab" data-tab="history" data-ui="backpack.tabHistory"></button>
+    </div>
+    <div id="backpack-body" class="backpack-body" role="tabpanel"></div>
   </aside>
 
-  <footer class="footer">
-    <span class="tag tag-sim" data-ui="simulated"></span>
-    <span data-ui="scoreDisclaimer"></span>
-    <button type="button" id="footer-sources" class="btn-link" data-ui="topbar.sources"></button>
-  </footer>
+  <!-- Phím ảo cho điện thoại -->
+  <div id="touch" class="touch" hidden>
+    <div class="dpad">
+      <button type="button" data-dir="up" aria-label="Lên">▲</button>
+      <button type="button" data-dir="left" aria-label="Trái">◀</button>
+      <button type="button" data-dir="right" aria-label="Phải">▶</button>
+      <button type="button" data-dir="down" aria-label="Xuống">▼</button>
+    </div>
+    <button type="button" id="touch-a" class="touch-a" aria-label="Hành động">A</button>
+  </div>
+
+  <!-- Màn hình chính + cảnh báo nội dung -->
+  <section id="title" class="title-screen" hidden>
+    <div class="title-card">
+      <p class="title-game" data-ui="gameTitle"></p>
+      <h1 id="title-case"></h1>
+      <div class="panel warning" role="note">
+        <h2 data-ui="title.warningTitle"></h2>
+        <p data-ui="title.warning"></p>
+        <p class="muted" data-ui="title.simulatedNote"></p>
+      </div>
+      <form id="title-name" class="panel" hidden>
+        <label for="title-name-input" data-ui="title.nameLabel"></label>
+        <input id="title-name-input" maxlength="20" autocomplete="off">
+        <p class="muted" data-ui="title.nameHint"></p>
+        <button type="submit" class="btn-primary" data-ui="title.nameConfirm"></button>
+      </form>
+      <div id="title-actions" class="actions">
+        <button type="button" id="title-start" class="btn-primary" data-ui="title.start"></button>
+        <button type="button" id="title-continue" class="btn-primary" data-ui="title.continue"></button>
+        <button type="button" id="title-restart" class="btn" data-ui="title.restart"></button>
+      </div>
+      <div class="panel">
+        <h2 data-ui="title.controlsTitle"></h2>
+        <p data-ui="title.controls"></p>
+      </div>
+      <p class="muted small" data-ui="scoreDisclaimer"></p>
+    </div>
+  </section>
+
+  <p id="loading" class="loading" data-ui="loading">Đang tải hồ sơ…</p>
 
   <dialog id="modal" class="modal">
     <div class="modal-head">
@@ -122,6 +114,7 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
 
+  <script src="vendor/phaser.min.js"></script>
   <script type="module" src="js/main.js"></script>
 </body>
 </html>

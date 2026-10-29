@@ -1,17 +1,27 @@
 # Thám tử tin giả — Vụ án Những Gương Mặt Không Có Thật
 
-Game pixel HTML/CSS/JS (không backend) cho bài tập mục 08, môn Thẩm định tin tức (Văn Lang).
+Game pixel nhập vai (không backend) cho bài tập mục 08, môn Thẩm định tin tức (Văn Lang).
+Người chơi đi lại trong văn phòng Ban Hải Đăng, nói chuyện với NPC, nhận nhiệm vụ và trả lời ngay trong hội thoại.
 Tình huống, nhân vật, tổ chức và công cụ mô phỏng là **GIẢ LẬP**; dữ kiện về vụ lật tàu Vịnh Xanh 58 lấy từ báo chí, có ghi nguồn.
 
 ## Chạy trên máy
 
-Game đọc dữ liệu JSON bằng `fetch`, nên phải chạy qua máy chủ web (mở thẳng file `index.html` sẽ báo lỗi tải dữ liệu):
+Game đọc dữ liệu bằng `fetch`, nên phải chạy qua máy chủ web (mở thẳng `index.html` sẽ báo lỗi tải dữ liệu):
 
 ```sh
 cd game
 python -m http.server 8000
 # rồi mở http://localhost:8000
 ```
+
+## Điều khiển
+
+| Việc | Máy tính | Điện thoại |
+|---|---|---|
+| Đi lại | WASD hoặc phím mũi tên | Phím ảo D-pad |
+| Nói chuyện / xem đồ vật / tiếp lời thoại | E, Space, Enter | Nút A hoặc chạm khung thoại |
+| Mở balo | B hoặc biểu tượng balo | Biểu tượng balo |
+| Đóng | Esc | Nút Đóng |
 
 ## Triển khai GitHub Pages
 
@@ -26,32 +36,33 @@ GitHub Pages chỉ phục vụ từ thư mục gốc hoặc `/docs`, nên đẩy
 
 | Đường dẫn | Nội dung |
 |---|---|
-| `data/quests.json` | Nhiệm vụ, phòng, thẻ evidence, nhân vật chính, tổ chức hư cấu, boss |
-| `data/npc_dialogues.json` | NPC, cảnh hội thoại (`scenes`), từ khóa trả lời tự do (`freeChat`) |
+| `data/quests.json` | Phòng, nhiệm vụ, thẻ evidence, nhân vật chính, tổ chức hư cấu, boss |
+| `data/npc_dialogues.json` | NPC, cảnh hội thoại (`scenes`), luật nói chuyện (`interactions`), trạm đứng của NPC (`stations`), lời giới thiệu phòng (`zoneScenes`), chữ khi xem đồ vật (`inspect`) |
 | `data/sources.json` | Nguồn trích dẫn APA |
 | `data/ui.json` | Toàn bộ chữ trên giao diện |
-| `js/main.js` | Khởi động, điều hướng màn S0–S3, sổ tay, nguồn, nhật ký, cài đặt |
-| `js/quests.js` | Dựng nhiệm vụ G1 (điền evidence), G2 (chọn thẻ), chấm điểm, gợi ý |
-| `js/chat.js` | Chat NPC, lưu nhật ký `tfd_chat_log`, xuất JSON |
-| `js/state.js` | Tiến trình `tfd_progress`, cài đặt `tfd_settings` |
-| `js/pixel.js` | Bảng màu, sprite, cảnh nền 320×180 vẽ bằng code |
-| `js/audio.js` | Hiệu ứng âm thanh tạo bằng WebAudio |
+| `maps/office.json` | Bản đồ văn phòng (Tiled). Lớp `walls` và `doors` có va chạm theo thuộc tính `collides` của ô; lớp `objects` chứa điểm xuất hiện, khu vực, cửa, NPC, đường đi tuần / dẫn đường, đồ vật xem được |
+| `assets/` | Tileset và sprite TẠM, sinh bởi `node tools/gen-assets.mjs` (ở thư mục gốc repo) |
+| `js/main.js` | Khởi động, màn hình chính, cài đặt, nguồn |
+| `js/world.js`, `js/actors.js` | Cảnh Phaser: bản đồ, người chơi, NPC đi tuần / dẫn đường, cửa, khu vực |
+| `js/story.js`, `js/dialogue.js` | Cốt truyện và nhiệm vụ trong hội thoại; khung thoại |
+| `js/grading.js`, `js/text.js` | Chấm đáp án (bỏ dấu, gần đúng), điểm, trạng thái phòng |
+| `js/backpack.js` | Balo: sổ tay, nhiệm vụ + bản đồ nhỏ, bảng ghim, lịch sử theo NPC |
+| `js/state.js`, `js/history.js` | Lưu tiến trình, cài đặt, lịch sử trò chuyện |
 
 ## Đã có / chưa có
 
-- Đã có: S0 (cảnh báo nội dung), S1 (nhận vụ án, đặt tên), S2 (bản đồ), S3 Phòng Hồ sơ (Q1, Q2).
-- Đang xây dựng: S4–S8, Boss S9, Kết quả S10, màn bonus G11.
+- Đã có (giai đoạn 1): màn hình chính có cảnh báo nội dung, văn phòng đi lại được, NPC đi tuần và dẫn đường, Phòng Hồ sơ (Q1, Q2) trong hội thoại, balo, lịch sử theo NPC.
+- Chưa có: art và nhạc thật (giai đoạn 2), intro (3), bối cảnh ngoài trời (4), các phòng Q3–Q13 (5), boss và kết quả (6).
 
 ## Nguồn tài nguyên (giấy phép)
 
 | Tài nguyên | Nguồn | Giấy phép |
 |---|---|---|
+| Phaser 3.80.1 | phaser.io (`vendor/PHASER-LICENSE.md`) | MIT |
 | Phông chữ VT323 (Peter Hull) | Google Fonts | SIL Open Font License 1.1 |
-| Sprite, cảnh nền, bảng màu 16 màu | Tự tạo bằng code (`js/pixel.js`) | Của nhóm |
-| Âm thanh | Tự tạo bằng WebAudio (`js/audio.js`) | Của nhóm |
-
-Ghi chú: Pixelify Sans đã cân nhắc nhưng không có bộ ký tự tiếng Việt (thiếu U+1EA0–1EF1), nên dùng VT323.
+| Tileset, sprite tạm | Tự tạo bằng code (`tools/gen-assets.mjs`) | Của nhóm |
+| Hiệu ứng âm thanh | Tự tạo bằng WebAudio (`js/audio.js`) | Của nhóm |
 
 ## Lưu dữ liệu
 
-Chỉ lưu trên trình duyệt (localStorage): `tfd_progress`, `tfd_settings`, `tfd_chat_log` (giữ mọi lượt chơi). Không lưu tên thật hay dữ liệu định danh. Nút "Xóa dữ liệu của tôi" trong Nhật ký xóa toàn bộ.
+Chỉ lưu trên trình duyệt (localStorage): `tfd_progress`, `tfd_settings`, `tfd_chat_log` (giữ mọi lượt chơi). Không lưu tên thật hay dữ liệu định danh. Nút "Xóa dữ liệu của tôi" trong balo → Lịch sử xóa toàn bộ.

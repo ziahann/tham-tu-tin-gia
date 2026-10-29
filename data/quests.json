@@ -47,6 +47,9 @@
       "quests": [
         "q1_stop",
         "q2_event"
+      ],
+      "requires": [
+        "s1_done"
       ]
     },
     {
@@ -179,7 +182,8 @@
         "thuthao2025",
         "thuonghuyen2025",
         "baocao"
-      ]
+      ],
+      "submitLabel": "Nộp các thẻ đã chọn"
     },
     {
       "id": "q2_event",
@@ -209,7 +213,8 @@
             "19 thang 7 nam 2025",
             "19 thang 7 2025"
           ],
-          "fuzzy": false
+          "fuzzy": false,
+          "ask": "Theo nguồn, tai nạn xảy ra ngày nào?"
         },
         {
           "id": "place",
@@ -218,7 +223,8 @@
           "accepts": [
             "ha long",
             "quang ninh"
-          ]
+          ],
+          "ask": "Tai nạn xảy ra ở đâu?"
         },
         {
           "id": "ship",
@@ -229,7 +235,8 @@
             "qn-7105",
             "qn 7105",
             "qn7105"
-          ]
+          ],
+          "ask": "Tên tàu (hoặc số hiệu) là gì?"
         },
         {
           "id": "cause",
@@ -240,7 +247,8 @@
             "dong loc",
             "giong",
             "loc"
-          ]
+          ],
+          "ask": "Nguồn nói nguyên nhân là gì?"
         }
       ],
       "hints": [
@@ -841,10 +849,9 @@
       ]
     }
   ],
-  "sceneAlt": {
-    "S0": "Văn phòng điều tra ban đêm: thám tử đứng giữa phòng, cửa sổ nhìn ra vịnh, bảng ghim và tủ hồ sơ. Hình minh họa GIẢ LẬP.",
-    "S1": "Chị Tuệ Lâm ngồi sau bàn làm việc giao vụ án cho thám tử. Hình minh họa GIẢ LẬP.",
-    "S2": "Hành lang văn phòng với các cửa phòng điều tra; màu cửa cho biết phòng đã xong, đang mở hay chưa mở.",
-    "S3": "Phòng Hồ sơ: tủ hồ sơ, bảng ghim với giấy note và dây đỏ, chị Tuệ Lâm đứng cạnh bàn."
+  "areas": {
+    "corridor": "Hành lang",
+    "lobby": "Sảnh",
+    "street": "Phố ven vịnh"
   }
 }

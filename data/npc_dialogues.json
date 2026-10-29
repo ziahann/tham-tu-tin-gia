@@ -364,7 +364,7 @@
         },
         {
           "id": "s1_reply_stop_l2",
-          "text": "Vụ án có ba câu hỏi xác minh. Tôi đã ghi vào sổ tay của bạn. Bắt đầu từ Phòng Hồ sơ nhé."
+          "text": "Vụ án có ba câu hỏi xác minh, tôi đã ghi vào sổ tay trong balo của bạn. Đi theo tôi tới Phòng Hồ sơ nhé."
         }
       ],
       "choices": [],
@@ -430,6 +430,53 @@
         {
           "id": "s3_done_l1",
           "text": "Hồ sơ đã có mốc sự thật. Từ đây ta có thể so các nội dung lan truyền với sự kiện thật."
+        },
+        {
+          "id": "s3_done_l2",
+          "text": "Các phòng khác đang được chuẩn bị. Khi sẵn sàng, tôi sẽ báo bạn."
+        }
+      ],
+      "choices": [],
+      "next": "end"
+    },
+    {
+      "id": "npc1_lobby_wait",
+      "screen": "S2",
+      "npc": "npc1",
+      "lines": [
+        {
+          "id": "npc1_lobby_wait_l1",
+          "text": "Chào bạn. Tôi là Tuệ Lâm. Khi nào sẵn sàng nhận vụ án thì nói với tôi nhé."
+        }
+      ],
+      "choices": [],
+      "next": "end"
+    },
+    {
+      "id": "npc2_idle",
+      "screen": "S2",
+      "npc": "npc2",
+      "lines": [
+        {
+          "id": "npc2_idle_l1",
+          "text": "Tôi là Khải, bên phân tích ảnh. Phòng của tôi chưa sẵn sàng."
+        },
+        {
+          "id": "npc2_idle_l2",
+          "text": "Mẹo nhỏ: ảnh càng làm mình xúc động, càng nên phóng to thêm chút nữa trước khi tin."
+        }
+      ],
+      "choices": [],
+      "next": "end"
+    },
+    {
+      "id": "npc2_idle_after",
+      "screen": "S2",
+      "npc": "npc2",
+      "lines": [
+        {
+          "id": "npc2_idle_after_l1",
+          "text": "Nghe nói bạn đã xác lập xong sự kiện thật. Có mốc rồi thì soi ảnh mới có ý nghĩa."
         }
       ],
       "choices": [],
@@ -553,5 +600,84 @@
       ],
       "fallback": "Tôi chưa có thông tin cho câu hỏi này. Hãy hỏi về nguồn tin, quy trình kiểm tra hoặc nhiệm vụ hiện tại."
     }
+  },
+  "interactions": {
+    "note": "Khi người chơi nói chuyện với NPC, game lấy mục đầu tiên khớp điều kiện. quest: nhiệm vụ đã mở và chưa xong. idle: lời nói chuyện thường (không hiện dấu !). lead: NPC đi trước dẫn đường theo path trên bản đồ, rồi đứng ở station.",
+    "list": [
+      {
+        "npc": "npc1",
+        "excludes": [
+          "s1_done"
+        ],
+        "scene": "s1_intro",
+        "setFlags": [
+          "s1_done"
+        ],
+        "lead": "lead_hoso"
+      },
+      {
+        "npc": "npc1",
+        "quest": "q1_stop"
+      },
+      {
+        "npc": "npc1",
+        "quest": "q2_event"
+      },
+      {
+        "npc": "npc1",
+        "scene": "s3_done",
+        "idle": true
+      },
+      {
+        "npc": "npc2",
+        "requires": [
+          "done_S3"
+        ],
+        "scene": "npc2_idle_after",
+        "idle": true
+      },
+      {
+        "npc": "npc2",
+        "scene": "npc2_idle",
+        "idle": true
+      }
+    ]
+  },
+  "stations": {
+    "npc1": [
+      {
+        "requires": [
+          "s1_done"
+        ],
+        "station": "npc1_hoso",
+        "patrol": "patrol_npc1_hoso"
+      }
+    ]
+  },
+  "zoneScenes": {
+    "S3": {
+      "scene": "s3_intro",
+      "thenTalk": "npc1"
+    }
+  },
+  "inspect": {
+    "inspect_notice": [
+      "Bảng tin của Ban Hải Đăng (GIẢ LẬP): lịch trực, nội quy, và một tờ giấy ghi \"Dừng lại trước khi chia sẻ\"."
+    ],
+    "inspect_window": [
+      "Ngoài cửa sổ là vịnh Hạ Long về đêm. Mặt nước yên lặng."
+    ],
+    "inspect_reception": [
+      "Quầy lễ tân. Có một chồng phiếu \"Yêu cầu kiểm chứng\" (GIẢ LẬP)."
+    ],
+    "inspect_pinboard": [
+      "Bảng ghim của Phòng Hồ sơ. Các mảnh giấy được nối bằng dây đỏ, chờ thêm bằng chứng."
+    ],
+    "inspect_cabinet": [
+      "Tủ hồ sơ. Nhãn ghi: \"Ảnh chụp màn hình do báo chí đăng lại\". Báo cáo chỉ tiếp cận bài đăng qua các ảnh chụp này."
+    ],
+    "inspect_bookshelf": [
+      "Kệ sách: sổ tay kiểm chứng, tài liệu về SIFT và khung Information Disorder của Wardle và Derakhshan (2017)."
+    ]
   }
 }

@@ -5,6 +5,7 @@ let ctx = null;
 
 const sounds = {
   click: [[660, 0.04, 'square']],
+  blip: [[880, 0.015, 'square']],
   correct: [[523, 0.09, 'triangle'], [784, 0.14, 'triangle']],
   partial: [[523, 0.1, 'triangle'], [587, 0.12, 'triangle']],
   wrong: [[220, 0.18, 'triangle']],
