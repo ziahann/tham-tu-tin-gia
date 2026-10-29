@@ -147,11 +147,11 @@ export class Weather {
     this.playerLight = null;
     if (!on) {
       sc.lights.disable();
-      this.targets().forEach(o => o.resetPipeline?.());
+      this.targets().forEach(o => o?.scene && o.resetPipeline?.());
       return;
     }
     sc.lights.enable().setAmbientColor(this.outdoor ? 0x39426a : 0x6e7898);
-    this.targets().forEach(o => o.setPipeline?.('Light2D'));
+    this.targets().forEach(o => o?.scene && o.setPipeline?.('Light2D'));
     const walls = sc.walls;
     walls.forEachTile(tile => {
       const name = tile.properties?.name;
