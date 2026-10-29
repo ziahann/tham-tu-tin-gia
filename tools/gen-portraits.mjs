@@ -13,6 +13,7 @@ const OUTLINE = '#10141f';
 
 // Chi tiết chỉ có ở chân dung (mắt, mi, ria, kẹp tóc...). Ghép thêm vào thông số dùng chung.
 const EXTRA = {
+  amb_barista: { lashes: true }, amb_vendor: { lashes: true }, amb_jogger: { lashes: true }, amb_elder: { wrinkles: true }, amb_fisher: { stubble: true },
   hero_m: { iris: '#3a2a20' },
   hero_f: { iris: '#4a2e20', lashes: true },
   npc1: { iris: '#2b1d1a', lashes: true, earrings: '#e8c66a' },
@@ -244,6 +245,18 @@ function drawHeadAccessories(f, s) {
   }
   if (s.pen) { for (let i = 0; i < 12; i++) f.rect(CX + 15 + Math.floor(i / 6), 20 + i, 2, 1, i < 2 ? '#c8323c' : '#f2d36b'); }
   if (s.earrings) { f.rect(CX - 17, 39, 2, 3, s.earrings); f.rect(CX + 16, 39, 2, 3, s.earrings); }
+  if (s.hat) {
+    const c = s.hat, d = shade(c, -0.3);
+    if (s.conical) {
+      // nón lá: hình nón rộng
+      for (let y = 0; y < 20; y++) { const hw = Math.round(2 + y * 1.35); f.rect(CX - hw, y, hw * 2 + 1, 1, y % 4 === 3 ? d : c); }
+      f.rect(CX - 28, 20, 57, 2, d);
+    } else {
+      // mũ cói vành rộng
+      for (let y = 6; y < 18; y++) { const hw = Math.round(14 * Math.sqrt(Math.max(0, 1 - ((18 - y) / 12) ** 2))); f.rect(CX - hw, y, hw * 2 + 1, 1, c); }
+      f.rect(CX - 14, 15, 29, 3, shade(c, -0.45)); f.rect(CX - 24, 18, 49, 3, c); f.rect(CX - 24, 21, 49, 1, d);
+    }
+  }
   if (s.cap) {
     const c = s.cap, d = shade(c, -0.3);
     for (let y = 8; y < 22; y++) { const hw = Math.round(17 * Math.sqrt(Math.max(0, 1 - ((22 - y) / 15) ** 2))); f.rect(CX - hw, y, hw * 2 + 1, 1, c); }
@@ -383,7 +396,7 @@ function sheetOf(draw, moods) {
 }
 
 for (const [id, spec] of Object.entries(CHARACTERS)) {
-  sheetOf(e => drawPerson({ ...spec, ...EXTRA[id] }, e), EXPRESSIONS).save(path.join(ROOT, `assets/portraits/${id}.png`));
+  sheetOf(e => drawPerson({ iris: '#2b1d1a', ...spec, ...EXTRA[id] }, e), EXPRESSIONS).save(path.join(ROOT, `assets/portraits/${id}.png`));
 }
 // Boss: cột theo thứ tự neutral, smug (≈ happy), cracked (≈ surprised), blank (gỡ mặt nạ), angry (≈ serious)
 sheetOf(drawBoss, ['neutral', 'smug', 'cracked', 'blank', 'angry']).save(path.join(ROOT, 'assets/portraits/boss.png'));

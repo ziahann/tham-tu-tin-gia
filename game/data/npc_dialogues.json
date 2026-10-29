@@ -117,6 +117,87 @@
       "sprite": "boss",
       "isFictional": true,
       "sheetStatus": "đã duyệt 29/10/2026"
+    },
+    {
+      "id": "amb_guard",
+      "name": "Chú Bảo Vệ Tấn",
+      "role": "Bảo vệ tòa nhà Ban Hải Đăng (GIẢ LẬP)",
+      "room": "Văn phòng Ban Hải Đăng",
+      "sprite": "amb_guard",
+      "isFictional": true,
+      "ambient": true
+    },
+    {
+      "id": "amb_worker",
+      "name": "Anh Văn Phòng",
+      "role": "Nhân viên Ban Hải Đăng (GIẢ LẬP)",
+      "room": "Văn phòng Ban Hải Đăng",
+      "sprite": "amb_worker",
+      "isFictional": true,
+      "ambient": true
+    },
+    {
+      "id": "amb_barista",
+      "name": "Chị Pha Chế",
+      "role": "Pha chế quán Gió Biển (GIẢ LẬP)",
+      "room": "Quán cà phê Gió Biển",
+      "sprite": "amb_barista",
+      "isFictional": true,
+      "ambient": true
+    },
+    {
+      "id": "amb_vendor",
+      "name": "Cô Bán Báo",
+      "role": "Chủ sạp báo đầu phố (GIẢ LẬP)",
+      "room": "Phố ven vịnh",
+      "sprite": "amb_vendor",
+      "isFictional": true,
+      "ambient": true
+    },
+    {
+      "id": "amb_tourist",
+      "name": "Bạn Du Khách",
+      "role": "Du khách tham quan vịnh (GIẢ LẬP)",
+      "room": "Phố ven vịnh",
+      "sprite": "amb_tourist",
+      "isFictional": true,
+      "ambient": true
+    },
+    {
+      "id": "amb_fisher",
+      "name": "Chú Câu Cá",
+      "role": "Người câu cá ở cầu tàu (GIẢ LẬP)",
+      "room": "Bến tàu",
+      "sprite": "amb_fisher",
+      "isFictional": true,
+      "ambient": true
+    },
+    {
+      "id": "amb_student",
+      "name": "Em Học Sinh",
+      "role": "Học sinh đi học về (GIẢ LẬP)",
+      "room": "Phố ven vịnh",
+      "sprite": "amb_student",
+      "isFictional": true,
+      "ambient": true
+    },
+    {
+      "id": "amb_elder",
+      "name": "Ông Ngồi Ghế Đá",
+      "role": "Cụ ông hay ngồi công viên (GIẢ LẬP)",
+      "room": "Công viên ven vịnh",
+      "sprite": "amb_elder",
+      "isFictional": true,
+      "ambient": true
+    },
+    {
+      "id": "amb_jogger",
+      "name": "Chị Chạy Bộ",
+      "role": "Người chạy bộ ven vịnh (GIẢ LẬP)",
+      "room": "Lối dạo ven vịnh",
+      "sprite": "amb_jogger",
+      "isFictional": true,
+      "ambient": true
     }
   ],
   "dialogues": {
@@ -1236,6 +1317,34 @@
     ],
     "inspect_agency_sign": [
       "Biển hiệu: \"Phòng thám tử\". Bên trong có máy tìm ngược ảnh, bàn soi, máy dò ảnh AI, kho báo và bảng dòng thời gian. (GIẢ LẬP)"
+    ],
+    "inspect_tv": [
+      "TV ở sảnh đang phát bản tin. Dòng chữ chạy: \"Cảnh giác với video gắn nhãn sai về vụ 19/7\".",
+      "Bạn xem tóm tắt bài báo được nhắc trong bản tin."
+    ],
+    "inspect_whiteboard": [
+      "Bảng trắng ghi: \"Phân loại theo TỪNG nhóm nội dung — không gộp!\" (GIẢ LẬP)"
+    ],
+    "inspect_cooler": [
+      "Bình nước của hành lang. Có tờ giấy dán: \"Uống nước trước, chia sẻ sau.\""
+    ],
+    "inspect_kiosk": [
+      "Sạp báo đầu phố, mấy tờ báo in kẹp ngay ngắn. Bạn đọc thử."
+    ],
+    "inspect_busstop": [
+      "Áp phích ở trạm xe buýt: \"Dừng lại — Kiểm tra — Rồi mới chia sẻ.\" (GIẢ LẬP)"
+    ],
+    "inspect_stall": [
+      "Sạp chợ nhỏ bán trái cây. Cô chủ đang xem điện thoại, lẩm bẩm: \"Ảnh này ai đăng vậy ta?\""
+    ],
+    "inspect_boat": [
+      "Tàu tham quan neo ở bến, chờ khách như mọi ngày. (Cảnh bình thường.)"
+    ],
+    "inspect_news_tv": [
+      "Màn hình tòa soạn chiếu lại một bản tin. Bạn đọc tóm tắt bài báo liên quan."
+    ],
+    "inspect_cafe_tv": [
+      "TV của quán đang phát bản tin về các video gắn nhãn sai. Bạn đọc tóm tắt bài báo."
     ]
   },
   "inspectSources": {
@@ -1261,6 +1370,58 @@
       "thuthao2025",
       "hoaianh2025",
       "manh2025"
+    ],
+    "inspect_tv": [
+      "doquyen2025"
+    ],
+    "inspect_kiosk": [
+      "thuthao2025",
+      "dangkhoa2025"
+    ],
+    "inspect_news_tv": [
+      "minhthu2025"
+    ],
+    "inspect_cafe_tv": [
+      "hoaianh2025"
+    ]
+  },
+  "ambientLines": {
+    "note": "Người qua đường: nói lần lượt từng câu, không giao nhiệm vụ, không đưa dữ kiện mới ngoài F1–F16. Nhân vật GIẢ LẬP.",
+    "amb_guard": [
+      "Ai vào đây cũng phải trình thẻ. Tin trên mạng cũng nên vậy: hỏi xem nó từ đâu tới.",
+      "Trời mưa thì đi chậm thôi cháu, sàn sảnh trơn lắm."
+    ],
+    "amb_worker": [
+      "Máy in lại kẹt giấy rồi… Còn bạn thì sao, hồ sơ nào đang dở?",
+      "Sếp dặn: tiêu đề càng giật gân thì càng phải đọc kỹ ngày đăng."
+    ],
+    "amb_barista": [
+      "Cà phê nóng đây! Khách ở quán hay vừa uống vừa xem bản tin trên TV kia.",
+      "Có khách đưa điện thoại hỏi: \"Ảnh này thật không em?\" Em bảo: anh hỏi người làm thẩm định ấy."
+    ],
+    "amb_vendor": [
+      "Báo đây, báo đây! Muốn đọc thử thì xem ngay ở sạp, bài nào cũng ghi rõ ngày và tên báo.",
+      "Có người hỏi cô sao không bán \"tin nóng chưa kiểm chứng\". Cô bảo: không bán!"
+    ],
+    "amb_tourist": [
+      "Vịnh đẹp quá! Mình chụp nhiều ảnh, nhưng khi đăng sẽ ghi rõ ngày chụp.",
+      "Lần trước mình suýt chia sẻ một clip \"nóng\", may mà xem kỹ thì là clip cũ."
+    ],
+    "amb_fisher": [
+      "Mấy chục năm sống cạnh biển, chú chỉ tin người tận mắt thấy hoặc thông báo chính thức.",
+      "Cá cắn câu thì giật, còn tin \"giật gân\" thì đừng vội cắn câu."
+    ],
+    "amb_student": [
+      "Cô giáo dạy em hỏi ba câu trước khi chia sẻ: Ai đăng? Đăng khi nào? Có nguồn khác xác nhận không?",
+      "Bạn em bảo ảnh nào có chữ \"SỐC\" là phải nghi ngay. Đúng không anh chị?"
+    ],
+    "amb_elder": [
+      "Hồi xưa tin đồn đi bằng miệng, giờ đi bằng điện thoại. Nhanh hơn, nên càng phải chậm lại.",
+      "Ông không rành mạng, nhưng ông biết hỏi cháu ông: \"Báo nào đăng?\""
+    ],
+    "amb_jogger": [
+      "Chạy bộ thì cần nhịp đều; đọc tin cũng vậy, đừng chạy theo cảm xúc.",
+      "Sáng nào chị cũng chạy dọc vịnh. Gặp tin lạ trên mạng, chị dừng lại thở đều rồi mới đọc kỹ."
     ]
   }
 }

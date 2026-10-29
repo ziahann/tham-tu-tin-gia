@@ -22,11 +22,21 @@ const TILES = [
   // phòng boss
   'void', 'frame_wall', 'frame', 'shard',
   // phòng thám tử: thiết bị (mỗi thiết bị là một object 'device' trên bản đồ)
-  'floor_dark', 'dev_pc', 'dev_lighttable', 'dev_detector', 'dev_reader', 'dev_monitors', 'dev_timeline', 'dev_evidence'
+  'floor_dark', 'dev_pc', 'dev_lighttable', 'dev_detector', 'dev_reader', 'dev_monitors', 'dev_timeline', 'dev_evidence',
+  // nội thất chi tiết
+  'blinds', 'clock', 'poster', 'whiteboard', 'tv_wall', 'paper_desk', 'printer', 'water_cooler', 'filing_boxes', 'floor_lamp',
+  'coffee_table', 'trash', 'counter', 'cafe_table', 'floor_check',
+  // mặt tiền và phố
+  'glass', 'brick', 'brick_window', 'stone', 'stone_window', 'roof_edge', 'ac_unit', 'balcony', 'cafe_window', 'neon',
+  'curb', 'curb_low', 'crosswalk', 'kiosk', 'bus_stop', 'bin', 'bollard', 'stall', 'boat_l', 'boat_r', 'gravel', 'hydrant', 'post'
 ];
 const COLLIDES = new Set(['wall_top', 'wall_face', 'door_closed', 'window', 'pinboard', 'desk', 'cabinet', 'bookshelf', 'plant', 'sofa', 'reception',
   'water', 'karst', 'railing', 'roof', 'facade', 'facade_window', 'awning', 'signboard', 'tree', 'bench', 'lamp', 'flowerbed', 'frame_wall', 'frame',
-  'dev_pc', 'dev_lighttable', 'dev_detector', 'dev_reader', 'dev_monitors', 'dev_timeline', 'dev_evidence']);
+  'dev_pc', 'dev_lighttable', 'dev_detector', 'dev_reader', 'dev_monitors', 'dev_timeline', 'dev_evidence',
+  'blinds', 'clock', 'poster', 'whiteboard', 'tv_wall', 'paper_desk', 'printer', 'water_cooler', 'filing_boxes', 'floor_lamp',
+  'coffee_table', 'counter', 'cafe_table',
+  'glass', 'brick', 'brick_window', 'stone', 'stone_window', 'roof_edge', 'ac_unit', 'balcony', 'cafe_window', 'neon',
+  'kiosk', 'bus_stop', 'bin', 'bollard', 'stall', 'boat_l', 'boat_r', 'hydrant', 'post']);
 const tid = name => TILES.indexOf(name);
 
 /** Vẽ một ô 32x32 theo tên tại (ox, oy). */
@@ -178,6 +188,203 @@ function drawTile(img, name, ox, oy, rnd) {
       [[4, 5, '#f4eedc'], [13, 4, '#9fb3c8'], [22, 6, '#f4eedc'], [7, 13, '#f2d36b'], [18, 13, '#f4eedc']].forEach(([x, y, c]) => { R(x, y, 6, 5, c); R(x + 2, y, 1, 1, '#c8323c'); });
       for (let i = 0; i < 10; i++) { R(7 + i, 7 + Math.round(i * 0.6), 1, 1, '#c8323c'); R(16 + i, 8 + Math.round(i * 0.5), 1, 1, '#c8323c'); }
       break;
+    // ---------- nội thất chi tiết
+    case 'blinds':
+      // cửa sổ có rèm lá sách: vệt sáng ngang kiểu phim trinh thám
+      wallFace();
+      R(3, 2, 26, 20, '#b4b8c5'); R(5, 4, 22, 16, '#1c2a44');
+      for (let y = 5; y < 20; y += 3) R(5, y, 22, 2, '#c9d1dc');
+      R(15, 4, 2, 16, '#b4b8c5'); R(26, 4, 1, 16, '#8e97a8');
+      break;
+    case 'clock':
+      wallFace();
+      img.ellipse(ox + 16, oy + 10, 8, 8, '#2b2f3a'); img.ellipse(ox + 16, oy + 10, 6, 6, '#f4eedc');
+      R(16, 5, 1, 6, '#2b2f3a'); R(16, 10, 4, 1, '#c8323c');
+      break;
+    case 'poster':
+      wallFace();
+      R(8, 2, 16, 18, '#2b2f3a'); R(9, 3, 14, 16, '#e9e4d6'); R(10, 4, 12, 6, '#3d5a98'); R(11, 12, 10, 1, '#5b5d6e'); R(11, 14, 8, 1, '#5b5d6e'); R(11, 16, 9, 1, '#c8323c');
+      break;
+    case 'whiteboard':
+      wallFace();
+      R(1, 2, 30, 18, '#8e97a8'); R(2, 3, 28, 16, '#f4f6f8');
+      R(4, 6, 10, 1, '#3d5a98'); R(4, 9, 14, 1, '#3d5a98'); img.frame(ox + 19, oy + 5, 8, 7, '#c8323c'); R(4, 13, 6, 1, '#4aa35b');
+      R(4, 20, 24, 2, '#5b5d6e');
+      break;
+    case 'tv_wall':
+      wallFace();
+      R(1, 1, 30, 19, '#14161c'); R(2, 2, 28, 15, '#2c3a55'); R(2, 13, 28, 4, '#c8323c'); R(4, 14, 12, 1, '#f4eedc'); R(4, 4, 10, 7, '#9fb3c8'); R(16, 5, 11, 1, '#e6ebf2'); R(16, 8, 9, 1, '#9fb3c8');
+      break;
+    case 'paper_desk':
+      // bàn làm việc: màn hình, chồng hồ sơ, đèn bàn, cốc
+      shadow(14, 29);
+      R(1, 8, 30, 12, '#5a3e2c'); R(1, 8, 30, 3, '#76533a'); R(1, 20, 30, 9, '#45301f');
+      R(3, 2, 9, 8, '#2b2f3a'); R(4, 3, 7, 5, '#5fb3d9'); R(6, 10, 3, 1, '#2b2f3a');
+      R(14, 6, 7, 5, '#f4eedc'); R(15, 5, 7, 5, '#e9e4d6'); R(16, 4, 6, 5, '#f4eedc'); R(17, 6, 4, 1, '#999999');
+      R(25, 2, 1, 8, '#2b2f3a'); R(23, 1, 5, 3, '#2b2f3a'); R(24, 3, 3, 1, '#f2d36b');
+      R(22, 10, 3, 3, '#e8e8e8'); R(23, 11, 1, 1, '#6b4630');
+      R(3, 28, 3, 4, '#2b1d16'); R(26, 28, 3, 4, '#2b1d16');
+      break;
+    case 'printer':
+      shadow(12, 30);
+      R(4, 10, 24, 20, '#3a3f4d'); R(5, 11, 22, 8, '#c9d1dc'); R(7, 6, 18, 5, '#e9e4d6'); R(8, 4, 16, 3, '#f4eedc');
+      R(8, 21, 16, 2, '#14161c'); R(22, 13, 3, 2, '#4aa35b');
+      break;
+    case 'water_cooler':
+      shadow(8, 30);
+      R(10, 14, 12, 16, '#c9d1dc'); R(11, 15, 10, 4, '#e6ebf2'); R(13, 20, 2, 2, '#3d7fd1'); R(17, 20, 2, 2, '#c8323c');
+      R(11, 1, 10, 13, '#7fb0d0'); R(12, 2, 3, 10, '#a9d0ea'); R(13, 0, 6, 2, '#3d7fd1');
+      break;
+    case 'filing_boxes':
+      shadow(13, 30);
+      R(3, 14, 13, 15, '#a77b52'); R(3, 14, 13, 2, '#c49a6c'); R(6, 19, 7, 3, '#f4eedc');
+      R(16, 16, 13, 13, '#8a6040'); R(16, 16, 13, 2, '#a77b52'); R(19, 20, 7, 3, '#f4eedc');
+      R(7, 5, 13, 10, '#a77b52'); R(7, 5, 13, 2, '#c49a6c'); R(10, 9, 7, 3, '#f4eedc');
+      break;
+    case 'floor_lamp':
+      img.ellipse(ox + 16, oy + 30, 6, 2, '#00000044');
+      R(15, 8, 2, 21, '#2b2f3a'); R(11, 28, 10, 2, '#2b2f3a');
+      R(10, 1, 12, 8, '#e8c66a'); R(11, 2, 10, 6, '#f4dc96'); R(12, 9, 8, 1, '#c99a3a');
+      break;
+    case 'coffee_table':
+      shadow(13, 26);
+      R(3, 12, 26, 10, '#5a3e2c'); R(3, 12, 26, 2, '#76533a'); R(5, 22, 2, 5, '#2b1d16'); R(25, 22, 2, 5, '#2b1d16');
+      R(7, 14, 8, 5, '#e9e4d6'); R(19, 14, 3, 3, '#f4eedc'); R(20, 15, 1, 1, '#6b4630');
+      break;
+    case 'trash':
+      img.ellipse(ox + 16, oy + 29, 6, 2, '#00000044');
+      R(11, 16, 10, 13, '#5b6170'); R(10, 14, 12, 3, '#3a3f4d'); R(13, 18, 1, 9, '#4a5060'); R(18, 18, 1, 9, '#4a5060'); R(14, 12, 4, 3, '#f4eedc');
+      break;
+    case 'counter':
+      // quầy pha chế: mặt gỗ, máy pha cà phê, cốc
+      shadow(16, 30);
+      R(0, 8, T, 22, '#4e3324'); R(0, 8, T, 4, '#8a5c3d'); for (let x = 3; x < T; x += 8) R(x, 15, 4, 12, '#5a3e2c');
+      R(4, 0, 12, 10, '#3a3f4d'); R(6, 2, 8, 4, '#c9d1dc'); R(8, 7, 2, 2, '#14161c'); R(20, 4, 4, 5, '#f4eedc'); R(25, 5, 4, 4, '#e8e8e8');
+      break;
+    case 'cafe_table':
+      img.ellipse(ox + 16, oy + 27, 11, 3, '#00000040');
+      img.ellipse(ox + 16, oy + 13, 12, 7, '#6b4630'); img.ellipse(ox + 16, oy + 12, 11, 6, '#8a5c3d');
+      R(15, 18, 3, 8, '#2b2f3a'); R(10, 9, 4, 3, '#f4eedc'); R(11, 10, 2, 1, '#6b4630'); R(19, 12, 4, 3, '#f4eedc');
+      break;
+    case 'floor_check':
+      R(0, 0, T, T, '#3a3f4d'); R(0, 0, 16, 16, '#d8d0bf'); R(16, 16, 16, 16, '#d8d0bf');
+      break;
+    // ---------- mặt tiền
+    case 'glass':
+      R(0, 0, T, T, '#5b6f8a'); R(1, 1, 14, 30, '#86a6c4'); R(17, 1, 14, 30, '#86a6c4');
+      R(2, 2, 4, 28, '#a9c4dc'); R(18, 2, 4, 28, '#a9c4dc'); R(0, 15, T, 2, '#4a5363');
+      break;
+    case 'brick':
+      R(0, 0, T, T, '#8a4a3a');
+      for (let y = 0; y < T; y += 6) { R(0, y, T, 1, '#6e3a2e'); for (let x = (y / 6) % 2 ? 4 : 0; x < T; x += 8) R(x, y + 1, 1, 5, '#6e3a2e'); }
+      noise('#8a4a3a', 0.15, 40);
+      break;
+    case 'brick_window':
+      R(0, 0, T, T, '#8a4a3a');
+      for (let y = 0; y < T; y += 6) R(0, y, T, 1, '#6e3a2e');
+      R(5, 3, 22, 24, '#d8d0bf'); R(7, 5, 18, 20, '#2c3a55'); R(15, 5, 2, 20, '#d8d0bf'); R(7, 13, 18, 2, '#d8d0bf'); R(8, 6, 5, 2, '#9fb3c8');
+      R(4, 27, 24, 3, '#b4b8c5');
+      break;
+    case 'stone':
+      R(0, 0, T, T, '#4a5060');
+      for (let y = 0; y < T; y += 10) { R(0, y, T, 1, '#3a3f4d'); R((y / 10) % 2 ? 10 : 22, y, 1, 10, '#3a3f4d'); }
+      noise('#4a5060', 0.12, 30);
+      break;
+    case 'stone_window':
+      R(0, 0, T, T, '#4a5060');
+      R(5, 3, 22, 24, '#2b2f3a'); R(7, 5, 18, 20, '#f2c46b'); R(7, 5, 18, 8, '#e0a84e'); R(15, 5, 2, 20, '#2b2f3a'); R(4, 27, 24, 2, '#6b7686');
+      break;
+    case 'roof_edge':
+      R(0, 0, T, T, '#3a3f4d'); R(0, 0, T, 6, '#5b6170'); R(0, 6, T, 3, '#2b2f3a');
+      for (let x = 2; x < T; x += 8) R(x, 9, 4, 20, '#4a5060');
+      R(0, 28, T, 4, '#2b2f3a');
+      break;
+    case 'ac_unit':
+      R(0, 0, T, T, '#efe2c4'); R(4, 6, 24, 16, '#c9d1dc'); R(5, 7, 22, 14, '#e6ebf2');
+      for (let x = 7; x < 25; x += 3) R(x, 9, 1, 10, '#9aa1b3'); R(4, 22, 24, 2, '#8e97a8');
+      break;
+    case 'balcony':
+      R(0, 0, T, T, '#efe2c4'); R(6, 2, 20, 18, '#2c3a55'); R(15, 2, 2, 18, '#efe2c4');
+      R(2, 18, 28, 2, '#3a3f4d'); for (let x = 3; x < 30; x += 4) R(x, 20, 1, 8, '#3a3f4d'); R(2, 27, 28, 2, '#3a3f4d');
+      R(5, 22, 4, 5, '#4f7a4a'); R(23, 22, 4, 5, '#c8323c');
+      break;
+    case 'cafe_window':
+      R(0, 0, T, T, '#6b4630'); R(2, 2, 28, 26, '#3a2a20'); R(3, 3, 26, 24, '#f2c46b'); R(3, 3, 26, 10, '#e8a94e');
+      R(8, 16, 6, 4, '#6b4630'); R(18, 15, 8, 5, '#6b4630'); R(15, 3, 1, 24, '#3a2a20');
+      break;
+    case 'neon':
+      // biển hiệu neon của Phòng thám tử (kính lúp phát sáng)
+      R(0, 0, T, T, '#4a5060'); R(1, 6, 30, 18, '#14161c');
+      img.ellipse(ox + 12, oy + 14, 6, 6, '#7fe3ff'); img.ellipse(ox + 12, oy + 14, 4, 4, '#14161c');
+      for (let i = 0; i < 6; i++) R(16 + i, 18 + i, 2, 2, '#7fe3ff');
+      R(22, 10, 6, 1, '#ff9fd0'); R(22, 13, 4, 1, '#ff9fd0');
+      break;
+    // ---------- phố
+    case 'curb':
+      R(0, 0, T, T, '#c9c2b4'); for (let y = 0; y < 24; y += 8) R(0, y, T, 1, '#b2aa9a');
+      R(0, 24, T, 4, '#e6e1d6'); R(0, 28, T, 4, '#4a4d57');
+      break;
+    case 'curb_low':
+      R(0, 0, T, T, '#c9c2b4'); for (let y = 8; y < T; y += 8) R(0, y, T, 1, '#b2aa9a');
+      R(0, 0, T, 4, '#4a4d57'); R(0, 4, T, 4, '#e6e1d6');
+      break;
+    case 'crosswalk':
+      R(0, 0, T, T, '#4a4d57'); noise('#4a4d57', 0.18, 40);
+      for (let x = 2; x < T; x += 10) R(x, 0, 6, T, '#e6e1d6');
+      break;
+    case 'kiosk':
+      // sạp báo: mái, kệ báo, tạp chí
+      img.ellipse(ox + 16, oy + 30, 13, 2, '#00000044');
+      R(2, 2, 28, 5, '#2a9d8f'); for (let x = 2; x < 30; x += 6) R(x, 7, 3, 2, '#2a9d8f');
+      R(4, 9, 24, 20, '#6b4630'); R(5, 10, 22, 8, '#3a2a20');
+      [[6, 11, '#f4eedc'], [11, 11, '#e9e4d6'], [16, 11, '#c8323c'], [21, 11, '#f2d36b']].forEach(([x, y, c]) => { R(x, y, 4, 6, c); R(x + 1, y + 2, 2, 1, '#5b5d6e'); });
+      R(5, 20, 22, 2, '#8a5c3d'); R(7, 22, 6, 6, '#f4eedc'); R(15, 22, 10, 6, '#e9e4d6');
+      break;
+    case 'bus_stop':
+      img.ellipse(ox + 16, oy + 30, 13, 2, '#00000044');
+      R(2, 2, 28, 4, '#3a3f4d'); R(3, 6, 2, 22, '#3a3f4d'); R(27, 6, 2, 22, '#3a3f4d');
+      R(5, 6, 22, 14, '#9fb3c855'); R(6, 8, 8, 10, '#3d5a98'); R(7, 9, 6, 2, '#f4eedc'); R(5, 22, 22, 3, '#8a5c3d');
+      R(25, 0, 6, 6, '#2a9d8f'); R(26, 1, 4, 1, '#f4eedc');
+      break;
+    case 'bin':
+      img.ellipse(ox + 16, oy + 29, 7, 2, '#00000044');
+      R(10, 12, 12, 17, '#2f5a4a'); R(9, 10, 14, 3, '#3f7a64'); R(12, 15, 8, 2, '#4f8a74'); R(14, 8, 4, 2, '#3f7a64');
+      break;
+    case 'bollard':
+      img.ellipse(ox + 16, oy + 29, 4, 2, '#00000044');
+      R(13, 14, 6, 15, '#3a3f4d'); R(13, 16, 6, 2, '#f2d36b'); R(12, 12, 8, 3, '#4a5060');
+      break;
+    case 'stall':
+      // sạp chợ: dù sọc, bàn hàng trái cây
+      img.ellipse(ox + 16, oy + 30, 14, 2, '#00000044');
+      for (let x = 0; x < T; x += 8) { R(x, 1, 4, 8, '#e8902f'); R(x + 4, 1, 4, 8, '#f4eedc'); }
+      R(15, 9, 2, 8, '#3a3f4d'); R(2, 17, 28, 4, '#8a5c3d'); R(4, 21, 2, 8, '#5a3e2c'); R(26, 21, 2, 8, '#5a3e2c');
+      [[4, 14, '#f2d36b'], [9, 13, '#c8323c'], [14, 14, '#4aa35b'], [19, 13, '#e8902f'], [24, 14, '#f2d36b']].forEach(([x, y, c]) => R(x, y, 4, 3, c));
+      break;
+    case 'boat_l':
+    case 'boat_r': {
+      // tàu tham quan neo ở bến (cảnh bình thường), hai ô ghép
+      R(0, 0, T, T, '#2f7f9f');
+      for (let i = 0; i < 3; i++) R(Math.floor(rnd() * 24), Math.floor(rnd() * 30), 6, 1, '#5aa8c4');
+      const left = name === 'boat_l';
+      R(left ? 4 : 0, 14, left ? 28 : 26, 10, '#f4f4f4'); R(left ? 4 : 0, 22, left ? 28 : 26, 3, '#9aa3b0');
+      if (left) { R(2, 16, 3, 7, '#f4f4f4'); R(8, 6, 24, 8, '#e6e6e6'); R(10, 8, 4, 3, '#2c3a55'); R(16, 8, 4, 3, '#2c3a55'); R(22, 8, 4, 3, '#2c3a55'); }
+      else { R(0, 6, 18, 8, '#e6e6e6'); R(2, 8, 4, 3, '#2c3a55'); R(8, 8, 4, 3, '#2c3a55'); R(26, 16, 3, 6, '#f4f4f4'); R(14, 2, 2, 5, '#5b5d6e'); }
+      break;
+    }
+    case 'gravel':
+      R(0, 0, T, T, '#b9b09c'); noise('#b9b09c', 0.25, 90);
+      break;
+    case 'post':
+      // bảng thông tin trên cột gỗ (bến tàu)
+      img.ellipse(ox + 16, oy + 30, 6, 2, '#00000044');
+      R(14, 14, 4, 16, '#6b4630'); R(3, 2, 26, 14, '#5a3e2c'); R(5, 4, 22, 10, '#e9e4d6');
+      R(7, 6, 12, 1, '#3d5a98'); R(7, 9, 16, 1, '#5b5d6e'); R(7, 11, 10, 1, '#c8323c');
+      break;
+    case 'hydrant':
+      img.ellipse(ox + 16, oy + 29, 5, 2, '#00000044');
+      R(12, 12, 8, 17, '#c8323c'); R(11, 10, 10, 3, '#a82a32'); R(9, 17, 3, 4, '#a82a32'); R(20, 17, 3, 4, '#a82a32'); R(14, 8, 4, 2, '#a82a32');
+      break;
     case 'chair':
       shadow(8, 28);
       R(9, 8, 14, 14, '#3a3f4d'); R(10, 9, 12, 8, '#59606f'); R(10, 22, 2, 6, '#22252e'); R(20, 22, 2, 6, '#22252e');
@@ -266,7 +473,7 @@ function drawTile(img, name, ox, oy, rnd) {
       for (let x = 0; x < T; x += 8) { R(x, 20, 4, 3, '#a82a32'); R(x + 4, 20, 4, 2, '#dcd6c4'); }
       break;
     case 'signboard':
-      R(0, 0, T, T, '#efe2c4'); R(1, 6, 30, 16, '#2a4f7a'); R(3, 8, 26, 12, '#3d6ea6'); R(6, 12, 20, 2, '#f4eedc'); R(8, 16, 14, 1, '#f2d36b');
+      R(0, 0, T, T, '#2b2f3a'); R(0, 0, T, 2, '#3a3f4d'); R(1, 6, 30, 16, '#14161c'); R(3, 8, 26, 12, '#3d6ea6'); R(6, 12, 20, 2, '#f4eedc'); R(8, 16, 14, 1, '#f2d36b'); R(0, 30, T, 2, '#14161c');
       break;
     case 'tree':
       R(0, 0, T, T, '#00000000');
@@ -585,228 +792,300 @@ function buildMap(key, { rows, legend, ground, doors = [], objects, label, music
 /** Cửa phòng đóng 2 ô ngang ở hàng tường trên (y) và mặt tường (y + 1). */
 const roomDoor = (x, y) => [[x, y, 'wall_top'], [x + 1, y, 'wall_top'], [x, y + 1, 'door_closed'], [x + 1, y + 1, 'door_closed']];
 
-const INDOOR = { '#': 'wall_top', W: 'wall_face', w: 'window', p: 'pinboard', d: 'desk', c: 'cabinet', b: 'bookshelf', P: 'plant', h: 'chair', s: 'sofa', R: 'reception', Q: 'door_closed' };
+const INDOOR = {
+  '#': 'wall_top', W: 'wall_face', w: 'window', p: 'pinboard', d: 'desk', c: 'cabinet', b: 'bookshelf', P: 'plant', h: 'chair', s: 'sofa', R: 'reception', Q: 'door_closed',
+  L: 'blinds', k: 'clock', o: 'poster', x: 'whiteboard', V: 'tv_wall', n: 'paper_desk', r: 'printer', q: 'water_cooler', f: 'filing_boxes',
+  m: 'floor_lamp', a: 'coffee_table', t: 'trash', C: 'counter'
+};
 
-// ---------------- Văn phòng Ban Hải Đăng
-// # tường trên, W mặt tường, w cửa sổ, p bảng ghim, D lối cửa phòng, E cửa ra phố, Q cửa Phòng họp (boss),
-// . sàn gỗ, ~ thảm hành lang, , sàn sảnh, d bàn, c tủ hồ sơ, b kệ sách, P cây, h ghế, s sofa, R quầy lễ tân.
-const OFFICE = [
-  '########################################',
-  '#WWWppWWWW#WWWwwWWWW#WWwWWWwWW#WWWwwWWW#',
-  '#ccc...ccc#........P#bbb.....b#ccc....P#',
-  '#.........#.........#.........#........#',
-  '#.........#.ddd.ddd.#.........#........#',
-  '#...ddd...#..h...h..#...ddd...#...ddd..#',
-  '#....h....#.........#....h....#....h...#',
-  '#.........#.........#.........#........#',
-  '#P.......P#P.......P#........P#P.......#',
-  '####DD##########DD########DD#######DD###',
-  '#WWWDDWWWWWWWWWWDDWWWWWWWWWDDWWWWWWWDDW#',
-  '#P~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~P#',
-  '#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#',
-  '#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#',
-  '################,,,,,,,,################',
-  '#WWwWWpWWWwWWWWW,,,,,,,,WWWWWwWQQWWwWWW#',
-  '#bb.............P,,,,,,P...............#',
-  '#,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,#',
-  '#,,,,,,,,,,,,,,,,RRRRRR,,,,,,,,,,,,,,,,#',
-  '#,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,#',
-  '#,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,#',
-  '#,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,#',
-  '#,,sss,,,,,,,,,,,,,,,,,,,,,,,,,,,sss,,,#',
-  '#,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,#',
-  '#,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,#',
-  '#,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,#',
-  '#P,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,P#',
-  '###################EE###################'
-];
-const OFFICE_RUGS = [[2, 21, 6, 4], [32, 21, 6, 4], [3, 6, 5, 2]];
+// ---------------- Văn phòng Ban Hải Đăng (gọn lại, nhiều chi tiết)
+// # tường trên, W mặt tường, L cửa sổ rèm lá sách, p bảng ghim, k đồng hồ, o áp phích, x bảng trắng, V TV tin tức,
+// D lối cửa phòng, E cửa ra phố, Q cửa Phòng họp (boss), . sàn gỗ, ~ thảm hành lang, , sàn sảnh,
+// n bàn làm việc, d bàn, h ghế, c tủ hồ sơ, b kệ sách, f thùng hồ sơ, r máy in, q bình nước, m đèn cây, t thùng rác,
+// P cây, s sofa, a bàn nước, R quầy lễ tân.
+/** Lưới ký tự rỗng W x H; put(x, y, chuỗi) ghi đè từ (x, y). */
+function grid(W, H, fill) {
+  const g = Array.from({ length: H }, () => Array(W).fill(fill));
+  const put = (x, y, str) => [...str].forEach((ch, i) => { g[y][x + i] = ch; });
+  return { g, put, rows: () => g.map(r => r.join('')) };
+}
+
+const OFFICE = (() => {
+  const W = 33, H = 20;
+  const { g, put, rows } = grid(W, H, ',');
+  put(0, 0, '#'.repeat(W));
+  for (let y = 0; y < H; y++) { g[y][0] = '#'; g[y][W - 1] = '#'; }
+  // bốn phòng phía trên (S3, S4, S7, S8), mỗi phòng 7 ô
+  const ROOM = [
+    ['WWppLWk', 'cc..f.P', '..nnn..', '...h...', '.......', 'm....tP'],   // S3 Hồ sơ
+    ['WxxWLLW', 'bb...rP', '.nn.nn.', '.h..h..', '.......', 'P.....m'],   // S4 Phân tích ảnh
+    ['WoWLLWk', 'P.bb..c', '..nnn..', '...h...', '.......', 'm....tP'],   // S7 Tác động
+    ['WLLWxxW', 'c..f..P', '..nnn..', '...h...', '.......', 'P....tm']    // S8 Phân loại
+  ];
+  ROOM.forEach((lines, i) => lines.forEach((ln, j) => put(1 + i * 8, 1 + j, ln)));
+  for (const x of [8, 16, 24]) for (let y = 0; y <= 7; y++) g[y][x] = '#';
+  put(0, 7, '#'.repeat(W));
+  put(1, 8, 'W'.repeat(W - 2));
+  for (const x of [4, 12, 20, 28]) { g[7][x] = g[7][x + 1] = 'D'; g[8][x] = g[8][x + 1] = 'D'; }
+  // hành lang
+  put(1, 9, 'q' + '~'.repeat(29) + 'P');
+  put(1, 10, '~'.repeat(31));
+  // sảnh
+  put(0, 11, '#'.repeat(13) + ','.repeat(6) + '#'.repeat(14));
+  put(1, 12, 'WLLWpWVVWWLW'); put(19, 12, 'WWkWLLWWQQWLW');
+  put(1, 13, 'bb'); g[13][12] = 'P'; g[13][19] = 'P'; put(29, 13, 'rqf');
+  put(2, 14, 'sss'); put(27, 14, 'sss');
+  g[15][3] = 'a'; put(13, 15, 'RRRRRR'); g[15][28] = 'a';
+  put(2, 16, 'sss'); put(27, 16, 'sss');
+  g[17][1] = 'm'; g[17][8] = 'P'; g[17][23] = 'P'; g[17][31] = 'm';
+  g[18][1] = 'P'; g[18][10] = 't'; g[18][31] = 'P';
+  put(0, 19, '#'.repeat(W)); g[19][16] = g[19][17] = 'E';
+  // sàn: gỗ trong phòng, thảm hành lang
+  for (let y = 1; y <= 6; y++) for (let x = 1; x < W - 1; x++) if (g[y][x] === ',') g[y][x] = '.';
+  return rows();
+})();
+const OFFICE_RUGS = [[12, 16, 8, 3], [2, 14, 3, 3], [27, 14, 3, 3]];
 
 const office = buildMap('office', {
   rows: OFFICE, legend: INDOOR, label: 'Văn phòng Ban Điều phối Thông tin Du lịch Hải Đăng', music: 'office',
   ground: (ch, x, y) => {
     if (ch === 'D') return 'doorway';
     if (ch === 'E') return 'exit_mat';
-    if (ch === '~') return 'carpet';
-    if (OFFICE_RUGS.some(([rx, ry, rw, rh]) => x >= rx && x < rx + rw && y >= ry && y < ry + rh) && !INDOOR[ch]) return 'rug';
-    if (y >= 14) return 'floor_lobby';
-    if (y >= 11) return 'carpet';
+    if (ch === '~' || (y >= 9 && y <= 10)) return 'carpet';
+    if (OFFICE_RUGS.some(([rx, ry, rw, rh]) => x >= rx && x < rx + rw && y >= ry && y < ry + rh)) return 'rug';
+    if (y >= 11) return 'floor_lobby';
     return 'floor_wood';
   },
-  doors: [...roomDoor(4, 9), ...roomDoor(16, 9), ...roomDoor(26, 9), ...roomDoor(35, 9)],
+  doors: [...roomDoor(4, 7), ...roomDoor(12, 7), ...roomDoor(20, 7), ...roomDoor(28, 7)],
   objects: () => [
-    point('spawn', 'spawn_start', 20, 25.5),
-    point('spawn', 'spawn_from_street', 20, 25.5),
-    point('spawn', 'spawn_from_boss', 32, 17),
-    rectT('zone', 'zone_S3', 1, 1, 9, 8, { room: 'S3' }),
-    rectT('zone', 'zone_S4', 11, 1, 9, 8, { room: 'S4' }),
-    rectT('zone', 'zone_S7', 21, 1, 9, 8, { room: 'S7' }),
-    rectT('zone', 'zone_S8', 31, 1, 8, 8, { room: 'S8' }),
-    rectT('zone', 'zone_corridor', 1, 11, 38, 3, { area: 'corridor' }),
-    rectT('zone', 'zone_lobby', 1, 14, 38, 13, { area: 'lobby' }),
-    ...[['S3', 4], ['S4', 16], ['S7', 26], ['S8', 35]].map(([room, cx]) => rectT('door', `door_${room}`, cx, 9, 2, 2, { room })),
-    rectT('exit', 'exit_street', 19, 26.6, 2, 1.4, { target: 'street', spawn: 'spawn_from_office' }),
-    rectT('portal', 'portal_boss', 31, 15, 2, 1, { target: 'boss', spawn: 'spawn_from_office', room: 'S9' }),
-    point('npc', 'npc1', 19, 20.5, { patrol: 'patrol_npc1_lobby' }),
-    point('npc', 'npc2', 8, 12.5, { patrol: 'patrol_npc2' }),
-    path_('patrol_npc1_lobby', [[16.5, 20.5], [23.5, 20.5]]),
-    path_('patrol_npc2', [[3, 12.5], [36, 12.5]]),
-    path_('lead_hoso', [[19, 20.5], [16.5, 20.5], [16.5, 17.5], [19.5, 17.5], [19.5, 12.5], [5, 12.5], [5, 9.8], [5, 7.5]]),
-    path_('patrol_npc1_hoso', [[2.5, 7.5], [8.5, 7.5]]),
-    point('station', 'npc1_hoso', 5, 7.5),
-    path_('patrol_npc2_s4', [[12.5, 7.5], [18.5, 7.5]]),
-    point('station', 'npc2_s4', 15.5, 7.5),
-    path_('patrol_npc1_s7', [[22.5, 7.5], [28.5, 7.5]]),
-    point('station', 'npc1_s7', 25.5, 7.5),
-    path_('patrol_npc1_s8', [[32.5, 7.5], [37.5, 7.5]]),
-    point('station', 'npc1_s8', 35.5, 7.5),
-    path_('patrol_npc1_end', [[28.5, 17.5], [35.5, 17.5]]),
-    point('station', 'npc1_lobby_end', 30, 17.5),
-    rectT('inspect', 'inspect_notice', 6, 15, 1, 1, { text: 'inspect_notice' }),
-    rectT('inspect', 'inspect_window_lobby', 3, 15, 1, 1, { text: 'inspect_window' }),
-    rectT('inspect', 'inspect_reception', 17, 18, 6, 1, { text: 'inspect_reception' }),
-    rectT('inspect', 'inspect_pinboard_S3', 4, 1, 2, 1, { text: 'inspect_pinboard' }),
-    rectT('inspect', 'inspect_cabinet_S3', 1, 2, 3, 1, { text: 'inspect_cabinet' }),
-    rectT('inspect', 'inspect_bookshelf_lobby', 1, 16, 2, 1, { text: 'inspect_bookshelf' }),
-    rectT('inspect', 'inspect_lab_S4', 12, 4, 7, 1, { text: 'inspect_lab' })
+    point('spawn', 'spawn_start', 16.5, 17.6),
+    point('spawn', 'spawn_from_street', 16.5, 17.6),
+    point('spawn', 'spawn_from_boss', 27.5, 13.7),
+    rectT('zone', 'zone_S3', 1, 1, 7, 6, { room: 'S3' }),
+    rectT('zone', 'zone_S4', 9, 1, 7, 6, { room: 'S4' }),
+    rectT('zone', 'zone_S7', 17, 1, 7, 6, { room: 'S7' }),
+    rectT('zone', 'zone_S8', 25, 1, 7, 6, { room: 'S8' }),
+    rectT('zone', 'zone_corridor', 1, 8, 31, 3, { area: 'corridor' }),
+    rectT('zone', 'zone_lobby', 1, 11, 31, 8, { area: 'lobby' }),
+    ...[['S3', 4], ['S4', 12], ['S7', 20], ['S8', 28]].map(([room, cx]) => rectT('door', `door_${room}`, cx, 7, 2, 2, { room })),
+    rectT('exit', 'exit_street', 16, 18.6, 2, 1.4, { target: 'street', spawn: 'spawn_from_office' }),
+    rectT('portal', 'portal_boss', 27, 12, 2, 1, { target: 'boss', spawn: 'spawn_from_office', room: 'S9' }),
+    point('npc', 'npc1', 16, 16.6, { patrol: 'patrol_npc1_lobby' }),
+    point('npc', 'npc2', 8, 9.7, { patrol: 'patrol_npc2' }),
+    point('npc', 'amb_guard', 19.5, 18.4, { patrol: 'patrol_guard' }),
+    point('npc', 'amb_worker', 22, 10.5, { patrol: 'patrol_worker' }),
+    path_('patrol_npc1_lobby', [[13.5, 16.6], [18.5, 16.6]]),
+    path_('patrol_npc2', [[3, 9.7], [29, 9.7]]),
+    path_('patrol_guard', [[18.5, 18.4], [21.5, 18.4]]),
+    path_('patrol_worker', [[14, 10.5], [30, 10.5]]),
+    path_('patrol_npc1_hoso', [[2.5, 5.6], [6.5, 5.6]]),
+    point('station', 'npc1_hoso', 4.5, 5.6),
+    path_('patrol_npc2_s4', [[10.5, 5.6], [14.5, 5.6]]),
+    point('station', 'npc2_s4', 12.5, 5.6),
+    path_('patrol_npc1_s7', [[18.5, 5.6], [22.5, 5.6]]),
+    point('station', 'npc1_s7', 20.5, 5.6),
+    path_('patrol_npc1_s8', [[26.5, 5.6], [30.5, 5.6]]),
+    point('station', 'npc1_s8', 28.5, 5.6),
+    point('station', 'npc1_lobby_end', 22, 17.6),
+    rectT('inspect', 'inspect_notice', 5, 12, 1, 1, { text: 'inspect_notice' }),
+    rectT('inspect', 'inspect_window_lobby', 2, 12, 2, 1, { text: 'inspect_window' }),
+    rectT('inspect', 'inspect_tv', 7, 12, 2, 1, { text: 'inspect_tv' }),
+    rectT('inspect', 'inspect_reception', 13, 15, 6, 1, { text: 'inspect_reception' }),
+    rectT('inspect', 'inspect_pinboard_S3', 3, 1, 2, 1, { text: 'inspect_pinboard' }),
+    rectT('inspect', 'inspect_cabinet_S3', 1, 2, 2, 1, { text: 'inspect_cabinet' }),
+    rectT('inspect', 'inspect_bookshelf_lobby', 1, 13, 2, 1, { text: 'inspect_bookshelf' }),
+    rectT('inspect', 'inspect_lab_S4', 10, 3, 5, 1, { text: 'inspect_lab' }),
+    rectT('inspect', 'inspect_whiteboard_S8', 29, 1, 2, 1, { text: 'inspect_whiteboard' }),
+    rectT('inspect', 'inspect_cooler', 1, 9, 1, 1, { text: 'inspect_cooler' })
   ]
 });
 
-// ---------------- Phố ven vịnh
-// # mái, W tường mặt tiền, w cửa sổ, S biển hiệu, a mái hiên quán, o/n/c cửa tòa nhà (văn phòng / tòa soạn / quán),
-// g cỏ, _ vỉa hè, = đường, - vạch kẻ, , lối đi dạo, T cây, B ghế đá, L đèn, F bồn hoa, | lan can, ~ nước, K đảo đá, X cầu tàu.
-// t: cửa Phòng thám tử (tòa nhà thứ tư, bên phải)
-const sRow = (a, b, c, d) => 'gg' + a + 'gggg' + b + 'gggg' + c + 'gggg' + d + 'gggg';
-const SW = 62;
-const STREET = [
-  sRow('############', '############', '##########', '##########'),
-  sRow('############', '############', '##########', '##########'),
-  sRow('WwWwWwWwWwWW', 'WwWwWwWwWwWW', 'aaaaaaaaaa', 'WwWwWWwWwW'),
-  sRow('WwWWSWWWwWWW', 'WwWWSWWWwWWW', 'WwWWSWWwWW', 'WwWSWWWwWW'),
-  sRow('WwWwWWWWwWwW', 'WwWwWWWWwWwW', 'WwWWWWWwWW', 'WwWwWWwWwW'),
-  sRow('WWWWWooWWWWW', 'WWWWWnnWWWWW', 'WWWWccWWWW', 'WWWWttWWWW'),
-  '_'.repeat(SW),
-  '_'.repeat(16) + 'L' + '_'.repeat(15) + 'L' + '_'.repeat(15) + 'L' + '_'.repeat(13),
-  '='.repeat(SW),
-  '-'.repeat(SW),
-  '='.repeat(SW),
-  '_'.repeat(SW),
-  ',,,T,,,,BB,,,T,,L,,,,BB,,,,,T,,BB,,L,,,,,,,,,,T,,,,BB,,,,T,,,,',
-  ','.repeat(SW),
-  ',,FF,,,,,,,,,,,,,,,,,FF,,,,,,,,,,,,,,,,,,,,,,FF,,,,,,,,,,FF,,,',
-  '|'.repeat(37) + 'XXX' + '|'.repeat(SW - 40),
-  ...Array.from({ length: 10 }, (_, i) => '~'.repeat(37) + (i < 7 ? 'XXX' : '~~~') + '~'.repeat(SW - 40))
-];
-// đảo đá trên mặt nước, bảng thông tin cuối cầu tàu
-const setCh = (x, y, ch) => { STREET[y] = STREET[y].slice(0, x) + ch + STREET[y].slice(x + 1); };
-[[6, 19], [7, 19], [6, 20], [7, 20], [8, 20], [14, 23], [14, 24], [24, 18], [25, 18], [25, 19], [26, 19], [44, 20], [45, 20], [45, 21], [30, 24], [3, 24]]
-  .forEach(([x, y]) => setCh(x, y, 'K'));
-setCh(40, 21, 'S');
+// ---------------- Phố ven vịnh (thành phố mở rộng)
+// Tòa nhà (hàng 0–6): # mái, G máng xối, H kính, S biển hiệu, K gạch, k cửa sổ gạch, Z đá, z cửa sổ đá, N biển neon,
+// A máy lạnh, Y ban công, W tường, w cửa sổ, a mái hiên, U cửa kính quán; o/n/t/c cửa (văn phòng / tòa soạn / thám tử / quán).
+// Phố: _ vỉa hè, ^ mép vỉa trên, v mép vỉa dưới, = đường, - vạch giữa, % vạch qua đường, y hẻm sỏi, : lối sỏi, g cỏ,
+// , lối dạo, L đèn, T cây, B ghế, F bồn hoa, Q sạp báo, J trạm xe buýt, b thùng rác, l cọc chắn, M sạp chợ, h trụ nước,
+// p bảng bến tàu, | lan can, ~ nước, X cầu tàu, I đảo đá, O/R tàu neo (hai ô).
+const CW = 64, CH = 36;
+const CITY = (() => {
+  const { g, put, rows } = grid(CW, CH, '_');
+  const BUILDINGS = [
+    [2, ['##############', '##############', 'GGGGGGGGGGGGGG', 'HHHHHSHHHHHHHH', 'HHHHHHHHHHHHHH', 'HHHHHHHHHHHHHH', 'HHHHHHooHHHHHH']],
+    [19, ['############', '############', 'GGGGGGGGGGGG', 'KkKkKSKkKkKk', 'KkKkKkKkKkKk', 'KAKkKkKkKAKk', 'KKKKKnnKKKKK']],
+    [34, ['##########', '##########', 'GGGGGGGGGG', 'ZzZZNNZZzZ', 'ZzZzZZzZzZ', 'ZzZzZZzZzZ', 'ZZZZttZZZZ']],
+    [47, ['############', '############', 'GGGGGGGGGGGG', 'WwYwWSWwYwWw', 'WwWwWwWwWwWw', 'aaaaaaaaaaaa', 'UUUUUccUUUUU']]
+  ];
+  for (let y = 0; y <= 6; y++) for (let x = 0; x < CW; x++) g[y][x] = 'y';
+  BUILDINGS.forEach(([x0, lines]) => lines.forEach((ln, y) => put(x0, y, ln)));
+  [[0, 5, 'T'], [17, 4, 'T'], [17, 6, 'b'], [32, 5, 'T'], [45, 6, 'b'], [45, 4, 'T'], [61, 5, 'T'], [62, 2, 'T']].forEach(([x, y, c]) => { g[y][x] = c; });
+  // vỉa hè trên
+  [[5, 'L'], [17, 'h'], [21, 'L'], [32, 'Q'], [36, 'L'], [44, 'b'], [50, 'L'], [61, 'L'], [14, 'T'], [57, 'T']].forEach(([x, c]) => { g[7][x] = c; });
+  put(0, 8, '^'.repeat(CW));
+  // đường hai chiều
+  for (const y of [9, 10, 12, 13]) put(0, y, '='.repeat(CW));
+  put(0, 11, '-'.repeat(CW));
+  for (const cx of [17, 45]) for (let y = 9; y <= 13; y++) { g[y][cx] = g[y][cx + 1] = '%'; }
+  put(0, 14, 'v'.repeat(CW));
+  // vỉa hè dưới: trạm xe buýt, sạp báo, chợ nhỏ
+  [[10, 'J'], [15, 'l'], [20, 'l'], [43, 'l'], [48, 'l'], [5, 'B'], [34, 'L'], [60, 'B']].forEach(([x, c]) => { g[15][x] = c; });
+  put(26, 16, 'MMMM'); g[16][12] = 'Q'; g[16][3] = 'T'; g[16][55] = 'T';
+  // công viên
+  for (let y = 17; y <= 22; y++) for (let x = 0; x < CW; x++) g[y][x] = 'g';
+  for (let y = 17; y <= 22; y++) { g[y][17] = g[y][18] = ':'; g[y][45] = g[y][46] = ':'; }
+  put(0, 20, ':'.repeat(CW));
+  [[3, 18, 'T'], [8, 17, 'F'], [9, 17, 'F'], [12, 18, 'T'], [22, 18, 'B'], [23, 18, 'B'], [26, 17, 'T'], [30, 18, 'F'], [31, 18, 'F'],
+    [35, 17, 'T'], [40, 18, 'T'], [50, 18, 'B'], [51, 18, 'B'], [55, 17, 'T'], [60, 18, 'F'], [61, 18, 'F'],
+    [5, 22, 'T'], [14, 22, 'L'], [24, 22, 'T'], [30, 22, 'B'], [31, 22, 'B'], [42, 22, 'L'], [52, 22, 'T'], [58, 22, 'F']].forEach(([x, y, c]) => { g[y][x] = c; });
+  // lối dạo ven vịnh, lan can, cầu tàu
+  put(0, 23, ','.repeat(CW)); put(0, 24, ','.repeat(CW));
+  g[24][40] = 'p';
+  put(0, 25, '|'.repeat(CW)); g[25][36] = g[25][37] = g[25][38] = 'X';
+  for (let y = 26; y < CH; y++) put(0, y, '~'.repeat(CW));
+  for (let y = 26; y <= 31; y++) g[y][36] = g[y][37] = g[y][38] = 'X';
+  put(33, 28, 'OR'); put(39, 30, 'OR');
+  [[6, 29], [7, 29], [6, 30], [7, 30], [8, 30], [14, 33], [14, 34], [24, 28], [25, 28], [25, 29], [26, 29], [50, 30], [51, 30], [51, 31], [58, 34], [3, 34], [44, 33]]
+    .forEach(([x, y]) => { g[y][x] = 'I'; });
+  return rows();
+})();
 
 const street = buildMap('street', {
-  rows: STREET, label: 'Phố ven vịnh Hạ Long', music: 'street',
-  legend: { '#': 'roof', W: 'facade', w: 'facade_window', S: 'signboard', a: 'awning', T: 'tree', B: 'bench', L: 'lamp', F: 'flowerbed', '|': 'railing', '~': 'water', K: 'karst' },
+  rows: CITY, label: 'Phố ven vịnh Hạ Long', music: 'street',
+  legend: {
+    '#': 'roof', G: 'roof_edge', H: 'glass', S: 'signboard', K: 'brick', k: 'brick_window', Z: 'stone', z: 'stone_window', N: 'neon',
+    A: 'ac_unit', Y: 'balcony', W: 'facade', w: 'facade_window', a: 'awning', U: 'cafe_window',
+    L: 'lamp', T: 'tree', B: 'bench', F: 'flowerbed', Q: 'kiosk', J: 'bus_stop', b: 'bin', l: 'bollard', M: 'stall', h: 'hydrant', p: 'post',
+    '|': 'railing', '~': 'water', I: 'karst', O: 'boat_l', R: 'boat_r'
+  },
   ground: (ch, x, y) => {
     if ('onct'.includes(ch)) return 'shop_door';
-    if (ch === 'g') return 'grass';
     if (ch === '=') return 'road';
     if (ch === '-') return x % 3 === 0 ? 'road' : 'road_line';
+    if (ch === '%') return 'crosswalk';
+    if (ch === '^') return 'curb';
+    if (ch === 'v') return 'curb_low';
     if (ch === 'X') return 'dock';
-    if (y >= 15) return 'water';
-    if (y >= 12) return 'promenade';
+    if (ch === 'y') return 'gravel';
+    if (ch === ':') return 'gravel';
+    if (ch === 'g' || (y >= 17 && y <= 22)) return 'grass';
+    if (y >= 26 || ch === '~' || ch === 'I' || ch === 'O' || ch === 'R') return 'water';
+    if (y >= 23) return 'promenade';
     return 'sidewalk';
   },
   objects: () => [
-    point('spawn', 'spawn_from_office', 8, 6.9),
-    point('spawn', 'spawn_from_news', 24, 6.9),
-    point('spawn', 'spawn_from_cafe', 39, 6.9),
-    point('spawn', 'spawn_from_agency', 53, 6.9),
-    rectT('zone', 'zone_street', 0, 6, SW, 9, { area: 'street' }),
-    rectT('zone', 'zone_pier', 37, 15, 3, 8, { area: 'pier' }),
-    rectT('exit', 'door_office', 7, 5, 2, 1, { target: 'office', spawn: 'spawn_from_street' }),
-    rectT('exit', 'door_news', 23, 5, 2, 1, { target: 'newsroom', spawn: 'spawn_from_street' }),
-    rectT('exit', 'door_cafe', 38, 5, 2, 1, { target: 'cafe', spawn: 'spawn_from_street' }),
-    rectT('exit', 'door_agency', 52, 5, 2, 1, { target: 'agency', spawn: 'spawn_from_street' }),
-    rectT('inspect', 'inspect_agency_sign', 51, 3, 1, 1, { text: 'inspect_agency_sign' }),
-    point('npc', 'npc5', 12, 13.5, { patrol: 'patrol_npc5' }),
-    path_('patrol_npc5', [[5, 13.5], [20, 13.5]]),
-    rectT('inspect', 'inspect_office_sign', 6, 3, 1, 1, { text: 'inspect_office_sign' }),
-    rectT('inspect', 'inspect_news_sign', 22, 3, 1, 1, { text: 'inspect_news_sign' }),
-    rectT('inspect', 'inspect_cafe_sign', 38, 3, 1, 1, { text: 'inspect_cafe_sign' }),
-    rectT('inspect', 'inspect_pier_sign', 40, 21, 1, 1, { text: 'inspect_pier_sign' }),
-    rectT('inspect', 'inspect_sea', 0, 15, 37, 1, { text: 'inspect_sea' })
+    point('spawn', 'spawn_from_office', 9, 7.7),
+    point('spawn', 'spawn_from_news', 25, 7.7),
+    point('spawn', 'spawn_from_agency', 39, 7.7),
+    point('spawn', 'spawn_from_cafe', 53, 7.7),
+    rectT('zone', 'zone_street', 0, 7, CW, 9, { area: 'street' }),
+    rectT('zone', 'zone_park', 0, 16, CW, 9, { area: 'park' }),
+    rectT('zone', 'zone_pier', 36, 25, 3, 7, { area: 'pier' }),
+    rectT('exit', 'door_office', 8, 6, 2, 1, { target: 'office', spawn: 'spawn_from_street' }),
+    rectT('exit', 'door_news', 24, 6, 2, 1, { target: 'newsroom', spawn: 'spawn_from_street' }),
+    rectT('exit', 'door_agency', 38, 6, 2, 1, { target: 'agency', spawn: 'spawn_from_street' }),
+    rectT('exit', 'door_cafe', 52, 6, 2, 1, { target: 'cafe', spawn: 'spawn_from_street' }),
+    // làn xe: dir -1 chạy sang trái, 1 sang phải; vạch qua đường (xe dừng khi có người)
+    rectT('lane', 'lane_w_car', 0, 9, CW, 1, { dir: -1, kind: 'car' }),
+    rectT('lane', 'lane_w_bike', 0, 10, CW, 1, { dir: -1, kind: 'bike' }),
+    rectT('lane', 'lane_e_bike', 0, 12, CW, 1, { dir: 1, kind: 'bike' }),
+    rectT('lane', 'lane_e_car', 0, 13, CW, 1, { dir: 1, kind: 'car' }),
+    rectT('crosswalk', 'cross_1', 17, 9, 2, 5),
+    rectT('crosswalk', 'cross_2', 45, 9, 2, 5),
+    point('npc', 'npc5', 14, 23.6, { patrol: 'patrol_npc5' }),
+    path_('patrol_npc5', [[6, 23.6], [30, 23.6]]),
+    point('npc', 'amb_vendor', 11.5, 16.6),
+    point('npc', 'amb_tourist', 40, 20.6, { patrol: 'patrol_tourist' }),
+    path_('patrol_tourist', [[36, 20.6], [56, 20.6]]),
+    point('npc', 'amb_fisher', 37.5, 30.6),
+    point('npc', 'amb_student', 4, 7.7, { patrol: 'patrol_student' }),
+    path_('patrol_student', [[2, 7.7], [30, 7.7]]),
+    point('npc', 'amb_elder', 22.5, 19.4),
+    point('npc', 'amb_jogger', 50, 24.4, { patrol: 'patrol_jogger' }),
+    path_('patrol_jogger', [[2, 24.4], [62, 24.4]]),
+    rectT('inspect', 'inspect_office_sign', 7, 3, 1, 1, { text: 'inspect_office_sign' }),
+    rectT('inspect', 'inspect_news_sign', 24, 3, 1, 1, { text: 'inspect_news_sign' }),
+    rectT('inspect', 'inspect_agency_sign', 38, 3, 2, 1, { text: 'inspect_agency_sign' }),
+    rectT('inspect', 'inspect_cafe_sign', 52, 3, 1, 1, { text: 'inspect_cafe_sign' }),
+    rectT('inspect', 'inspect_kiosk', 12, 16, 1, 1, { text: 'inspect_kiosk' }),
+    rectT('inspect', 'inspect_kiosk_north', 32, 7, 1, 1, { text: 'inspect_kiosk' }),
+    rectT('inspect', 'inspect_busstop', 10, 15, 1, 1, { text: 'inspect_busstop' }),
+    rectT('inspect', 'inspect_stall', 26, 16, 4, 1, { text: 'inspect_stall' }),
+    rectT('inspect', 'inspect_pier_sign', 40, 24, 1, 1, { text: 'inspect_pier_sign' }),
+    rectT('inspect', 'inspect_boat', 33, 28, 2, 1, { text: 'inspect_boat' }),
+    rectT('inspect', 'inspect_sea', 0, 25, 36, 1, { text: 'inspect_sea' })
   ]
 });
 
 // ---------------- Tòa soạn Tin Vịnh (S5 Lưu trữ, S6 Dòng thời gian)
 const NEWS = [
   '##########################',
-  '#bbbbbWbbbbb#WppWpppWppWW#',
+  '#bbbbbkbbbbb#WppWpppWppkW#',
   '#...........#............#',
-  '#...dd......#............#',
+  '#...nn...f..#..........f.#',
   '#...h.......#............#',
-  '#...........#............#',
+  '#........m..#m...........#',
   '#P.........P#P..........P#',
   '#####DD############DD#####',
-  '#WwWWDDWWWwWWWWWwWWDDWWwW#',
+  '#WLWWDDWWWLWVVWWLWWDDWWLW#',
   '#P......................P#',
-  '#..ddd....ddd....ddd.....#',
+  '#..nnn....nnn....nnn..r..#',
   '#...h......h......h......#',
   '#........................#',
-  '#........................#',
-  '#P......................P#',
+  '#f......................t#',
+  '#P.........m............P#',
   '############EE############'
 ];
 const newsroom = buildMap('newsroom', {
   rows: NEWS, legend: INDOOR, label: 'Tòa soạn Tin Vịnh', music: 'archive',
   ground: ch => (ch === 'D' ? 'doorway' : ch === 'E' ? 'exit_mat' : 'floor_wood'),
-  doors: [...roomDoor(5, 7), ...roomDoor(18, 7)],
+  doors: [...roomDoor(5, 7), ...roomDoor(19, 7)],
   objects: () => [
     point('spawn', 'spawn_from_street', 13, 14),
     rectT('zone', 'zone_S5', 1, 1, 11, 6, { room: 'S5' }),
     rectT('zone', 'zone_S6', 13, 1, 12, 6, { room: 'S6' }),
     rectT('zone', 'zone_newsroom', 1, 9, 24, 6, { area: 'newsroom' }),
     rectT('door', 'door_S5', 5, 7, 2, 2, { room: 'S5' }),
-    rectT('door', 'door_S6', 18, 7, 2, 2, { room: 'S6' }),
+    rectT('door', 'door_S6', 19, 7, 2, 2, { room: 'S6' }),
     rectT('exit', 'exit_street', 12, 14.6, 2, 1.4, { target: 'street', spawn: 'spawn_from_news' }),
-    point('npc', 'npc3', 6, 12.5, { patrol: 'patrol_npc3_home' }),
-    path_('patrol_npc3_home', [[2.5, 12.5], [9.5, 12.5]]),
-    point('station', 'npc3_s5', 6, 5.5),
-    path_('patrol_npc3_s5', [[2.5, 5.5], [10.5, 5.5]]),
+    point('npc', 'npc3', 6, 5.5, { patrol: 'patrol_npc3_home' }),
+    path_('patrol_npc3_home', [[2.5, 5.5], [10.5, 5.5]]),
     point('station', 'npc3_s6', 18.5, 5.5),
     path_('patrol_npc3_s6', [[14.5, 5.5], [23.5, 5.5]]),
     point('npc', 'npc4', 16, 12.5, { patrol: 'patrol_npc4' }),
     path_('patrol_npc4', [[13.5, 12.5], [22.5, 12.5]]),
     rectT('inspect', 'inspect_archive', 1, 1, 5, 1, { text: 'inspect_archive' }),
-    rectT('inspect', 'inspect_timeline', 13, 1, 12, 1, { text: 'inspect_timeline' }),
-    rectT('inspect', 'inspect_newsdesk', 10, 10, 3, 1, { text: 'inspect_newsdesk' })
+    rectT('inspect', 'inspect_timeline', 13, 1, 10, 1, { text: 'inspect_timeline' }),
+    rectT('inspect', 'inspect_newsdesk', 10, 10, 3, 1, { text: 'inspect_newsdesk' }),
+    rectT('inspect', 'inspect_news_tv', 12, 8, 2, 1, { text: 'inspect_news_tv' })
   ]
 });
 
 // ---------------- Quán cà phê Gió Biển
 const CAFE = [
   '##################',
-  '#WWwWWWwWWWwWWWwW#',
-  '#RRRR........P...#',
+  '#WWLWWkWWVVWWLWWW#',
+  '#CCCC........P..m#',
   '#................#',
-  '#..dd....dd......#',
-  '#..hh....hh......#',
+  '#..T....T....T...#',
+  '#.h.h..h.h..h.h..#',
   '#................#',
-  '#..dd....dd....P.#',
-  '#..hh....hh......#',
+  '#..T....T....P...#',
+  '#.h.h..h.h.......#',
   '#P..............P#',
-  '#................#',
+  '#m...............#',
   '########EE########'
 ];
 const cafe = buildMap('cafe', {
-  rows: CAFE, legend: INDOOR, label: 'Quán cà phê Gió Biển', music: 'cafe',
-  ground: (ch, x, y) => (ch === 'E' ? 'exit_mat' : (x + y) % 2 ? 'floor_wood' : 'floor_lobby'),
+  rows: CAFE, legend: { ...INDOOR, T: 'cafe_table' }, label: 'Quán cà phê Gió Biển', music: 'cafe',
+  ground: ch => (ch === 'E' ? 'exit_mat' : 'floor_check'),
   objects: () => [
     point('spawn', 'spawn_from_street', 9, 10.4),
     rectT('zone', 'zone_cafe', 1, 1, 16, 10, { room: 'CAFE' }),
     rectT('exit', 'exit_street', 8, 10.6, 2, 1.4, { target: 'street', spawn: 'spawn_from_cafe' }),
     point('npc', 'npc6', 11, 6.6),
-    rectT('inspect', 'inspect_cafe_menu', 1, 2, 4, 1, { text: 'inspect_cafe_menu' })
+    point('npc', 'amb_barista', 2.5, 3.4, { patrol: 'patrol_barista' }),
+    path_('patrol_barista', [[1.5, 3.4], [5.5, 3.4]]),
+    rectT('inspect', 'inspect_cafe_menu', 1, 2, 4, 1, { text: 'inspect_cafe_menu' }),
+    rectT('inspect', 'inspect_cafe_tv', 9, 1, 2, 1, { text: 'inspect_cafe_tv' })
   ]
 });
 
@@ -816,7 +1095,7 @@ const cafe = buildMap('cafe', {
 const AGENCY = [
   '##################',
   '#WWeeeWVVWwWtttWW#',
-  '#P..............P#',
+  '#Pf............mP#',
   '#..K..M....A..Y..#',
   '#..h..h....h..h..#',
   '#................#',
@@ -873,7 +1152,60 @@ const boss = buildMap('boss', {
   ]
 });
 
+/** Xe cộ (nhìn ngang, hướng sang phải; game lật ngang khi chạy sang trái). */
+function buildVehicles() {
+  const save = (img, id) => img.save(path.join(ROOT, `assets/sprites/${id}.png`));
+  const outline = (f, w, h) => {
+    const out = new Img(w, h);
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      if (f.get(x, y)[3] > 200) continue;
+      if ([[1, 0], [-1, 0], [0, 1], [0, -1]].some(([dx, dy]) => { const nx = x + dx, ny = y + dy; return nx >= 0 && ny >= 0 && nx < w && ny < h && f.get(nx, ny)[3] > 200; })) out.set(x, y, '#0b0f18');
+    }
+    out.blit(f, 0, 0, w, h, 0, 0);
+    return out;
+  };
+  // ô tô con, ba màu
+  [['car1', '#c8323c'], ['car2', '#3d6ea6'], ['car3', '#e6e6e6']].forEach(([id, col]) => {
+    const f = new Img(64, 32);
+    const R = (x, y, w, h, c) => f.rect(x, y, w, h, c);
+    R(3, 15, 58, 10, col); R(3, 15, 58, 2, shade(col, 0.25)); R(3, 23, 58, 2, shade(col, -0.3));
+    R(15, 6, 32, 10, col); R(17, 7, 13, 8, '#9fd0e6'); R(32, 7, 13, 8, '#9fd0e6'); R(18, 8, 4, 2, '#e6f4fb'); R(30, 7, 2, 8, shade(col, -0.2));
+    R(57, 17, 4, 3, '#ffe9a0'); R(3, 17, 3, 3, '#ff6a6a'); R(30, 18, 4, 1, shade(col, -0.35));
+    for (const cx of [15, 49]) { f.ellipse(cx, 25, 5, 5, '#1b1d24'); f.ellipse(cx, 25, 2, 2, '#9aa1b3'); }
+    const out = outline(f, 64, 32);
+    const sh = new Img(64, 32); sh.ellipse(32, 30, 29, 2, '#00000055'); sh.blit(out, 0, 0, 64, 32, 0, 0);
+    save(sh, id);
+  });
+  // xe buýt
+  {
+    const f = new Img(96, 40);
+    const R = (x, y, w, h, c) => f.rect(x, y, w, h, c);
+    R(2, 5, 92, 26, '#2a9d8f'); R(2, 5, 92, 3, '#5fc2b6'); R(2, 27, 92, 4, '#1e6f66');
+    for (let x = 8; x < 82; x += 13) R(x, 9, 10, 9, '#9fd0e6');
+    R(84, 9, 8, 14, '#9fd0e6'); R(70, 19, 9, 12, '#1e6f66'); R(71, 20, 3, 10, '#9fd0e6'); R(75, 20, 3, 10, '#9fd0e6');
+    R(4, 21, 50, 3, '#f4eedc'); R(90, 25, 3, 3, '#ffe9a0');
+    for (const cx of [20, 76]) { f.ellipse(cx, 32, 6, 6, '#1b1d24'); f.ellipse(cx, 32, 2, 2, '#9aa1b3'); }
+    const out = outline(f, 96, 40);
+    const sh = new Img(96, 40); sh.ellipse(48, 38, 44, 2, '#00000055'); sh.blit(out, 0, 0, 96, 40, 0, 0);
+    save(sh, 'bus');
+  }
+  // xe máy có người lái (đội mũ bảo hiểm)
+  [['bike1', '#c8323c', '#3d5a98', '#f2d36b'], ['bike2', '#2b2f3a', '#e07a5f', '#f4f4f4']].forEach(([id, body, shirt, helmet]) => {
+    const f = new Img(32, 32);
+    const R = (x, y, w, h, c) => f.rect(x, y, w, h, c);
+    R(6, 20, 20, 5, body); R(20, 15, 5, 6, body); R(24, 13, 4, 2, '#3a3f4d'); R(8, 18, 10, 3, '#2b2f3a');
+    R(11, 9, 7, 10, shirt); R(17, 12, 7, 3, shirt); R(12, 18, 6, 4, '#2d3a5a'); R(15, 21, 3, 4, '#2d3a5a');
+    R(11, 2, 8, 7, helmet); R(16, 4, 4, 3, '#9fd0e6'); R(11, 7, 3, 2, '#f1c7a0');
+    for (const cx of [8, 24]) { f.ellipse(cx, 26, 4, 4, '#1b1d24'); f.ellipse(cx, 26, 1, 1, '#9aa1b3'); }
+    R(27, 17, 2, 2, '#ffe9a0');
+    const out = outline(f, 32, 32);
+    const sh = new Img(32, 32); sh.ellipse(16, 30, 13, 2, '#00000055'); sh.blit(out, 0, 0, 32, 32, 0, 0);
+    save(sh, id);
+  });
+}
+
 buildTileset();
+buildVehicles();
 for (const [id, spec] of Object.entries(CHARACTERS)) buildCharacter(id, spec);
 buildBoss();
 console.log(['ok:', `tileset ${TILES.length} ô`, office, street, newsroom, cafe, agency, boss].join('\n  '));
