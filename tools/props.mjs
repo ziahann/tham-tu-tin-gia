@@ -491,7 +491,7 @@ const STYLE = {
  * shop (mặt tiền tầng trệt kính / cửa cuốn), awning (màu), fireEscape, balcony, roof: ['tank','antenna','ac','vent'], sign: true }.
  * Tầng trệt cao 2,5 ô, mỗi tầng trên cao 2 ô, mái 0,8 ô. Trả về { img, meta }.
  */
-function building(o) {
+function buildingFront(o) {
   const s = STYLE[o.style];
   const W = o.cols * 32, GF = 80, FL = 64, ROOF = 26;
   const H = ROOF + o.floors * FL + GF;
@@ -499,7 +499,7 @@ function building(o) {
   const lights = [];
   // mái
   R(0, 6, W, ROOF - 6, '#22262e'); R(0, ROOF - 4, W, 4, s.trim); R(0, 6, W, 2, '#3a4150');
-  for (const it of o.roof || []) {
+  for (const it of o.frontRoof || []) {
     const x = Math.floor(rnd() * (W - 40)) + 8;
     if (it === 'tank') { R(x, -2 + 0, 22, 4, '#3a3026'); R(x + 2, 0, 18, 18, '#4a3c2e'); R(x + 2, 0, 18, 2, '#5b4a3a'); R(x + 4, 18, 2, 8, '#22262e'); R(x + 16, 18, 2, 8, '#22262e'); }
     if (it === 'antenna') { R(x + 10, 0, 2, 22, '#2b303b'); R(x + 4, 4, 14, 1, '#2b303b'); R(x + 6, 9, 10, 1, '#2b303b'); E(x + 11, 1, 2, 2, '#c8323c'); lights.push([x + 11, 1, 0xff5a5a, 40, 0.8]); }
@@ -597,6 +597,82 @@ function building(o) {
   return { img, meta: { base: [W - 4, H - 10], lights, sign, door: doorX != null ? doorX + 32 : null } };
 }
 
+/** Mái và mặt hông theo phong cách: màu mái, chi tiết đặc trưng. */
+const ROOF = {
+  concrete: { roof: '#3a3f4a', edge: '#5b6372' }, glass: { roof: '#26303f', edge: '#3a4b63' }, brick: { roof: '#37302e', edge: '#5e4440' },
+  stone: { roof: '#2f343d', edge: '#525a68' }, shop: { roof: '#353b46', edge: '#5b6372' }, warehouse: { roof: '#3c434e', edge: '#55606e' },
+  hotel: { roof: '#3b424f', edge: '#636c7c' }
+};
+
+/**
+ * Tòa nhà giả 3D (góc nhìn 3/4 xiên): mặt tiền + mái nhìn từ trên (lệch lên phải theo chiều sâu) + mặt hông bên phải
+ * tối hơn, có cửa sổ xiên. Đồ trên mái (máy lạnh, bồn nước, ống thông gió, giếng trời, vườn mái, pin mặt trời) là khối nhỏ.
+ * meta.ox: vị trí tâm mặt tiền trong ảnh (để chân đế và cửa khớp ô bản đồ).
+ */
+function building(o) {
+  const { img: front, meta } = buildingFront(o);
+  const W = front.w, H = front.h, s = o.depth || 44;
+  const img = new Img(W + s, H + s), { R } = brush(img);
+  const st = STYLE[o.style], rf = ROOF[o.style];
+  // điểm trên mái: u dọc mặt tiền (0..W), v vào sâu (0..s) → toạ độ ảnh
+  const P = (u, v) => [u + v, s - v];
+  // mái
+  for (let y = 0; y < s; y++) {
+    const v = s - y, t = v / s;
+    R(v, y, W, 1, mix(rf.roof, shade(rf.roof, -0.25), t));
+  }
+  if (o.style === 'warehouse') for (let u = 4; u < W; u += 8) for (let v = 0; v < s; v++) { const [x, y] = P(u, v); img.set(x, y, '#2e343d'); }
+  // gờ tường mái (lan can) quanh mép
+  for (let v = 0; v < s; v++) { const [x, y] = P(0, v); R(x, y - 3, 3, 3, rf.edge); const [x2, y2] = P(W - 3, v); R(x2, y2 - 3, 3, 3, rf.edge); }
+  for (let u = 0; u < W; u++) { const [x, y] = P(u, s - 1); R(x, y - 2, 1, 3, rf.edge); }
+  // khối nhỏ trên mái
+  const cube = (u, v, w, d, h, top, side, frontC) => {
+    for (let j = 0; j < d; j++) { const [x, y] = P(u, v + j); R(x + w, y - h, 1, h, side); }
+    for (let j = 0; j < d; j++) { const [x, y] = P(u, v + j); R(x, y - h, w, 1, top); }
+    const [x0, y0] = P(u, v); R(x0, y0 - h, w, h, frontC);
+  };
+  const items = o.roof || [];
+  let u = 10;
+  for (const it of items) {
+    const v = 8 + Math.floor(rnd() * Math.max(1, s - 26));
+    if (it === 'ac') cube(u, v, 18, 10, 10, '#b4bccb', '#6b7486', '#8e97a8');
+    if (it === 'tank') { cube(u, v, 18, 14, 20, '#5b4a3a', '#3a3026', '#4a3c2e'); }
+    if (it === 'vent') cube(u, v, 10, 8, 8, '#6b7686', '#3a4150', '#4a5060');
+    if (it === 'antenna') { const [x, y] = P(u + 4, v); R(x, y - 30, 2, 30, '#2b303b'); R(x - 6, y - 26, 14, 1, '#2b303b'); R(x - 4, y - 20, 10, 1, '#2b303b'); img.set(x, y - 31, '#ff5a5a'); meta.lights.push([x, y - 31, 0xff5a5a, 40, 0.8]); }
+    if (it === 'skylight') cube(u, v, 22, 12, 4, '#7fa8c8', '#2a3a4a', '#3a5068');
+    if (it === 'solar') for (let k = 0; k < 3; k++) cube(u + k * 12, v, 10, 12, 3, '#2c4a6b', '#1a2a3a', '#22384f');
+    if (it === 'garden') { for (let k = 0; k < 4; k++) cube(u + k * 11, v, 9, 10, 8, '#3a6455', '#1f3a33', '#2a4a40'); }
+    u += it === 'solar' || it === 'garden' ? 46 : 28;
+    if (u > W - 30) u = 14;
+  }
+  // mặt hông bên phải: tối hơn mặt tiền, cửa sổ xiên theo tầng
+  const side = shade(st.wall2, -0.32), sideWin = shade(st.win, -0.2);
+  for (let i = 0; i < s; i++) {
+    const x = W + i, top = s - i;
+    R(x, top, 1, H, mix(side, shade(side, -0.25), i / s));
+  }
+  const GF = 80, FL = 64, ROOFH = 26, floors = o.floors;
+  for (let f = 0; f < floors; f++) {
+    const wy = s + ROOFH + f * FL + 12;
+    for (let i = 0; i < s; i++) {
+      const k = i % 22;
+      if (k < 6 || k > 16) continue;
+      const lit = ((f * 7 + Math.floor(i / 22) * 3) % 5) === 0;
+      R(W + i, wy - i, 1, 34, lit ? shade(st.lit, -0.3) : sideWin);
+    }
+  }
+  for (let i = 0; i < s; i++) R(W + i, H + s - GF - i, 1, 3, shade(st.trim, -0.3)); // gờ tầng trệt
+  // mép đứng nối mặt tiền và mặt hông
+  R(W - 1, s, 2, H, shade(st.wall2, -0.45));
+  // mặt tiền
+  img.blit(front, 0, 0, W, H, 0, s);
+  // chân đế và ánh sáng / biển hiệu dịch xuống theo chiều sâu mái
+  meta.lights = meta.lights.map(([x, y, c, r, k]) => [x, y + s, c, r, k]);
+  if (meta.sign) meta.sign = { ...meta.sign, y: meta.sign.y + s };
+  meta.ox = (W / 2) / (W + s);
+  return { img, meta };
+}
+
 // ---------------------------------------------------------------- danh mục
 
 /** Tất cả props: khóa → { img, meta }. meta.base: [rộng, sâu] chân đế va chạm (0 = không va chạm); flat: nằm dưới chân; wall: dán tường. */
@@ -655,19 +731,19 @@ export function allProps() {
   add('karst', karstIsland(false), { base: [90, 20] });
   // tòa nhà: tương tác (có biển, cửa) và trang trí
   const B = {
-    bld_thanhnien: { cols: 12, floors: 5, style: 'glass', door: 'center', sign: true, signGlow: '#c8323c', roof: ['antenna', 'ac', 'ac'] },
-    bld_tinvinh: { cols: 9, floors: 3, style: 'brick', door: 2, sign: true, signGlow: '#ff9a3a', fireEscape: true, roof: ['tank', 'vent'] },
-    bld_xacminh: { cols: 8, floors: 2, style: 'stone', door: 'center', sign: true, signGlow: '#7fe3ff', roof: ['antenna'] },
-    bld_cafe: { cols: 8, floors: 1, style: 'shop', door: 'center', shop: 'glass', awning: '#5a3a3a', sign: true, signGlow: '#f2c46b', roof: ['vent'] },
-    bld_apartment: { cols: 9, floors: 5, style: 'concrete', door: 3, balcony: true, sign: false, signGlow: '#9fb3c8', roof: ['tank', 'ac', 'antenna'] },
-    bld_apartment2: { cols: 7, floors: 4, style: 'concrete', door: 2, sign: false, roof: ['tank', 'ac'] },
-    bld_hotel: { cols: 10, floors: 6, style: 'hotel', door: 'center', balcony: true, sign: false, signGlow: '#ff9fd0', roof: ['antenna', 'tank'] },
-    bld_pharmacy: { cols: 5, floors: 2, style: 'shop', door: 1, shop: 'glass', sign: false, signGlow: '#4aa35b', roof: ['ac'] },
-    bld_store: { cols: 6, floors: 2, style: 'shop', door: 2, shop: 'glass', awning: '#2c4a6b', sign: false, signGlow: '#9fd8ff', roof: ['vent'] },
-    bld_books: { cols: 5, floors: 2, style: 'brick', door: 1, shop: 'glass', sign: false, signGlow: '#f2c46b', roof: ['tank'] },
-    bld_closed: { cols: 6, floors: 2, style: 'concrete', door: null, shop: 'shutter', sign: false, signGlow: '#5b6170', roof: [] },
-    bld_warehouse: { cols: 12, floors: 1, style: 'warehouse', door: 4, shop: 'shutter', sign: false, signGlow: '#c9a24a', roof: ['vent', 'vent'] },
-    bld_tenement: { cols: 6, floors: 4, style: 'brick', door: 1, fireEscape: true, sign: false, roof: ['tank'] }
+    bld_thanhnien: { cols: 12, floors: 5, style: 'glass', door: 'center', sign: true, signGlow: '#c8323c', depth: 52, roof: ['antenna', 'solar', 'ac', 'ac', 'skylight'] },
+    bld_tinvinh: { cols: 9, floors: 3, style: 'brick', door: 2, sign: true, signGlow: '#ff9a3a', fireEscape: true, roof: ['tank', 'vent', 'ac', 'antenna'] },
+    bld_xacminh: { cols: 8, floors: 2, style: 'stone', door: 'center', sign: true, signGlow: '#7fe3ff', roof: ['antenna', 'skylight', 'vent'] },
+    bld_cafe: { cols: 8, floors: 1, style: 'shop', door: 'center', shop: 'glass', awning: '#5a3a3a', sign: true, signGlow: '#f2c46b', roof: ['garden', 'vent'] },
+    bld_apartment: { cols: 9, floors: 5, style: 'concrete', door: 3, balcony: true, sign: false, signGlow: '#9fb3c8', roof: ['tank', 'ac', 'antenna', 'ac'] },
+    bld_apartment2: { cols: 7, floors: 4, style: 'concrete', door: 2, sign: false, roof: ['ac', 'tank', 'vent'] },
+    bld_hotel: { cols: 10, floors: 6, style: 'hotel', door: 'center', balcony: true, sign: false, signGlow: '#ff9fd0', roof: ['garden', 'tank', 'antenna'] },
+    bld_pharmacy: { cols: 5, floors: 2, style: 'shop', door: 1, shop: 'glass', sign: false, signGlow: '#4aa35b', roof: ['ac', 'skylight'] },
+    bld_store: { cols: 6, floors: 2, style: 'shop', door: 2, shop: 'glass', awning: '#2c4a6b', sign: false, signGlow: '#9fd8ff', roof: ['tank', 'ac'] },
+    bld_books: { cols: 5, floors: 2, style: 'brick', door: 1, shop: 'glass', sign: false, signGlow: '#f2c46b', roof: ['solar'] },
+    bld_closed: { cols: 6, floors: 2, style: 'concrete', door: null, shop: 'shutter', sign: false, signGlow: '#5b6170', roof: ['vent', 'ac'] },
+    bld_warehouse: { cols: 12, floors: 1, style: 'warehouse', door: 4, shop: 'shutter', sign: false, signGlow: '#c9a24a', roof: ['vent', 'vent', 'skylight'] },
+    bld_tenement: { cols: 6, floors: 4, style: 'brick', door: 1, fireEscape: true, sign: false, roof: ['tank', 'ac', 'antenna'] }
   };
   for (const [k, o] of Object.entries(B)) { const { img, meta } = building(o); P[k] = { img, meta: { ...meta, building: true } }; }
   return P;
