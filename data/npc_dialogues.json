@@ -261,6 +261,24 @@
       "sprite": "amb_patron",
       "isFictional": true,
       "ambient": true
+    },
+    {
+      "id": "amb_rumor",
+      "name": "Kẻ Tung Tin Áo Đỏ",
+      "role": "Người đi rong phát tán tin giật tít (GIẢ LẬP)",
+      "room": "Khu phố",
+      "sprite": "amb_rumor",
+      "isFictional": true,
+      "rumor": true
+    },
+    {
+      "id": "amb_rumor2",
+      "name": "Kẻ Tung Tin Áo Tím",
+      "role": "Người đi rong phát tán tin giật tít (GIẢ LẬP)",
+      "room": "Khu phố",
+      "sprite": "amb_rumor2",
+      "isFictional": true,
+      "rumor": true
     }
   ],
   "dialogues": {
@@ -1419,6 +1437,9 @@
     ],
     "inspect_cafe_tv": [
       "TV của quán đang phát bản tin về các video gắn nhãn sai. Bạn đọc tóm tắt bài báo."
+    ],
+    "inspect_barrier": [
+      "Rào chắn: \"Vỉa hè đang thi công\" (GIẢ LẬP). Muốn đi tiếp thì sang đường ở vạch kẻ, đi vỉa hè bên kia."
     ]
   },
   "inspectSources": {
@@ -1523,5 +1544,159 @@
       "Mình đang đọc lại bài báo gốc thay vì chỉ đọc tiêu đề. Khác nhau nhiều đấy.",
       "Tiêu đề viết hoa với ba dấu chấm than là mình dừng lại đọc kỹ ngay."
     ]
+  },
+  "rumors": [
+    {
+      "headline": "NÓNG!!! Ảnh \"người sống sót cuối cùng\" đang lan khắp mạng — chia sẻ ngay trước khi bị xóa!",
+      "options": [
+        {
+          "text": "Lời giục chia sẻ gấp, không ghi ai chụp, chụp ở đâu",
+          "correct": true,
+          "why": "Giục chia sẻ gấp và thiếu nguồn là dấu hiệu phải dừng lại kiểm tra trước."
+        },
+        {
+          "text": "Nhiều người chia sẻ rồi nên chắc là thật",
+          "correct": false,
+          "why": "Lượt chia sẻ không chứng minh được sự thật; tin sai cũng lan rất nhanh."
+        },
+        {
+          "text": "Có chữ NÓNG nên là tin chính thức",
+          "correct": false,
+          "why": "Chữ NÓNG, dấu chấm than là cách câu cảm xúc, không phải dấu hiệu tin chính thức."
+        }
+      ]
+    },
+    {
+      "headline": "Clip cảnh tàu lật \"vừa quay xong\" — xem đi rồi biết!",
+      "options": [
+        {
+          "text": "Tìm bản đăng sớm nhất của clip để biết ngày quay thật",
+          "correct": true,
+          "why": "Clip cũ hay bị đăng lại như mới; tìm ngược khung hình để thấy bản sớm nhất."
+        },
+        {
+          "text": "Hình ảnh trông rất thật nên tin được",
+          "correct": false,
+          "why": "Trông thật không có nghĩa là đúng thời điểm, đúng địa điểm."
+        },
+        {
+          "text": "Cứ chia sẻ trước, sai thì xóa sau",
+          "correct": false,
+          "why": "Xóa sau thì tin sai đã lan rồi; người khác không biết bạn đã xóa."
+        }
+      ]
+    },
+    {
+      "headline": "Một trang có tên và logo giống báo lớn đăng \"danh sách đầy đủ\" kèm đường link lạ.",
+      "options": [
+        {
+          "text": "Kiểm tra tên miền, tài khoản chính thức; không bấm link lạ",
+          "correct": true,
+          "why": "Trang mạo danh hay bắt chước tên, logo; đối chiếu địa chỉ chính thức trước."
+        },
+        {
+          "text": "Logo giống hệt nên là trang thật",
+          "correct": false,
+          "why": "Logo sao chép rất dễ; phải xem tên miền và tài khoản đã xác minh."
+        },
+        {
+          "text": "Bấm vào link xem thử cho biết",
+          "correct": false,
+          "why": "Link lạ có thể lừa đảo hoặc lấy thông tin; không bấm khi chưa rõ nguồn."
+        }
+      ]
+    },
+    {
+      "headline": "Ảnh em bé khóc trên áo phao — \"ai nhìn mà không rơi nước mắt\".",
+      "options": [
+        {
+          "text": "Soi dấu hiệu ảnh tạo bằng AI và tìm nguồn gốc ảnh",
+          "correct": true,
+          "why": "Ảnh đánh vào cảm xúc cần kiểm tra kỹ nhất: chi tiết bất thường, nguồn gốc, bản sớm nhất."
+        },
+        {
+          "text": "Cảm xúc mạnh như vậy thì chắc là thật",
+          "correct": false,
+          "why": "Tin giả thường được làm để gây cảm xúc mạnh, khiến người xem quên kiểm tra."
+        },
+        {
+          "text": "Máy dò AI báo \"thật\" là đủ kết luận",
+          "correct": false,
+          "why": "Máy dò AI chỉ là bằng chứng bổ trợ, có thể sai; cần thêm nguồn gốc và chi tiết ảnh."
+        }
+      ]
+    },
+    {
+      "headline": "Kêu gọi chuyển tiền vào tài khoản cá nhân \"giúp gia đình nạn nhân\", kèm ảnh xúc động.",
+      "options": [
+        {
+          "text": "Chỉ ủng hộ qua kênh chính thức đã xác minh",
+          "correct": true,
+          "why": "Đối chiếu với kênh chính thức trước khi ủng hộ; chưa đủ dữ liệu thì không kết luận về người đăng."
+        },
+        {
+          "text": "Có ảnh kèm theo nên chắc là thật",
+          "correct": false,
+          "why": "Ảnh có thể lấy từ nơi khác; ảnh không chứng minh tài khoản là của ai."
+        },
+        {
+          "text": "Chuyển ít thôi thì không sao",
+          "correct": false,
+          "why": "Chưa xác minh thì ít hay nhiều đều có thể sai chỗ; kiểm tra kênh chính thức trước."
+        }
+      ]
+    },
+    {
+      "headline": "\"Nguồn tin nội bộ\" nói sự thật khác hẳn — không báo nào dám đăng!",
+      "options": [
+        {
+          "text": "Không có nguồn cụ thể thì đối chiếu thông báo chính thức và nhiều nguồn",
+          "correct": true,
+          "why": "\"Nguồn tin nội bộ\" không tên không kiểm chứng được; chờ và đối chiếu nguồn chính thức."
+        },
+        {
+          "text": "Báo không đăng nghĩa là đang che giấu",
+          "correct": false,
+          "why": "Báo không đăng thường vì chưa kiểm chứng được, không phải bằng chứng che giấu."
+        },
+        {
+          "text": "Nhiều bình luận đồng ý nên là đúng",
+          "correct": false,
+          "why": "Số người đồng ý không thay được bằng chứng."
+        }
+      ]
+    }
+  ],
+  "decoys": {
+    "decoy_S3": {
+      "room": "S3",
+      "title": "Ảnh chụp màn hình một bài \"tin nóng\", bị cắt mất tên tài khoản và giờ đăng.",
+      "why": "Ảnh chụp màn hình bị cắt mất tài khoản, thời gian thì không truy được nguồn. Phải tìm bài gốc trước."
+    },
+    "decoy_S4": {
+      "room": "S4",
+      "title": "Bản \"làm nét\" của bức ảnh nghi giả: ai đó đã chỉnh cho rõ hơn rồi gửi lại.",
+      "why": "Ảnh đã qua ứng dụng làm nét bị thay đổi điểm ảnh. Phân tích bản gốc, sớm nhất."
+    },
+    "decoy_S5": {
+      "room": "S5",
+      "title": "Trang báo in không ghi ngày, kèm dòng viết tay \"mới đăng hôm qua\".",
+      "why": "Không có ngày xuất bản thì không dùng để dựng mốc. Tra kho lưu trữ tìm ngày gốc."
+    },
+    "decoy_S6": {
+      "room": "S6",
+      "title": "Clip đăng lại có dòng chữ \"TRỰC TIẾP\" ở góc.",
+      "why": "Bản đăng lại mang thời gian của người đăng lại, không phải lúc quay. Tìm bản sớm nhất."
+    },
+    "decoy_S7": {
+      "room": "S7",
+      "title": "Bình luận: \"Chắc chắn người đăng làm vậy để kiếm tiền.\"",
+      "why": "Chưa có dữ liệu thì không kết luận động cơ hay danh tính. Chỉ ghi điều kiểm chứng được."
+    },
+    "decoy_S8": {
+      "room": "S8",
+      "title": "Tờ giấy ai đó dán: \"Mọi tin sai đều là tin giả cố ý.\"",
+      "why": "Phải phân biệt thông tin sai vô tình (misinformation), cố ý (disinformation) và thông tin thật dùng để gây hại (malinformation), theo từng nhóm đối tượng."
+    }
   }
 }
