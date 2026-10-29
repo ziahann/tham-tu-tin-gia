@@ -16,7 +16,7 @@ const EXTRA = {
   amb_nurse: { lashes: true }, amb_clerk2: { lashes: true }, amb_patron: { lashes: true }, amb_patient: { wrinkles: true },
   amb_barista: { lashes: true }, amb_vendor: { lashes: true }, amb_jogger: { lashes: true }, amb_elder: { wrinkles: true }, amb_fisher: { stubble: true },
   hero_m: { iris: '#3a2a20' },
-  hero_f: { iris: '#4a2e20', lashes: true },
+  hero_f: { iris: '#5a3020', lashes: true, earrings: '#f2d36b', blush: true },
   npc1: { iris: '#2b1d1a', lashes: true, earrings: '#e8c66a' },
   npc2: { iris: '#3a2a20' },
   npc3: { iris: '#4b3a2a', mustache: '#d8d8d8', wrinkles: true },
@@ -233,6 +233,18 @@ function drawHairFront(f, s) {
   }
   if (hs === 'grey') { f.rect(CX - 10, 9, 20, 1, '#ffffff'); f.rect(CX - 14, 12, 4, 1, '#ffffff'); }
   if (hs === 'bob') for (let x = CX - 13; x <= CX + 13; x += 4) f.rect(x, 25, 2, 2, dark);
+  // ánh tóc (tóc dài): vài sợi sáng chạy dọc hai bên
+  if (s.highlight && hs === 'long') {
+    for (let y = 14; y < 30; y++) { f.set(CX - 12 + Math.floor((y - 14) / 5), y, s.highlight); f.set(CX + 5 + Math.floor((y - 14) / 6), y - 2, s.highlight); }
+    for (let y = 34; y < 62; y += 1) { f.set(CX - 18, y, s.highlight); f.set(CX + 18, y, shade(s.highlight, -0.2)); }
+  }
+  // nơ cài tóc
+  if (s.ribbon) {
+    const rb = s.ribbon, rbD = shade(rb, -0.3), rbL = shade(rb, 0.25);
+    for (let i = 0; i < 6; i++) { f.rect(CX + 8 - i, 10 - Math.floor(i / 2), 1, 2 + i, rb); f.rect(CX + 14 + i, 10 - Math.floor(i / 2), 1, 2 + i, rb); }
+    f.rect(CX + 9, 9, 5, 5, rbD); f.rect(CX + 10, 10, 3, 3, rb); f.set(CX + 5, 7, rbL); f.set(CX + 17, 7, rbL);
+    f.rect(CX + 10, 14, 2, 4, rbD); f.rect(CX + 13, 14, 2, 4, rb);
+  }
   if (s.clip) { f.rect(CX + 9, 17, 5, 3, s.clip); f.rect(CX + 10, 16, 3, 5, s.clip); f.set(CX + 11, 18, '#ffffff'); }
 }
 
@@ -279,7 +291,7 @@ function drawPerson(spec, expr) {
   }
   // mũi
   f.rect(CX + 1, 37, 1, 3, shade(s.skin, -0.2)); f.rect(CX - 1, 40, 3, 1, shade(s.skin, -0.25)); f.set(CX, 38, shade(s.skin, 0.2));
-  if (expr === 'happy' || expr === 'surprised') { f.rect(CX - 12, 40, 4, 1, '#e8828a90'); f.rect(CX + 9, 40, 4, 1, '#e8828a90'); }
+  if (expr === 'happy' || expr === 'surprised' || s.blush) { f.rect(CX - 13, 39, 5, 2, '#e8828a80'); f.rect(CX + 9, 39, 5, 2, '#e8828a80'); }
   drawMouth(f, s, expr);
   drawHairFront(f, s);
   drawHeadAccessories(f, s);
