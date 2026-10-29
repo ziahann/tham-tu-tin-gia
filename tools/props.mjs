@@ -380,7 +380,8 @@ function device(kind) {
 /** Cây xanh (tán tối, lạnh). big: 3 ô x 4 ô. Thân mọc liền lên tán, có nhánh và gốc loe. */
 function tree(big) {
   const w = big ? 96 : 64, h = big ? 128 : 92, img = new Img(w, h), { R, E } = brush(img);
-  shadow(img, w / 2, h - 4, w / 2 - 10, 5);
+  // bóng đổ chéo sang phải (nắng từ trên trái)
+  img.ellipse(w / 2 + 8, h - 4, w / 2 - 8, 5, '#00000040'); img.ellipse(w / 2 + 2, h - 4, w / 4, 3, '#00000030');
   const cx = w / 2, cy = big ? 46 : 34, rx = big ? 40 : 26, ry = big ? 36 : 27, tw = big ? 10 : 7;
   // thân: từ giữa tán xuống đất, gốc loe, vài nhánh chĩa vào tán
   R(cx - tw / 2, cy, tw, h - 6 - cy, '#3a3026'); R(cx - tw / 2, cy, 3, h - 6 - cy, '#4a3c2e'); R(cx + tw / 2 - 2, cy, 2, h - 6 - cy, '#2b241d');
@@ -400,7 +401,7 @@ function tree(big) {
 /** Đèn đường cao 3,5 ô. */
 function streetLamp() {
   const img = new Img(40, 116), { R, E } = brush(img);
-  shadow(img, 12, 113, 8);
+  img.ellipse(18, 113, 14, 3, '#00000040'); // bóng đổ chéo
   R(10, 14, 4, 98, '#2b303b'); R(11, 14, 1, 98, '#4a5060'); R(6, 108, 12, 6, '#22262e');
   R(12, 12, 22, 3, '#2b303b'); R(26, 10, 12, 7, '#22262e'); R(27, 16, 10, 3, '#ffe2a0');
   return outline(img);
@@ -761,7 +762,7 @@ export function allProps() {
   add('bollard', bollard(), { base: [8, 6] });
   add('planter', planter(), { base: [64, 16] });
   add('market_stall', marketStall(), { base: [76, 20] });
-  add('tour_boat', tourBoat(), { base: [290, 34], lights: [[160, 48, 0xffe2a0, 120, 0.8]] });
+  add('tour_boat', extrude(tourBoat(), 22), { base: [290, 34], ox: 160 / 342, lights: [[160, 70, 0xffe2a0, 120, 0.8]] });
   add('karst_big', karstIsland(true), { base: [150, 30] });
   add('karst', karstIsland(false), { base: [90, 20] });
   // tòa nhà: tương tác (có biển, cửa) và trang trí
@@ -850,9 +851,10 @@ function scooter(body, shirt, helmet) {
 
 /** Ảnh các xe (khóa → Img), lưu thành sprite riêng cho traffic.js. */
 export function vehicles() {
+  // giả 3D: thân xe có nóc / mui nhìn từ trên và mặt hông (xe máy chỉ đẩy khối phần thân xe, không đẩy người lái)
   return {
-    car1: car('#8a2a30'), car2: car('#2c4a6b'), car3: car('#c9ced6'), car4: car('#3a3f4d'),
-    bus: bus(),
-    bike1: scooter('#8a2a30', '#2c4a6b', '#c9a24a'), bike2: scooter('#2b303b', '#9b5a3a', '#e6ebf2')
+    car1: extrude(car('#8a2a30'), 14), car2: extrude(car('#2c4a6b'), 14), car3: extrude(car('#c9ced6'), 14), car4: extrude(car('#3a3f4d'), 14),
+    bus: extrude(bus(), 20),
+    bike1: extrude(scooter('#8a2a30', '#2c4a6b', '#c9a24a'), 6, 30), bike2: extrude(scooter('#2b303b', '#9b5a3a', '#e6ebf2'), 6, 30)
   };
 }
