@@ -799,6 +799,43 @@ export function isoExtrude(src, d, fromY = 0) {
 }
 
 /**
+ * Khối isometric có đồ đặt trên mặt (bàn có màn hình, chồng giấy, đèn, cốc...): phần ảnh từ hàng fromY trở xuống là
+ * thân đồ vật (đẩy khối sâu d); phần phía trên được tách thành từng món theo các cột liền nhau, mỗi món đẩy thành khối nhỏ
+ * riêng và đặt lên mặt trên, lùi về phía sau — thay cho ảnh phẳng dán ở mặt trước.
+ */
+export function isoWithItems(src, d, fromY) {
+  const body = new Img(src.w, src.h);
+  body.blit(src, 0, fromY, src.w, src.h - fromY, 0, fromY);
+  const base = isoExtrude(body, d, 0);
+  const out = base.img;
+  const z = src.h - fromY; // độ cao mặt trên
+  const colSolid = x => { for (let y = 0; y < fromY; y++) if (src.get(x, y)[3] > 200) return true; return false; };
+  // các món: dải cột liền nhau có điểm đặc phía trên mặt
+  const items = [];
+  for (let x = 0; x < src.w; x++) {
+    if (!colSolid(x)) continue;
+    let x1 = x;
+    while (x1 + 1 < src.w && colSolid(x1 + 1)) x1++;
+    items.push([x, x1]);
+    x = x1;
+  }
+  for (const [x0, x1] of items) {
+    const w = x1 - x0 + 1;
+    let top = fromY;
+    for (let y = 0; y < fromY && top === fromY; y++) for (let x = x0; x <= x1; x++) if (src.get(x, y)[3] > 200) { top = y; break; }
+    const crop = new Img(w, fromY - top);
+    crop.blit(src, x0, top, w, fromY - top, 0, 0);
+    // món cao và rộng (màn hình, bảng) thì mỏng; món nhỏ (cốc, giấy) thì dày gần bằng bề ngang
+    const dk = crop.h > 12 && w > 14 ? 4 : Math.max(3, Math.min(12, Math.round(w * 0.6)));
+    const k = Math.max(2, Math.min(d - dk - 2, Math.round(d * 0.55)));
+    const it = isoExtrude(crop, dk, 0);
+    const px = x0 + k, py = base.ay + Math.floor(x0 / 2) - Math.floor(k / 2) - z - it.ay;
+    out.blit(it.img, 0, 0, it.img.w, it.img.h, px, py);
+  }
+  return base;
+}
+
+/**
  * Tòa nhà isometric: mặt nam = mặt tiền (cắt xiên), mặt đông = tường hông có cửa sổ theo tầng (tối hơn), mái phẳng có gờ
  * và đồ trên mái (khối nhỏ). D: chiều sâu chân đế (px logic). Neo (0, ay) = chân mép trái mặt tiền.
  */
@@ -1074,6 +1111,9 @@ export function allProps() {
     dev_monitor: [16, 0], kiosk: [44, 0], bus_stop: [32, 0], market_stall: [40, 0], street_bin: [16, 0], planter: [24, 0], bench: [18, 0], barrier: [8, 0], barrier_ns: [96, 0],
     tour_boat: [96, 0]
   };
+  // đồ có món đặt trên mặt (tách thành khối riêng); đồ có bản quay về đông
+  const ON_TOP = new Set(['desk_pc', 'desk_papers', 'desk_lab', 'dev_computer', 'dev_magnifier', 'dev_archive', 'reception', 'cafe_counter']);
+  const FACE_EAST = new Set(['bookshelf', 'cabinet', 'archive_shelf', 'filing_boxes', 'sofa', 'printer', 'water_cooler']);
   for (const [k, [d, fromY]] of Object.entries(ISO)) {
     const p = P[k];
     if (!p) continue;
@@ -1082,8 +1122,17 @@ export function allProps() {
       const lights = (p.meta.lights || []).map(([x, y, c, rr, i]) => [x, Math.ceil(d / 2) + y + x / 2, c, rr, i]);
       P[name] = { img: r.img, meta: { ...p.meta, lights, iso: { ay: r.ay, fw: r.fw, d: r.d } } };
     };
-    mk(p.img, `${k}@iso`);
+    if (ON_TOP.has(k)) {
+      const r = isoWithItems(p.img, d, fromY);
+      const lights = (p.meta.lights || []).map(([x, y, c, rr, i]) => [x, Math.ceil(d / 2) + y + x / 2, c, rr, i]);
+      P[`${k}@iso`] = { img: r.img, meta: { ...p.meta, lights, iso: { ay: r.ay, fw: r.fw, d: r.d } } };
+    } else mk(p.img, `${k}@iso`);
     if (k === 'tour_boat') mk(mirror(p.img), `${k}@isoW`);
+    // đồ áp tường tây: mặt trước quay về phía đông (vào trong phòng)
+    if (FACE_EAST.has(k)) {
+      const r = isoExtrude(mirror(p.img), d, fromY);
+      P[`${k}@isoE`] = { img: mirror(r.img), meta: { ...p.meta, lights: [], iso: { ay: r.ay, fw: r.fw, d: r.d, east: true } } };
+    }
   }
   // đồ ngoài trời dựng bằng voxel thay bản cắt xiên (đá vôi, ghế, bồn hoa...) + đồ mới (đài phun nước, luống hoa, hàng rào)
   for (const [k, v] of Object.entries(voxelProps())) {

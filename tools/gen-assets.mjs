@@ -920,7 +920,7 @@ const tnLobby = buildMap('tn_lobby', {
     pp('sofa', 3.6, 6.2), pp('coffee_table', 3.6, 7.6), pp('sofa', 3.6, 9.8),
     pp('desk_papers', 17.8, 11.6), pp('chair', 17.8, 10.4), pp('trash', 19.8, 12.2),
     pp('sofa', 18, 6.2), pp('coffee_table', 18, 7.6),
-    pp('plant_big', 1.6, 4.4), pp('plant_big', 20.4, 4.4), pp('bookshelf', 2.6, 12.6), pp('plant_small', 5.6, 12.6),
+    pp('plant_big', 1.6, 4.4), pp('plant_big', 20.4, 4.4), pp('bookshelf', 1.75, 11.2, { face: 'e' }), pp('plant_small', 5.6, 12.6),
     pp('water_cooler', 12.9, 4.2), pp('floor_lamp', 6.4, 9), pp('floor_lamp', 15.6, 9),
     point('npc', 'amb_guard', 15.6, 11.4, { patrol: 'patrol_guard' }),
     path_('patrol_guard', [[15.6, 11.4], [13.4, 11.4]]),
@@ -931,7 +931,7 @@ const tnLobby = buildMap('tn_lobby', {
     rectT('inspect', 'inspect_notice', 17.6, 2, 2, 1, { text: 'inspect_notice' }),
     rectT('inspect', 'inspect_tv', 14, 2, 2, 1, { text: 'inspect_tv' }),
     rectT('inspect', 'inspect_reception', 8.5, 6.6, 5, 1, { text: 'inspect_reception' }),
-    rectT('inspect', 'inspect_bookshelf_lobby', 1.6, 11.6, 2, 1, { text: 'inspect_bookshelf' }),
+    rectT('inspect', 'inspect_bookshelf_lobby', 1.75, 10.2, 0.8, 2, { text: 'inspect_bookshelf' }),
     rectT('inspect', 'inspect_cooler', 12.4, 3.6, 1, 0.8, { text: 'inspect_cooler' })
   ]
 });
@@ -940,7 +940,7 @@ const tnF2 = tnFloor('tn_f2', {
   floor: 'Tầng 2', room: 'S3', roomName: 'Phòng Hồ sơ', ground: 'floor_wood',
   props: [
     pp('cork_board', 11.4, 2.9), pp('blinds_window', 14.6, 2.9), pp('whiteboard', 17.6, 2.75),
-    pp('cabinet', 12.9, 4.2), pp('cabinet', 14, 4.2), pp('archive_shelf', 15.6, 10.8),
+    pp('cabinet', 12.9, 4.2), pp('cabinet', 14, 4.2), pp('archive_shelf', 1.8, 7.6, { face: 'e' }),
     pp('desk_papers', 7, 7), pp('chair', 7, 8.1), pp('desk_papers', 11, 7), pp('chair', 11, 8.1),
     pp('desk_pc', 15, 7), pp('chair', 15, 8.1),
     pp('rug_room', 9.6, 10.8), pp('filing_boxes', 4, 10.6), pp('plant_small', 18.4, 10.6),
