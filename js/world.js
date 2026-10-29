@@ -440,9 +440,10 @@ export class WorldScene extends Phaser.Scene {
       const m = meta[o.name];
       if (!m) continue;
       // ox: tâm mặt tiền trong ảnh (tòa nhà giả 3D có mặt hông bên phải nên tâm ảnh lệch khỏi tâm mặt tiền)
-      const ox = m.ox ?? 0.5;
+      const mirror = propOf(o, 'flip') && !m.building;
+      const ox = mirror ? 1 - (m.ox ?? 0.5) : m.ox ?? 0.5;
       const img = this.add.image(o.x, o.y, 'props', o.name).setOrigin(ox, 1);
-      if (propOf(o, 'flip') && !m.building) img.setFlipX(true);
+      if (mirror) img.setFlipX(true);
       img.setDepth(m.flat ? 0.5 : m.wall ? o.y - 40 : o.y);
       const left = o.x - m.w * ox, top = o.y - m.h;
       const [bw, bh] = m.base || [0, 0];
