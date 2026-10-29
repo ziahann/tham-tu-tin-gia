@@ -1,6 +1,7 @@
 // Khởi động: tải dữ liệu, màn hình chính, Phaser, thanh trên, balo, cài đặt, nguồn.
 import { data, loadAll, t, sourceById, shortCite } from './data.js';
 import { Bay } from './bay.js';
+import { playMusic, unlockMusic, refreshMusic, musicSupported } from './music.js';
 import { state, loadState, saveSettings, startNewProgress } from './state.js';
 import { initInput, on, releaseAll } from './input.js';
 import * as dlg from './dialogue.js';
@@ -59,6 +60,7 @@ function showTitle() {
   $('title-restart').hidden = !has;
   bay.setScene('calm');
   bay.start();
+  playMusic('title');
   (has ? $('title-continue') : $('title-start')).focus();
 }
 
@@ -199,8 +201,10 @@ function openSettings() {
   const music = el('label', 'setting');
   const mbox = el('input');
   mbox.type = 'checkbox';
-  mbox.disabled = true;
-  music.append(mbox, el('span', 'muted', `${t('settingsPanel.music')} — ${t('hud.musicSoon')}`));
+  mbox.checked = state.settings.music !== false && musicSupported;
+  mbox.disabled = !musicSupported;
+  mbox.addEventListener('change', () => { state.settings.music = mbox.checked; saveSettings(); refreshMusic(); });
+  music.append(mbox, el('span', musicSupported ? null : 'muted', musicSupported ? t('settingsPanel.music') : `${t('settingsPanel.music')} — ${t('hud.musicUnsupported')}`));
   const actions = el('div', 'actions');
   const home = el('button', 'btn', t('settingsPanel.home'));
   home.type = 'button';
@@ -239,6 +243,7 @@ function showResults() {
   $('results-sources').textContent = r.sources;
   $('results-replay').textContent = r.replay;
   $('results').hidden = false;
+  playMusic('ending');
   $('results-continue').focus();
 }
 
@@ -259,7 +264,10 @@ function bindEvents() {
     heroLook = b.dataset.look;
     document.querySelectorAll('.look').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
   }));
-  $('results-continue').addEventListener('click', () => { $('results').hidden = true; });
+  $('results-continue').addEventListener('click', () => {
+    $('results').hidden = true;
+    playMusic(game?.scene.getScene('world')?.mapMusic);
+  });
   $('results-sources').addEventListener('click', openSources);
   $('results-replay').addEventListener('click', async () => {
     if (!(await confirmBox(t('title.restart'), t('title.restartConfirm')))) return;
@@ -309,6 +317,8 @@ async function boot() {
   bay = new Bay($('bay'));
   $('bay').setAttribute('aria-label', t('title.bayAlt'));
   initInput();
+  // Trình duyệt chỉ cho phát nhạc sau thao tác đầu tiên của người chơi.
+  ['pointerdown', 'keydown'].forEach(ev => window.addEventListener(ev, unlockMusic, { once: true }));
   dlg.initDialog();
   backpack.initBackpack(() => game?.scene.getScene('world') || null);
   setOnChange(refreshUi);

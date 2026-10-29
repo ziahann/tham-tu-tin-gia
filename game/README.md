@@ -59,7 +59,7 @@ GitHub Pages chỉ phục vụ từ thư mục gốc hoặc `/docs`, nên đẩy
 | Quán cà phê Gió Biển (`cafe`) | Q10b thẩm vấn (tùy chọn) | Chú Sáu Nhóm |
 | Phòng Boss (`boss`) | Đối đầu Kẻ Dệt Chuyện 3 pha, kết thúc A/B, màn kết quả; sau đó màn bonus G11 (trang mạo danh) | Kẻ Dệt Chuyện |
 
-Intro trên nền vịnh Hạ Long chuyển động (`js/bay.js`), chọn mẫu thám tử nam/nữ. Chưa có: nhạc nền; art vẫn là bản tạm vẽ bằng code.
+Intro trên nền vịnh Hạ Long chuyển động (`js/bay.js`), chọn mẫu thám tử nam/nữ, nhạc nền CC0 đổi theo bản đồ (`js/music.js`; trình duyệt chỉ phát sau thao tác đầu tiên). Art vẽ bằng code (`tools/gen-assets.mjs`).
 
 ## Nguồn tài nguyên (giấy phép)
 
@@ -69,6 +69,9 @@ Intro trên nền vịnh Hạ Long chuyển động (`js/bay.js`), chọn mẫu 
 | Phông chữ VT323 (Peter Hull) | Google Fonts | SIL Open Font License 1.1 |
 | Tileset, sprite tạm | Tự tạo bằng code (`tools/gen-assets.mjs`) | Của nhóm |
 | Hiệu ứng âm thanh | Tự tạo bằng WebAudio (`js/audio.js`) | Của nhóm |
+| Nhạc nền (`assets/audio/*.ogg`) | Juhani Junkala (SubspaceAudio), *JRPG Music Pack* #2 Towns, #3 Evil, #4 Calm — opengameart.org | CC0 1.0 (tác giả xin ghi công, không bắt buộc) |
+
+Nhạc theo mốc: `title` = Calm1 *A Place I Call Home*; `office` = Calm3 *Peaceful Days*; `street` = Calm4 *Sand Castles*; `archive` = Town2 *Where Time Stands Still*; `cafe` = Town1 *Home Town*; `boss` = Evil5 *Whispers From Beyond*; `ending` = Calm6 *Innocence*. Đổi bài: thay file cùng tên, hoặc sửa thuộc tính `music` của bản đồ trong `tools/gen-assets.mjs`.
 
 ## Lưu dữ liệu
 
