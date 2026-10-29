@@ -6,7 +6,8 @@ import { direction } from './input.js';
 import { makeAnims, feetBody, dirFrom, idleFrame, Npc, showEmote } from './actors.js';
 import { roomStatus } from './grading.js';
 import * as story from './story.js';
-import { setPlace } from './hud.js';
+import { setPlace, updateMeters } from './hud.js';
+import { tickPressure, isLight, caseOpen } from './obstacles.js';
 import { playMusic } from './music.js';
 import { buildGraph, guideTarget, updateTrackLine, GuideArrow } from './guide.js';
 import { Weather } from './weather.js';
@@ -27,6 +28,9 @@ export const heroSprite = () => `hero_${state.progress?.heroLook === 'f' ? 'f' :
 
 /** Lấy thuộc tính tùy chỉnh của object Tiled. */
 const propOf = (o, name) => (o.properties || []).find(p => p.name === name)?.value;
+
+/** Hiện một dòng thông báo ngắn (không chặn điều khiển). */
+const toastLater = text => import('./ui.js').then(m => m.toast(text));
 
 /** Điểm có nằm trong hình chữ nhật của object Tiled không. */
 const inRect = (o, x, y, pad = 0) => x >= o.x - pad && x <= o.x + o.width + pad && y >= o.y - pad && y <= o.y + o.height + pad;
@@ -84,6 +88,13 @@ export class WorldScene extends Phaser.Scene {
     this.portals = objs.filter(o => o.type === 'portal');
     this.inspects = objs.filter(o => o.type === 'inspect');
     this.elevators = objs.filter(o => o.type === 'elevator');
+    // Manh mối đánh lừa: dấu "?" nổi trên tờ giấy khi hồ sơ của nó còn đang làm
+    this.decoys = objs.filter(o => o.type === 'decoy').map(o => ({
+      obj: o,
+      id: propOf(o, 'decoy'),
+      marker: this.add.text(iso.P(o.x + o.width / 2, o.y + o.height / 2).x, iso.P(o.x + o.width / 2, o.y + o.height / 2).y - 22, '?', { fontFamily: 'VT323', fontSize: '24px', color: '#e8ecf2', stroke: '#0f0e17', strokeThickness: 4 })
+        .setOrigin(0.5, 1).setDepth(100000).setVisible(false)
+    }));
     // Chữ trên tường / sàn (biển tầng, tên tòa nhà)
     for (const o of objs.filter(o => o.type === 'label')) {
       // chữ vẽ cắt xiên nằm trên mặt tường (bảng tên tầng: nền tối)
@@ -278,6 +289,7 @@ export class WorldScene extends Phaser.Scene {
   spawnNpc(id, x, y, homePatrol) {
     const npc = new Npc(this, id, x, y);
     npc.ambient = !!data.npcs.ambientLines?.[id];
+    npc.chaser = !!data.npcs.npcs.find(n => n.id === id)?.rumor;
     npc.homePatrol = homePatrol;
     if (id === 'boss') {
       npc.sprite.setScale(BOSS_SCALE);
@@ -385,7 +397,35 @@ export class WorldScene extends Phaser.Scene {
       d.marker.setText(isTracked ? '▼' : '!').setColor(isTracked ? '#7fe3ff' : '#f2d36b');
       d.marker.setVisible(!!story.questForDevice(d.id));
     });
+    this.decoys?.forEach(d => d.marker.setVisible(!hasFlag(`seen_${d.id}`) && caseOpen(data.npcs.decoys?.[d.id]?.room)));
+    updateMeters();
     updateTrackLine();
+  }
+
+  /** Kẻ tung tin bắt kịp người chơi. */
+  onCaught(id) {
+    if (story.isBusy() || window.uiBlocked?.()) return;
+    story.rumorEncounter(id);
+  }
+
+  /** Kẻ tung tin được đuổi theo không (chế độ Nhẹ: không). */
+  canChase() { return !isLight(); }
+
+  /** Xong lượt gặp kẻ tung tin: một lúc sau mới đuổi tiếp. */
+  rumorDone(id) {
+    const npc = this.npcs.get(id);
+    if (npc) npc.cool = 25000;
+  }
+
+  /** Người chơi đi giữa làn xe (không ở vạch kẻ) bị xe hất về mép đường gần nhất. */
+  knockback(toY) {
+    if (this.time.now < (this.stunUntil || 0)) return;
+    this.stunUntil = this.time.now + 700;
+    this.player.body.reset(this.player.x, toY);
+    this.player.setVelocity(0, 0);
+    this.cameras.main.shake(180, 0.006);
+    sfx('wrong');
+    if (this.time.now > (this.carHitToast || 0)) { this.carHitToast = this.time.now + 8000; toastLater(t('obstacles.carHit')); }
   }
 
   /** Bắt đầu / kết thúc trò chuyện: NPC dừng và quay mặt về người chơi, người chơi nhìn NPC. */
@@ -430,6 +470,8 @@ export class WorldScene extends Phaser.Scene {
     if (lift) return { kind: 'elevator', x: lift.x + lift.width / 2, y: lift.y + lift.height, lift: 70 };
     const dev = this.devices.find(d => inRect(d.obj, fx, fy, PAD));
     if (dev) return { kind: 'device', id: dev.id, x: dev.obj.x + dev.obj.width / 2, y: dev.obj.y + dev.obj.height, lift: 50 };
+    const dc = this.decoys.find(d => inRect(d.obj, fx, fy, PAD));
+    if (dc) return { kind: 'decoy', id: dc.id, x: dc.obj.x + dc.obj.width / 2, y: dc.obj.y + dc.obj.height, lift: 36 };
     const ins = this.inspects.find(o => inRect(o, fx, fy, PAD));
     if (ins) return { kind: 'inspect', key: propOf(ins, 'text'), x: ins.x + ins.width / 2, y: ins.y + ins.height, lift: 40 };
     const door = this.doorObjs.find(d => inRect(d.obj, fx, fy, PAD) && d.status !== 'open' && d.status !== 'done');
@@ -444,7 +486,9 @@ export class WorldScene extends Phaser.Scene {
     const tg = this.target;
     if (!tg) return;
     if (tg.kind === 'npc' && tg.id === 'boss') story.runBoss();
+    else if (tg.kind === 'npc' && this.npcs.get(tg.id)?.chaser) story.rumorEncounter(tg.id);
     else if (tg.kind === 'npc') story.talkTo(tg.id);
+    else if (tg.kind === 'decoy') story.inspectDecoy(tg.id);
     else if (tg.kind === 'portal') {
       const room = propOf(tg.portal, 'room');
       const st = roomStatus(room, state.progress.flags);
@@ -571,7 +615,7 @@ export class WorldScene extends Phaser.Scene {
 
   /** Vòng lặp mỗi khung hình. */
   update(time, delta) {
-    const frozen = this.leaving || story.isBusy() || window.uiBlocked?.();
+    const frozen = this.leaving || story.isBusy() || window.uiBlocked?.() || time < (this.stunUntil || 0);
     let { x, y } = frozen ? { x: 0, y: 0 } : direction();
     if (x && y) { x *= Math.SQRT1_2; y *= Math.SQRT1_2; }
     // phím theo hướng màn hình → vận tốc logic (lên màn hình = lùi chéo về tây bắc trên lưới)
@@ -587,6 +631,8 @@ export class WorldScene extends Phaser.Scene {
         this.stepIn = 300;
         footstep(this.ground.getTileAtWorldXY(this.player.x, this.player.y - 2)?.properties?.name, this.weather?.kind === 'rain');
       }
+      const room = story.trackedRoom();
+      if (tickPressure(delta, room)) story.deadlineCall(room);
       if (time - this.lastSave > 1000) {
         this.lastSave = time;
         this.savePos();
@@ -603,7 +649,8 @@ export class WorldScene extends Phaser.Scene {
 
     this.weather.update(delta, this.player.view);
     this.ambIn -= delta;
-    if (this.ambIn <= 0) { this.updateAmbience(250 - this.ambIn); this.ambIn = 250; }
+    if (this.ambIn <= 0) { this.updateAmbience(250 - this.ambIn); this.ambIn = 250; updateMeters(); }
+    if (!this.reduceMotion) this.decoys.forEach((d, i) => d.marker.setY(iso.P(d.obj.x + d.obj.width / 2, d.obj.y + d.obj.height / 2).y - 22 + Math.round(Math.sin(time / 300 + i) * 2)));
     const gt = frozen ? null : guideTarget(this);
     this.guide.draw(this.player.view, gt && { ...iso.P(gt.x, gt.y), here: gt.here }, time);
     if (frozen) { this.prompt.setVisible(false); return; }

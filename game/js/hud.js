@@ -2,6 +2,8 @@
 import { t } from './data.js';
 import { state } from './state.js';
 import { earnedBadges, caseProgress } from './grading.js';
+import { credOf, pressure, caseOpen, isLight, CRED_MAX } from './obstacles.js';
+import { questById } from './data.js';
 
 /** Hiện tên khu vực đang đứng. */
 export function setPlace(text) {
@@ -13,6 +15,28 @@ export function updateScore() {
   const flags = state.progress?.flags || [];
   document.getElementById('hud-score').textContent = state.progress
     ? t('progress', { badges: earnedBadges(flags).length, ...caseProgress(flags) }) : '';
+  updateMeters();
+}
+
+/** Thanh độ tin cậy (hồ sơ đang theo dõi) và thanh hạn chót; ẩn khi không có hồ sơ đang làm. */
+export function updateMeters() {
+  const box = document.getElementById('hud-meters');
+  if (!box) return;
+  const id = state.progress?.tracked;
+  const room = id && id !== 'boss' ? questById(id)?.room : null;
+  const on = caseOpen(room);
+  box.hidden = !on;
+  if (!on) return;
+  const cred = credOf(room), p = Math.round(pressure());
+  const set = (sel, v, warn) => {
+    const m = box.querySelector(sel);
+    m.querySelector('i').style.width = `${v}%`;
+    m.classList.toggle('is-warn', warn);
+  };
+  set('.meter-cred', (cred / CRED_MAX) * 100, cred <= 30);
+  set('.meter-press', p, p >= 75);
+  box.querySelector('.meter-press').hidden = isLight();
+  box.querySelector('.meter-cred').title = `${t('obstacles.credTitle')} (${cred}/${CRED_MAX})`;
 }
 
 /** Dòng "đang theo dõi": người giao hồ sơ và nơi gặp. on = có hồ sơ đang theo dõi. */

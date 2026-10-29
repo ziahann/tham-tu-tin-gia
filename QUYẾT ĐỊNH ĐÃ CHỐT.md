@@ -152,3 +152,13 @@
 | Sửa hình | Thảm nằm phẳng trên sàn; bảng, áp phích, chữ dán sát tường; mỗi chiều xe một làn rộng 2 ô; đá vôi, ghế, bồn hoa dựng lại bằng khối voxel có đậm nhạt tạo khối |
 | Công viên | Đài phun nước ở giữa, luống hoa, hàng rào cây xén, thêm ghế và đèn |
 | Tòa nhà vào được | Thêm Cao ốc văn phòng, Trung tâm y tế, Cà phê Sương Sớm: hư cấu, gắn GIẢ LẬP trên biển hiệu và tên khu vực; bên trong có NPC trang trí (bác sĩ, điều dưỡng, người chờ khám, nhân viên văn phòng, pha chế, khách quen) nói câu về thói quen kiểm chứng, không thêm số liệu ngoài F1–F16, không có nhiệm vụ |
+
+## Chốt ngày 29/10/2026 (đợt 9)
+
+| Mục | Quyết định |
+|---|---|
+| Kích thước phòng | Thu gọn: sảnh 22x14, các tầng Thanh Niên 20x12, Tin Vịnh 24x17, quán cà phê 16x12, Phòng xác minh 18x12, phòng trang trí 16–18 x 11–12; đồ xếp theo cụm chức năng, chừa lối đi |
+| Cản trở | Đủ bốn loại: kẻ tung tin đi rong (GIẢ LẬP, hỏi kỹ năng nhận diện tin giật tít, không thêm dữ kiện ngoài F1–F16); áp lực hạn chót (Phát Vội gọi giục đăng); manh mối đánh lừa (6 tờ giấy, mỗi hồ sơ một, không đặt trong tòa Báo Thanh Niên); chướng ngại di chuyển (thẻ khách, chờ thang máy, xe hất khi đi ngoài vạch kẻ, rào thi công) |
+| Hậu quả | Thanh "Độ tin cậy" theo từng hồ sơ, bắt đầu 100; về 0 thì làm lại hồ sơ đó từ bước đầu. Huy hiệu vẫn là phần thưởng chính, không có điểm |
+| Hạn chót | Chỉ chạy khi đang đi lại và có hồ sơ đang theo dõi; dừng khi hội thoại, đọc báo, mở menu; trả lời đúng một bước giảm áp lực |
+| Chế độ Nhẹ | Cài đặt "Thử thách: Đầy đủ / Nhẹ". Nhẹ: không hạn chót, kẻ tung tin không đuổi, không mất độ tin cậy, xe vẫn dừng cho người chơi, thang máy không phải chờ |

@@ -43,6 +43,9 @@ const PATROL_SPEED = 42;
 const LEAD_SPEED = 95;
 const LEAD_WAIT_DIST = 150; // NPC dẫn đường đứng chờ khi người chơi ở xa hơn
 const NOTICE_DIST = 60;     // NPC đi tuần dừng lại khi người chơi gần hơn
+const CHASE_DIST = 170;    // kẻ tung tin thấy người chơi trong tầm này thì đuổi theo
+const CHASE_SPEED = 92;    // chậm hơn người chơi (120): chạy được nếu để ý
+const CATCH_DIST = 30;
 
 export class Npc {
   constructor(scene, id, x, y) {
@@ -112,8 +115,22 @@ export class Npc {
       if (this.emoteIn <= 0) { this.emoteIn = 7000 + Math.random() * 9000; showEmote(this.scene, s.view || s, Phaser.Utils.Array.GetRandom(EMOTES)); }
     }
     if (this.talking || frozen || this.mode === 'idle') { this.stand(); return; }
+    // Kẻ tung tin: thấy người chơi thì đuổi theo; bắt kịp thì chặn lại "mời" xem tin giật tít
+    if (this.chaser) {
+      this.cool = Math.max(0, (this.cool || 0) - delta);
+      const d = Phaser.Math.Distance.Between(s.x, s.y, player.x, player.y);
+      if (!this.cool && this.scene.canChase?.() && d < CHASE_DIST) {
+        if (d < CATCH_DIST) { this.cool = 25000; this.face(player.x, player.y); this.scene.onCaught?.(this.id); return; }
+        const dx = player.x - s.x, dy = player.y - s.y;
+        s.body.setVelocity((dx / d) * CHASE_SPEED, (dy / d) * CHASE_SPEED);
+        const sd = iso.toScreenDir(dx, dy);
+        this.facing = dirFrom(sd.x, sd.y);
+        s.anims.play(`${this.id}-walk-${this.facing}`, true);
+        return;
+      }
+    }
     // Đang đi tuần mà người chơi lại gần: dừng lại, quay sang chờ nói chuyện.
-    if (this.mode === 'patrol' && Phaser.Math.Distance.Between(s.x, s.y, player.x, player.y) < NOTICE_DIST) {
+    if (this.mode === 'patrol' && !this.chaser && Phaser.Math.Distance.Between(s.x, s.y, player.x, player.y) < NOTICE_DIST) {
       this.face(player.x, player.y);
       return;
     }

@@ -35,6 +35,8 @@ export const CHARACTERS = {
   amb_clerk: { skin: '#f1c7a0', hair: '#1b1418', hairStyle: 'short', top: '#2c3a55', inner: '#e8ecf2', bottom: '#2c3a55', shoes: '#14161c', lanyard: true },
   amb_clerk2: { skin: '#f3cdb0', hair: '#3a2318', hairStyle: 'long', top: '#6b5a8a', bottom: '#3a3f4d', skirt: true, shoes: '#22252e', glasses: true },
   amb_barista2: { skin: '#d9a67e', hair: '#2a2a2a', hairStyle: 'spiky', top: '#2f5446', inner: '#c8a26b', bottom: '#2f2f38', shoes: '#1d1d24' },
-  amb_patron: { skin: '#f1c7a0', hair: '#5a3a1a', hairStyle: 'bob', top: '#9b5a3a', bottom: '#2d3a5a', shoes: '#f4f4f4' }
+  amb_patron: { skin: '#f1c7a0', hair: '#5a3a1a', hairStyle: 'bob', top: '#9b5a3a', bottom: '#2d3a5a', shoes: '#f4f4f4' },
+  amb_rumor: { skin: '#e6bb98', hair: '#1b1418', hairStyle: 'spiky', top: '#8a2a30', inner: '#1d1d24', bottom: '#1f1f1f', shoes: '#2b2b2b' },
+  amb_rumor2: { skin: '#f1c7a0', hair: '#2b1d1a', hairStyle: 'bob', top: '#4a2f6a', inner: '#c8a24a', bottom: '#2a2a33', shoes: '#14161c' }
 };
 
