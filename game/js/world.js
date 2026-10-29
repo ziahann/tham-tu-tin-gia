@@ -640,13 +640,20 @@ export class WorldScene extends Phaser.Scene {
       const isoKey = `${o.name}@iso`, im2 = meta[isoKey];
       const makeWall = (x, y) => this.add.image(x - m.w * ox, y - (m.w * ox) / 2, 'props', isoKey).setOrigin(0, im2.h0 / im2.h);
       // khối isometric: <khóa>@iso (đồ vật, tàu; tàu quay ngược: @isoW) hoặc chính khóa (tòa nhà có meta.iso)
-      const isoName = mirror && meta[`${o.name}@isoW`] ? `${o.name}@isoW` : meta[`${o.name}@iso`]?.iso ? `${o.name}@iso` : m.iso ? o.name : null;
+      const east = propOf(o, 'face') === 'e' && meta[`${o.name}@isoE`];
+      const isoName = east ? `${o.name}@isoE` : mirror && meta[`${o.name}@isoW`] ? `${o.name}@isoW` : meta[`${o.name}@iso`]?.iso ? `${o.name}@iso` : m.iso ? o.name : null;
       const im = isoName ? meta[isoName] : null;
       let img, left, top, lights = m.lights;
       if (m.wall) {
         const parts = this.sliceOnWall(im2 ? makeWall : make, o.x, o.y, o.x - m.w * ox);
         img = parts[0]; this.propExtras.push(...parts.slice(1));
         left = img.x; top = img.y - img.height * img.originY; lights = [];
+      } else if (im?.iso.east) {
+        // quay mặt về đông: (o.x, o.y) = giữa mép trước (phía đông); góc bắc của mép trước ứng với mép phải ảnh
+        const q = iso.P(o.x, o.y - im.iso.fw / 2);
+        img = this.add.image(q.x, q.y, 'props', isoName).setOrigin(1, im.iso.ay / im.h);
+        img.setDepth(iso.depth(o.x - im.iso.d / 2, o.y));
+        left = q.x - im.w; top = q.y - im.iso.ay; lights = [];
       } else if (im) {
         const q = iso.P(o.x - im.iso.fw / 2, o.y);
         img = this.add.image(q.x, q.y, 'props', isoName).setOrigin(0, im.iso.ay / im.h);
@@ -663,7 +670,8 @@ export class WorldScene extends Phaser.Scene {
         left = img.x - m.w * ox; top = img.y - m.h;
       }
       if (bw && bh && !m.flat && !m.wall) {
-        const z = this.add.zone(o.x, o.y - bh / 2, bw, bh);
+        // chân đế: quay về đông thì đổi chiều (sâu theo x, dài theo y)
+        const z = east ? this.add.zone(o.x - bh / 2, o.y, bh, bw) : this.add.zone(o.x, o.y - bh / 2, bw, bh);
         this.propBodies.add(z);
       }
       (lights || []).forEach(([lx, ly, c, r, i]) => this.propLights.push([left + lx, top + ly, c, r, i]));
