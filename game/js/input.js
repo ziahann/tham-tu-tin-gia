@@ -48,7 +48,6 @@ export function initInput() {
     if (e.code === 'KeyE' || (!onButton && (e.code === 'Space' || e.code === 'Enter'))) { e.preventDefault(); emit('action'); }
     else if (e.code === 'KeyB') { emit('backpack'); }
     else if (e.code === 'KeyJ') { emit('cases'); }
-    else if (e.code === 'KeyT') { emit('weather'); }
   });
   window.addEventListener('keyup', e => {
     const d = KEY_DIR[e.code];

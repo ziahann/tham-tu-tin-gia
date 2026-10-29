@@ -505,3 +505,10 @@ button.frame:hover { border-color: var(--grey); }
 .sc-sim { font-size: 13px; opacity: 0.8; margin-top: 6px; }
 
 .title-authors { color: var(--straw); margin-top: 6px; }
+
+/* Thu nhỏ khung thoại */
+.dialog-box { position: relative; }
+.dialog-min-btn { position: absolute; top: 4px; right: 6px; width: 32px; height: 28px; font: inherit; font-size: 20px; line-height: 1; color: var(--paper); background: rgb(15 14 23 / 0.7); border: 2px solid var(--muted); cursor: pointer; z-index: 2; }
+.dialog-min-btn:hover, .dialog-min-btn:focus-visible { border-color: var(--straw); color: var(--straw); }
+.dialog-mini { position: fixed; left: 50%; bottom: 12px; transform: translateX(-50%); z-index: 40; font: inherit; font-size: 18px; color: var(--ink); background: var(--straw); border: 2px solid var(--ink); padding: 6px 14px; max-width: calc(100vw - 32px); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; box-shadow: 0 3px 0 #0f0e17; }
+.dialog-mini[hidden] { display: none; }

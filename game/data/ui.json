@@ -108,7 +108,9 @@
     "caseOption": "{room}: {title}",
     "notNow": "Để sau",
     "tracking": "Đang theo dõi: {title}",
-    "badge": "🏅 Huy hiệu mới: {name}. {learned}"
+    "badge": "🏅 Huy hiệu mới: {name}. {learned}",
+    "minimize": "Thu nhỏ khung thoại (đi lại tự do, bấm thanh dưới để mở lại)",
+    "minimized": "▲ Đang trò chuyện với {name} · bấm (hoặc E) để mở lại"
   },
   "backpack": {
     "title": "Balo",
@@ -316,7 +318,13 @@
     "clear": "☀ Trời quang",
     "rain": "☂ Mưa",
     "fog": "≋ Sương mù",
-    "night": "☾ Ban đêm"
+    "night": "☾ Ban đêm",
+    "fx": {
+      "clear": "đi lại bình thường",
+      "rain": "đường trơn: đi chậm hơn, xe phanh dài hơn",
+      "fog": "sương dày: tầm nhìn hẹp, khó thấy kẻ tung tin từ xa",
+      "night": "trời tối: kẻ tung tin để ý từ xa hơn, hạn chót trôi nhanh hơn"
+    }
   },
   "elevator": {
     "name": "Thang máy",
