@@ -61,6 +61,16 @@ function extrude(src, s, fromY = 0) {
   return outline(out);
 }
 
+/** Cắt xiên ảnh cho nằm trên mặt tường isometric: cột u hạ xuống u/2 px. Ảnh cao thêm w/2. */
+export function shearIso(src) {
+  const out = new Img(src.w, src.h + Math.ceil(src.w / 2));
+  for (let u = 0; u < src.w; u++) for (let v = 0; v < src.h; v++) {
+    const c = src.get(u, v);
+    if (c[3]) out.set(u, v + Math.floor(u / 2), c);
+  }
+  return out;
+}
+
 /** Bóng đổ mềm dưới chân đồ vật. */
 const shadow = (img, cx, cy, rx, ry = 3) => img.ellipse(cx, cy, rx, ry, '#00000048');
 
@@ -709,6 +719,118 @@ function building(o) {
   return { img, meta, shadowImg };
 }
 
+
+/** Lật ngang một ảnh. */
+function mirror(src) {
+  const out = new Img(src.w, src.h);
+  out.blit(src, 0, 0, src.w, src.h, 0, 0, true);
+  return out;
+}
+
+/**
+ * Khối isometric từ ảnh chính diện: mặt trước cắt xiên theo trục x (cột u hạ u/2 px) thành mặt nam; mép trên / mép phải
+ * đẩy lùi d px theo hướng (+1, −1/2) (lùi về phía bắc trên lưới) thành mặt trên (sáng) / mặt đông (tối).
+ * Chỉ phần từ hàng fromY trở xuống được đẩy khối (đồ đặt trên mặt bàn giữ nguyên).
+ * Trả về { img, ay, fw, d }: điểm neo (0, ay) = chân mép trái mặt nam; fw = bề rộng mặt nam (px logic); d = chiều sâu.
+ */
+export function isoExtrude(src, d, fromY = 0) {
+  const sh = shearIso(src);
+  const yo = Math.ceil(d / 2);
+  const out = new Img(src.w + d, sh.h + yo);
+  const solid = (x, y) => x >= 0 && y >= fromY && x < src.w && y < src.h && src.get(x, y)[3] > 200;
+  const isOut = c => c[0] === 11 && c[1] === 15 && c[2] === 24;
+  const hex = c => `#${c.slice(0, 3).map(v => v.toString(16).padStart(2, '0')).join('')}`;
+  for (let k = d; k >= 1; k--) {
+    for (let y = 0; y < src.h; y++) for (let x = 0; x < src.w; x++) {
+      if (!solid(x, y)) continue;
+      const top = !solid(x, y - 1), right = !solid(x + 1, y);
+      if (!top && !right) continue;
+      let c = src.get(x, y);
+      if (isOut(c)) c = top && solid(x, y + 1) ? src.get(x, y + 1) : solid(x - 1, y) ? src.get(x - 1, y) : c;
+      if (isOut(c)) continue;
+      const col = top ? shade(hex(c), k === d ? 0.2 : 0.07) : shade(hex(c), -0.42);
+      out.set(x + k, yo + y + Math.floor(x / 2) - Math.round(k / 2), col);
+    }
+  }
+  out.blit(sh, 0, 0, sh.w, sh.h, 0, yo);
+  return { img: outline(out), ay: yo + src.h, fw: src.w, d };
+}
+
+/**
+ * Tòa nhà isometric: mặt nam = mặt tiền (cắt xiên), mặt đông = tường hông có cửa sổ theo tầng (tối hơn), mái phẳng có gờ
+ * và đồ trên mái (khối nhỏ). D: chiều sâu chân đế (px logic). Neo (0, ay) = chân mép trái mặt tiền.
+ */
+function buildingIso(o) {
+  const { img: front, meta } = buildingFront(o);
+  const W = front.w, H = front.h, D = (o.deep || 6) * 32;
+  const st = STYLE[o.style], rf = ROOF[o.style];
+  const y0 = Math.ceil(D / 2);
+  const out = new Img(W + D, H + Math.ceil(W / 2) + y0 + 2);
+  const set = (x, y, c) => out.set(Math.round(x), Math.round(y), c);
+  // mặt đông: cột j lùi về sau, mỗi cột cao H
+  const side = shade(st.wall2, -0.34), sideWin = shade(st.win, -0.25);
+  const GF = 80, FL = 64, ROOFH = 26;
+  for (let j = 0; j <= D; j++) {
+    const x = W + j, yTop = y0 + W / 2 - j / 2;
+    const base = mix(side, shade(side, -0.25), j / D);
+    for (let v = 0; v < H; v++) set(x, yTop + v, base);
+    const k = j % 32;
+    if (k >= 6 && k <= 26) {
+      for (let f = 0; f < o.floors; f++) {
+        const wy = ROOFH + f * FL + 12;
+        const lit = ((f * 5 + Math.floor(j / 32) * 3) % 7) === 0;
+        for (let v = wy; v < wy + 36; v++) set(x, yTop + v, lit ? shade(st.lit, -0.3) : sideWin);
+      }
+      if (o.shop && k > 8 && k < 24) for (let v = H - GF + 22; v < H - 4; v++) set(x, yTop + v, shade(st.lit, -0.5));
+    }
+    set(x, yTop + H - GF, shade(st.trim, -0.3)); set(x, yTop + H - GF + 1, shade(st.trim, -0.3));
+    if (j === 0 || j === D) for (let v = 0; v < H; v++) set(x, yTop + v, shade(st.wall2, -0.5));
+  }
+  // mặt nam: mặt tiền cắt xiên
+  const sh = shearIso(front);
+  out.blit(sh, 0, 0, sh.w, sh.h, 0, y0);
+  // mái: điểm (a dọc x, b lùi sau, z cao) → ảnh
+  const roofPt = (a, b, z = 0) => [a + b, y0 + a / 2 - b / 2 - z];
+  const fillTop = (a0, b0, w, d, z, colorAt) => {
+    const [xa] = roofPt(a0, b0), [xb] = roofPt(a0 + w, b0 + d);
+    for (let x = Math.floor(xa); x <= Math.ceil(xb); x++) for (let y = Math.floor(y0 - (b0 + d) / 2 - z - 2 + a0 / 2); y <= Math.ceil(y0 + (a0 + w) / 2 - b0 / 2 - z + 2); y++) {
+      const yy = y + z - y0;
+      const a = x / 2 + yy, b = x / 2 - yy;
+      if (a < a0 || a >= a0 + w || b < b0 || b >= b0 + d) continue;
+      out.set(x, y, colorAt(a - a0, b - b0));
+    }
+  };
+  fillTop(0, 0, W, D, 0, (a, b) => {
+    const edge = a < 3 || b < 3 || a > W - 4 || b > D - 4;
+    if (edge) return rf.edge;
+    if (o.style === 'warehouse' && Math.floor(a) % 8 < 2) return '#2e343d';
+    return mix(rf.roof, shade(rf.roof, -0.22), b / D);
+  });
+  // đồ trên mái: hộp nhỏ isometric
+  const cube = (a0, b0, w, d, h, top, south, east) => {
+    for (let a = a0; a < a0 + w; a++) { const [x, y] = roofPt(a, b0); for (let z = 0; z < h; z++) set(x, y - z, south); }
+    for (let b = b0; b < b0 + d; b++) { const [x, y] = roofPt(a0 + w, b); for (let z = 0; z < h; z++) set(x, y - z, east); }
+    fillTop(a0, b0, w, d, h, () => top);
+  };
+  let a = 14;
+  for (const it of o.roof || []) {
+    const b = 14 + Math.floor(rnd() * Math.max(1, D - 50));
+    if (it === 'ac') cube(a, b, 20, 14, 12, '#b4bccb', '#8e97a8', '#6b7486');
+    if (it === 'tank') cube(a, b, 20, 20, 24, '#5b4a3a', '#4a3c2e', '#3a3026');
+    if (it === 'vent') cube(a, b, 12, 12, 10, '#6b7686', '#4a5060', '#3a4150');
+    if (it === 'skylight') cube(a, b, 26, 18, 5, '#7fa8c8', '#3a5068', '#2a3a4a');
+    if (it === 'solar') for (let k = 0; k < 3; k++) cube(a + k * 14, b, 12, 18, 4, '#2c4a6b', '#22384f', '#1a2a3a');
+    if (it === 'garden') for (let k = 0; k < 4; k++) cube(a + k * 12, b, 10, 12, 10, '#3a6455', '#2a4a40', '#1f3a33');
+    if (it === 'antenna') { const [x, y] = roofPt(a + 6, b); for (let z = 0; z < 34; z++) set(x, y - z, '#2b303b'); for (let k = -6; k < 8; k++) set(x + k, y - 28, '#2b303b'); set(x, y - 35, '#ff5a5a'); meta.lights.push([x, y - 35 - y0, 0xff5a5a, 40, 0.8]); }
+    a += it === 'solar' || it === 'garden' ? 52 : 34;
+    if (a > W - 40) a = 18;
+  }
+  // ánh sáng / biển hiệu: toạ độ mặt tiền → ảnh cắt xiên
+  const lights = meta.lights.map(([x, y, c, r, i]) => [x, y0 + y + x / 2, c, r, i]);
+  const sign = meta.sign ? { ...meta.sign, x: meta.sign.x, y: y0 + meta.sign.y + meta.sign.x / 2 } : null;
+  return { img: out, meta: { base: [W - 4, D - 8], lights, sign, building: true, iso: { ay: y0 + H, fw: W, d: D } } };
+}
+
 // ---------------------------------------------------------------- danh mục
 
 /** Tất cả props: khóa → { img, meta }. meta.base: [rộng, sâu] chân đế va chạm (0 = không va chạm); flat: nằm dưới chân; wall: dán tường. */
@@ -762,45 +884,47 @@ export function allProps() {
   add('bollard', bollard(), { base: [8, 6] });
   add('planter', planter(), { base: [64, 16] });
   add('market_stall', marketStall(), { base: [76, 20] });
-  add('tour_boat', extrude(tourBoat(), 22), { base: [290, 34], ox: 160 / 342, lights: [[160, 70, 0xffe2a0, 120, 0.8]] });
+  add('tour_boat', tourBoat(), { base: [290, 34], lights: [[160, 48, 0xffe2a0, 120, 0.8]] });
   // đảo đá giả 3D: đỉnh phủ cây nhìn từ trên, vách hông tối
-  { const k = extrude(karstIsland(true), 24); add('karst_big', k, { base: [150, 30], ox: 90 / k.w }); }
-  { const k = extrude(karstIsland(false), 16); add('karst', k, { base: [90, 20], ox: 55 / k.w }); }
+  add('karst_big', karstIsland(true), { base: [150, 30] });
+  add('karst', karstIsland(false), { base: [90, 20] });
   // tòa nhà: tương tác (có biển, cửa) và trang trí
   const B = {
-    bld_thanhnien: { cols: 12, floors: 5, style: 'glass', door: 'center', sign: true, signGlow: '#c8323c', depth: 52, roof: ['antenna', 'solar', 'ac', 'ac', 'skylight'] },
-    bld_tinvinh: { cols: 9, floors: 3, style: 'brick', door: 2, sign: true, signGlow: '#ff9a3a', fireEscape: true, roof: ['tank', 'vent', 'ac', 'antenna'] },
-    bld_xacminh: { cols: 8, floors: 2, style: 'stone', door: 'center', sign: true, signGlow: '#7fe3ff', roof: ['antenna', 'skylight', 'vent'] },
-    bld_cafe: { cols: 8, floors: 1, style: 'shop', door: 'center', shop: 'glass', awning: '#5a3a3a', sign: true, signGlow: '#f2c46b', roof: ['garden', 'vent'] },
-    bld_apartment: { cols: 9, floors: 5, style: 'concrete', door: 3, balcony: true, sign: false, signGlow: '#9fb3c8', roof: ['tank', 'ac', 'antenna', 'ac'] },
-    bld_apartment2: { cols: 7, floors: 4, style: 'concrete', door: 2, sign: false, roof: ['ac', 'tank', 'vent'] },
-    bld_hotel: { cols: 10, floors: 6, style: 'hotel', door: 'center', balcony: true, sign: false, signGlow: '#ff9fd0', roof: ['garden', 'tank', 'antenna'] },
-    bld_pharmacy: { cols: 5, floors: 2, style: 'shop', door: 1, shop: 'glass', sign: false, signGlow: '#4aa35b', roof: ['ac', 'skylight'] },
-    bld_store: { cols: 6, floors: 2, style: 'shop', door: 2, shop: 'glass', awning: '#2c4a6b', sign: false, signGlow: '#9fd8ff', roof: ['tank', 'ac'] },
-    bld_books: { cols: 5, floors: 2, style: 'brick', door: 1, shop: 'glass', sign: false, signGlow: '#f2c46b', roof: ['solar'] },
-    bld_closed: { cols: 6, floors: 2, style: 'concrete', door: null, shop: 'shutter', sign: false, signGlow: '#5b6170', roof: ['vent', 'ac'] },
-    bld_warehouse: { cols: 12, floors: 1, style: 'warehouse', door: 4, shop: 'shutter', sign: false, signGlow: '#c9a24a', roof: ['vent', 'vent', 'skylight'] },
-    bld_tenement: { cols: 6, floors: 4, style: 'brick', door: 1, fireEscape: true, sign: false, roof: ['tank', 'ac', 'antenna'] }
+    bld_thanhnien: { deep: 7, cols: 12, floors: 5, style: 'glass', door: 'center', sign: true, signGlow: '#c8323c', depth: 52, roof: ['antenna', 'solar', 'ac', 'ac', 'skylight'] },
+    bld_tinvinh: { deep: 6, cols: 9, floors: 3, style: 'brick', door: 2, sign: true, signGlow: '#ff9a3a', fireEscape: true, roof: ['tank', 'vent', 'ac', 'antenna'] },
+    bld_xacminh: { deep: 6, cols: 8, floors: 2, style: 'stone', door: 'center', sign: true, signGlow: '#7fe3ff', roof: ['antenna', 'skylight', 'vent'] },
+    bld_cafe: { deep: 5, cols: 8, floors: 1, style: 'shop', door: 'center', shop: 'glass', awning: '#5a3a3a', sign: true, signGlow: '#f2c46b', roof: ['garden', 'vent'] },
+    bld_apartment: { deep: 6, cols: 9, floors: 5, style: 'concrete', door: 3, balcony: true, sign: false, signGlow: '#9fb3c8', roof: ['tank', 'ac', 'antenna', 'ac'] },
+    bld_apartment2: { deep: 5, cols: 7, floors: 4, style: 'concrete', door: 2, sign: false, roof: ['ac', 'tank', 'vent'] },
+    bld_hotel: { deep: 6, cols: 10, floors: 6, style: 'hotel', door: 'center', balcony: true, sign: false, signGlow: '#ff9fd0', roof: ['garden', 'tank', 'antenna'] },
+    bld_pharmacy: { deep: 5, cols: 5, floors: 2, style: 'shop', door: 1, shop: 'glass', sign: false, signGlow: '#4aa35b', roof: ['ac', 'skylight'] },
+    bld_store: { deep: 5, cols: 6, floors: 2, style: 'shop', door: 2, shop: 'glass', awning: '#2c4a6b', sign: false, signGlow: '#9fd8ff', roof: ['tank', 'ac'] },
+    bld_books: { deep: 5, cols: 5, floors: 2, style: 'brick', door: 1, shop: 'glass', sign: false, signGlow: '#f2c46b', roof: ['solar'] },
+    bld_closed: { deep: 5, cols: 6, floors: 2, style: 'concrete', door: null, shop: 'shutter', sign: false, signGlow: '#5b6170', roof: ['vent', 'ac'] },
+    bld_warehouse: { deep: 6, cols: 12, floors: 1, style: 'warehouse', door: 4, shop: 'shutter', sign: false, signGlow: '#c9a24a', roof: ['vent', 'vent', 'skylight'] },
+    bld_tenement: { deep: 5, cols: 6, floors: 4, style: 'brick', door: 1, fireEscape: true, sign: false, roof: ['tank', 'ac', 'antenna'] }
   };
-  for (const [k, o] of Object.entries(B)) {
-    const { img, meta, shadowImg } = building(o);
-    P[k] = { img, meta: { ...meta, building: true } };
-    P[`${k}_shadow`] = { img: shadowImg, meta: { base: [0, 0], flat: true, shadow: true } };
-  }
-  // đồ vật thành khối giả 3D (mặt trên + mặt hông); độ sâu theo kích thước thật
-  const DEPTH = {
-    desk_pc: [14, 22], desk_papers: [14, 22], desk_lab: [14, 22], cabinet: 12, bookshelf: 12, reception: [16, 16], printer: 10, filing_boxes: 8,
-    meeting_table: [16, 16], archive_shelf: 14, cafe_counter: [14, 22], coffee_table: [8, 8], sofa: 12, water_cooler: [8, 24], trash: 6,
-    dev_computer: [14, 22], dev_detector: 10, dev_archive: [10, 30], dev_magnifier: [12, 28], dev_monitor: 8,
-    kiosk: 16, bus_stop: 12, market_stall: 12, street_bin: 6, planter: 10, bench: 6
+  // bản isometric của đồ dán tường (cắt xiên theo mặt tường)
+  for (const [k, p] of Object.entries(P)) if (p.meta.wall) P[`${k}@iso`] = { img: shearIso(p.img), meta: { base: [0, 0], wall: true, isoOf: k, h0: p.img.h } };
+  for (const [k, o] of Object.entries(B)) { const { img, meta } = buildingIso(o); P[k] = { img, meta }; }
+  // đồ vật thành khối isometric: [chiều sâu chân đế (px logic), hàng bắt đầu đẩy khối]
+  const ISO = {
+    desk_pc: [28, 22], desk_papers: [28, 22], desk_lab: [28, 22], cabinet: [20, 0], bookshelf: [22, 0], reception: [34, 16], printer: [26, 0],
+    filing_boxes: [22, 0], meeting_table: [56, 16], archive_shelf: [24, 0], cafe_counter: [30, 22], coffee_table: [26, 8], sofa: [30, 0],
+    water_cooler: [18, 24], trash: [14, 0], dev_computer: [28, 22], dev_detector: [26, 0], dev_archive: [28, 30], dev_magnifier: [30, 28],
+    dev_monitor: [16, 0], kiosk: [44, 0], bus_stop: [32, 0], market_stall: [40, 0], street_bin: [16, 0], planter: [24, 0], bench: [18, 0],
+    tour_boat: [96, 0]
   };
-  for (const [k, v] of Object.entries(DEPTH)) {
+  for (const [k, [d, fromY]] of Object.entries(ISO)) {
     const p = P[k];
     if (!p) continue;
-    const [d, fromY] = Array.isArray(v) ? v : [v, 0];
-    const img = extrude(p.img, d, fromY);
-    p.meta = { ...p.meta, ox: (p.img.w / 2) / img.w, lights: (p.meta.lights || []).map(([x, y, c, r, i]) => [x, y + d, c, r, i]) };
-    p.img = img;
+    const mk = (src, name) => {
+      const r = isoExtrude(src, d, fromY);
+      const lights = (p.meta.lights || []).map(([x, y, c, rr, i]) => [x, Math.ceil(d / 2) + y + x / 2, c, rr, i]);
+      P[name] = { img: r.img, meta: { ...p.meta, lights, iso: { ay: r.ay, fw: r.fw, d: r.d } } };
+    };
+    mk(p.img, `${k}@iso`);
+    if (k === 'tour_boat') mk(mirror(p.img), `${k}@isoW`);
   }
   return P;
 }
@@ -852,10 +976,17 @@ function scooter(body, shirt, helmet) {
 
 /** Ảnh các xe (khóa → Img), lưu thành sprite riêng cho traffic.js. */
 export function vehicles() {
-  // giả 3D: thân xe có nóc / mui nhìn từ trên và mặt hông (xe máy chỉ đẩy khối phần thân xe, không đẩy người lái)
-  return {
-    car1: extrude(car('#8a2a30'), 14), car2: extrude(car('#2c4a6b'), 14), car3: extrude(car('#c9ced6'), 14), car4: extrude(car('#3a3f4d'), 14),
-    bus: extrude(bus(), 20),
-    bike1: extrude(scooter('#8a2a30', '#2c4a6b', '#c9a24a'), 6, 30), bike2: extrude(scooter('#2b303b', '#9b5a3a', '#e6ebf2'), 6, 30)
+  // ảnh nhìn ngang (cho thân va chạm) + bản isometric theo hướng chạy: _e (xuôi trục x, đông nam), _w (ngược, tây bắc)
+  const base = {
+    car1: car('#8a2a30'), car2: car('#2c4a6b'), car3: car('#c9ced6'), car4: car('#3a3f4d'), bus: bus(),
+    bike1: scooter('#8a2a30', '#2c4a6b', '#c9a24a'), bike2: scooter('#2b303b', '#9b5a3a', '#e6ebf2')
   };
+  const out = {};
+  for (const [id, img] of Object.entries(base)) {
+    const [d, fromY] = id === 'bus' ? [72, 0] : id.startsWith('bike') ? [14, 30] : [42, 0];
+    out[id] = img;
+    out[`${id}_e`] = isoExtrude(img, d, fromY).img;
+    out[`${id}_w`] = isoExtrude(mirror(img), d, fromY).img;
+  }
+  return out;
 }

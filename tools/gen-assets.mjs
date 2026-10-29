@@ -6,6 +6,8 @@ import { fileURLToPath } from 'node:url';
 import { Img, rgba, seeded } from './png.mjs';
 import { CHARACTERS, shade } from './characters.mjs';
 import { allProps, vehicles } from './props.mjs';
+import { isoGround, isoWalls } from './iso.mjs';
+import { buildBadges } from './badges.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', 'game');
 const T = 32; // cỡ ô
@@ -554,6 +556,9 @@ function buildTileset() {
   TILES.forEach((name, i) => drawTile(img, name, (i % cols) * T, Math.floor(i / cols) * T, seeded(i + 7)));
   noirGrade(img);
   img.save(path.join(ROOT, 'assets/tiles/tiles.png'));
+  // bản isometric: ô nền hình thoi + khối tường (tools/iso.mjs)
+  isoGround(img, TILES.length).save(path.join(ROOT, 'assets/iso/ground.png'));
+  isoWalls(img, { wall_top: tid('wall_top'), wall_upper: tid('wall_upper'), wall_lower: tid('wall_lower') }).save(path.join(ROOT, 'assets/iso/walls.png'));
   return { cols, rows };
 }
 
@@ -1261,7 +1266,8 @@ function buildProps() {
 
 buildTileset();
 const propsInfo = buildProps();
+const badgesInfo = buildBadges(ROOT);
 buildVehicles();
 for (const [id, spec] of Object.entries(CHARACTERS)) buildCharacter(id, spec);
 buildBoss();
-console.log(['ok:', `tileset ${TILES.length} ô`, tnLobby, tnF2, tnF3, tnF4, tnF5, street, newsroom, cafe, agency, boss, propsInfo].join('\n  '));
+console.log(['ok:', `tileset ${TILES.length} ô`, tnLobby, tnF2, tnF3, tnF4, tnF5, street, newsroom, cafe, agency, boss, propsInfo, badgesInfo].join('\n  '));
