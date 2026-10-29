@@ -2,18 +2,22 @@
 import { data, t } from './data.js';
 import { state, saveProgress, hasFlag } from './state.js';
 import { direction } from './input.js';
-import { makeAnims, feetBody, dirFrom, idleFrame, Npc } from './actors.js';
+import { makeAnims, feetBody, dirFrom, idleFrame, Npc, showEmote } from './actors.js';
 import { roomStatus } from './grading.js';
 import * as story from './story.js';
 import { setPlace } from './hud.js';
 import { playMusic } from './music.js';
 import { buildGraph, guideTarget, updateTrackLine, GuideArrow } from './guide.js';
 import { Weather } from './weather.js';
+import { Traffic, VEHICLE_SPRITES } from './traffic.js';
 
-const SPRITE_IDS = ['npc1', 'npc2', 'npc3', 'npc4', 'npc5', 'npc6', 'boss', 'boss_blank'];
 const MAPS = ['office', 'street', 'newsroom', 'cafe', 'agency', 'boss'];
 const SPEED = 120;
+const MAP_VERSION = 2; // tăng khi sửa bố cục bản đồ: vị trí đã lưu theo bản cũ bị bỏ qua
 const BOSS_SCALE = 1.5;
+
+/** Sprite của mọi nhân vật trong npc_dialogues.json (NPC chính, người qua đường, boss) + boss đã gỡ mặt nạ. */
+const spriteIds = () => [...new Set([...data.npcs.npcs.map(n => n.sprite || n.id), 'boss', 'boss_blank'])];
 
 /** File sprite của thám tử theo mẫu người chơi chọn (nam / nữ). */
 export const heroSprite = () => `hero_${state.progress?.heroLook === 'f' ? 'f' : 'm'}`;
@@ -32,7 +36,8 @@ export class WorldScene extends Phaser.Scene {
     MAPS.forEach(key => this.load.tilemapTiledJSON(key, `maps/${key}.json`));
     this.load.image('tiles', 'assets/tiles/tiles.png');
     this.load.spritesheet('hero', `assets/sprites/${heroSprite()}.png`, { frameWidth: 32, frameHeight: 48 });
-    SPRITE_IDS.forEach(id => this.load.spritesheet(id, `assets/sprites/${id}.png`, { frameWidth: 32, frameHeight: 48 }));
+    spriteIds().forEach(id => this.load.spritesheet(id, `assets/sprites/${id}.png`, { frameWidth: 32, frameHeight: 48 }));
+    VEHICLE_SPRITES.forEach(id => this.load.image(id, `assets/sprites/${id}.png`));
   }
 
   /** Nhận bản đồ và điểm xuất hiện khi chuyển cảnh. */
@@ -42,7 +47,7 @@ export class WorldScene extends Phaser.Scene {
 
   /** Dựng bản đồ, người chơi, NPC, camera. */
   create() {
-    const saved = state.progress.pos;
+    const saved = state.progress.pos?.v === MAP_VERSION || state.progress.pos?.spawnName ? state.progress.pos : null;
     this.mapKey = this.args.map || (MAPS.includes(saved?.map) ? saved.map : 'office');
     const map = this.map = this.make.tilemap({ key: this.mapKey });
     const tiles = map.addTilesetImage('tiles', 'tiles');
@@ -51,7 +56,7 @@ export class WorldScene extends Phaser.Scene {
     this.doors = map.createLayer('doors', tiles);
     this.walls.setCollisionByProperty({ collides: true });
     this.doors.setCollisionByProperty({ collides: true });
-    ['hero', ...SPRITE_IDS].forEach(id => makeAnims(this, id));
+    ['hero', ...spriteIds()].forEach(id => makeAnims(this, id));
 
     const objs = map.getObjectLayer('objects').objects;
     this.paths = {};
@@ -79,7 +84,8 @@ export class WorldScene extends Phaser.Scene {
 
     // Người chơi: điểm xuất hiện khi chuyển cảnh, vị trí đã lưu, hoặc điểm bắt đầu.
     const fallback = this.points.spawn_start || Object.entries(this.points).find(([k]) => k.startsWith('spawn'))?.[1];
-    const start = (this.args.spawn && this.points[this.args.spawn]) || (saved?.map === this.mapKey && saved.x != null ? saved : fallback);
+    const resume = saved?.map === this.mapKey && (saved.x != null ? saved : this.points[saved.spawnName]);
+    const start = (this.args.spawn && this.points[this.args.spawn]) || resume || fallback;
     this.player = this.physics.add.sprite(start.x, start.y, 'hero', 0);
     feetBody(this.player);
     this.player.setCollideWorldBounds(true);
@@ -94,6 +100,7 @@ export class WorldScene extends Phaser.Scene {
     this.npcs = new Map();
     for (const o of objs.filter(o => o.type === 'npc')) {
       const npc = new Npc(this, o.name, o.x, o.y);
+      npc.ambient = !!data.npcs.ambientLines?.[o.name];
       npc.homePatrol = propOf(o, 'patrol');
       if (o.name === 'boss') {
         npc.sprite.setScale(BOSS_SCALE);
@@ -127,7 +134,9 @@ export class WorldScene extends Phaser.Scene {
     this.target = null;
     buildGraph(this, MAPS);
     this.guide = new GuideArrow(this);
-    this.weather = new Weather(this, () => [this.ground, this.walls, this.doors, this.player, ...[...this.npcs.values()].map(n => n.sprite)]);
+    this.traffic = objs.some(o => o.type === 'lane') ? new Traffic(this, objs, this.player) : null;
+    this.weather = new Weather(this, () => [this.ground, this.walls, this.doors, this.player,
+      ...[...this.npcs.values()].map(n => n.sprite), ...(this.traffic?.sprites() || [])]);
     this.reduceMotion = state.settings.reduceMotion;
     story.setWorld(this);
     this.refresh();
@@ -135,7 +144,7 @@ export class WorldScene extends Phaser.Scene {
 
   /** Lưu vị trí hiện tại (bản đồ, toạ độ, hướng nhìn). */
   savePos() {
-    state.progress.pos = { map: this.mapKey, x: Math.round(this.player.x), y: Math.round(this.player.y), dir: this.facing };
+    state.progress.pos = { map: this.mapKey, x: Math.round(this.player.x), y: Math.round(this.player.y), dir: this.facing, v: MAP_VERSION };
     saveProgress();
   }
 
@@ -150,6 +159,12 @@ export class WorldScene extends Phaser.Scene {
     if (state.settings.reduceMotion) { go(); return; }
     this.cameras.main.fadeOut(250, 15, 14, 23);
     this.cameras.main.once('camerafadeoutcomplete', go);
+  }
+
+  /** Bong bóng biểu cảm trên đầu thám tử ('hero') hoặc một NPC. */
+  emote(who, ch) {
+    if (who === 'hero') showEmote(this, this.player, ch);
+    else { const npc = this.npcs.get(who); if (npc) showEmote(this, npc.sprite, ch); }
   }
 
   /** Gỡ mặt nạ boss: thay sprite bằng khung trống. */
@@ -366,6 +381,7 @@ export class WorldScene extends Phaser.Scene {
     }
     this.player.setDepth(this.player.y);
     this.npcs.forEach(n => n.update(delta, frozen, this.player));
+    this.traffic?.update(delta, frozen);
     if (!this.reduceMotion) this.devices.forEach((d, i) => d.marker.setY(d.obj.y - 2 + Math.round(Math.sin(time / 250 + i) * 2)));
 
     this.weather.update(delta, this.player);

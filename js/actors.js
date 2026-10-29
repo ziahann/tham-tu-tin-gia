@@ -25,6 +25,18 @@ export function feetBody(sprite) {
   sprite.body.setOffset(8, 37);
 }
 
+/** Bong bóng biểu cảm (! ? … ♪) nổi trên đầu một sprite trong ms mili giây. */
+export function showEmote(scene, sprite, ch, ms = 1500) {
+  const t = scene.add.text(sprite.x, sprite.y - 56, ch, {
+    fontFamily: 'VT323', fontSize: '22px', color: '#0a0e18', backgroundColor: '#e8ecf2', padding: { x: 5, y: 0 }
+  }).setOrigin(0.5, 1).setDepth(100002);
+  const follow = () => t.setPosition(sprite.x, sprite.y - 56);
+  scene.events.on('update', follow);
+  scene.tweens.add({ targets: t, y: '-=4', duration: 200, yoyo: true });
+  scene.time.delayedCall(ms, () => { scene.events.off('update', follow); t.destroy(); });
+}
+
+const EMOTES = ['…', '♪', '?', '!'];
 const PATROL_SPEED = 42;
 const LEAD_SPEED = 95;
 const LEAD_WAIT_DIST = 150; // NPC dẫn đường đứng chờ khi người chơi ở xa hơn
@@ -45,6 +57,8 @@ export class Npc {
     this.step = 1;
     this.wait = 0;
     this.talking = false;
+    this.ambient = false;
+    this.emoteIn = 4000 + Math.random() * 8000; // người qua đường thỉnh thoảng hiện biểu cảm
     this.marker = scene.add.text(x, y - 52, '!', { fontFamily: 'VT323', fontSize: '28px', color: '#f2d36b', stroke: '#0f0e17', strokeThickness: 4 })
       .setOrigin(0.5, 1).setVisible(false);
   }
@@ -90,6 +104,10 @@ export class Npc {
     const s = this.sprite;
     s.setDepth(s.y);
     this.marker.setPosition(s.x, s.y - 50 + Math.round(Math.sin(this.scene.time.now / 250) * 2)).setDepth(s.y + 1);
+    if (this.ambient && !frozen && !this.talking) {
+      this.emoteIn -= delta;
+      if (this.emoteIn <= 0) { this.emoteIn = 7000 + Math.random() * 9000; showEmote(this.scene, s, Phaser.Utils.Array.GetRandom(EMOTES)); }
+    }
     if (this.talking || frozen || this.mode === 'idle') { this.stand(); return; }
     // Đang đi tuần mà người chơi lại gần: dừng lại, quay sang chờ nói chuyện.
     if (this.mode === 'patrol' && Phaser.Math.Distance.Between(s.x, s.y, player.x, player.y) < NOTICE_DIST) {

@@ -12,7 +12,7 @@ const PORTRAITS = new Set(['npc1', 'npc2', 'npc3', 'npc4', 'npc5', 'npc6', 'boss
 const MOODS = ['neutral', 'happy', 'thinking', 'surprised', 'serious'];
 const BOSS_COL = { neutral: 0, thinking: 0, happy: 1, smug: 1, surprised: 2, cracked: 2, blank: 3, serious: 4, angry: 4 };
 /** Có chân dung không: NPC, boss, thiết bị (dev_*), đồ vật (obj_*). */
-const hasPortrait = id => !!id && (PORTRAITS.has(id) || /^(dev|obj)_/.test(id));
+const hasPortrait = id => !!id && (PORTRAITS.has(id) || !!npcById(id) || /^(dev|obj)_/.test(id));
 /** File sprite / chân dung của thám tử theo mẫu nam / nữ. */
 const heroFile = () => `hero_${state.progress?.heroLook === 'f' ? 'f' : 'm'}`;
 const els = {};
