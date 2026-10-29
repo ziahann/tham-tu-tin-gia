@@ -1,7 +1,8 @@
 // Balo: khung dọc bên phải với Sổ tay, Nhiệm vụ + bản đồ nhỏ, Bảng ghim, Lịch sử trò chuyện theo NPC.
 import { data, t, evidenceById, sourceById, shortCite, citeLine, npcById, questById } from './data.js';
 import { state, clearAllStorage, isQuestDone } from './state.js';
-import { questStatus, nextQuestIn, isUnlocked, bossStatus, earnedBadges } from './grading.js';
+import { questStatus, nextQuestIn, isUnlocked, bossStatus, earnedBadges, caseProgress } from './grading.js';
+import { credOf, CRED_MAX } from './obstacles.js';
 import { objective, track, giverOf } from './story.js';
 import { currentRunByNpc, exportLog } from './history.js';
 import { heroTitle } from './dialogue.js';
@@ -86,8 +87,44 @@ export function evidenceCard(ev) {
   return card;
 }
 
-/** Sổ tay: huy hiệu kỹ năng, câu hỏi xác minh, thẻ evidence, ghi chép từ báo. */
+/** Uy tín: trung bình độ tin cậy của các hồ sơ (không tính Phòng họp, hồ sơ tùy chọn). */
+export function trustScore() {
+  const rooms = data.quests.rooms.filter(r => !r.boss && !r.optional);
+  return Math.round(rooms.reduce((s, r) => s + credOf(r.id), 0) / (rooms.length || 1));
+}
+
+/** Thẻ sinh viên (mô phỏng): ảnh chân dung, tên, ngành, uy tín, số huy hiệu / hồ sơ đã khép. */
+function studentCard() {
+  const flags = state.progress?.flags || [];
+  const card = el('div', 'student-card');
+  card.setAttribute('aria-label', t('card.title'));
+  const head = el('div', 'sc-head');
+  const crest = el('span', 'sc-crest');
+  crest.setAttribute('aria-hidden', 'true');
+  head.append(crest, el('span', 'sc-school', t('card.school')));
+  const photo = el('div', 'sc-photo');
+  photo.style.backgroundImage = `url(assets/portraits/hero_${state.progress?.heroLook === 'f' ? 'f' : 'm'}.png)`;
+  const info = el('div', 'sc-info');
+  const trust = trustScore();
+  const meter = el('span', 'sc-meter');
+  const fill = el('i');
+  fill.style.width = `${(trust / CRED_MAX) * 100}%`;
+  meter.append(fill);
+  const tr = el('div', 'sc-trust');
+  tr.title = t('card.trustNote');
+  tr.append(el('span', null, `${t('card.trust')} ${trust}/${CRED_MAX}`), meter);
+  const cp = caseProgress(flags);
+  info.append(el('div', 'sc-kind', t('card.kind')), el('div', 'sc-name', heroTitle()), el('div', 'sc-fac', t('card.faculty')), tr,
+    el('div', 'sc-stats', `${t('card.badges')}: ${earnedBadges(flags).length} · ${t('card.cases')}: ${cp.done}/${cp.total}`));
+  const body = el('div', 'sc-body');
+  body.append(photo, info);
+  card.append(head, body, el('div', 'sc-sim', t('card.sim')));
+  return card;
+}
+
+/** Sổ tay: thẻ sinh viên, huy hiệu kỹ năng, câu hỏi xác minh, thẻ evidence, ghi chép từ báo. */
 function notebook() {
+  els.body.append(el('h3', null, t('card.title')), studentCard());
   els.body.append(el('h3', null, t('backpack.badges')));
   const earned = new Set(earnedBadges(state.progress?.flags || []).map(r => r.id));
   if (!earned.size) els.body.append(el('p', 'muted', t('backpack.noBadges')));
