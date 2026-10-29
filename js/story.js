@@ -109,27 +109,49 @@ async function runQuest(q, npc) {
   return true;
 }
 
-/** Menu trợ giúp: gợi ý / hướng dẫn từng bước / để sau / quay lại. Trả về 'retry' hoặc 'later'. */
-async function helpMenu(q, qs, npc, afterWrong) {
+/** Mở các nguồn của nhiệm vụ (kèm tóm tắt dự phòng) cho tới khi người chơi đọc xong. */
+async function showSources(q, npc, text) {
+  for (;;) {
+    const r = await dlg.links(q.resources || [], { speaker: npc, text });
+    if (!r.backup) return;
+    await dlg.say(npc, t('dialog.backupLine', { text: backupText(q) }));
+  }
+}
+
+/**
+ * Menu trợ giúp: gợi ý / mở lại nguồn / hướng dẫn từng bước / để sau / quay lại.
+ * field: ô đang hỏi (G1) — gợi ý và hướng dẫn lấy theo từng câu hỏi; không có thì dùng của nhiệm vụ.
+ * Trả về 'retry' hoặc 'later'.
+ */
+async function helpMenu(q, qs, npc, afterWrong, field = null) {
+  const hints = field?.hints || q.hints || [];
+  const walkthrough = field?.walkthrough || q.walkthrough;
+  const key = field?.id || '_quest';
+  qs.hintsBy ||= {};
+  const used = qs.hintsBy[key] || 0;
   const options = [
     { id: 'retry', text: afterWrong ? t('dialog.retry') : t('dialog.backToAnswer') },
-    { id: 'hint', text: t('dialog.hint', { n: Math.min(qs.hints + 1, q.hints.length) }) },
-    ...(q.walkthrough ? [{ id: 'walk', text: t('dialog.cantFind') }] : []),
+    ...(hints.length ? [{ id: 'hint', text: t('dialog.hint', { n: Math.min(used + 1, hints.length), max: hints.length }) }] : []),
+    ...(q.resources?.length ? [{ id: 'sources', text: t('dialog.reopenSources') }] : []),
+    ...(walkthrough ? [{ id: 'walk', text: t('dialog.cantFind') }] : []),
     { id: 'later', text: t('dialog.later') }
   ];
   const c = await dlg.choose(options);
   if (c.id === 'hint') {
-    if (qs.hints >= q.hints.length) {
+    if (used >= hints.length) {
       await dlg.say(npc, t('dialog.noMoreHints'));
     } else {
-      qs.hints++;
+      qs.hintsBy[key] = used + 1;
+      qs.hints++; // tổng số gợi ý, dùng để tính điểm
       saveProgress();
-      await dlg.say(npc, t('dialog.hintLine', { n: qs.hints, text: q.hints[qs.hints - 1] }));
+      await dlg.say(npc, t('dialog.hintLine', { n: used + 1, max: hints.length, text: hints[used] }));
     }
+  } else if (c.id === 'sources') {
+    await showSources(q, npc, t('dialog.openSourcesLine'));
   } else if (c.id === 'walk') {
     qs.walkthrough = true;
     saveProgress();
-    await dlg.say(npc, t('dialog.walkthrough', { text: q.walkthrough }));
+    await dlg.say(npc, t('dialog.walkthrough', { text: walkthrough }));
   } else if (c.id === 'later') {
     await dlg.say(npc, t('dialog.laterLine'));
     return 'later';
@@ -174,11 +196,7 @@ async function runFields(q, qs, npc) {
   if (!qs.readSources) {
     await dlg.say(npc, q.question);
     if (q.safetyNote) await dlg.say(npc, q.safetyNote);
-    for (;;) {
-      const r = await dlg.links(q.resources || [], { speaker: npc, text: t('dialog.openSourcesLine') });
-      if (!r.backup) break;
-      await dlg.say(npc, t('dialog.backupLine', { text: backupText(q) }));
-    }
+    await showSources(q, npc, t('dialog.openSourcesLine'));
     qs.readSources = true;
     saveProgress();
   }
@@ -187,7 +205,7 @@ async function runFields(q, qs, npc) {
     while (!qs.fieldOk[f.id]) {
       const r = await dlg.input({ speaker: npc, text: f.ask || f.label, label: f.label, placeholder: f.placeholder });
       if (r.help) {
-        if (await helpMenu(q, qs, npc, false) === 'later') return 'later';
+        if (await helpMenu(q, qs, npc, false, f) === 'later') return 'later';
         continue;
       }
       qs.answers[f.id] = r.value;
@@ -203,7 +221,7 @@ async function runFields(q, qs, npc) {
       saveProgress();
       sfx('wrong');
       await dlg.say(npc, `✗ ${t('dialog.fieldWrong')}`);
-      if (await helpMenu(q, qs, npc, true) === 'later') return 'later';
+      if (await helpMenu(q, qs, npc, true, f) === 'later') return 'later';
     }
   }
   return 'done';

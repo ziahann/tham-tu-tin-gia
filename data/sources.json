@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "note": "URL lấy từ danh mục tham khảo của báo cáo giữa kỳ (PDF), ghép lại từ các dòng bị ngắt. Chưa kiểm tra link còn sống. urlStatus: from_report_unverified | tool | missing.",
+  "note": "URL lấy từ danh mục tham khảo của báo cáo; kiểm tra ngày 29/10/2026. urlStatus: verified (đã đọc nội dung) | live (link mở được, chưa đối chiếu nội dung) | tool | missing.",
   "sources": [
     {
       "id": "baocao",
@@ -8,84 +8,111 @@
       "outlet": "Báo cáo của nhóm",
       "url": null,
       "urlStatus": "missing",
-      "note": "Nhóm điền tên tác giả và năm chính xác."
+      "note": "Nhóm điền tên tác giả và năm chính xác.",
+      "short": "Báo cáo giữa kỳ của nhóm"
     },
     {
       "id": "thuthao2025",
       "apa": "Thu Thảo. (2025, ngày 22 tháng 7). Lợi dụng bi kịch lật tàu du lịch ở vịnh Hạ Long để \"câu view\" bằng AI. Thời báo VTV.",
       "outlet": "Thời báo VTV",
       "url": "https://vtv.vn/loi-dung-bi-kich-lat-tau-du-lich-o-vinh-ha-long-de-cau-view-bang-ai-100250721231905962.htm",
-      "urlStatus": "from_report_unverified"
+      "urlStatus": "verified",
+      "checked": "2026-10-29",
+      "verifiedContent": "Chiều 19/7 trên Vịnh Hạ Long; tàu du lịch Vịnh Xanh 58 (QN-7105); fanpage M.P.V., M.C.O.; hình ảnh và câu chuyện do AI dựng; ghi chú hư cấu khó thấy. KHÔNG nêu nguyên nhân."
     },
     {
       "id": "thuonghuyen2025",
       "apa": "Thương Huyền, & Minh Nhật. (2025, ngày 21 tháng 7). Phẫn nộ hành vi sử dụng AI câu tương tác từ vụ lật tàu ở Quảng Ninh. Dân trí.",
       "outlet": "Dân trí",
       "url": "https://dantri.com.vn/cong-nghe/phan-no-hanh-vi-su-dung-ai-cau-tuong-tac-tu-vu-lat-tau-o-quang-ninh-20250721071757153.htm",
-      "urlStatus": "from_report_unverified"
+      "urlStatus": "verified",
+      "checked": "2026-10-29",
+      "verifiedContent": "Vịnh Xanh 58 (QN-7105) trên Vịnh Hạ Long chiều 19/7; fanpage M.C.O.; link trong bình luận để \"đọc tiếp\"; dòng chữ nhỏ \"tình tiết hư cấu\"."
     },
     {
       "id": "th2025",
       "apa": "T.H. (2025, ngày 21 tháng 7). Tràn lan bài viết bịa đặt, ảnh AI câu view vụ lật tàu ở Hạ Long. VOH.",
       "outlet": "VOH",
       "url": "https://voh.com.vn/doi-song/tran-lan-bai-viet-bia-dat-anh-ai-cau-view-vu-lat-tau-o-ha-long-606313.html",
-      "urlStatus": "from_report_unverified"
+      "urlStatus": "live",
+      "checked": "2026-10-29"
     },
     {
       "id": "hoaianh2025",
       "apa": "Hoài Anh. (2025, ngày 20 tháng 7). Loạt video giả vụ lật tàu 'gây thiệt hại cho du lịch vịnh Hạ Long'. VnExpress.",
       "outlet": "VnExpress",
       "url": "https://vnexpress.net/loat-video-gia-vu-lat-tau-gay-thiet-hai-cho-du-lich-vinh-ha-long-4916602.html",
-      "urlStatus": "from_report_unverified"
+      "urlStatus": "verified",
+      "checked": "2026-10-29",
+      "verifiedContent": "Video từ bão Yagi và tàu chìm ở Congo tháng 10/2024 bị gắn là vụ 19/7; phát ngôn về ảnh hưởng du lịch."
     },
     {
       "id": "minhthu2025",
       "apa": "Minh Thu. (2025, ngày 22 tháng 7). Dựng chuyện bằng AI, ghép ảnh câu like: Mặt tối của mạng xã hội sau \"thảm họa\" lật tàu. VietnamPlus.",
       "outlet": "VietnamPlus",
       "url": "https://www.vietnamplus.vn/dung-chuyen-bang-ai-ghep-anh-cau-like-mat-toi-cua-mang-xa-hoi-sau-tham-hoa-lat-tau-post1051045.vnp",
-      "urlStatus": "from_report_unverified"
+      "urlStatus": "verified",
+      "checked": "2026-10-29",
+      "verifiedContent": "Ảnh nhóm trẻ em chụp trong chuyến du lịch Hạ Long tháng 8/2024 bị chia sẻ với chú thích như ảnh vụ tai nạn."
     },
     {
       "id": "phamphuocdung2025",
       "apa": "Phạm Phước Dũng. (2025, ngày 23 tháng 7). Dàn dựng clip giả vụ lật tàu ở Hạ Long, hành vi phá hoại ngành du lịch cần xử lý. Phụ Nữ Online.",
       "outlet": "Phụ Nữ Online (Tuổi Trẻ)",
       "url": "https://tuoitre.vn/phunuonline/dan-dung-clip-gia-vu-lat-tau-o-ha-long-hanh-vi-pha-hoai-nganh-du-lich-can-xu-ly-1101555777.htm",
-      "urlStatus": "from_report_unverified"
+      "urlStatus": "live",
+      "checked": "2026-10-29"
     },
     {
       "id": "manh2025",
       "apa": "M. Anh. (2025, ngày 21 tháng 7). Xử lý nghiêm hành vi đăng tin sai sự thật liên quan vụ lật tàu trên vịnh Hạ Long. Tuổi Trẻ Online.",
       "outlet": "Tuổi Trẻ Online",
       "url": "https://tuoitre.vn/xu-ly-nghiem-hanh-vi-dang-tin-sai-su-that-lien-quan-vu-lat-tau-tren-vinh-ha-long-20250721124814462.htm",
-      "urlStatus": "from_report_unverified"
+      "urlStatus": "live",
+      "checked": "2026-10-29"
     },
     {
       "id": "kimngoc2025",
       "apa": "Kim Ngọc. (2025, ngày 23 tháng 7). Không thể để thông tin giả tiếp tục lộng hành. Lao Động.",
       "outlet": "Lao Động",
       "url": "https://laodong.vn/van-hoa-giai-tri/khong-the-de-thong-tin-gia-tiep-tuc-long-hanh-1545079.ldo",
-      "urlStatus": "from_report_unverified"
+      "urlStatus": "live",
+      "checked": "2026-10-29"
     },
     {
       "id": "dangkhoa2025",
       "apa": "Đăng Khoa. (2025, ngày 23 tháng 7). Hình AI giả tràn lan sau thảm kịch lật tàu ở Hạ Long: Khi cảm xúc cộng đồng thành \"mồi câu view\". VietTimes.",
       "outlet": "VietTimes",
       "url": "https://viettimes.vn/hinh-ai-gia-tran-lan-sau-tham-kich-lat-tau-o-ha-long-khi-cam-xuc-cong-dong-thanh-moi-cau-view-post187848.html",
-      "urlStatus": "from_report_unverified"
+      "urlStatus": "live",
+      "checked": "2026-10-29"
     },
     {
       "id": "doquyen2025",
       "apa": "Đỗ Quyên, & Trọng Huy. (2025, ngày 21 tháng 7). Câu view bất chấp từ vụ lật tàu Vịnh Xanh 58. Tiền Phong.",
       "outlet": "Tiền Phong",
       "url": "https://tienphong.vn/post-1762232.html",
-      "urlStatus": "from_report_unverified"
+      "urlStatus": "verified",
+      "checked": "2026-10-29",
+      "verifiedContent": "Chiều 19/7, Vịnh Xanh 58 (QN-7105), vịnh Hạ Long, Quảng Ninh; video bão Yagi bị gắn nhầm. KHÔNG nêu nguyên nhân."
+    },
+    {
+      "id": "minhkhang2025",
+      "apa": "Minh Khang. (2025, ngày 20 tháng 7). Tin cảnh báo dông lốc được công bố khi tàu Vịnh Xanh 58 QN-7105 đã rời bến. Báo Sài Gòn Giải Phóng.",
+      "outlet": "Sài Gòn Giải Phóng",
+      "url": "https://www.sggp.org.vn/tin-canh-bao-dong-loc-duoc-cong-bo-khi-tau-vinh-xanh-58-qn-7105-da-roi-ben-post804612.html",
+      "urlStatus": "verified",
+      "checked": "2026-10-29",
+      "verifiedContent": "Tại họp báo ngày 20/7, lãnh đạo UBND tỉnh Quảng Ninh nói dông lốc rất lớn chiều 19/7 là nguyên nhân khiến tàu Vịnh Xanh 58 bị lật.",
+      "note": "Bổ sung 29/10/2026 vì các bài trong danh mục ban đầu không nêu nguyên nhân (F2)."
     },
     {
       "id": "minhanh2025",
       "apa": "Minh Anh. (2025, ngày 25 tháng 7). Báo động vấn nạn \"đạo đức số\". Báo Văn Hóa.",
       "outlet": "Báo Văn Hóa",
       "url": "https://baovanhoa.vn/bao-chi/bao-dong-van-nan-dao-duc-so-155983.html",
-      "urlStatus": "from_report_unverified"
+      "urlStatus": "live",
+      "checked": "2026-10-29"
     },
     {
       "id": "google_lens",
@@ -106,14 +133,16 @@
       "apa": "Wardle, C., & Derakhshan, H. (2017). Information disorder: Toward an interdisciplinary framework for research and policy making (Council of Europe report DGI(2017)09). Council of Europe.",
       "outlet": "Council of Europe",
       "url": "https://rm.coe.int/information-disorder-toward-an-interdisciplinary-framework-for-researc/168076277c",
-      "urlStatus": "from_report_unverified"
+      "urlStatus": "live",
+      "checked": "2026-10-29"
     },
     {
       "id": "unesco2021",
       "apa": "UNESCO. (2021). Recommendation on the ethics of artificial intelligence.",
       "outlet": "UNESCO",
       "url": "https://unesdoc.unesco.org/ark:/48223/pf0000381137",
-      "urlStatus": "from_report_unverified"
+      "urlStatus": "live",
+      "checked": "2026-10-29"
     },
     {
       "id": "vanban",
