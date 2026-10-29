@@ -217,7 +217,7 @@ function openSources() {
 /** Cài đặt: âm thanh, ảnh nhạy cảm, giảm chuyển động, về màn hình chính. */
 function openSettings() {
   const wrap = el('div');
-  [['hideSensitiveImages', 'hideSensitive'], ['muted', 'mute'], ['ambience', 'ambience'], ['reduceMotion', 'reduceMotion']].forEach(([key, label]) => {
+  [['hideSensitiveImages', 'hideSensitive'], ['muted', 'mute'], ['ambience', 'ambience'], ['reduceMotion', 'reduceMotion'], ['clickMove', 'clickMove']].forEach(([key, label]) => {
     const row = el('label', 'setting');
     const box = el('input');
     box.type = 'checkbox';
