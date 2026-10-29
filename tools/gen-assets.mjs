@@ -75,9 +75,10 @@ function drawTile(img, name, ox, oy, rnd) {
       R(0, 0, T, 2, '#6d8a52'); R(0, 30, T, 2, '#6d8a52');
       break;
     case 'wall_top':
-      R(0, 0, T, T, '#5a4030');
-      R(0, 0, T, 2, '#6e5040');
-      noise('#5a4030', 0.15, 20);
+      // đỉnh bức tường dày nhìn từ trên: mặt trên xám đá, gờ sáng phía trên, cạnh tối phía dưới và bên phải
+      R(0, 0, T, T, '#4e5562'); R(0, 0, T, 3, '#6a7280'); R(0, 26, T, 6, '#2e333c'); R(29, 0, 3, T, '#3a404b');
+      for (let x = 4; x < T; x += 10) R(x, 8, 1, 14, '#454b57');
+      noise('#4e5562', 0.08, 16);
       break;
     case 'wall_face':
       wallFace();

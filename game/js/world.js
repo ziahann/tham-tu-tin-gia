@@ -460,6 +460,8 @@ export class WorldScene extends Phaser.Scene {
           .setOrigin(0.5).setDepth(img.depth + 1).setResolution(2);
         if (sub) this.add.text(sx, sy + 9, sub, { fontFamily: 'VT323', fontSize: '11px', color: '#a3adbf' }).setOrigin(0.5).setDepth(img.depth + 1).setResolution(2);
       }
+      // bóng đổ chéo của tòa nhà (atlas: <khóa>_shadow), nằm sát mặt đất
+      if (m.building && meta[`${o.name}_shadow`]) this.add.image(left, o.y, 'props', `${o.name}_shadow`).setOrigin(0, 1).setDepth(0.5);
       this.props.push({ img, obj: o, meta: m });
     }
     this.physics.add.collider(this.player, this.propBodies);
