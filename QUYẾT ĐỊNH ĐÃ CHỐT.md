@@ -49,3 +49,18 @@
 | Thanh trên | Cài đặt và Nguồn dùng biểu tượng thay chữ |
 | NPC | Đi tuần theo lộ trình, quay mặt về người chơi khi nói chuyện; ở mốc cốt truyện thì đi trước dẫn đường |
 | Thời hạn | Trên 3 tuần |
+
+## Chốt ngày 29/10/2026 (đợt 3)
+
+| Mục | Quyết định |
+|---|---|
+| Thứ tự làm | Nội dung trước: dựng đủ Q3–Q13, boss, màn kết quả với hình tạm; sau đó mới thay art/nhạc, rồi bối cảnh ngoài trời |
+| Phong cách đồ họa | Ấm áp, chi tiết (kiểu game nông trại / đời thường); tìm gói CC0 theo hướng này |
+| NPC, tổ chức, boss | Đã duyệt: 6 NPC theo phiếu trong `npc_dialogues.json`; "Ban Điều phối Thông tin Du lịch Hải Đăng"; boss "Kẻ Dệt Chuyện" (biệt danh "Kẻ Giấu Mặt") |
+| Thám tử | Đổi ngoại hình: sinh viên báo chí (áo khoác dù, balo, thẻ phóng viên thực tập, sổ tay, bút sau tai). Người chơi chọn mẫu nam / nữ ở cuối intro; lời thoại dùng "bạn" |
+| Đối chiếu nguồn Q3–Q13 | Kiểm tra khi dựng từng phòng, như đã làm với Q1–Q2 |
+| Nguyên nhân tai nạn (Q2) | Giữ câu hỏi, ghi rõ "theo phát biểu của lãnh đạo tỉnh tại họp báo 20/7", không phải kết luận điều tra |
+| Nguồn báo cáo giữa kỳ | Nhóm bổ sung tác giả, năm sau; tạm hiển thị "Báo cáo giữa kỳ của nhóm" |
+| Video demo | Cần video 2–3 phút; Claude chuẩn bị kịch bản quay (tài liệu 01 mục 10) |
+| GitHub | Nhóm đã có repo; Claude chỉ push khi được yêu cầu |
+| Màn ghi công | Không cần (nguồn đã có ở nút Nguồn và README) |
