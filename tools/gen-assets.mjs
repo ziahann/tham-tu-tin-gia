@@ -1030,7 +1030,7 @@ const street = buildMap('street', {
     bld('bld_hotel', 49, 10, 10),
     bld('bld_apartment', 76, 9, 11),
     // --- dãy nhà phía bắc, quay mặt ra phố chính
-    bld('bld_apartment2', 2, 7, N_BOTTOM),
+    bld('bld_office', 2, 7, N_BOTTOM, 'CAO ỐC VĂN PHÒNG', 'tòa nhà hư cấu · GIẢ LẬP'),
     bld('bld_thanhnien', 11, 12, N_BOTTOM, 'BÁO THANH NIÊN', 'Trụ sở · nội dung trong game là GIẢ LẬP'),
     bld('bld_tinvinh', 25, 9, N_BOTTOM, 'TIN VỊNH', 'trang tin (hư cấu)'),
     bld('bld_pharmacy', 36, 5, N_BOTTOM),
@@ -1041,9 +1041,9 @@ const street = buildMap('street', {
     bld('bld_tenement', 78, 6, N_BOTTOM),
     bld('bld_store', 84, 6, N_BOTTOM),
     // --- dãy nhà thấp giữa hai con đường, quay mặt ra đường ven vịnh
-    bld('bld_closed', 50, 6, C_BOTTOM),
+    bld('bld_clinic', 50, 6, C_BOTTOM, 'TRUNG TÂM Y TẾ', 'hư cấu · GIẢ LẬP'),
     bld('bld_warehouse', 57, 12, C_BOTTOM),
-    bld('bld_store', 70, 6, C_BOTTOM, null, null, { flip: true }),
+    bld('bld_cafe2', 70, 6, C_BOTTOM, 'CÀ PHÊ SƯƠNG SỚM', 'quán hư cấu'),
     bld('bld_books', 77, 5, C_BOTTOM),
     bld('bld_pharmacy', 83, 5, C_BOTTOM, null, null, { flip: true }),
     bld('bld_closed', 89, 6, C_BOTTOM, null, null, { flip: true }),
@@ -1052,6 +1052,12 @@ const street = buildMap('street', {
     doorExit('door_news', 27.5, N_BOTTOM, 'newsroom'),
     doorExit('door_agency', 44.5, N_BOTTOM, 'agency'),
     doorExit('door_cafe', 66.5, N_BOTTOM, 'cafe'),
+    doorExit('door_office2', 4.5, N_BOTTOM, 'office2'),
+    doorExit('door_clinic', 52.5, C_BOTTOM, 'clinic'),
+    doorExit('door_cafe2', 72.5, C_BOTTOM, 'cafe2'),
+    point('spawn', 'spawn_from_office2', 5.5, 20.4),
+    point('spawn', 'spawn_from_clinic', 53.5, 39.4),
+    point('spawn', 'spawn_from_cafe2', 73.5, 39.4),
     point('spawn', 'spawn_from_office', 17.5, 20.4),
     point('spawn', 'spawn_from_news', 28.5, 20.4),
     point('spawn', 'spawn_from_agency', 45.5, 20.4),
@@ -1202,6 +1208,61 @@ const agency = buildMap('agency', {
   ]
 });
 
+
+// ---------------- Tòa nhà trang trí vào được (hư cấu, GIẢ LẬP): chỉ để thế giới sống động, không có nhiệm vụ
+/** Nội thất nhỏ: tường bắc cao, cửa ra ở giữa cạnh nam. */
+function decorRoom(key, { W, H, label, music, area, ground, back, items }) {
+  const ex = Math.floor(W / 2) - 1;
+  return buildMap(key, {
+    rows: floorRows(W, H, g => { g[H - 1][ex] = g[H - 1][ex + 1] = 'E'; }), legend: TN_LEGEND, label, music,
+    ground: ch => (ch === 'E' ? 'exit_mat' : ground),
+    objects: () => [
+      point('spawn', 'spawn_from_street', ex + 1, H - 2.4),
+      rectT('zone', `zone_${key}`, 1, 3, W - 2, H - 4, { area }),
+      rectT('exit', 'exit_street', ex, H - 1.4, 2, 1.4, { target: 'street', spawn: back }),
+      ...items
+    ]
+  });
+}
+const office2 = decorRoom('office2', {
+  W: 24, H: 14, label: 'Cao ốc văn phòng (hư cấu · GIẢ LẬP)', music: 'office', area: 'office2', ground: 'floor_lobby', back: 'spawn_from_office2',
+  items: [
+    label('o2_name', 6, 1.5, 'CAO ỐC VĂN PHÒNG\nTẦNG TRỆT', { size: 14, plate: true }),
+    pp('blinds_window', 12, 2.9), pp('blinds_window', 16, 2.9), pp('whiteboard', 20.5, 2.75), pp('wall_clock', 9.5, 1.3),
+    pp('desk_papers', 4, 6.4), pp('chair', 4, 5.2), pp('plant_big', 1.6, 4.4), pp('water_cooler', 22.4, 4.2),
+    pp('desk_pc', 9, 8), pp('chair', 9, 9.3), pp('desk_pc', 13.5, 8), pp('chair', 13.5, 9.3), pp('desk_pc', 18, 8), pp('chair', 18, 9.3),
+    pp('desk_pc', 9, 11.6), pp('chair', 9, 12.6), pp('desk_pc', 13.5, 11.6), pp('chair', 13.5, 12.6),
+    pp('printer', 21.6, 8.4), pp('filing_boxes', 21.6, 12.4), pp('plant_small', 1.6, 12.6), pp('trash', 16, 12.6),
+    point('npc', 'amb_clerk', 6, 9.5, { patrol: 'patrol_clerk' }), path_('patrol_clerk', [[6, 9.5], [6, 12.4], [20, 12.4]]),
+    point('npc', 'amb_clerk2', 18, 6.4)
+  ]
+});
+const clinic = decorRoom('clinic', {
+  W: 22, H: 14, label: 'Trung tâm y tế (hư cấu · GIẢ LẬP)', music: 'agency', area: 'clinic', ground: 'floor_lobby', back: 'spawn_from_clinic',
+  items: [
+    label('cl_name', 6.5, 1.5, 'TRUNG TÂM Y TẾ\n(hư cấu · GIẢ LẬP)', { size: 14, plate: true }),
+    pp('poster_a', 12, 2.4), pp('tv_wall', 16, 2.6), pp('blinds_window', 20, 2.9),
+    pp('reception', 7, 6.2), pp('cabinet', 15.2, 4.2), pp('cabinet', 16.3, 4.2), pp('bookshelf', 19.6, 4.6),
+    pp('sofa', 5, 10.6), pp('coffee_table', 5, 12), pp('sofa', 12, 10.6), pp('water_cooler', 20.4, 9.2),
+    pp('plant_big', 1.6, 4.4), pp('plant_big', 20.4, 12.6), pp('floor_lamp', 1.6, 12.6),
+    point('npc', 'amb_nurse', 7, 4.6, { patrol: 'patrol_nurse' }), path_('patrol_nurse', [[4.5, 4.6], [9.5, 4.6]]),
+    point('npc', 'amb_doctor', 17, 7.4, { patrol: 'patrol_doctor' }), path_('patrol_doctor', [[14, 7.4], [19, 7.4]]),
+    point('npc', 'amb_patient', 12.5, 12.2)
+  ]
+});
+const cafe2 = decorRoom('cafe2', {
+  W: 20, H: 13, label: 'Cà phê Sương Sớm (quán hư cấu)', music: 'cafe', area: 'cafe2', ground: 'floor_wood', back: 'spawn_from_cafe2',
+  items: [
+    label('c2_name', 5, 1.5, 'CÀ PHÊ SƯƠNG SỚM', { size: 14, plate: true }),
+    pp('blinds_window', 11, 2.9), pp('blinds_window', 15, 2.9), pp('poster_b', 18.5, 2.4),
+    pp('cafe_counter', 5, 5.4), pp('bookshelf', 17.6, 4.6),
+    pp('cafe_table', 8.5, 8.4), pp('cafe_table', 13.5, 8.4), pp('cafe_table', 4.5, 10.8), pp('cafe_table', 14.5, 11.4),
+    pp('floor_lamp', 1.6, 8.6), pp('plant_big', 18.4, 11.6), pp('rug_room', 10, 12.4),
+    point('npc', 'amb_barista2', 3, 3.9, { patrol: 'patrol_barista2' }), path_('patrol_barista2', [[2, 3.9], [7.5, 3.9]]),
+    point('npc', 'amb_patron', 12, 9.6)
+  ]
+});
+
 // ---------------- Phòng Boss (không gian trừu tượng)
 const BOSS = [
   '####################',
@@ -1271,4 +1332,4 @@ const badgesInfo = buildBadges(ROOT);
 buildVehicles();
 for (const [id, spec] of Object.entries(CHARACTERS)) buildCharacter(id, spec);
 buildBoss();
-console.log(['ok:', `tileset ${TILES.length} ô`, tnLobby, tnF2, tnF3, tnF4, tnF5, street, newsroom, cafe, agency, boss, propsInfo, badgesInfo].join('\n  '));
+console.log(['ok:', `tileset ${TILES.length} ô`, tnLobby, tnF2, tnF3, tnF4, tnF5, street, newsroom, cafe, agency, office2, clinic, cafe2, boss, propsInfo, badgesInfo].join('\n  '));

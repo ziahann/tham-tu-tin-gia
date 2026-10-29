@@ -198,6 +198,69 @@
       "sprite": "amb_jogger",
       "isFictional": true,
       "ambient": true
+    },
+    {
+      "id": "amb_doctor",
+      "name": "Bác sĩ Trực",
+      "role": "Bác sĩ trung tâm y tế (GIẢ LẬP)",
+      "room": "Trung tâm y tế",
+      "sprite": "amb_doctor",
+      "isFictional": true,
+      "ambient": true
+    },
+    {
+      "id": "amb_nurse",
+      "name": "Chị Điều Dưỡng",
+      "role": "Điều dưỡng trung tâm y tế (GIẢ LẬP)",
+      "room": "Trung tâm y tế",
+      "sprite": "amb_nurse",
+      "isFictional": true,
+      "ambient": true
+    },
+    {
+      "id": "amb_patient",
+      "name": "Ông Chờ Khám",
+      "role": "Người đến khám (GIẢ LẬP)",
+      "room": "Trung tâm y tế",
+      "sprite": "amb_patient",
+      "isFictional": true,
+      "ambient": true
+    },
+    {
+      "id": "amb_clerk",
+      "name": "Anh Nhân Viên",
+      "role": "Nhân viên văn phòng (GIẢ LẬP)",
+      "room": "Cao ốc văn phòng",
+      "sprite": "amb_clerk",
+      "isFictional": true,
+      "ambient": true
+    },
+    {
+      "id": "amb_clerk2",
+      "name": "Chị Truyền Thông",
+      "role": "Nhân viên truyền thông nội bộ (GIẢ LẬP)",
+      "room": "Cao ốc văn phòng",
+      "sprite": "amb_clerk2",
+      "isFictional": true,
+      "ambient": true
+    },
+    {
+      "id": "amb_barista2",
+      "name": "Anh Pha Chế Sớm",
+      "role": "Pha chế quán Sương Sớm (GIẢ LẬP)",
+      "room": "Cà phê Sương Sớm",
+      "sprite": "amb_barista2",
+      "isFictional": true,
+      "ambient": true
+    },
+    {
+      "id": "amb_patron",
+      "name": "Bạn Đọc Báo",
+      "role": "Khách quen của quán (GIẢ LẬP)",
+      "room": "Cà phê Sương Sớm",
+      "sprite": "amb_patron",
+      "isFictional": true,
+      "ambient": true
     }
   ],
   "dialogues": {
@@ -1433,6 +1496,32 @@
     "amb_jogger": [
       "Chạy bộ thì cần nhịp đều; đọc tin cũng vậy, đừng chạy theo cảm xúc.",
       "Sáng nào chị cũng chạy dọc vịnh. Gặp tin lạ trên mạng, chị dừng lại thở đều rồi mới đọc kỹ."
+    ],
+    "amb_doctor": [
+      "Tôi hay gặp người mang theo \"bài thuốc\" đọc trên mạng. Tôi luôn hỏi: nguồn nào, ai viết, có chuyên gia nào xác nhận không?",
+      "Thông tin sức khỏe sai có thể gây hại thật. Kiểm tra trước khi làm theo."
+    ],
+    "amb_nurse": [
+      "Mời bạn ngồi chờ một lát. Đọc được tin gì về sức khỏe thì hỏi nhân viên y tế trước nhé.",
+      "Ảnh \"bệnh nhân\" lan trên mạng nhiều khi không phải người thật đâu."
+    ],
+    "amb_patient": [
+      "Con cháu gửi ông đủ thứ tin trên điện thoại, ông mang lên hỏi bác sĩ cho chắc."
+    ],
+    "amb_clerk": [
+      "Công ty tôi có quy định: tin chưa xác minh thì không đăng lên trang chính thức.",
+      "Lại phải đính chính một bài đăng vội tuần trước. Đăng chậm mà đúng vẫn hơn."
+    ],
+    "amb_clerk2": [
+      "Mình làm truyền thông nội bộ. Ảnh nào đưa lên bản tin cũng phải ghi nguồn và ngày chụp.",
+      "Sinh viên Quan hệ công chúng hả? Nhớ nhé: uy tín mất rất nhanh, gây dựng lại rất lâu."
+    ],
+    "amb_barista2": [
+      "Quán mở từ sáng sớm. Khách hay hỏi \"tin này thật không\", mình chỉ họ cách tìm ngược ảnh."
+    ],
+    "amb_patron": [
+      "Mình đang đọc lại bài báo gốc thay vì chỉ đọc tiêu đề. Khác nhau nhiều đấy.",
+      "Tiêu đề viết hoa với ba dấu chấm than là mình dừng lại đọc kỹ ngay."
     ]
   }
 }
