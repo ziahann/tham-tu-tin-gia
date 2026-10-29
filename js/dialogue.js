@@ -6,7 +6,9 @@ import { releaseAll } from './input.js';
 import { sfx } from './audio.js';
 import { toast } from './ui.js';
 
-const SPRITES = new Set(['hero', 'npc1', 'npc2', 'npc3', 'npc4', 'npc5', 'npc6']);
+const SPRITES = new Set(['npc1', 'npc2', 'npc3', 'npc4', 'npc5', 'npc6', 'boss']);
+/** File sprite của thám tử theo mẫu nam / nữ. */
+const heroFile = () => `hero_${state.progress?.heroLook === 'f' ? 'f' : 'm'}`;
 const els = {};
 let partner = null;
 let open = false;
@@ -59,8 +61,8 @@ const vars = () => ({ hero: heroTitle(), org: data.quests.organization.name });
 /** Đặt tên, nhãn GIẢ LẬP và chân dung cho người nói. */
 function setSpeaker(id) {
   let name, sprite = null, fictional = true;
-  if (id === 'hero') { name = heroTitle(); sprite = 'hero'; }
-  else if (id === 'inspect') { name = t('dialog.inspectSpeaker'); sprite = 'hero'; }
+  if (id === 'hero') { name = heroTitle(); sprite = heroFile(); }
+  else if (id === 'inspect') { name = t('dialog.inspectSpeaker'); sprite = heroFile(); }
   else if (id === 'system') { name = t('system'); fictional = false; }
   else { const npc = npcById(id); name = npc ? npc.name : id; sprite = SPRITES.has(id) ? id : null; }
   els.name.textContent = name;

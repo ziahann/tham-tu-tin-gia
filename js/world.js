@@ -7,9 +7,13 @@ import { roomStatus } from './grading.js';
 import * as story from './story.js';
 import { setPlace } from './hud.js';
 
-const SPRITE_IDS = ['hero', 'npc1', 'npc2', 'npc3', 'npc4', 'npc5', 'npc6'];
+const SPRITE_IDS = ['npc1', 'npc2', 'npc3', 'npc4', 'npc5', 'npc6', 'boss', 'boss_blank'];
+const MAPS = ['office', 'street', 'newsroom', 'cafe', 'boss'];
 const SPEED = 120;
-const MAP_KEY = 'office';
+const BOSS_SCALE = 1.5;
+
+/** File sprite của thám tử theo mẫu người chơi chọn (nam / nữ). */
+export const heroSprite = () => `hero_${state.progress?.heroLook === 'f' ? 'f' : 'm'}`;
 
 /** Lấy thuộc tính tùy chỉnh của object Tiled. */
 const propOf = (o, name) => (o.properties || []).find(p => p.name === name)?.value;
@@ -22,21 +26,29 @@ export class WorldScene extends Phaser.Scene {
 
   /** Tải bản đồ, tileset, sprite. */
   preload() {
-    this.load.tilemapTiledJSON(MAP_KEY, `maps/${MAP_KEY}.json`);
-    this.load.image('tiles-office', 'assets/tiles/office.png');
+    MAPS.forEach(key => this.load.tilemapTiledJSON(key, `maps/${key}.json`));
+    this.load.image('tiles', 'assets/tiles/tiles.png');
+    this.load.spritesheet('hero', `assets/sprites/${heroSprite()}.png`, { frameWidth: 32, frameHeight: 48 });
     SPRITE_IDS.forEach(id => this.load.spritesheet(id, `assets/sprites/${id}.png`, { frameWidth: 32, frameHeight: 48 }));
+  }
+
+  /** Nhận bản đồ và điểm xuất hiện khi chuyển cảnh. */
+  init(args) {
+    this.args = args || {};
   }
 
   /** Dựng bản đồ, người chơi, NPC, camera. */
   create() {
-    const map = this.map = this.make.tilemap({ key: MAP_KEY });
-    const tiles = map.addTilesetImage('office', 'tiles-office');
+    const saved = state.progress.pos;
+    this.mapKey = this.args.map || (MAPS.includes(saved?.map) ? saved.map : 'office');
+    const map = this.map = this.make.tilemap({ key: this.mapKey });
+    const tiles = map.addTilesetImage('tiles', 'tiles');
     map.createLayer('ground', tiles);
     this.walls = map.createLayer('walls', tiles);
     this.doors = map.createLayer('doors', tiles);
     this.walls.setCollisionByProperty({ collides: true });
     this.doors.setCollisionByProperty({ collides: true });
-    SPRITE_IDS.forEach(id => makeAnims(this, id));
+    ['hero', ...SPRITE_IDS].forEach(id => makeAnims(this, id));
 
     const objs = map.getObjectLayer('objects').objects;
     this.paths = {};
@@ -47,6 +59,7 @@ export class WorldScene extends Phaser.Scene {
     }
     this.zones = objs.filter(o => o.type === 'zone');
     this.exits = objs.filter(o => o.type === 'exit');
+    this.portals = objs.filter(o => o.type === 'portal');
     this.inspects = objs.filter(o => o.type === 'inspect');
     this.doorObjs = objs.filter(o => o.type === 'door').map(o => ({
       obj: o,
@@ -54,13 +67,14 @@ export class WorldScene extends Phaser.Scene {
       tiles: this.tilesIn(o)
     }));
 
-    // Người chơi
-    const saved = state.progress.pos;
-    const start = saved?.map === MAP_KEY ? saved : this.points.spawn_start;
+    // Người chơi: điểm xuất hiện khi chuyển cảnh, vị trí đã lưu, hoặc điểm bắt đầu.
+    const fallback = this.points.spawn_start || Object.entries(this.points).find(([k]) => k.startsWith('spawn'))?.[1];
+    const start = (this.args.spawn && this.points[this.args.spawn]) || (saved?.map === this.mapKey && saved.x != null ? saved : fallback);
     this.player = this.physics.add.sprite(start.x, start.y, 'hero', 0);
     feetBody(this.player);
     this.player.setCollideWorldBounds(true);
-    this.facing = saved?.dir || 'up';
+    this.facing = this.args.spawn ? (this.args.dir || 'down') : saved?.dir || 'up';
+    this.savePos();
     this.player.setFrame(idleFrame(this.facing));
     this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
     this.physics.add.collider(this.player, this.walls);
@@ -71,6 +85,11 @@ export class WorldScene extends Phaser.Scene {
     for (const o of objs.filter(o => o.type === 'npc')) {
       const npc = new Npc(this, o.name, o.x, o.y);
       npc.homePatrol = propOf(o, 'patrol');
+      if (o.name === 'boss') {
+        npc.sprite.setScale(BOSS_SCALE);
+        npc.marker.setVisible(false);
+        if (hasFlag('boss_done')) npc.sprite.setTexture('boss_blank', 0);
+      }
       this.npcs.set(o.name, npc);
       this.physics.add.collider(this.player, npc.sprite);
       this.placeNpc(o.name);
@@ -90,10 +109,36 @@ export class WorldScene extends Phaser.Scene {
     this.scale.on('resize', () => this.fitCamera());
 
     this.lastSave = 0;
+    this.leaving = false;
     this.zoneKey = null;
+    if (!state.settings.reduceMotion) cam.fadeIn(250, 15, 14, 23);
     this.target = null;
     story.setWorld(this);
     this.refresh();
+  }
+
+  /** Lưu vị trí hiện tại (bản đồ, toạ độ, hướng nhìn). */
+  savePos() {
+    state.progress.pos = { map: this.mapKey, x: Math.round(this.player.x), y: Math.round(this.player.y), dir: this.facing };
+    saveProgress();
+  }
+
+  /** Chuyển sang bản đồ khác, xuất hiện ở điểm spawn. */
+  travel(target, spawn) {
+    if (this.leaving) return;
+    this.leaving = true;
+    this.player.setVelocity(0, 0);
+    state.progress.pos = { map: target, spawnName: spawn };
+    saveProgress();
+    const go = () => this.scene.restart({ map: target, spawn, dir: target === 'street' ? 'down' : 'up' });
+    if (state.settings.reduceMotion) { go(); return; }
+    this.cameras.main.fadeOut(250, 15, 14, 23);
+    this.cameras.main.once('camerafadeoutcomplete', go);
+  }
+
+  /** Gỡ mặt nạ boss: thay sprite bằng khung trống. */
+  bossUnmask() {
+    this.npcs.get('boss')?.sprite.setTexture('boss_blank', 0);
   }
 
   /** Zoom nguyên lần để pixel đều; thấy khoảng 20x11 ô trên màn hình lớn. */
@@ -180,16 +225,19 @@ export class WorldScene extends Phaser.Scene {
   findTarget() {
     const off = { down: [0, 18], up: [0, -26], left: [-22, -6], right: [22, -6] }[this.facing];
     const fx = this.player.x + off[0], fy = this.player.y + off[1];
-    let best = null, bestD = 34;
+    let best = null, bestD = Infinity;
     this.npcs.forEach((npc, id) => {
+      const big = npc.sprite.scale > 1; // boss to hơn: tầm nói chuyện rộng hơn
       const d = Phaser.Math.Distance.Between(fx, fy, npc.sprite.x, npc.sprite.y - 12);
-      if (d < bestD) { best = { kind: 'npc', id, x: npc.sprite.x, y: npc.sprite.y - 54 }; bestD = d; }
+      if (d < (big ? 64 : 34) && d < bestD) { best = { kind: 'npc', id, x: npc.sprite.x, y: npc.sprite.y - (big ? 80 : 54) }; bestD = d; }
     });
     if (best) return best;
     const ins = this.inspects.find(o => inRect(o, fx, fy, 4));
     if (ins) return { kind: 'inspect', key: propOf(ins, 'text'), x: ins.x + ins.width / 2, y: ins.y - 4 };
     const door = this.doorObjs.find(d => inRect(d.obj, fx, fy, 4) && d.status !== 'open' && d.status !== 'done');
     if (door) return { kind: 'door', door, x: door.obj.x + door.obj.width / 2, y: door.obj.y + door.obj.height - 40 };
+    const portal = this.portals.find(o => inRect(o, fx, fy, 6));
+    if (portal) return { kind: 'portal', portal, x: portal.x + portal.width / 2, y: portal.y - 6 };
     return null;
   }
 
@@ -197,7 +245,14 @@ export class WorldScene extends Phaser.Scene {
   interact() {
     const tg = this.target;
     if (!tg) return;
-    if (tg.kind === 'npc') story.talkTo(tg.id);
+    if (tg.kind === 'npc' && tg.id === 'boss') story.runBoss();
+    else if (tg.kind === 'npc') story.talkTo(tg.id);
+    else if (tg.kind === 'portal') {
+      const room = propOf(tg.portal, 'room');
+      const st = roomStatus(room, state.progress.flags);
+      if (st === 'open' || st === 'done') this.travel(propOf(tg.portal, 'target'), propOf(tg.portal, 'spawn'));
+      else story.notice(t('dialog.bossLocked'));
+    }
     else if (tg.kind === 'inspect') story.inspect(tg.key);
     else if (tg.kind === 'door') {
       const room = data.quests.rooms.find(r => r.id === tg.door.room);
@@ -240,7 +295,7 @@ export class WorldScene extends Phaser.Scene {
 
   /** Vòng lặp mỗi khung hình. */
   update(time, delta) {
-    const frozen = story.isBusy() || window.uiBlocked?.();
+    const frozen = this.leaving || story.isBusy() || window.uiBlocked?.();
     let { x, y } = frozen ? { x: 0, y: 0 } : direction();
     if (x && y) { x *= Math.SQRT1_2; y *= Math.SQRT1_2; }
     this.player.setVelocity(x * SPEED, y * SPEED);
@@ -249,8 +304,7 @@ export class WorldScene extends Phaser.Scene {
       this.player.anims.play(`hero-walk-${this.facing}`, true);
       if (time - this.lastSave > 1000) {
         this.lastSave = time;
-        state.progress.pos = { map: MAP_KEY, x: Math.round(this.player.x), y: Math.round(this.player.y), dir: this.facing };
-        saveProgress();
+        this.savePos();
       }
     } else {
       this.player.anims.stop();
@@ -263,8 +317,9 @@ export class WorldScene extends Phaser.Scene {
     this.checkZone();
     const exit = this.exits.find(o => inRect(o, this.player.x, this.player.y));
     if (exit) {
+      const target = propOf(exit, 'target');
+      if (MAPS.includes(target)) { this.travel(target, propOf(exit, 'spawn')); return; }
       this.player.body.reset(this.player.x, exit.y - 12);
-      this.facing = 'up';
       story.notice(t('dialog.exitBuilding'));
       return;
     }

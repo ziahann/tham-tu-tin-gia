@@ -42,7 +42,7 @@
       "id": "npc3",
       "name": "Bác Tín Thư",
       "role": "Thủ thư lưu trữ báo chí",
-      "room": "S5, S6",
+      "room": "S5, S6 (Tòa soạn Tin Vịnh)",
       "age": 64,
       "job": "Thủ thư lưu trữ báo chí",
       "personality": "Chậm rãi, hiền hậu, nhớ ngày tháng rất giỏi",
@@ -58,7 +58,7 @@
       "id": "npc4",
       "name": "Phát Vội",
       "role": "Biên tập viên đăng tin vội (bẫy)",
-      "room": "S8",
+      "room": "Tòa soạn Tin Vịnh",
       "age": 24,
       "job": "Biên tập viên một trang tin hư cấu (nhân vật bẫy)",
       "personality": "Hối hả, sốt sắng, chạy theo lượt xem",
@@ -74,7 +74,7 @@
       "id": "npc5",
       "name": "Bông Mây",
       "role": "Nghệ sĩ hư cấu (bẫy)",
-      "room": "S8",
+      "room": "Phố ven vịnh",
       "age": 29,
       "job": "Ca sĩ hư cấu (nhân vật bẫy)",
       "personality": "Tốt bụng, giàu cảm xúc",
@@ -90,7 +90,7 @@
       "id": "npc6",
       "name": "Chú Sáu Nhóm",
       "role": "Quản trị nhóm mạng (phỏng vấn tùy chọn)",
-      "room": "S7",
+      "room": "Quán cà phê Gió Biển",
       "age": 52,
       "job": "Quản trị một nhóm mạng xã hội hư cấu (thẩm vấn tùy chọn)",
       "personality": "Lảng tránh, nói vòng vo",
@@ -120,101 +120,6 @@
     }
   ],
   "dialogues": {
-    "q1_denial_trap": [
-      {
-        "npc": "npc4",
-        "text": "Ảnh xúc động thế này mà không đăng à? Đăng trước, sai thì xóa sau!",
-        "trap": true,
-        "correction": "Xóa sau không thu hồi được những gì đã lan."
-      }
-    ],
-    "q7_q8": [
-      {
-        "id": "q7",
-        "npc": "npc3",
-        "intro": "Tôi là Bác Tín Thư. Clip này quay lúc nào? Ngày quay quan trọng lắm.",
-        "correct": "Clip cũ gắn nhãn sai bối cảnh: vẫn là thông tin sai.",
-        "wrong": "Nội dung thật nhưng sai ngữ cảnh thì vẫn gây hiểu lầm."
-      },
-      {
-        "id": "q8",
-        "npc": "npc3",
-        "intro": "Sắp xếp các mốc theo thứ tự thời gian.",
-        "correct": "Đúng. Lưu ý: ta không biết bài đăng đầu tiên là lúc nào.",
-        "wrong": "Bắt đầu từ sự kiện thật rồi mới tới tin giả."
-      }
-    ],
-    "q9_q10": [
-      {
-        "id": "q9",
-        "npc": "npc1",
-        "intro": "Tách số liệu đã ghi nhận khỏi rủi ro nhé.",
-        "correct": "Đúng. Số liệu một bài không phải tổng tiếp cận.",
-        "wrong": "Nếu không có số liệu nguồn nêu thì đó là rủi ro, không phải sự thật đã ghi nhận."
-      },
-      {
-        "id": "q10",
-        "npc": "npc1",
-        "intro": "Có thủ đoạn nào cho thấy chủ đích? Nhưng cẩn thận kết luận vượt bằng chứng.",
-        "correct": "Đúng, không suy đoán tiền bạc hay danh tính.",
-        "wrong": "Bằng chứng chưa nói điều đó."
-      }
-    ],
-    "npc6_interview": {
-      "npc": "npc6",
-      "label": "GIẢ LẬP — nhân vật hư cấu, lời khai KHÔNG phải bằng chứng thật",
-      "nodes": [
-        {
-          "id": "n1",
-          "player": "Chú đăng bộ ảnh này lấy từ đâu?",
-          "npc": "Tôi thấy người ta chia sẻ, tôi đăng lại thôi.",
-          "flag": "no_source"
-        },
-        {
-          "id": "n2",
-          "player": "Sao không ghi chú là truyện hư cấu?",
-          "npc": "À… có ghi nhưng nhỏ xíu, ai cũng thấy mà.",
-          "flag": "contradiction_note_hidden"
-        },
-        {
-          "id": "n3",
-          "player": "Link 'Xem tiếp' dẫn đi đâu?",
-          "npc": "Cái đó… quảng cáo thôi, chắc không sao.",
-          "flag": "external_link"
-        }
-      ],
-      "lesson": "Lời khai chỉ là dữ kiện tham khảo; không đủ để kết luận chủ đích hay danh tính ai đó."
-    },
-    "q11_traps": [
-      {
-        "npc": "npc4",
-        "text": "Cứ gọi hết là tin giả cố ý đi cho nhanh!",
-        "trap": true,
-        "correction": "Phân loại theo từng nhóm đối tượng, cần xét chủ đích."
-      },
-      {
-        "npc": "npc5",
-        "text": "Tôi đã đăng vì thương nạn nhân, vậy là đúng đúng không?",
-        "trap": true,
-        "correction": "Chia sẻ vì thương cảm vẫn có thể là Misinformation."
-      }
-    ],
-    "q12_q13": [
-      {
-        "id": "q12",
-        "npc": "npc1",
-        "intro": "Bạn phát hiện bài giả đang lan. Làm gì?",
-        "correct": "Báo cáo, không chia sẻ lại, dùng nguồn chính thống.",
-        "wrong": "Tránh khuếch đại và tránh lộ thông tin cá nhân."
-      },
-      {
-        "id": "q13",
-        "npc": "npc1",
-        "intro": "Theo bạn nền tảng nên làm gì?",
-        "correct": "Câu mở — mọi gợi ý hợp lý đều được ghi nhận.",
-        "wrong": ""
-      }
-    ],
     "boss_intro": [
       {
         "npc": "boss",
@@ -529,8 +434,21 @@
       "next": "end"
     },
     {
-      "id": "s4_done",
+      "id": "npc2_after_s4",
       "screen": "S4",
+      "npc": "npc2",
+      "lines": [
+        {
+          "id": "npc2_after_s4_l1",
+          "text": "Nhớ nhé: không dựa vào một bằng chứng duy nhất, nhất là một con số từ công cụ."
+        }
+      ],
+      "choices": [],
+      "next": "end"
+    },
+    {
+      "id": "s4_done",
+      "screen": "",
       "npc": "npc2",
       "lines": [
         {
@@ -539,20 +457,405 @@
         },
         {
           "id": "s4_done_l2",
-          "text": "Các phòng tiếp theo đang được chuẩn bị. Khi sẵn sàng, chị Tuệ Lâm sẽ báo bạn."
+          "text": "Giờ tới phần video cũ. Bác Tín Thư ở Tòa soạn Tin Vịnh, bên kia phố ven vịnh, giữ kho lưu trữ báo chí. Ra cửa chính sảnh rồi rẽ sang phải."
         }
       ],
       "choices": [],
       "next": "end"
     },
     {
-      "id": "npc2_after_s4",
-      "screen": "S4",
-      "npc": "npc2",
+      "id": "s5_intro",
+      "screen": "",
+      "npc": "npc3",
       "lines": [
         {
-          "id": "npc2_after_s4_l1",
-          "text": "Nhớ nhé: không dựa vào một bằng chứng duy nhất, nhất là một con số từ công cụ."
+          "id": "s5_intro_l1",
+          "text": "À, cháu là thẩm định viên Ban Hải Đăng nhờ tới phải không? Bác là Tín Thư, coi kho lưu trữ này."
+        },
+        {
+          "id": "s5_intro_l2",
+          "text": "Ngày tháng không nói dối, người gắn nhãn thì có thể. Ta cùng tra nhé."
+        }
+      ],
+      "choices": [],
+      "next": "end"
+    },
+    {
+      "id": "s5_q7_intro",
+      "screen": "",
+      "npc": "npc3",
+      "lines": [
+        {
+          "id": "s5_q7_intro_l1",
+          "text": "Có mấy đoạn video người ta bảo là \"cận cảnh vụ 19/7\". Bác ngờ lắm. Cháu đọc báo xem chúng thật ra từ đâu."
+        }
+      ],
+      "choices": [],
+      "next": "end"
+    },
+    {
+      "id": "s5_done",
+      "screen": "",
+      "npc": "npc3",
+      "lines": [
+        {
+          "id": "s5_done_l1",
+          "text": "Tốt lắm. Giờ sang phòng bên cạnh, ta xếp lại dòng thời gian cho rõ."
+        }
+      ],
+      "choices": [],
+      "next": "end"
+    },
+    {
+      "id": "s6_intro",
+      "screen": "",
+      "npc": "npc3",
+      "lines": [
+        {
+          "id": "s6_intro_l1",
+          "text": "Đây là phòng dòng thời gian. Mỗi tờ giấy trên bảng là một mốc."
+        }
+      ],
+      "choices": [],
+      "next": "end"
+    },
+    {
+      "id": "s6_q8_intro",
+      "screen": "",
+      "npc": "npc3",
+      "lines": [
+        {
+          "id": "s6_q8_intro_l1",
+          "text": "Xếp đúng thứ tự thì mới thấy tin sai đi nhanh tới mức nào."
+        }
+      ],
+      "choices": [],
+      "next": "end"
+    },
+    {
+      "id": "s6_done",
+      "screen": "",
+      "npc": "npc3",
+      "lines": [
+        {
+          "id": "s6_done_l1",
+          "text": "Dòng thời gian đã rõ. Cháu về Ban Hải Đăng đi, chị Tuệ Lâm đang chờ ở Phòng Tác động và chủ đích."
+        }
+      ],
+      "choices": [],
+      "next": "end"
+    },
+    {
+      "id": "s7_intro",
+      "screen": "",
+      "npc": "npc1",
+      "lines": [
+        {
+          "id": "s7_intro_l1",
+          "text": "Bạn về rồi. Đây là Phòng Tác động và chủ đích. Ở đây ta phải rất cẩn thận với lời nói của mình."
+        }
+      ],
+      "choices": [],
+      "next": "end"
+    },
+    {
+      "id": "s7_q9_intro",
+      "screen": "",
+      "npc": "npc1",
+      "lines": [
+        {
+          "id": "s7_q9_intro_l1",
+          "text": "Tin giả đã gây ra những gì? Hãy tách cái đã ghi nhận khỏi cái mới chỉ là lo ngại."
+        }
+      ],
+      "choices": [],
+      "next": "end"
+    },
+    {
+      "id": "s7_q10_intro",
+      "screen": "",
+      "npc": "npc1",
+      "lines": [
+        {
+          "id": "s7_q10_intro_l1",
+          "text": "Câu hỏi khó nhất: người đăng có cố ý không? Nếu muốn luyện thêm, chú Sáu quản trị một nhóm mạng hay ngồi ở quán cà phê Gió Biển ngoài phố — bạn có thể hỏi chuyện chú ấy."
+        }
+      ],
+      "choices": [],
+      "next": "end"
+    },
+    {
+      "id": "s7_done",
+      "screen": "",
+      "npc": "npc1",
+      "lines": [
+        {
+          "id": "s7_done_l1",
+          "text": "Rõ ràng và đúng mức. Sang Phòng Phân loại và xử lý nhé, ngay cạnh đây."
+        }
+      ],
+      "choices": [],
+      "next": "end"
+    },
+    {
+      "id": "s8_intro",
+      "screen": "",
+      "npc": "npc1",
+      "lines": [
+        {
+          "id": "s8_intro_l1",
+          "text": "Phòng cuối cùng trước khi khép hồ sơ. Ta phân loại và quyết định cách ứng xử."
+        }
+      ],
+      "choices": [],
+      "next": "end"
+    },
+    {
+      "id": "s8_q11_intro",
+      "screen": "",
+      "npc": "npc1",
+      "lines": [
+        {
+          "id": "s8_q11_intro_l1",
+          "text": "Đúng lúc này lại có người gọi tới…"
+        }
+      ],
+      "choices": [],
+      "next": "end"
+    },
+    {
+      "id": "s8_q12_intro",
+      "screen": "",
+      "npc": "npc1",
+      "lines": [
+        {
+          "id": "s8_q12_intro_l1",
+          "text": "Giờ, nếu bạn thấy một bài đăng giả đang lan, bạn làm gì?"
+        }
+      ],
+      "choices": [],
+      "next": "end"
+    },
+    {
+      "id": "s8_q13_intro",
+      "screen": "",
+      "npc": "npc1",
+      "lines": [
+        {
+          "id": "s8_q13_intro_l1",
+          "text": "Một câu hỏi mở, không có đáp án đúng sai: nền tảng nên làm gì?"
+        }
+      ],
+      "choices": [],
+      "next": "end"
+    },
+    {
+      "id": "s8_done",
+      "screen": "",
+      "npc": "npc1",
+      "lines": [
+        {
+          "id": "s8_done_l1",
+          "text": "Hồ sơ đã đủ. Nhưng có một thứ vẫn lẩn khuất sau tất cả những câu chuyện kia…"
+        },
+        {
+          "id": "s8_done_l2",
+          "text": "Cửa Phòng họp cuối sảnh vừa mở. Mang theo các thẻ evidence của bạn. (Phòng Boss là GIẢ LẬP.)"
+        }
+      ],
+      "choices": [],
+      "next": "end"
+    },
+    {
+      "id": "npc1_after_boss",
+      "screen": "",
+      "npc": "npc1",
+      "lines": [
+        {
+          "id": "npc1_after_boss_l1",
+          "text": "Cảm ơn bạn. Nếu muốn, còn một hồ sơ nhỏ: có trang mạo danh chính Ban Hải Đăng đấy."
+        }
+      ],
+      "choices": [],
+      "next": "end"
+    },
+    {
+      "id": "npc1_end",
+      "screen": "",
+      "npc": "npc1",
+      "lines": [
+        {
+          "id": "npc1_end_l1",
+          "text": "Kiểm chứng luôn dựa vào nguồn và bằng chứng. Điểm số chỉ để chơi."
+        }
+      ],
+      "choices": [],
+      "next": "end"
+    },
+    {
+      "id": "npc3_idle",
+      "screen": "",
+      "npc": "npc3",
+      "lines": [
+        {
+          "id": "npc3_idle_l1",
+          "text": "Ngày tháng không nói dối, người gắn nhãn thì có thể."
+        }
+      ],
+      "choices": [],
+      "next": "end"
+    },
+    {
+      "id": "npc3_wait",
+      "screen": "",
+      "npc": "npc3",
+      "lines": [
+        {
+          "id": "npc3_wait_l1",
+          "text": "Bác ở kho lưu trữ đây. Khi nào xong việc bên Ban Hải Đăng thì ghé nhé."
+        }
+      ],
+      "choices": [],
+      "next": "end"
+    },
+    {
+      "id": "npc4_idle",
+      "screen": "",
+      "npc": "npc4",
+      "lines": [
+        {
+          "id": "npc4_idle_l1",
+          "text": "Ảnh xúc động thế này mà không đăng à? Đăng trước, sai thì xóa sau!"
+        }
+      ],
+      "choices": [
+        {
+          "id": "npc4_c1",
+          "text": "Xóa sau không thu hồi được những gì đã lan.",
+          "next": "npc4_reply"
+        },
+        {
+          "id": "npc4_c2",
+          "text": "Anh kiểm tra nguồn chưa?",
+          "next": "npc4_reply"
+        }
+      ],
+      "next": "end"
+    },
+    {
+      "id": "npc4_reply",
+      "screen": "",
+      "npc": "npc4",
+      "lines": [
+        {
+          "id": "npc4_reply_l1",
+          "text": "…Ừ thì, lượt xem cũng quan trọng mà. Nhưng thôi, để tôi đợi bên kiểm chứng xác nhận đã."
+        }
+      ],
+      "choices": [],
+      "next": "end"
+    },
+    {
+      "id": "npc5_idle",
+      "screen": "",
+      "npc": "npc5",
+      "lines": [
+        {
+          "id": "npc5_idle_l1",
+          "text": "Mình đã chia sẻ bức ảnh vì thương nạn nhân quá. Vậy là đúng mà, phải không?"
+        }
+      ],
+      "choices": [
+        {
+          "id": "npc5_c1",
+          "text": "Thương cảm là thật, nhưng chia sẻ tin chưa kiểm chứng vẫn có thể lan tin sai.",
+          "next": "npc5_reply"
+        },
+        {
+          "id": "npc5_c2",
+          "text": "Bạn biết ảnh đó lấy từ đâu không?",
+          "next": "npc5_reply"
+        }
+      ],
+      "next": "end"
+    },
+    {
+      "id": "npc5_reply",
+      "screen": "",
+      "npc": "npc5",
+      "lines": [
+        {
+          "id": "npc5_reply_l1",
+          "text": "Mình không biết… Mình có nhiều người theo dõi, chắc nhiều người đã tin theo. Mình sẽ gỡ bài và đăng lời đính chính."
+        }
+      ],
+      "choices": [],
+      "next": "end"
+    },
+    {
+      "id": "npc6_idle",
+      "screen": "",
+      "npc": "npc6",
+      "lines": [
+        {
+          "id": "npc6_idle_l1",
+          "text": "Người ta chia sẻ thì tui chia sẻ thôi mà."
+        }
+      ],
+      "choices": [],
+      "next": "end"
+    },
+    {
+      "id": "cafe_q10b_intro",
+      "screen": "",
+      "npc": "npc6",
+      "lines": [
+        {
+          "id": "cafe_q10b_intro_l1",
+          "text": "Cô cậu hỏi gì thì hỏi lẹ, tui còn uống cà phê. (Nhân vật GIẢ LẬP.)"
+        }
+      ],
+      "choices": [],
+      "next": "end"
+    },
+    {
+      "id": "bonus_intro",
+      "screen": "",
+      "npc": "npc1",
+      "lines": [
+        {
+          "id": "bonus_intro_l1",
+          "text": "Có người báo một trang lạ dùng tên Ban Hải Đăng để kêu gọi quyên góp. Bạn xem giúp tôi."
+        }
+      ],
+      "choices": [],
+      "next": "end"
+    },
+    {
+      "id": "boss_intro",
+      "screen": "",
+      "npc": "boss",
+      "lines": [
+        {
+          "id": "boss_intro_l1",
+          "text": "Hừ… ngươi lần theo được tới đây. (Ta là nhân vật hư cấu, đại diện cho hành vi lan tin giả.)"
+        },
+        {
+          "id": "boss_intro_l2",
+          "text": "Chứng minh đi. Chỉ bằng chứng thật mới làm ta lung lay."
+        }
+      ],
+      "choices": [],
+      "next": "end"
+    },
+    {
+      "id": "boss_locked",
+      "screen": "",
+      "npc": "system",
+      "lines": [
+        {
+          "id": "boss_locked_l1",
+          "text": "Cửa Phòng họp đang khóa. Hoàn thành các phòng điều tra và thu thập ít nhất 8 thẻ evidence."
         }
       ],
       "choices": [],
@@ -700,11 +1003,6 @@
         "quest": "q2_event"
       },
       {
-        "npc": "npc1",
-        "scene": "s3_done",
-        "idle": true
-      },
-      {
         "npc": "npc2",
         "quest": "q3_lens"
       },
@@ -740,11 +1038,112 @@
         "npc": "npc2",
         "scene": "npc2_idle",
         "idle": true
+      },
+      {
+        "npc": "npc1",
+        "quest": "q9_impact"
+      },
+      {
+        "npc": "npc1",
+        "quest": "q10_intent"
+      },
+      {
+        "npc": "npc1",
+        "quest": "q11_classify"
+      },
+      {
+        "npc": "npc1",
+        "quest": "q12_response"
+      },
+      {
+        "npc": "npc1",
+        "quest": "q13_platform"
+      },
+      {
+        "npc": "npc1",
+        "requires": [
+          "boss_done"
+        ],
+        "quest": "bonus_impersonation"
+      },
+      {
+        "npc": "npc1",
+        "requires": [
+          "boss_done"
+        ],
+        "scene": "npc1_end",
+        "idle": true
+      },
+      {
+        "npc": "npc1",
+        "scene": "s3_done",
+        "idle": true
+      },
+      {
+        "npc": "npc3",
+        "quest": "q7_oldclips"
+      },
+      {
+        "npc": "npc3",
+        "quest": "q8_timeline"
+      },
+      {
+        "npc": "npc3",
+        "requires": [
+          "done_S4"
+        ],
+        "scene": "npc3_idle",
+        "idle": true
+      },
+      {
+        "npc": "npc3",
+        "scene": "npc3_wait",
+        "idle": true
+      },
+      {
+        "npc": "npc4",
+        "scene": "npc4_idle",
+        "idle": true
+      },
+      {
+        "npc": "npc5",
+        "scene": "npc5_idle",
+        "idle": true
+      },
+      {
+        "npc": "npc6",
+        "quest": "q10b_interview"
+      },
+      {
+        "npc": "npc6",
+        "scene": "npc6_idle",
+        "idle": true
       }
     ]
   },
   "stations": {
     "npc1": [
+      {
+        "requires": [
+          "boss_done"
+        ],
+        "station": "npc1_lobby_end",
+        "patrol": "patrol_npc1_lobby"
+      },
+      {
+        "requires": [
+          "done_S7"
+        ],
+        "station": "npc1_s8",
+        "patrol": "patrol_npc1_s8"
+      },
+      {
+        "requires": [
+          "done_S6"
+        ],
+        "station": "npc1_s7",
+        "patrol": "patrol_npc1_s7"
+      },
       {
         "requires": [
           "s1_done"
@@ -761,6 +1160,15 @@
         "station": "npc2_s4",
         "patrol": "patrol_npc2_s4"
       }
+    ],
+    "npc3": [
+      {
+        "requires": [
+          "done_S5"
+        ],
+        "station": "npc3_s6",
+        "patrol": "patrol_npc3_s6"
+      }
     ]
   },
   "zoneScenes": {
@@ -771,6 +1179,22 @@
     "S4": {
       "scene": "s4_intro",
       "thenTalk": "npc2"
+    },
+    "S5": {
+      "scene": "s5_intro",
+      "thenTalk": "npc3"
+    },
+    "S6": {
+      "scene": "s6_intro",
+      "thenTalk": "npc3"
+    },
+    "S7": {
+      "scene": "s7_intro",
+      "thenTalk": "npc1"
+    },
+    "S8": {
+      "scene": "s8_intro",
+      "thenTalk": "npc1"
     }
   },
   "inspect": {
@@ -794,6 +1218,33 @@
     ],
     "inspect_lab": [
       "Hai màn hình lớn hiển thị bản ghi kết quả công cụ. Một tờ giấy dán: \"Không tải lại ảnh giả lên công cụ.\""
+    ],
+    "inspect_timeline": [
+      "Bảng dòng thời gian bằng gỗ, ghim đầy giấy note. Có chỗ trống ghi: \"Bài đăng đầu tiên: ???\""
+    ],
+    "inspect_archive": [
+      "Kệ báo lưu trữ, xếp theo ngày. Bác Tín Thư dán nhãn rất cẩn thận."
+    ],
+    "inspect_newsdesk": [
+      "Bàn biên tập: một màn hình đang mở bản nháp với tiêu đề viết hoa \"SỐC!!!\" chưa đăng."
+    ],
+    "inspect_pier_sign": [
+      "Bảng thông tin bến tàu (GIẢ LẬP): lịch tàu tham quan, số điện thoại cứu hộ, lời nhắc mặc áo phao."
+    ],
+    "inspect_sea": [
+      "Mặt vịnh yên ả. Những đảo đá vôi nhô lên xa xa."
+    ],
+    "inspect_cafe_menu": [
+      "Thực đơn: cà phê muối, trà chanh, nước dừa. Tờ giấy dán quầy: \"Đọc kỹ trước khi chia sẻ\"."
+    ],
+    "inspect_office_sign": [
+      "Biển hiệu: Ban Điều phối Thông tin Du lịch Hải Đăng (GIẢ LẬP)."
+    ],
+    "inspect_news_sign": [
+      "Biển hiệu: Tòa soạn Tin Vịnh (GIẢ LẬP)."
+    ],
+    "inspect_cafe_sign": [
+      "Biển hiệu: Quán cà phê Gió Biển (GIẢ LẬP)."
     ]
   }
 }

@@ -40,7 +40,7 @@ GitHub Pages chỉ phục vụ từ thư mục gốc hoặc `/docs`, nên đẩy
 | `data/npc_dialogues.json` | NPC, cảnh hội thoại (`scenes`), luật nói chuyện (`interactions`), trạm đứng của NPC (`stations`), lời giới thiệu phòng (`zoneScenes`), chữ khi xem đồ vật (`inspect`) |
 | `data/sources.json` | Nguồn trích dẫn APA |
 | `data/ui.json` | Toàn bộ chữ trên giao diện |
-| `maps/office.json` | Bản đồ văn phòng (Tiled). Lớp `walls` và `doors` có va chạm theo thuộc tính `collides` của ô; lớp `objects` chứa điểm xuất hiện, khu vực, cửa, NPC, đường đi tuần / dẫn đường, đồ vật xem được |
+| `maps/*.json` | 5 bản đồ Tiled (office, street, newsroom, cafe, boss), dùng chung `assets/tiles/tiles.png`. Lớp `walls` và `doors` có va chạm theo thuộc tính `collides` của ô; lớp `objects` chứa điểm xuất hiện, khu vực, cửa phòng, lối ra (`exit`), cổng (`portal`), NPC, đường đi tuần / dẫn đường, đồ vật xem được |
 | `assets/` | Tileset và sprite TẠM, sinh bởi `node tools/gen-assets.mjs` (ở thư mục gốc repo) |
 | `js/main.js` | Khởi động, màn hình chính, cài đặt, nguồn |
 | `js/world.js`, `js/actors.js` | Cảnh Phaser: bản đồ, người chơi, NPC đi tuần / dẫn đường, cửa, khu vực |
@@ -49,12 +49,17 @@ GitHub Pages chỉ phục vụ từ thư mục gốc hoặc `/docs`, nên đẩy
 | `js/backpack.js` | Balo: sổ tay, nhiệm vụ + bản đồ nhỏ, bảng ghim, lịch sử theo NPC |
 | `js/state.js`, `js/history.js` | Lưu tiến trình, cài đặt, lịch sử trò chuyện |
 
-## Đã có / chưa có
+## Nội dung
 
-- Đã có (giai đoạn 1): màn hình chính có cảnh báo nội dung, văn phòng đi lại được, NPC đi tuần và dẫn đường, Phòng Hồ sơ (Q1, Q2) trong hội thoại, balo, lịch sử theo NPC.
-- Đã có: intro trên nền vịnh Hạ Long chuyển động (vẽ bằng code, `js/bay.js`) với 5 thẻ bối cảnh vụ án có trích nguồn.
-- Đã có: Phòng Phân tích ảnh (Q3–Q6) với Khải — bản ghi Google Lens/Hive theo báo cáo, kính soi lỗi trên lưới 12 khung MÔ PHỎNG, tìm ảnh dùng lại giữa hai bộ.
-- Chưa có: art và nhạc thật, bối cảnh ngoài trời, các phòng Q7–Q13, boss và kết quả.
+| Địa điểm (bản đồ) | Nhiệm vụ | NPC |
+|---|---|---|
+| Văn phòng Ban Hải Đăng (`office`) | Nhận vụ; S3 Hồ sơ Q1–Q2; S4 Phân tích ảnh Q3–Q6; S7 Tác động Q9–Q10; S8 Phân loại Q11–Q13; Phòng họp (Boss) | Tuệ Lâm, Khải |
+| Phố ven vịnh (`street`) | Lối đi giữa các tòa nhà, bến tàu (không có tàu) | Bông Mây |
+| Tòa soạn Tin Vịnh (`newsroom`) | S5 Lưu trữ Q7; S6 Dòng thời gian Q8 | Bác Tín Thư, Phát Vội |
+| Quán cà phê Gió Biển (`cafe`) | Q10b thẩm vấn (tùy chọn) | Chú Sáu Nhóm |
+| Phòng Boss (`boss`) | Đối đầu Kẻ Dệt Chuyện 3 pha, kết thúc A/B, màn kết quả; sau đó màn bonus G11 (trang mạo danh) | Kẻ Dệt Chuyện |
+
+Intro trên nền vịnh Hạ Long chuyển động (`js/bay.js`), chọn mẫu thám tử nam/nữ. Chưa có: nhạc nền; art vẫn là bản tạm vẽ bằng code.
 
 ## Nguồn tài nguyên (giấy phép)
 

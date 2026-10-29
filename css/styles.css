@@ -320,3 +320,40 @@ button.frame:hover { border-color: var(--grey); }
   .frame-n { font-size: 0.55em; }
   .frame-fake { font-size: 0.45em; padding: 0 2px; border-width: 1px; }
 }
+
+/* ---------- Xếp thứ tự, phân nhóm ---------- */
+.order-pool { display: flex; flex-direction: column; gap: 6px; }
+.order-pool .btn { width: 100%; }
+.order-seq { margin: 6px 0; padding-left: 1.6em; color: var(--straw); }
+.order-seq li { padding: 2px 0; border-bottom: 2px dashed var(--grey-dark); }
+.sort-item { border-bottom: 2px solid var(--grey-dark); padding: 4px 0 8px; }
+.sort-item p { margin: 0 0 4px; }
+.sort-cats { display: flex; flex-wrap: wrap; gap: 6px; }
+.sort-cats button { background: var(--plum); color: var(--paper); border: 2px solid var(--ink); padding: 2px 10px; min-height: 40px; }
+.sort-cats button[aria-pressed="true"] { background: var(--straw); color: var(--ink); }
+.sort-cats button[aria-pressed="true"]::before { content: "✓ "; }
+.wardle-panel td:first-child { font-weight: bold; white-space: nowrap; }
+.fakepage { background: #fff; color: #222; border: var(--px) solid var(--ink); padding: 10px; font-family: system-ui, sans-serif; font-size: 0.75em; }
+.fakepage .fp-name { font-weight: bold; font-size: 1.2em; }
+.fakepage .fp-meta { color: #666; }
+.fakepage .fp-post { margin: 8px 0; padding: 8px; background: #f2f2f2; }
+.fakepage .tag { font-family: var(--font); font-size: 1.1em; }
+
+/* ---------- Boss, kết quả, chọn mẫu thám tử ---------- */
+.boss-bar { position: fixed; top: calc(var(--hud-h) + 4px); left: 50%; transform: translateX(-50%); z-index: 21; display: flex; flex-direction: column; align-items: center; gap: 4px; background: rgb(20 16 31 / 0.9); border: var(--px) solid var(--ink); box-shadow: 0 0 0 var(--px) var(--lavender); padding: 4px 12px; }
+.boss-name { color: var(--lavender); font-size: 0.85em; }
+.boss-meter { display: flex; gap: 4px; }
+.boss-meter span { width: 48px; height: 10px; background: var(--grey-dark); border: 2px solid var(--ink); }
+.boss-meter span.on { background: var(--lavender); }
+.results { z-index: 45; background: radial-gradient(ellipse at top, rgb(140 123 184 / 0.25), transparent 60%), rgb(15 14 23 / 0.94); }
+.results-stats { display: flex; flex-wrap: wrap; gap: 6px 24px; font-size: 1.1em; }
+.results-stats strong { color: var(--straw); }
+.results-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.results-cols ul { padding-left: 1.2em; margin: 4px 0; }
+@media (max-width: 760px) { .results-cols { grid-template-columns: 1fr; } }
+.look-pick { display: flex; gap: 10px; margin-bottom: 8px; }
+.look { display: flex; flex-direction: column; align-items: center; gap: 2px; background: var(--plum); color: var(--paper); border: var(--px) solid var(--ink); padding: 6px 14px; min-width: 88px; }
+.look[aria-pressed="true"] { background: var(--teal); color: var(--ink); box-shadow: 0 0 0 3px var(--straw); }
+.look-img { width: 64px; height: 64px; background-repeat: no-repeat; background-size: 192px 384px; background-position: 0 -4px; image-rendering: pixelated; }
+.look[data-look="m"] .look-img { background-image: url(../assets/sprites/hero_m.png); }
+.look[data-look="f"] .look-img { background-image: url(../assets/sprites/hero_f.png); }
