@@ -119,7 +119,8 @@
       "question": "Hồ sơ có 6 thẻ. Chọn các nhóm NỘI DUNG LAN TRUYỀN cần thẩm định riêng. Bỏ qua các thẻ là kết luận vội.",
       "resources": [
         "thuthao2025",
-        "thuonghuyen2025"
+        "hoaianh2025",
+        "minhthu2025"
       ],
       "cards": [
         {
@@ -161,11 +162,11 @@
         }
       ],
       "hints": [
-        "Bước S trong SIFT là Stop: xác định cái gì đang lan truyền trước khi kết luận.",
-        "Thẻ bắt đầu bằng \"Kết luận:\" là phán đoán, không phải nội dung cần thẩm định.",
-        "Có 3 nhóm nội dung: ảnh/câu chuyện AI, clip cũ, ảnh bị gắn chú thích sai."
+        "Đọc bài VTV: hình ảnh và câu chuyện nào được nói là do AI dựng nên?",
+        "Đọc bài VnExpress: những video nào bị gắn nhầm là vụ 19/7?",
+        "Đọc bài VietnamPlus: ảnh nào chụp năm 2024 nhưng bị chia sẻ như ảnh vụ tai nạn? Thẻ bắt đầu bằng \"Kết luận:\" là phán đoán vội, không phải nội dung cần thẩm định."
       ],
-      "walkthrough": "Chọn 3 thẻ mô tả nội dung đang lan truyền (c1, c2, c3); bỏ 3 thẻ bắt đầu bằng \"Kết luận:\".",
+      "walkthrough": "Chọn 3 thẻ mô tả nội dung đang lan truyền: ảnh/câu chuyện AI trên fanpage (VTV), clip bão Yagi và Congo (VnExpress), ảnh nhóm trẻ em năm 2024 (VietnamPlus). Bỏ 3 thẻ bắt đầu bằng \"Kết luận:\".",
       "feedback": {
         "correct": "Đúng. Ba nhóm nội dung khác nhau cần thẩm định riêng (F4, F10).",
         "partial": "Gần đúng. Kiểm tra lại: còn thiếu nhóm nội dung hoặc đang chọn nhầm một kết luận vội.",
@@ -180,7 +181,8 @@
       ],
       "sources": [
         "thuthao2025",
-        "thuonghuyen2025",
+        "hoaianh2025",
+        "minhthu2025",
         "baocao"
       ],
       "submitLabel": "Nộp các thẻ đã chọn"
@@ -193,10 +195,10 @@
       "required": true,
       "title": "Xác lập sự kiện thật",
       "npcIntro": "s3_q2_intro",
-      "question": "Mở nguồn báo chí và điền các dữ kiện có thể kiểm chứng về vụ tai nạn.",
+      "question": "Mở nguồn báo chí và điền các dữ kiện có thể kiểm chứng về vụ tai nạn. Mỗi câu tôi hỏi đều có trong các bài dưới đây.",
       "resources": [
         "thuthao2025",
-        "doquyen2025"
+        "minhkhang2025"
       ],
       "safetyNote": "Đây là thảm kịch có thật. Đọc nguồn với sự tôn trọng người bị nạn và gia đình.",
       "fields": [
@@ -207,14 +209,22 @@
           "placeholder": "ngày/tháng/năm",
           "accepts": [
             "19/7/2025",
-            "19/07/2025",
             "19-7-2025",
             "19.7.2025",
             "19 thang 7 nam 2025",
-            "19 thang 7 2025"
+            "19 thang 7 2025",
+            "19/7",
+            "19-7",
+            "19 thang 7"
           ],
           "fuzzy": false,
-          "ask": "Theo nguồn, tai nạn xảy ra ngày nào?"
+          "ask": "Theo nguồn, tai nạn xảy ra ngày nào?",
+          "hints": [
+            "Tìm cụm từ chỉ thời gian ngay câu đầu bài VTV.",
+            "Bài viết \"xảy ra vào chiều .../7 trên Vịnh Hạ Long\".",
+            "Năm: xem ngày đăng bài (tháng 7/2025)."
+          ],
+          "walkthrough": "Mở bài VTV → đọc câu đầu tiên của bài → chép phần ngày tháng sau chữ \"chiều\"."
         },
         {
           "id": "place",
@@ -224,7 +234,12 @@
             "ha long",
             "quang ninh"
           ],
-          "ask": "Tai nạn xảy ra ở đâu?"
+          "ask": "Tai nạn xảy ra ở đâu?",
+          "hints": [
+            "Địa danh nằm ngay trong tiêu đề bài VTV.",
+            "Đó là một vịnh di sản thế giới ở tỉnh Quảng Ninh."
+          ],
+          "walkthrough": "Mở bài VTV → đọc tiêu đề bài: \"...lật tàu du lịch ở vịnh ... để câu view bằng AI\"."
         },
         {
           "id": "ship",
@@ -236,7 +251,12 @@
             "qn 7105",
             "qn7105"
           ],
-          "ask": "Tên tàu (hoặc số hiệu) là gì?"
+          "ask": "Tên tàu (hoặc số hiệu) là gì?",
+          "hints": [
+            "Tên tàu đứng ngay sau cụm \"vụ lật tàu du lịch\" trong bài VTV.",
+            "Tên gồm hai chữ và một con số; số hiệu trong ngoặc bắt đầu bằng QN."
+          ],
+          "walkthrough": "Mở bài VTV → tìm cụm \"Vụ lật tàu du lịch ...\" → chép tên tàu (hoặc số hiệu trong ngoặc)."
         },
         {
           "id": "cause",
@@ -248,15 +268,15 @@
             "giong",
             "loc"
           ],
-          "ask": "Nguồn nói nguyên nhân là gì?"
+          "ask": "Nguồn nói nguyên nhân là gì?",
+          "hints": [
+            "Bài VTV không nói nguyên nhân. Hãy mở bài của Báo Sài Gòn Giải Phóng (SGGP).",
+            "Tìm phát biểu của lãnh đạo tỉnh Quảng Ninh tại họp báo ngày 20/7.",
+            "Đó là một hiện tượng thời tiết có gió xoáy mạnh, xuất hiện ngay trong tiêu đề bài SGGP."
+          ],
+          "walkthrough": "Mở bài SGGP → đọc tiêu đề \"Tin cảnh báo ... được công bố khi tàu Vịnh Xanh 58 đã rời bến\" → tìm câu \"Đây là nguyên nhân khiến tàu Vịnh Xanh 58 bị lật\" và xem câu ngay trước nó."
         }
       ],
-      "hints": [
-        "Đọc đoạn mở đầu bài VTV (Thu Thảo, 2025).",
-        "Tên tàu có một con số; số hiệu bắt đầu bằng QN.",
-        "Nguyên nhân là một hiện tượng thời tiết bất ngờ."
-      ],
-      "walkthrough": "Mở bài VTV → đọc đoạn mở đầu → ghi ngày, nơi xảy ra, tên tàu → tìm câu nói về nguyên nhân.",
       "feedback": {
         "correct": "Đúng. Ghi sự kiện thật trước để có mốc so với nội dung lan truyền (F1, F2).",
         "partial": "Một phần. Các ô đánh dấu ✗ cần đọc lại nguồn.",
@@ -273,7 +293,7 @@
       ],
       "sources": [
         "thuthao2025",
-        "doquyen2025",
+        "minhkhang2025",
         "baocao"
       ]
     },
@@ -836,15 +856,17 @@
       "title": "Tai nạn có thật",
       "text": "Chiều 19/7/2025, tàu du lịch Vịnh Xanh 58 (QN-7105) bị lật trên vịnh Hạ Long, Quảng Ninh.",
       "sources": [
-        "thuthao2025"
+        "thuthao2025",
+        "thuonghuyen2025"
       ]
     },
     {
       "id": "ev_f2",
       "fact": "F2",
       "title": "Nguyên nhân theo nguồn",
-      "text": "Theo báo cáo: giông lốc bất ngờ quật lật tàu.",
+      "text": "Theo báo cáo và phát biểu của lãnh đạo UBND tỉnh Quảng Ninh tại họp báo ngày 20/7/2025: dông (giông) lốc rất lớn chiều 19/7 là nguyên nhân khiến tàu bị lật.",
       "sources": [
+        "minhkhang2025",
         "baocao"
       ]
     }
@@ -853,5 +875,69 @@
     "corridor": "Hành lang",
     "lobby": "Sảnh",
     "street": "Phố ven vịnh"
+  },
+  "intro": {
+    "skip": "Bỏ qua",
+    "next": "Tiếp ▸",
+    "start": "Vào văn phòng",
+    "questionsTitle": "Ba câu hỏi xác minh của vụ án",
+    "cards": [
+      {
+        "id": "i1",
+        "title": "Vịnh Hạ Long, Quảng Ninh",
+        "text": "Những đảo đá vôi nhô lên giữa mặt nước xanh. Mỗi ngày, tàu du lịch đưa du khách đi tham quan vịnh.",
+        "scene": "calm"
+      },
+      {
+        "id": "i2",
+        "title": "Chiều 19/7/2025",
+        "text": "Dông lốc rất lớn bất ngờ ập đến. Tàu du lịch Vịnh Xanh 58 (QN-7105) bị lật trên vịnh. Đây là một thảm kịch có thật, gây mất mát lớn cho nhiều gia đình.",
+        "facts": [
+          "F1",
+          "F2"
+        ],
+        "cite": [
+          "thuthao2025",
+          "minhkhang2025"
+        ],
+        "scene": "dusk"
+      },
+      {
+        "id": "i3",
+        "title": "Ngay chiều hôm đó",
+        "text": "Trên mạng xã hội bắt đầu xuất hiện những bức ảnh xúc động và câu chuyện về \"nạn nhân\". Từ 20 đến 22/7, chúng lan rộng qua Facebook, TikTok, các hội nhóm và video ngắn.",
+        "facts": [
+          "F3"
+        ],
+        "cite": [
+          "baocao"
+        ],
+        "scene": "night",
+        "overlay": "phone"
+      },
+      {
+        "id": "i4",
+        "title": "Nhưng nhiều thứ không có thật",
+        "text": "Có những bộ ảnh do AI dựng nên, có video cũ từ nơi khác bị gắn nhãn là vụ 19/7. Nhiều người để lại lời chia buồn vì tưởng nhân vật trong ảnh là nạn nhân thật.",
+        "facts": [
+          "F4",
+          "F9",
+          "F10"
+        ],
+        "cite": [
+          "thuthao2025",
+          "hoaianh2025"
+        ],
+        "scene": "night",
+        "overlay": "phone-fake"
+      },
+      {
+        "id": "i5",
+        "title": "Lời mời điều tra",
+        "text": "Ban Điều phối Thông tin Du lịch Hải Đăng (GIẢ LẬP) mời bạn, một thẩm định viên, làm rõ: đâu là thật, đâu là dựng, và có dấu hiệu cố ý hay không. Chỉ kết luận trong giới hạn bằng chứng.",
+        "scene": "dawn",
+        "simulated": true
+      }
+    ]
   }
 }

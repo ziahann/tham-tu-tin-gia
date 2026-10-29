@@ -52,7 +52,8 @@ GitHub Pages chỉ phục vụ từ thư mục gốc hoặc `/docs`, nên đẩy
 ## Đã có / chưa có
 
 - Đã có (giai đoạn 1): màn hình chính có cảnh báo nội dung, văn phòng đi lại được, NPC đi tuần và dẫn đường, Phòng Hồ sơ (Q1, Q2) trong hội thoại, balo, lịch sử theo NPC.
-- Chưa có: art và nhạc thật (giai đoạn 2), intro (3), bối cảnh ngoài trời (4), các phòng Q3–Q13 (5), boss và kết quả (6).
+- Đã có: intro trên nền vịnh Hạ Long chuyển động (vẽ bằng code, `js/bay.js`) với 5 thẻ bối cảnh vụ án có trích nguồn.
+- Chưa có: art và nhạc thật (giai đoạn 2), bối cảnh ngoài trời (4), các phòng Q3–Q13 (5), boss và kết quả (6).
 
 ## Nguồn tài nguyên (giấy phép)
 
