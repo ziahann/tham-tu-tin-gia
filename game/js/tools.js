@@ -22,7 +22,7 @@ function el(tag, cls, text) {
 export function toolWindow(device, body) {
   const win = el('div', `tool-window tool-${device}`);
   const bar = el('div', 'tool-bar');
-  bar.append(el('span', 'tool-dots'), el('span', 'tool-title', t(`devices.${device}.app`)), el('span', 'tag tag-sim', t('simulated')));
+  bar.append(el('span', 'tool-dots'), el('span', 'tool-title', t(`devices.${device}.app`)));
   const content = el('div', 'tool-body');
   content.append(body);
   win.append(bar, content);

@@ -124,7 +124,7 @@ function setSpeaker(id, text = '', mood = null) {
     focus(rightId === id ? 'right' : null);
   }
   els.name.textContent = name;
-  els.tag.hidden = !fictional;
+  els.tag.hidden = true; // nhãn GIẢ LẬP chỉ còn ở màn hình chính / intro
   return name;
 }
 

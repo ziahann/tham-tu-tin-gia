@@ -141,7 +141,8 @@ function finishIntro() {
   ol.innerHTML = '';
   data.quests.verificationQuestions.forEach(q => ol.append(el('li', null, q)));
   $('intro-start').textContent = intro.start;
-  $('intro-name-input').value = data.quests.hero.displayName;
+  $('intro-name-input').value = '';
+  $('intro-name-input').placeholder = t('title.namePlaceholder');
   $('intro-name-input').focus();
 }
 
@@ -204,6 +205,7 @@ function openSources() {
     box.append(row);
     wrap.append(box);
   }
+  wrap.append(el('h3', null, t('sourcesPanel.authors')), el('p', null, t('sourcesPanel.authorsList')));
   // Ghi công nhạc nền (CC BY 4.0)
   wrap.append(el('h3', null, t('sourcesPanel.music')));
   for (const m of data.sources.music || []) {
@@ -300,7 +302,8 @@ function bindEvents() {
   $('intro-skip').addEventListener('click', finishIntro);
   $('intro-name').addEventListener('submit', e => {
     e.preventDefault();
-    const name = $('intro-name-input').value.replace(/\s+/g, ' ').trim().slice(0, 20) || data.quests.hero.displayName;
+    const name = $('intro-name-input').value.replace(/\s+/g, ' ').trim().slice(0, 20);
+    if (!name) { toast(t('title.nameRequired')); $('intro-name-input').focus(); return; }
     startNewProgress(name, heroLook);
     startGame(true);
   });

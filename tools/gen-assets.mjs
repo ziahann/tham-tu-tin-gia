@@ -881,7 +881,7 @@ const TN_LEGEND = { '#': 'wall_top', '^': 'wall_upper', _: 'wall_lower' };
 function tnFloor(key, { floor, room, roomName, ground, props, inspects = [], extra = [] }) {
   const W = 20, H = 12;
   return buildMap(key, {
-    rows: floorRows(W, H), legend: TN_LEGEND, label: `Báo Thanh Niên · ${floor} · ${roomName} (GIẢ LẬP)`, music: 'office',
+    rows: floorRows(W, H), legend: TN_LEGEND, label: `Báo Thanh Niên · ${floor} · ${roomName}`, music: 'office',
     ground: () => ground,
     objects: () => [
       point('spawn', 'spawn_elevator', 3.5, 4.3),
@@ -902,7 +902,7 @@ ${roomName.toUpperCase()}`, { size: 16, color: '#e8ecf2', plate: true }),
 // Sảnh gọn 22x14: thang máy giữa tường bắc, quầy lễ tân trước thang máy, chờ bên trái, bảo vệ bên phải cửa
 const tnLobby = buildMap('tn_lobby', {
   rows: floorRows(22, 14, (g, put) => { g[13][10] = g[13][11] = 'E'; }),
-  legend: TN_LEGEND, label: 'Trụ sở Báo Thanh Niên — sảnh (nhân vật, sự việc GIẢ LẬP)', music: 'office',
+  legend: TN_LEGEND, label: 'Trụ sở Báo Thanh Niên — sảnh', music: 'office',
   ground: (ch, x, y) => (ch === 'E' ? 'exit_mat' : 'floor_lobby'),
   objects: () => [
     point('spawn', 'spawn_start', 11, 11.4),
@@ -912,8 +912,7 @@ const tnLobby = buildMap('tn_lobby', {
     rectT('exit', 'exit_street', 10, 12.6, 2, 1.4, { target: 'street', spawn: 'spawn_from_office' }),
     rectT('elevator', 'elevator', 10, 2, 2, 1, { group: 'tn' }),
     pp('elevator', 11, 3),
-    label('lobby_name', 4.8, 1.25, 'BÁO THANH NIÊN — TRỤ SỞ', { size: 20, color: '#e8ecf2', plate: true }),
-    label('lobby_note', 4.8, 2.2, 'Nhân vật và sự việc trong tòa nhà là GIẢ LẬP,\nkhông đại diện cho Báo Thanh Niên.', { size: 12, color: '#c9d1dc', plate: true }),
+    label('lobby_name', 4.8, 1.6, 'BÁO THANH NIÊN — TRỤ SỞ', { size: 20, color: '#e8ecf2', plate: true }),
     pp('tv_wall', 15, 2.6), pp('cork_board', 18.6, 2.9), pp('wall_clock', 13.4, 1.6),
     pp('reception', 11, 7.4),
     pp('rug_lobby', 11, 12),
@@ -1045,20 +1044,20 @@ const street = buildMap('street', {
     bld('bld_hotel', 49, 10, 10),
     bld('bld_apartment', 76, 9, 11),
     // --- dãy nhà phía bắc, quay mặt ra phố chính
-    bld('bld_office', 2, 7, N_BOTTOM, 'CAO ỐC VĂN PHÒNG', 'tòa nhà hư cấu · GIẢ LẬP'),
-    bld('bld_thanhnien', 11, 12, N_BOTTOM, 'BÁO THANH NIÊN', 'Trụ sở · nội dung trong game là GIẢ LẬP'),
-    bld('bld_tinvinh', 25, 9, N_BOTTOM, 'TIN VỊNH', 'trang tin (hư cấu)'),
+    bld('bld_office', 2, 7, N_BOTTOM, 'CAO ỐC VĂN PHÒNG'),
+    bld('bld_thanhnien', 11, 12, N_BOTTOM, 'BÁO THANH NIÊN', 'Trụ sở'),
+    bld('bld_tinvinh', 25, 9, N_BOTTOM, 'TIN VỊNH', 'trang tin'),
     bld('bld_pharmacy', 36, 5, N_BOTTOM),
-    bld('bld_xacminh', 41, 8, N_BOTTOM, 'PHÒNG XÁC MINH', 'thiết bị thẩm định (GIẢ LẬP)'),
+    bld('bld_xacminh', 41, 8, N_BOTTOM, 'PHÒNG XÁC MINH', 'thiết bị thẩm định'),
     bld('bld_hotel', 51, 10, N_BOTTOM, null, null, { flip: true }),
     bld('bld_cafe', 63, 8, N_BOTTOM, 'CÀ PHÊ GIÓ BIỂN', 'mở cửa đến khuya'),
     bld('bld_books', 71, 5, N_BOTTOM),
     bld('bld_tenement', 78, 6, N_BOTTOM),
     bld('bld_store', 84, 6, N_BOTTOM),
     // --- dãy nhà thấp giữa hai con đường, quay mặt ra đường ven vịnh
-    bld('bld_clinic', 50, 6, C_BOTTOM, 'TRUNG TÂM Y TẾ', 'hư cấu · GIẢ LẬP'),
+    bld('bld_clinic', 50, 6, C_BOTTOM, 'TRUNG TÂM Y TẾ'),
     bld('bld_warehouse', 57, 12, C_BOTTOM),
-    bld('bld_cafe2', 70, 6, C_BOTTOM, 'CÀ PHÊ SƯƠNG SỚM', 'quán hư cấu'),
+    bld('bld_cafe2', 70, 6, C_BOTTOM, 'CÀ PHÊ SƯƠNG SỚM'),
     bld('bld_books', 77, 5, C_BOTTOM),
     bld('bld_pharmacy', 83, 5, C_BOTTOM, null, null, { flip: true }),
     bld('bld_closed', 89, 6, C_BOTTOM, null, null, { flip: true }),
@@ -1170,7 +1169,7 @@ const NEWS = floorRows(24, 17, (g, put) => {
   g[16][11] = g[16][12] = 'E';
 });
 const newsroom = buildMap('newsroom', {
-  rows: NEWS, legend: TN_LEGEND, label: 'Tòa soạn Tin Vịnh (trang tin hư cấu)', music: 'archive',
+  rows: NEWS, legend: TN_LEGEND, label: 'Tòa soạn Tin Vịnh', music: 'archive',
   // lối vào hai phòng (D) lát cùng sàn để thấy rõ là cửa mở thông
   ground: (ch, x, y) => (ch === 'E' ? 'exit_mat' : y < 8 || (ch === 'D' && y < 10) ? (x < 11 ? 'floor_wood' : 'floor_dark') : 'floor_wood'),
   objects: () => [
@@ -1179,7 +1178,7 @@ const newsroom = buildMap('newsroom', {
     rectT('zone', 'zone_S6', 12, 3, 11, 5, { room: 'S6' }),
     rectT('zone', 'zone_newsroom', 1, 8, 22, 8, { area: 'newsroom' }),
     rectT('exit', 'exit_street', 11, 15.6, 2, 1.4, { target: 'street', spawn: 'spawn_from_news' }),
-    label('news_name', 11.5, 9.55, 'TIN VỊNH — trang tin (hư cấu)', { size: 14, plate: true }),
+    label('news_name', 11.5, 9.55, 'TIN VỊNH — trang tin', { size: 14, plate: true }),
     label('s5_name', 4, 1.5, 'LƯU TRỮ BÁO CHÍ', { size: 14, plate: true }),
     label('s6_name', 14.6, 1.3, 'DÒNG THỜI GIAN', { size: 14, plate: true }),
     // S5 lưu trữ
@@ -1232,13 +1231,13 @@ const cafe = buildMap('cafe', {
 const devAt = (id, tx, ty, w = 2) => [pp(`dev_${id}`, tx, ty), rectT('device', id, tx - w / 2, ty - 1, w, 1, { device: id })];
 // Gọn 18x12: ba thiết bị trên tường / sát tường, bốn thiết bị một hàng giữa phòng
 const agency = buildMap('agency', {
-  rows: floorRows(18, 12, g => { g[11][8] = g[11][9] = 'E'; }), legend: TN_LEGEND, label: 'Phòng xác minh (GIẢ LẬP)', music: 'agency',
+  rows: floorRows(18, 12, g => { g[11][8] = g[11][9] = 'E'; }), legend: TN_LEGEND, label: 'Phòng xác minh', music: 'agency',
   ground: (ch, x, y) => (ch === 'E' ? 'exit_mat' : y >= 9 ? 'carpet' : 'floor_dark'),
   objects: () => [
     point('spawn', 'spawn_from_street', 9, 9.6),
     rectT('zone', 'zone_agency', 1, 3, 16, 8, { area: 'agency' }),
     rectT('exit', 'exit_street', 8, 10.6, 2, 1.4, { target: 'street', spawn: 'spawn_from_agency' }),
-    label('agency_name', 8.2, 1.0, 'PHÒNG XÁC MINH — thiết bị mô phỏng', { size: 14, plate: true }),
+    label('agency_name', 8.2, 1.0, 'PHÒNG XÁC MINH', { size: 14, plate: true }),
     ...devAt('evidence', 2.8, 2.95), ...devAt('monitor', 8.6, 4.6, 3), ...devAt('timeline', 14.4, 2.95, 4),
     ...devAt('computer', 2.8, 7.6), ...devAt('magnifier', 6.6, 7.6), ...devAt('detector', 10.4, 7.6, 1.4), ...devAt('archive', 14.2, 7.6),
     pp('chair', 2.8, 8.7), pp('chair', 14.2, 8.7),
@@ -1264,7 +1263,7 @@ function decorRoom(key, { W, H, label, music, area, ground, back, items }) {
   });
 }
 const office2 = decorRoom('office2', {
-  W: 18, H: 12, label: 'Cao ốc văn phòng (hư cấu · GIẢ LẬP)', music: 'office', area: 'office2', ground: 'floor_lobby', back: 'spawn_from_office2',
+  W: 18, H: 12, label: 'Cao ốc văn phòng', music: 'office', area: 'office2', ground: 'floor_lobby', back: 'spawn_from_office2',
   items: [
     label('o2_name', 5, 1.5, 'CAO ỐC VĂN PHÒNG\nTẦNG TRỆT', { size: 14, plate: true }),
     pp('blinds_window', 10.4, 2.9), pp('whiteboard', 14.4, 2.75), pp('wall_clock', 12.4, 1.3),
@@ -1276,9 +1275,9 @@ const office2 = decorRoom('office2', {
   ]
 });
 const clinic = decorRoom('clinic', {
-  W: 16, H: 12, label: 'Trung tâm y tế (hư cấu · GIẢ LẬP)', music: 'agency', area: 'clinic', ground: 'floor_lobby', back: 'spawn_from_clinic',
+  W: 16, H: 12, label: 'Trung tâm y tế', music: 'agency', area: 'clinic', ground: 'floor_lobby', back: 'spawn_from_clinic',
   items: [
-    label('cl_name', 4.5, 1.5, 'TRUNG TÂM Y TẾ\n(hư cấu · GIẢ LẬP)', { size: 14, plate: true }),
+    label('cl_name', 4.5, 1.5, 'TRUNG TÂM Y TẾ', { size: 14, plate: true }),
     pp('poster_a', 9.4, 2.4), pp('tv_wall', 12.8, 2.6),
     pp('reception', 5, 5.6), pp('cabinet', 14.4, 4.2),
     pp('sofa', 3.4, 8.8), pp('coffee_table', 3.4, 10.2), pp('sofa', 12.6, 8.8), pp('water_cooler', 14.6, 6.4),
@@ -1289,7 +1288,7 @@ const clinic = decorRoom('clinic', {
   ]
 });
 const cafe2 = decorRoom('cafe2', {
-  W: 16, H: 11, label: 'Cà phê Sương Sớm (quán hư cấu)', music: 'cafe', area: 'cafe2', ground: 'floor_wood', back: 'spawn_from_cafe2',
+  W: 16, H: 11, label: 'Cà phê Sương Sớm', music: 'cafe', area: 'cafe2', ground: 'floor_wood', back: 'spawn_from_cafe2',
   items: [
     label('c2_name', 4.5, 1.5, 'CÀ PHÊ SƯƠNG SỚM', { size: 14, plate: true }),
     pp('blinds_window', 10, 2.9), pp('poster_b', 13.6, 2.4),
@@ -1319,7 +1318,7 @@ const BOSS = [
   '#########EE#########'
 ];
 const boss = buildMap('boss', {
-  rows: BOSS, label: 'Phòng họp — nơi Kẻ Dệt Chuyện ẩn mình (GIẢ LẬP)', music: 'boss',
+  rows: BOSS, label: 'Phòng họp — nơi Kẻ Dệt Chuyện ẩn mình', music: 'boss',
   legend: { '#': 'wall_top', X: 'frame_wall', f: 'frame' },
   ground: ch => (ch === 's' ? 'shard' : ch === 'E' ? 'exit_mat' : 'void'),
   objects: () => [

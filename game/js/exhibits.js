@@ -166,7 +166,7 @@ function wardlePanel() {
 function fakePage() {
   const ex = data.quests.exhibits.fakepage;
   const wrap = el('figure', 'exhibit fakepage');
-  wrap.append(el('span', 'tag', t('simulated')), el('div', 'fp-name', ex.name), el('div', 'fp-meta', ex.meta), el('div', 'fp-post', ex.post), el('p', 'fp-meta', ex.note));
+  wrap.append(el('div', 'fp-name', ex.name), el('div', 'fp-meta', ex.meta), el('div', 'fp-post', ex.post), el('p', 'fp-meta', ex.note));
   return wrap;
 }
 

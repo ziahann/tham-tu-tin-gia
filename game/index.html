@@ -18,7 +18,6 @@
   <header id="hud" class="hud" hidden>
     <div class="hud-left">
       <span class="hud-title" data-ui="gameTitle"></span>
-      <span class="tag tag-sim" data-ui="simulated"></span>
       <span id="hud-place" class="hud-place" aria-live="polite"></span>
       <button type="button" id="hud-track" class="hud-track"></button>
       <span id="hud-meters" class="hud-meters" hidden>
@@ -129,6 +128,7 @@
           <p data-ui="title.controls"></p>
         </details>
         <p data-ui="scoreDisclaimer"></p>
+        <p class="title-authors" data-ui="title.authors"></p>
       </div>
     </div>
   </section>
@@ -152,7 +152,7 @@
           </div>
           <label for="intro-name-input" data-ui="title.nameLabel"></label>
           <div class="answer-row">
-            <input id="intro-name-input" maxlength="20" autocomplete="off">
+            <input id="intro-name-input" maxlength="20" autocomplete="off" required>
             <button type="submit" class="btn-primary" id="intro-start"></button>
           </div>
           <p class="muted small" data-ui="title.nameHint"></p>
