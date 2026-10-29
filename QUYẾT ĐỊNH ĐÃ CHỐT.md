@@ -136,3 +136,11 @@
 |---|---|
 | Điểm số | Bỏ điểm và danh hiệu theo điểm (thay mục "Điểm" của đợt 1). Mỗi hồ sơ khép lại trao một **huy hiệu kỹ năng** kèm câu tóm tắt điều đã học; thanh trên hiện số huy hiệu và "Hồ sơ đã khép n/6"; gợi ý, hướng dẫn không bị trừ gì. Màn kết quả hiện bộ huy hiệu |
 | Đồ họa giả 3D | Giữ góc nhìn từ trên xuống nhưng vẽ khối kiểu 3/4: tòa nhà có mái, mặt hông, đồ trên mái, bóng đổ chéo; đồ vật trong nhà và ngoài phố có mặt trên + mặt hông; đỉnh tường dày. Không chuyển hẳn sang isometric (chi phí cao) |
+
+## Chốt ngày 29/10/2026 (đợt 7)
+
+| Mục | Quyết định |
+|---|---|
+| Góc nhìn | Chuyển sang **isometric vẽ bằng code** (thay giả 3D). Logic giữ lưới vuông; chỉ đổi lớp hiển thị. Đồ vật, tòa nhà, xe, tàu, chữ trên tường / biển hiệu đều theo đúng góc nghiêng của lưới isometric |
+| Huy hiệu | Mỗi huy hiệu có hình riêng (khiên + ruy băng + biểu tượng): Dừng lại trước khi chia sẻ (biển dừng), Soi ảnh (kính lúp), Truy gốc clip cũ (phim + đồng hồ), Dựng dòng thời gian (trục mốc), Cân tác động và chủ đích (cái cân), Phân loại và ứng xử (thẻ nhãn), Phỏng vấn kiểm chứng (bóng thoại), Gỡ mặt nạ Kẻ Dệt Chuyện (mặt nạ nứt), Nhận diện mạo danh (thẻ tên gạch chéo) |
+| Còn lại | Nhân vật vẫn dùng sprite 4 hướng theo màn hình; cây, đèn, người là ảnh đứng (đúng với isometric) |

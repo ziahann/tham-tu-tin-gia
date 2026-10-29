@@ -138,7 +138,7 @@ export class ViewLayer {
   }
 
   /** Mọi ảnh hiển thị (để bật ánh sáng ban đêm). */
-  views() { return this.items.map(it => it.v); }
+  views() { return this.items.filter(it => it.v.active && it.s.active).map(it => it.v); }
 }
 
 /**
