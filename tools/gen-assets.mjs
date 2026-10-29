@@ -1106,7 +1106,7 @@ const AGENCY = [
   '#######EE#########'
 ];
 const agency = buildMap('agency', {
-  rows: AGENCY, label: 'Phòng xác minh (GIẢ LẬP)', music: 'archive',
+  rows: AGENCY, label: 'Phòng xác minh (GIẢ LẬP)', music: 'agency',
   legend: { ...INDOOR, e: 'dev_evidence', V: 'dev_monitors', t: 'dev_timeline', K: 'dev_pc', M: 'dev_lighttable', A: 'dev_detector', Y: 'dev_reader' },
   ground: (ch, x, y) => (ch === 'E' ? 'exit_mat' : ch === '~' || y >= 6 ? 'carpet' : 'floor_dark'),
   objects: () => [

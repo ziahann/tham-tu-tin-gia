@@ -157,5 +157,79 @@
       "urlStatus": "missing",
       "note": "Báo cáo không kèm URL. Chỉ dẫn nội dung có trong nguồn; đây không phải tư vấn pháp lý."
     }
+  ],
+  "music": [
+    {
+      "key": "title",
+      "title": "Night on the Docks - Sax",
+      "license": "Licensed under Creative Commons: By Attribution 4.0 License",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "author": "Kevin MacLeod",
+      "site": "incompetech.com",
+      "file": "assets/audio/title.mp3"
+    },
+    {
+      "key": "office",
+      "title": "Hard Boiled",
+      "license": "Licensed under Creative Commons: By Attribution 4.0 License",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "author": "Kevin MacLeod",
+      "site": "incompetech.com",
+      "file": "assets/audio/office.mp3"
+    },
+    {
+      "key": "street",
+      "title": "Bass Walker",
+      "license": "Licensed under Creative Commons: By Attribution 4.0 License",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "author": "Kevin MacLeod",
+      "site": "incompetech.com",
+      "file": "assets/audio/street.mp3"
+    },
+    {
+      "key": "archive",
+      "title": "I Knew a Guy",
+      "license": "Licensed under Creative Commons: By Attribution 4.0 License",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "author": "Kevin MacLeod",
+      "site": "incompetech.com",
+      "file": "assets/audio/archive.mp3"
+    },
+    {
+      "key": "cafe",
+      "title": "Lobby Time",
+      "license": "Licensed under Creative Commons: By Attribution 4.0 License",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "author": "Kevin MacLeod",
+      "site": "incompetech.com",
+      "file": "assets/audio/cafe.mp3"
+    },
+    {
+      "key": "agency",
+      "title": "Spy Glass",
+      "license": "Licensed under Creative Commons: By Attribution 4.0 License",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "author": "Kevin MacLeod",
+      "site": "incompetech.com",
+      "file": "assets/audio/agency.mp3"
+    },
+    {
+      "key": "boss",
+      "title": "Crypto",
+      "license": "Licensed under Creative Commons: By Attribution 4.0 License",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "author": "Kevin MacLeod",
+      "site": "incompetech.com",
+      "file": "assets/audio/boss.mp3"
+    },
+    {
+      "key": "ending",
+      "title": "Past Sadness",
+      "license": "Licensed under Creative Commons: By Attribution 4.0 License",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "author": "Kevin MacLeod",
+      "site": "incompetech.com",
+      "file": "assets/audio/ending.mp3"
+    }
   ]
 }
