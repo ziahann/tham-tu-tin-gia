@@ -12,7 +12,7 @@ export function shade(hex, k) {
 export const CHARACTERS = {
   // Nhân vật chính: sinh viên Quan hệ công chúng – Truyền thông, ĐH Văn Lang — áo khoác dù, balo, thẻ sinh viên, bút gài tai. Hai mẫu nam / nữ.
   hero_m: { skin: '#f1c7a0', hair: '#2b1d1a', hairStyle: 'short', top: '#3d7fd1', inner: '#f4eedc', bottom: '#2d3a5a', shoes: '#3b2418', backpack: '#b8223a', vlu: true, press: true, pen: true },
-  hero_f: { skin: '#f3cdb0', hair: '#3a2318', hairStyle: 'bob', top: '#e07a5f', inner: '#f4eedc', bottom: '#3a4466', shoes: '#2b2b2b', backpack: '#b8223a', vlu: true, press: true, pen: true },
+  hero_f: { skin: '#f6d3b8', hair: '#4a2418', hairStyle: 'long', top: '#e8889e', inner: '#ffffff', bottom: '#2e3170', skirt: true, shoes: '#f4f4f4', backpack: '#b8223a', vlu: true, press: true, ribbon: '#d8283f', highlight: '#9a5a36' },
   npc1: { skin: '#f0c4a4', hair: '#1b1418', hairStyle: 'long', top: '#3d5a98', inner: '#f4eedc', bottom: '#4a4e5c', skirt: true, shoes: '#1d1d24', glasses: true, lanyard: true },
   npc2: { skin: '#e6b48f', hair: '#3a2a20', hairStyle: 'spiky', top: '#5f8a6b', bottom: '#2f2f38', shoes: '#22222a', glasses: true, camera: true },
   npc3: { skin: '#e9c2a0', hair: '#cfcfcf', hairStyle: 'grey', top: '#8a6b4f', inner: '#e8dcc0', bottom: '#4b4b4b', shoes: '#2b2b2b', glasses: true },

@@ -700,6 +700,18 @@ function drawCharFrame(spec, dir, frame) {
   }
   if (hs === 'bob' && dir === 'up') R(8, 15 + y0, 16, 4, hairDark);
   if (hs === 'bob' && dir === 'right') { R(9, 8 + y0, 6, 10, hair); R(9, 17 + y0, 6, 1, hairDark); }
+  // Ánh tóc và nơ cài tóc
+  if (spec.highlight && hs === 'long') {
+    if (dir === 'down') { R(12, 5 + y0, 3, 1, spec.highlight); R(9, 10 + y0, 1, 4, spec.highlight); R(22, 10 + y0, 1, 4, spec.highlight); }
+    if (dir === 'up') { R(12, 6 + y0, 1, 12, spec.highlight); R(18, 6 + y0, 1, 12, spec.highlight); }
+    if (dir === 'right') { R(11, 8 + y0, 1, 10, spec.highlight); R(13, 5 + y0, 4, 1, spec.highlight); }
+  }
+  if (spec.ribbon) {
+    const rb = spec.ribbon, rbD = shade(rb, -0.3);
+    if (dir === 'down') { R(19, 3 + y0, 2, 2, rb); R(22, 3 + y0, 2, 2, rb); R(21, 3 + y0, 1, 2, rbD); }
+    if (dir === 'up') { R(13, 8 + y0, 2, 3, rb); R(17, 8 + y0, 2, 3, rb); R(15, 8 + y0, 2, 2, rbD); R(15, 10 + y0, 1, 3, rb); R(16, 10 + y0, 1, 3, rbD); }
+    if (dir === 'right') { R(10, 5 + y0, 2, 2, rb); R(13, 5 + y0, 2, 2, rb); R(12, 5 + y0, 1, 2, rbD); }
+  }
   // Bút gài sau tai
   if (spec.pen) {
     if (dir === 'down') { R(22, 7 + y0, 1, 6, '#f2d36b'); R(22, 6 + y0, 1, 1, '#c8323c'); }
