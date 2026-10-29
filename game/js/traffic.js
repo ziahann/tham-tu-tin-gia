@@ -1,5 +1,8 @@
 // Xe cộ trên phố: ô tô, xe buýt, xe máy chạy theo làn (object 'lane' trên bản đồ Tiled).
-// Xe dừng trước vạch qua đường khi có người đang băng qua, dừng khi gặp người chơi hoặc xe phía trước; không gây hại.
+// Xe dừng trước vạch qua đường khi có người đang băng qua và dừng khi gặp xe phía trước. Người chơi đi giữa làn
+// ngoài vạch kẻ thì xe không dừng: chạm xe sẽ bị hất về mép đường (chế độ Nhẹ: xe vẫn dừng cho người chơi).
+import { isLight } from './obstacles.js';
+
 const propOf = (o, name) => (o.properties || []).find(p => p.name === name)?.value;
 
 export const VEHICLE_SPRITES = ['car1', 'car2', 'car3', 'car4', 'bus', 'bike1', 'bike2'].flatMap(k => [k, `${k}_e`, `${k}_w`]);
@@ -24,7 +27,7 @@ export class Traffic {
     this.crossings = objs.filter(o => o.type === 'crosswalk');
     this.cars = [];
     this.group = scene.physics.add.group({ immovable: true, allowGravity: false });
-    scene.physics.add.collider(player, this.group);
+    scene.physics.add.collider(player, this.group, (_p, car) => this.hit(car));
     // Rải sẵn vài xe để đường không trống lúc vào bản đồ
     for (const lane of this.lanes) for (let i = 0; i < 2; i++) this.spawn(lane, Math.random() * scene.map.widthInPixels);
   }
@@ -54,6 +57,17 @@ export class Traffic {
     this.cars.push(car);
   }
 
+  /** Người chơi chạm xe: hất về mép đường gần nhất (mép của cả lòng đường gồm các làn sát nhau). */
+  hit(sprite) {
+    if (isLight() || this.crossingWithPlayer()) return;
+    const car = this.cars.find(c => c.sprite === sprite);
+    if (!car) return;
+    const road = this.lanes.filter(l => Math.abs(l.y - car.lane.y) < 4 * 32);
+    const top = Math.min(...road.map(l => l.top)), bottom = Math.max(...road.map(l => l.bottom));
+    const p = this.player;
+    this.scene.knockback?.(p.y < (top + bottom) / 2 ? top - 20 : bottom + 30);
+  }
+
   /** Người chơi có đang ở vạch qua đường nào không. */
   crossingWithPlayer() {
     const { x, y } = this.player;
@@ -79,8 +93,8 @@ export class Traffic {
         const gap = d * (o.sprite.x - s.x) - car.half - o.half;
         if (gap >= -4 && gap < room) room = gap;
       }
-      // người chơi đứng trong làn phía trước
-      if (p.y > car.lane.top - 4 && p.y < car.lane.bottom + 8) {
+      // người chơi đứng trong làn phía trước: xe chỉ nhường khi người chơi ở vạch kẻ (hoặc chế độ Nhẹ)
+      if ((cross || isLight()) && p.y > car.lane.top - 4 && p.y < car.lane.bottom + 8) {
         const gap = d * (p.x - front);
         if (gap > -8 && gap < room) room = gap;
       }

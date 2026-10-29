@@ -848,6 +848,8 @@ function grid(W, H, fill) {
 // Tường phía bắc cao 2 ô (^ nửa trên, _ nửa dưới); đồ đạc là props đúng tỉ lệ.
 /** Đạo cụ đặt tại (tx, ty) = tâm đáy tính theo ô. */
 const pp = (key, tx, ty, props = {}) => obj('prop', key, tx * T, ty * T, 0, 0, props, { point: true });
+/** Manh mối đánh lừa: tờ giấy nằm trên đất + vùng tương tác (dữ liệu ở npc_dialogues.json → decoys). */
+const decoyAt = (id, tx, ty) => [pp('flyer', tx + 0.35, ty + 0.25), rectT('decoy', id, tx - 0.6, ty - 0.6, 1.2, 1.2, { decoy: id })];
 /** Chữ ghi trên tường / sàn (biển tầng, biển phòng). */
 const label = (name, tx, ty, text, props = {}) => obj('label', name, tx * T, ty * T, 0, 0, { text, ...props }, { point: true });
 
@@ -1108,6 +1110,15 @@ const street = buildMap('street', {
     path_('patrol_student', [[2, 20.5], [38, 20.5]]),
     point('npc', 'amb_elder', 26, 32.6),
     point('npc', 'amb_jogger', 70, 47.6, { patrol: 'patrol_jogger' }),
+    // kẻ tung tin đi rong (GIẢ LẬP): đuổi theo người chơi khi lại gần
+    point('npc', 'amb_rumor', 60, 28.8, { patrol: 'patrol_rumor' }),
+    path_('patrol_rumor', [[52, 28.8], [92, 28.8]]),
+    point('npc', 'amb_rumor2', 80, 20.4, { patrol: 'patrol_rumor2' }),
+    path_('patrol_rumor2', [[54, 20.4], [92, 20.4]]),
+    // vỉa hè bắc đang thi công: rào kín vỉa hè và mép đường, phải sang đường ở vạch kẻ
+    pp('barrier_ns', 36.5, 22.05), pp('barrier', 35.4, 19.3), pp('barrier', 35.4, 22.2),
+    rectT('inspect', 'inspect_barrier', 35, 18.8, 3.2, 3.2, { text: 'inspect_barrier' }),
+    ...decoyAt('decoy_S4', 13.4, 33.2), ...decoyAt('decoy_S7', 29.2, 20.6), ...decoyAt('decoy_S8', 40.2, 33.6),
     path_('patrol_jogger', [[2, 47.6], [94, 47.6]]),
     // --- đồ vật xem được
     rectT('inspect', 'inspect_office_sign', 13, 18.3, 3, 0.7, { text: 'inspect_office_sign' }),
@@ -1165,7 +1176,8 @@ const newsroom = buildMap('newsroom', {
     rectT('inspect', 'inspect_archive', 1.8, 3.6, 3.2, 1, { text: 'inspect_archive' }),
     rectT('inspect', 'inspect_timeline', 15.5, 2, 4.2, 1, { text: 'inspect_timeline' }),
     rectT('inspect', 'inspect_newsdesk', 15, 12.2, 2, 1, { text: 'inspect_newsdesk' }),
-    rectT('inspect', 'inspect_news_tv', 6.6, 9.6, 2, 1.2, { text: 'inspect_news_tv' })
+    rectT('inspect', 'inspect_news_tv', 6.6, 9.6, 2, 1.2, { text: 'inspect_news_tv' }),
+    ...decoyAt('decoy_S5', 6, 15.2)
   ]
 });
 
@@ -1185,7 +1197,8 @@ const cafe = buildMap('cafe', {
     point('npc', 'amb_barista', 3, 3.9, { patrol: 'patrol_barista' }),
     path_('patrol_barista', [[1.8, 3.9], [6.6, 3.9]]),
     rectT('inspect', 'inspect_cafe_menu', 1.6, 4.2, 6, 1.2, { text: 'inspect_cafe_menu' }),
-    rectT('inspect', 'inspect_cafe_tv', 8.4, 1.6, 2, 1.4, { text: 'inspect_cafe_tv' })
+    rectT('inspect', 'inspect_cafe_tv', 8.4, 1.6, 2, 1.4, { text: 'inspect_cafe_tv' }),
+    ...decoyAt('decoy_S3', 5.6, 8.2)
   ]
 });
 
@@ -1204,7 +1217,8 @@ const agency = buildMap('agency', {
     ...devAt('evidence', 2.8, 2.95), ...devAt('monitor', 8.6, 4.6, 3), ...devAt('timeline', 14.4, 2.95, 4),
     ...devAt('computer', 2.8, 7.6), ...devAt('magnifier', 6.6, 7.6), ...devAt('detector', 10.4, 7.6, 1.4), ...devAt('archive', 14.2, 7.6),
     pp('chair', 2.8, 8.7), pp('chair', 14.2, 8.7),
-    pp('sofa', 3.6, 10.8), pp('coffee_table', 13.6, 10.6), pp('plant_big', 16.4, 10.6), pp('floor_lamp', 1.6, 10.6), pp('filing_boxes', 16.4, 6)
+    pp('sofa', 3.6, 10.8), pp('coffee_table', 13.6, 10.6), pp('plant_big', 16.4, 10.6), pp('floor_lamp', 1.6, 10.6), pp('filing_boxes', 16.4, 6),
+    ...decoyAt('decoy_S6', 11.6, 10.2)
   ]
 });
 

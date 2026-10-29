@@ -464,6 +464,29 @@ function busStop() {
 /** Đồ nhỏ ngoài phố: thùng rác, trụ nước, cọc chắn, bồn hoa. */
 function streetBin() { const img = new Img(24, 36), { R } = brush(img); shadow(img, 12, 33, 9); R(4, 10, 16, 22, '#2a4a40'); R(3, 7, 18, 4, '#355a4e'); R(7, 14, 10, 2, '#4a7a6a'); R(9, 4, 6, 3, '#355a4e'); return outline(img); }
 function hydrant() { const img = new Img(22, 30), { R } = brush(img); shadow(img, 11, 27, 7); R(6, 8, 10, 18, '#8a2a30'); R(5, 6, 12, 3, '#6e2026'); R(2, 13, 4, 5, '#6e2026'); R(16, 13, 4, 5, '#6e2026'); R(8, 3, 6, 3, '#6e2026'); return outline(img); }
+/** Rào chắn thi công: thanh sọc đỏ trắng trên hai chân, đèn vàng nhấp nháy. */
+function barrier() {
+  const img = new Img(32, 36), { R } = brush(img);
+  shadow(img, 16, 33, 13);
+  R(4, 14, 3, 19, '#3a4150'); R(25, 14, 3, 19, '#3a4150'); R(2, 30, 7, 3, '#2b303b'); R(23, 30, 7, 3, '#2b303b');
+  for (let x = 1; x < 31; x++) for (let y = 10; y < 19; y++) img.set(x, y, Math.floor((x + y) / 4) % 2 ? '#e8ecf2' : '#c8323c');
+  R(1, 22, 30, 3, '#c9a24a');
+  R(14, 5, 4, 5, '#f2a83a'); R(15, 4, 2, 1, '#ffd28a');
+  return outline(img);
+}
+/** Rào thi công chạy dọc trục bắc–nam (chặn ngang vỉa hè): ảnh mặt cắt hẹp, isoExtrude kéo dài thành tấm rào sọc. */
+function barrierNS() {
+  const img = new Img(6, 30), { R } = brush(img);
+  for (let y = 0; y < 18; y++) R(0, y, 6, 1, Math.floor(y / 3) % 2 ? '#e8ecf2' : '#c8323c');
+  R(0, 18, 6, 3, '#c9a24a'); R(0, 21, 6, 9, '#3a4150');
+  return img;
+}
+/** Tờ giấy rơi trên đất (manh mối đánh lừa): hình nhìn từ trên, nằm phẳng. */
+function flyer() {
+  const img = new Img(22, 16), { R } = brush(img);
+  R(0, 0, 22, 16, '#d8d2c0'); R(2, 2, 12, 2, '#8a2a30'); R(2, 6, 18, 1, '#6b7280'); R(2, 9, 16, 1, '#6b7280'); R(2, 12, 10, 1, '#6b7280'); R(16, 2, 4, 3, '#3a4150');
+  return img;
+}
 function bollard() { const img = new Img(14, 28), { R } = brush(img); shadow(img, 7, 25, 5); R(3, 6, 8, 18, '#2b303b'); R(3, 9, 8, 2, '#c9a24a'); R(2, 3, 10, 4, '#3a4150'); return outline(img); }
 function planter() {
   const img = new Img(68, 40), { R, E } = brush(img);
@@ -1010,6 +1033,9 @@ export function allProps() {
   add('street_bin', streetBin(), { base: [16, 8] });
   add('hydrant', hydrant(), { base: [14, 8] });
   add('bollard', bollard(), { base: [8, 6] });
+  add('barrier', barrier(), { base: [30, 32], lights: [[16, 6, 0xffa040, 40, 0.9]] });
+  add('barrier_ns', barrierNS(), { base: [8, 96] });
+  add('flyer', flyer(), { base: [0, 0], flat: true });
   add('planter', planter(), { base: [64, 16] });
   add('market_stall', marketStall(), { base: [76, 20] });
   add('tour_boat', tourBoat(), { base: [290, 34], lights: [[160, 48, 0xffe2a0, 120, 0.8]] });
@@ -1045,7 +1071,7 @@ export function allProps() {
     desk_pc: [28, 22], desk_papers: [28, 22], desk_lab: [28, 22], cabinet: [20, 0], bookshelf: [22, 0], reception: [34, 16], printer: [26, 0],
     filing_boxes: [22, 0], meeting_table: [56, 16], archive_shelf: [24, 0], cafe_counter: [30, 22], coffee_table: [26, 8], sofa: [30, 0],
     water_cooler: [18, 24], trash: [14, 0], dev_computer: [28, 22], dev_detector: [26, 0], dev_archive: [28, 30], dev_magnifier: [30, 28],
-    dev_monitor: [16, 0], kiosk: [44, 0], bus_stop: [32, 0], market_stall: [40, 0], street_bin: [16, 0], planter: [24, 0], bench: [18, 0],
+    dev_monitor: [16, 0], kiosk: [44, 0], bus_stop: [32, 0], market_stall: [40, 0], street_bin: [16, 0], planter: [24, 0], bench: [18, 0], barrier: [8, 0], barrier_ns: [96, 0],
     tour_boat: [96, 0]
   };
   for (const [k, [d, fromY]] of Object.entries(ISO)) {

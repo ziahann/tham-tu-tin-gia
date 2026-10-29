@@ -9,6 +9,7 @@ import { sfx } from './audio.js';
 import { toast } from './ui.js';
 import { toolWindow, browseContent, deviceSpeaker } from './tools.js';
 import { targetMap } from './guide.js';
+import { loseCred, easePressure, isLight, roomName, caseOpen, PENALTY } from './obstacles.js';
 
 let world = null;
 let busy = false;
@@ -128,6 +129,14 @@ export async function talkTo(npcId, room = null) {
   await conversation(npcId, async () => {
     const e = interactionFor(npcId);
     // Người qua đường: nói lần lượt từng câu (không giao nhiệm vụ)
+    if (npcId === 'amb_guard' && !hasFlag('visitor_card')) {
+      await dlg.say(npcId, t('obstacles.guardCard'), { mood: 'happy' });
+      setFlag('visitor_card');
+      saveProgress();
+      sfx('unlock');
+      toast(t('obstacles.gotCard'));
+      return;
+    }
     const amb = data.npcs.ambientLines?.[npcId];
     if (!e && amb) {
       const said = (state.progress.ambientSaid ||= {});
@@ -224,6 +233,25 @@ async function helpMenu(q, qs, npc, afterWrong, field = null) {
   return 'retry';
 }
 
+/**
+ * Trả lời sai / một phần: trừ độ tin cậy của hồ sơ. Về 0 thì hồ sơ đặt lại từ đầu: báo cho người chơi và trả về true
+ * (nhiệm vụ đang chạy phải dừng ngay).
+ */
+async function penalize(q, npc, status) {
+  return creditHit(q.room, status === 'partial' ? PENALTY.partial : PENALTY.wrong, npc);
+}
+
+/** Trừ độ tin cậy của một hồ sơ, hiện thông báo; trả về true nếu hồ sơ vừa bị đặt lại. */
+async function creditHit(room, n, speaker = 'system') {
+  const res = loseCred(room, n);
+  onChange();
+  if (res === 'lost') toast(t('obstacles.credLost', { n, room: roomName(room) }));
+  if (res !== 'reset') return false;
+  await dlg.say(speaker, t('obstacles.caseReset', { room: roomName(room) }), { mood: 'serious' });
+  world?.refresh();
+  return true;
+}
+
 /** G2: chọn các thẻ mệnh đề cần thẩm định. */
 async function runCards(q, qs, npc) {
   let picked = qs.answers.picked || [];
@@ -248,6 +276,7 @@ async function runCards(q, qs, npc) {
     }
     if (!res.wrong.length && res.missing) await dlg.say(npc, t('dialog.missingCards', { n: res.missing }));
     await dlg.say(npc, `${t(`result.${res.status}`)} ${q.feedback[res.status]}`);
+    if (await penalize(q, npc, res.status)) return 'later';
     if (await helpMenu(q, qs, npc, true) === 'later') return 'later';
   }
 }
@@ -282,6 +311,7 @@ async function runFields(q, qs, npc) {
       saveProgress();
       sfx('wrong');
       await dlg.say(npc, `✗ ${t('dialog.fieldWrong')}`);
+      if (await penalize(q, npc, 'wrong')) return 'later';
       if (await helpMenu(q, qs, npc, true, f) === 'later') return 'later';
     }
   }
@@ -331,12 +361,15 @@ async function runSteps(q, qs, npc, device = null) {
       if (r === 'again') continue;
       if (r === 'ok') {
         qs.stepOk[step.id] = true;
+        easePressure(20);
         saveProgress();
+        onChange();
         break;
       }
       qs.fails++;
       saveProgress();
       sfx(r === 'partial' ? 'partial' : 'wrong');
+      if (await penalize(q, speaker, r)) return 'later';
       if (await helpMenu(q, qs, speaker, true, step) === 'later') return 'later';
     }
   }
@@ -403,6 +436,7 @@ export async function useDevice(device) {
 export async function useElevator() {
   const floors = data.quests.building?.floors || [];
   const here = world?.mapKey;
+  if (here === 'tn_lobby' && !hasFlag('visitor_card')) { await notice(t('obstacles.needCard')); return; }
   const goal = world ? targetMap(world) : null;
   const bossOpen = ['open', 'done'].includes(bossStatus(state.progress.flags));
   let pick = null;
@@ -417,7 +451,17 @@ export async function useElevator() {
     if (c.f.room === 'S9' && !bossOpen) { await dlg.say('system', t('elevator.lockedLine')); return; }
     pick = c.f;
   });
-  if (pick) { sfx('ding'); world?.travel(pick.map, pick.spawn || 'spawn_elevator', 'down'); }
+  if (!pick) return;
+  // thang đang ở tầng khác: chờ một lúc (chế độ Nhẹ thì đi ngay)
+  if (!isLight() && Math.random() < 0.5) {
+    const other = floors.filter(f => f.map !== here);
+    busy = true;
+    toast(t('obstacles.elevatorBusy', { n: Phaser.Utils.Array.GetRandom(other)?.label || '' }));
+    await new Promise(r => setTimeout(r, 2600));
+    busy = false;
+  }
+  sfx('ding');
+  world?.travel(pick.map, pick.spawn || 'spawn_elevator', 'down');
 }
 
 /** Mục tiêu dẫn đường của hồ sơ đang theo dõi: { kind: 'npc' | 'device', id } hoặc null. */
@@ -742,6 +786,92 @@ export function inspect(key) {
     for (const line of lines) await dlg.say('inspect', line);
     if (sources) await dlg.links(sources, { speaker: 'inspect', text: t('reader.note') });
   }, art);
+}
+
+// ---------------------------------------------------------------- cản trở (js/obstacles.js)
+
+/** Thanh hạn chót đầy: Phát Vội gọi giục đăng bài khi chưa kiểm chứng xong. */
+export async function deadlineCall(room) {
+  if (busy) return;
+  sfx('ding');
+  await conversation('npc4', async () => {
+    await dlg.say('npc4', t('obstacles.deadlineCall', { room: roomName(room) }), { mood: 'surprised' });
+    const c = await dlg.choose([
+      { id: 'no', text: t('obstacles.deadlineRefuse') },
+      { id: 'yes', text: t('obstacles.deadlinePublish') }
+    ], { speaker: 'npc4', text: t('obstacles.deadlineCall', { room: roomName(room) }) });
+    state.progress.pressure = 0;
+    saveProgress();
+    if (c.id === 'no') {
+      sfx('partial');
+      await dlg.say('npc4', t('obstacles.deadlineRefuseLine'), { mood: 'serious' });
+    } else {
+      sfx('wrong');
+      await dlg.say('system', t('obstacles.deadlinePublishLine'));
+      await creditHit(room, PENALTY.publish);
+    }
+  });
+}
+
+const shuffle = list => list.map(v => [Math.random(), v]).sort((a, b) => a[0] - b[0]).map(p => p[1]);
+
+/** Kẻ tung tin bắt kịp (hoặc người chơi tự bắt chuyện): một tin giật tít, chọn điều khiến mình dừng lại. */
+export async function rumorEncounter(id) {
+  const bank = data.npcs.rumors || [];
+  if (!bank.length || busy) return;
+  const i = (state.progress.rumorIdx || 0) % bank.length;
+  state.progress.rumorIdx = i + 1;
+  const r = bank[i];
+  const room = trackedRoom();
+  world?.setTalking(id, true);
+  await conversation(id, async () => {
+    await dlg.say(id, t('obstacles.rumorIntro'), { mood: 'happy' });
+    await dlg.say(id, `[GIẢ LẬP] ${r.headline}`, { mood: 'happy' });
+    const opts = shuffle(r.options.map((o, k) => ({ id: String(k), text: o.text })));
+    const c = await dlg.choose(opts, { speaker: id, text: t('obstacles.rumorAsk') });
+    const o = r.options[+c.id];
+    if (o.correct) {
+      sfx('correct');
+      await dlg.say('system', `✓ ${o.why}`);
+      await dlg.say(id, t('obstacles.rumorWin'), { mood: 'serious' });
+    } else {
+      sfx('wrong');
+      await dlg.say('system', `✗ ${o.why}`);
+      await dlg.say('system', t('obstacles.rumorLose'));
+      if (caseOpen(room)) await creditHit(room, PENALTY.rumor);
+    }
+    saveProgress();
+  });
+  world?.setTalking(id, false);
+  world?.rumorDone?.(id);
+}
+
+/** Manh mối đánh lừa (tờ giấy trên đất): đưa ngay vào hồ sơ thì bị trừ độ tin cậy, kiểm tra trước thì không. */
+export function inspectDecoy(id) {
+  const d = data.npcs.decoys?.[id];
+  if (!d) return;
+  conversation('notes', async () => {
+    await dlg.say('inspect', `${t('obstacles.decoyTitle')}: ${d.title}`);
+    if (hasFlag(`seen_${id}`) || !caseOpen(d.room)) {
+      await dlg.say('inspect', `${t('obstacles.decoyDone')} ${d.why}`);
+      return;
+    }
+    const c = await dlg.choose([
+      { id: 'add', text: t('obstacles.decoyAdd', { room: roomName(d.room) }) },
+      { id: 'check', text: t('obstacles.decoyCheck') }
+    ], { speaker: 'inspect', text: t('obstacles.decoyAsk') });
+    setFlag(`seen_${id}`);
+    saveProgress();
+    if (c.id === 'check') {
+      sfx('correct');
+      await dlg.say('inspect', `✓ ${t('obstacles.decoyChecked')} ${d.why}`);
+    } else {
+      sfx('wrong');
+      await dlg.say('inspect', `✗ ${t('obstacles.decoyAdded')} ${d.why}`);
+      await creditHit(d.room, PENALTY.decoy);
+    }
+  }, 'obj_paper');
+  world?.refresh();
 }
 
 /** Thông báo một câu của hệ thống (cửa khóa, khu chưa mở...). */
