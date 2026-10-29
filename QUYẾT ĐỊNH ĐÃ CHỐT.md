@@ -100,3 +100,16 @@
 | Hội thoại | Chân dung lớn có biểu cảm: người đang nói sáng lên, người kia mờ đi; khi người chơi trả lời thì chân dung thám tử bên trái sáng |
 | Âm thanh | Âm thanh phản hồi theo tương tác (bước chân theo mặt sàn, cửa, thiết bị, giọng "bíp" riêng của từng NPC, tiếng mưa/sóng/xe), tạo bằng WebAudio; nhạc nền CC0 vẫn giữ |
 | Màn hình chính | Làm nổi tên trò chơi, môn học, chủ đề vụ án; cảnh báo nội dung thu nhỏ (vẫn đọc được trước khi chơi) |
+
+## Hoàn thiện đợt 4 (29/10/2026)
+
+| Mục | Kết quả |
+|---|---|
+| Thế giới mở | Mọi hồ sơ mở ngay; bảng Hồ sơ vụ án (J) + mũi tên dẫn đường xuyên bản đồ; NPC chọn hồ sơ khi có nhiều hồ sơ đang mở; boss xuất hiện khi đủ điều kiện |
+| Phòng thám tử | Bản đồ `agency` (tòa nhà thứ tư trên phố), 7 thiết bị; Q3–Q8 và màn bonus có bước làm tại thiết bị, xong quay về báo NPC |
+| Nguồn | Trình đọc báo trong game (tóm tắt nội dung đã kiểm tra, bấm để ghi vào sổ); link bài gốc chỉ còn ở danh mục Nguồn. Sạp báo, TV, bảng tin... mở trình đọc để tự khám phá |
+| Chân dung | 72x88, 5 biểu cảm cho thám tử, 6 NPC, boss, 9 người qua đường; thiết bị / đồ vật cũng có hình bên phải |
+| Đồ họa | Tông lạnh; văn phòng 33x20 chi tiết; khu phố 64x36 (4 tòa nhà, đường có xe, công viên, bến tàu); 9 người qua đường GIẢ LẬP có câu thoại về thói quen kiểm chứng |
+| Thời tiết | Quang / mưa / sương mù / đêm (phím T), ánh sáng đêm từ đèn đường, cửa sổ, màn hình |
+| Âm thanh | Bước chân theo mặt sàn, giọng riêng từng nhân vật, âm thanh môi trường, nhạc nhỏ lại khi hội thoại; có nút tắt riêng |
+| Cần nhóm xem | Tên và câu thoại 9 người qua đường (`npc_dialogues.json → npcs`, `ambientLines`); vẫn giữ việc sửa F11/F12 trong báo cáo |
