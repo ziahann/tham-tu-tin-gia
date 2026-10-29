@@ -8,9 +8,9 @@
     "titleFormat": "Thám tử {name}",
     "playerCanRename": true,
     "age": 19,
-    "look": "Mũ cói nhỏ, khăn quàng xanh ngọc, áo khoác vàng đất, huy hiệu kính lúp",
+    "look": "Sinh viên báo chí: áo khoác dù, balo, thẻ phóng viên thực tập, sổ tay và bút gài sau tai. Người chơi chọn mẫu nam hoặc nữ (chưa dựng).",
     "catchphrase": "Chưa có bằng chứng thì chưa kết luận.",
-    "note": "Nhân vật ORIGINAL. Không dùng tên/câu nói/hình ảnh của nhân vật có bản quyền. displayName là tên mặc định; người chơi tự đặt tên ở S1."
+    "note": "Nhân vật ORIGINAL. Không dùng tên/câu nói/hình ảnh của nhân vật có bản quyền. displayName là tên mặc định; người chơi tự đặt tên ở cuối intro."
   },
   "settings": {
     "minCardsForBoss": 8,
@@ -268,7 +268,7 @@
             "giong",
             "loc"
           ],
-          "ask": "Nguồn nói nguyên nhân là gì?",
+          "ask": "Theo phát biểu của lãnh đạo tỉnh Quảng Ninh tại họp báo ngày 20/7, nguyên nhân là gì? (Đây là phát biểu, không phải kết luận điều tra.)",
           "hints": [
             "Bài VTV không nói nguyên nhân. Hãy mở bài của Báo Sài Gòn Giải Phóng (SGGP).",
             "Tìm phát biểu của lãnh đạo tỉnh Quảng Ninh tại họp báo ngày 20/7.",
