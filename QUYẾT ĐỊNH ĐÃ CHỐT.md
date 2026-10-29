@@ -60,7 +60,8 @@
 | Thám tử | Đổi ngoại hình: sinh viên báo chí (áo khoác dù, balo, thẻ phóng viên thực tập, sổ tay, bút sau tai). Người chơi chọn mẫu nam / nữ ở cuối intro; lời thoại dùng "bạn" |
 | Đối chiếu nguồn Q3–Q13 | Kiểm tra khi dựng từng phòng, như đã làm với Q1–Q2 |
 | Nguyên nhân tai nạn (Q2) | Giữ câu hỏi, ghi rõ "theo phát biểu của lãnh đạo tỉnh tại họp báo 20/7", không phải kết luận điều tra |
-| Nguồn báo cáo giữa kỳ | Nhóm bổ sung tác giả, năm sau; tạm hiển thị "Báo cáo giữa kỳ của nhóm" |
+| Nguồn báo cáo của nhóm | Báo cáo **cuối kỳ**; tác giả Trần Huỳnh Gia Hân, Đào Thị Mai Chi (2026). Tiêu đề lấy theo đề tài nền, nhóm đối chiếu lại với bìa |
 | Video demo | Cần video 2–3 phút; Claude chuẩn bị kịch bản quay (tài liệu 01 mục 10) |
-| GitHub | Nhóm đã có repo; Claude chỉ push khi được yêu cầu |
+| GitHub | Tài khoản `ziahann` (chưa có repo công khai nào, kiểm tra 29/10/2026). Tạo repo + bật Pages khi game gần xong; Claude chỉ push khi được yêu cầu |
+| Thời hạn | Ngày nộp còn rất lâu; không cần cắt phạm vi |
 | Màn ghi công | Không cần (nguồn đã có ở nút Nguồn và README) |
