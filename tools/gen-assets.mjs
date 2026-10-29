@@ -39,17 +39,19 @@ function drawTile(img, name, ox, oy, rnd) {
     for (let i = 0; i < n; i++) R(Math.floor(rnd() * T), Math.floor(rnd() * T), 1, 1, shade(base, (rnd() - 0.5) * amt));
   };
   const wallFace = () => {
-    R(0, 0, T, T, '#2c3e66');
-    for (let x = 0; x < T; x += 8) R(x, 0, 1, 26, '#26365a');
-    R(0, 0, T, 2, '#3a5080');
-    R(0, 26, T, 6, '#4a3328');
-    R(0, 26, T, 1, '#6b4a3a');
+    R(0, 0, T, T, '#e9dcc0');
+    for (let x = 0; x < T; x += 8) R(x, 2, 1, 18, '#e0d1b2');
+    R(0, 0, T, 2, '#f3e9d4');
+    R(0, 20, T, 12, '#8a5c3d'); R(0, 20, T, 2, '#a77b52'); R(0, 30, T, 2, '#6b4630');
+    for (let x = 4; x < T; x += 8) R(x, 23, 1, 6, '#7a5035');
   };
+  // bóng đổ mềm dưới đồ đạc (nền trong suốt để thấy sàn bên dưới)
+  const shadow = (w = 12, y = 29) => img.ellipse(ox + 16, oy + y, w, 3, '#00000038');
   switch (name) {
     case 'floor_wood':
-      R(0, 0, T, T, '#9a6b47');
-      for (let y = 0; y < T; y += 8) { R(0, y, T, 1, '#7d5537'); R((y * 3) % T, y + 1, 1, 7, '#7d5537'); }
-      noise('#9a6b47', 0.25, 60);
+      R(0, 0, T, T, '#c08a56');
+      for (let y = 0; y < T; y += 8) { R(0, y, T, 1, '#a0703f'); R((y * 3) % T, y + 1, 1, 7, '#a0703f'); }
+      noise('#c08a56', 0.18, 60);
       break;
     case 'floor_lobby':
       R(0, 0, T, T, '#d8d0bf');
@@ -58,14 +60,14 @@ function drawTile(img, name, ox, oy, rnd) {
       noise('#d8d0bf', 0.08, 30);
       break;
     case 'carpet':
-      R(0, 0, T, T, '#2f6f6a');
-      noise('#2f6f6a', 0.2, 90);
-      R(0, 0, T, 2, '#27605b'); R(0, 30, T, 2, '#27605b');
+      R(0, 0, T, T, '#7f9e62');
+      noise('#7f9e62', 0.15, 90);
+      R(0, 0, T, 2, '#6d8a52'); R(0, 30, T, 2, '#6d8a52');
       break;
     case 'wall_top':
-      R(0, 0, T, T, '#1a2236');
-      R(0, 0, T, 2, '#2a3554');
-      noise('#1a2236', 0.2, 20);
+      R(0, 0, T, T, '#5a4030');
+      R(0, 0, T, 2, '#6e5040');
+      noise('#5a4030', 0.15, 20);
       break;
     case 'wall_face':
       wallFace();
@@ -95,18 +97,18 @@ function drawTile(img, name, ox, oy, rnd) {
       for (let i = 0; i < 9; i++) R(8 + i, 9 + Math.round(i * 0.7), 1, 1, '#c8323c');
       break;
     case 'desk':
-      R(0, 0, T, T, '#9a6b47');
+      shadow(14, 29);
       R(1, 6, 30, 14, '#6b4630'); R(1, 6, 30, 3, '#8a5c3d'); R(1, 20, 30, 10, '#4e3324');
       R(4, 7, 10, 6, '#f4eedc'); R(6, 9, 6, 1, '#999'); R(18, 4, 8, 7, '#2b2f3a'); R(19, 5, 6, 5, '#5fb3d9');
       R(3, 28, 3, 4, '#2b1d16'); R(26, 28, 3, 4, '#2b1d16');
       break;
     case 'cabinet':
-      R(0, 0, T, T, '#9a6b47');
-      R(3, 0, 26, 31, '#2b2f3a'); R(4, 1, 24, 29, '#7d8496');
+      shadow(14, 30);
+      R(3, 0, 26, 31, '#2b2f3a'); R(4, 1, 24, 29, '#8e97a8');
       for (let i = 0; i < 3; i++) { R(6, 3 + i * 9, 20, 7, '#9aa1b3'); R(13, 6 + i * 9, 6, 2, '#2b2f3a'); R(8, 4 + i * 9, 5, 2, '#f4eedc'); }
       break;
     case 'bookshelf':
-      R(0, 0, T, T, '#9a6b47');
+      shadow(14, 30);
       R(2, 0, 28, 31, '#4e3324'); R(3, 1, 26, 29, '#6b4630');
       for (let s = 0; s < 3; s++) {
         R(3, 9 + s * 10, 26, 2, '#4e3324');
@@ -122,7 +124,7 @@ function drawTile(img, name, ox, oy, rnd) {
       img.ellipse(ox + 16, oy + 6, 4, 3, '#57b864');
       break;
     case 'chair':
-      R(0, 0, T, T, '#00000000');
+      shadow(8, 28);
       R(9, 8, 14, 14, '#3a3f4d'); R(10, 9, 12, 8, '#59606f'); R(10, 22, 2, 6, '#22252e'); R(20, 22, 2, 6, '#22252e');
       break;
     case 'rug':
@@ -131,14 +133,14 @@ function drawTile(img, name, ox, oy, rnd) {
       noise('#a33a48', 0.15, 30);
       break;
     case 'sofa':
-      R(0, 0, T, T, '#d8d0bf');
+      shadow(15, 29);
       R(1, 6, 30, 22, '#2a4f7a'); R(1, 6, 30, 7, '#356396'); R(1, 6, 4, 22, '#203d5f'); R(27, 6, 4, 22, '#203d5f');
       R(5, 15, 22, 9, '#3a6ea6');
       break;
     case 'reception':
-      R(0, 0, T, T, '#d8d0bf');
-      R(0, 4, T, 26, '#3b2c4a'); R(0, 4, T, 5, '#f4eedc'); R(0, 9, T, 2, '#2a1f35');
-      for (let x = 2; x < T; x += 8) R(x, 13, 4, 14, '#4a3a5c');
+      shadow(16, 30);
+      R(0, 4, T, 26, '#7a4f33'); R(0, 4, T, 5, '#f4eedc'); R(0, 9, T, 2, '#5a3a24');
+      for (let x = 2; x < T; x += 8) R(x, 13, 4, 14, '#8a5c3d');
       break;
     case 'doorway':
       R(0, 0, T, T, '#8a6040');
