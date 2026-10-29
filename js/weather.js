@@ -49,6 +49,18 @@ function makeTextures(scene) {
     }
     c.refresh();
   }
+  if (!tx.exists('vignette_fog')) {
+    // sương mù ngoài trời: tầm nhìn hẹp quanh người chơi
+    const c = tx.createCanvas('vignette_fog', 256, 256);
+    const ctx = c.getContext();
+    const grd = ctx.createRadialGradient(128, 128, 34, 128, 128, 128);
+    grd.addColorStop(0, 'rgba(180,192,210,0)');
+    grd.addColorStop(0.55, 'rgba(160,172,190,0.55)');
+    grd.addColorStop(1, 'rgba(140,152,170,0.95)');
+    ctx.fillStyle = grd;
+    ctx.fillRect(0, 0, 256, 256);
+    c.refresh();
+  }
   if (!tx.exists('vignette')) {
     const c = tx.createCanvas('vignette', 256, 256);
     const ctx = c.getContext();
@@ -74,6 +86,7 @@ export class Weather {
     this.tint = scene.add.rectangle(0, 0, 10, 10, 0x000000, 0).setOrigin(0).setScrollFactor(0).setDepth(DEPTH);
     this.fog = scene.add.tileSprite(0, 0, 10, 10, 'fog').setOrigin(0).setScrollFactor(0).setDepth(DEPTH + 1).setVisible(false);
     this.vignette = scene.add.image(0, 0, 'vignette').setOrigin(0).setScrollFactor(0).setDepth(DEPTH + 2);
+    this.fogView = scene.add.image(0, 0, 'vignette_fog').setOrigin(0).setScrollFactor(0).setDepth(DEPTH + 2).setVisible(false);
     this.onResize = () => this.layout();
     scene.scale.on('resize', this.onResize);
     scene.events.once('shutdown', () => scene.scale.off('resize', this.onResize));
@@ -94,18 +107,24 @@ export class Weather {
     this.tint.setPosition(v.x, v.y).setSize(v.w, v.h);
     this.fog.setPosition(v.x, v.y).setSize(v.w, v.h);
     this.vignette.setPosition(v.x, v.y).setDisplaySize(v.w, v.h);
+    this.fogView.setPosition(v.x, v.y).setDisplaySize(v.w, v.h);
     if (this.kind === 'rain' && this.outdoor) this.startRain();
   }
 
-  /** Đổi thời tiết; save = lưu vào cài đặt. */
+  /**
+   * Đổi thời tiết; save = lưu vào cài đặt. Thời tiết chỉ có ở ngoài trời: trong tòa nhà, phòng luôn như trời quang
+   * (this.kind = thời tiết đang có hiệu lực ở bản đồ này; this.global = thời tiết chung của thành phố).
+   */
   set(kind, save = true) {
-    this.kind = WEATHERS.includes(kind) ? kind : 'clear';
-    if (save) { state.settings.weather = this.kind; saveSettings(); }
+    this.global = WEATHERS.includes(kind) ? kind : 'clear';
+    if (save) { state.settings.weather = this.global; saveSettings(); }
+    this.kind = this.outdoor ? this.global : 'clear';
     const indoorK = this.outdoor ? 1 : 0.5;
     const tints = { clear: [0x000000, 0], rain: [0x1a2a48, 0.28 * indoorK], fog: [0xb8c4d6, 0.14], night: [0x02040c, this.webgl ? 0 : 0.5] };
     const [color, alpha] = tints[this.kind];
     this.tint.setFillStyle(color, alpha);
-    this.fog.setVisible(this.kind === 'fog').setAlpha(this.outdoor ? 0.55 : 0.22);
+    this.fog.setVisible(this.kind === 'fog').setAlpha(0.55);
+    this.fogView.setVisible(this.kind === 'fog');
     this.vignette.setAlpha(this.kind === 'night' ? 1 : 0.75);
     this.stopRain();
     if (this.kind === 'rain' && this.outdoor) this.startRain();
@@ -177,5 +196,18 @@ export class Weather {
   }
 }
 
-/** Thời tiết kế tiếp trong vòng (cho nút trên thanh trên / phím T). */
-export const nextWeather = kind => WEATHERS[(WEATHERS.indexOf(kind) + 1) % WEATHERS.length];
+/** Thời tiết ngẫu nhiên kế tiếp (khác hiện tại): trời quang hay gặp nhất. */
+export function randomWeather(current) {
+  const bag = [['clear', 4], ['rain', 2.5], ['fog', 1.5], ['night', 2]].filter(([k]) => k !== current);
+  let r = Math.random() * bag.reduce((s, [, w]) => s + w, 0);
+  for (const [k, w] of bag) { if ((r -= w) <= 0) return k; }
+  return 'clear';
+}
+
+/** Hiệu ứng của thời tiết lên người chơi (chỉ ngoài trời). */
+export const WEATHER_FX = {
+  clear: { speed: 1, chase: 1, pressure: 1 },
+  rain: { speed: 0.8, chase: 1, pressure: 1, brake: 1.6 },
+  fog: { speed: 1, chase: 1, pressure: 1, hideFar: 140 },
+  night: { speed: 1, chase: 1.5, pressure: 1.4 }
+};

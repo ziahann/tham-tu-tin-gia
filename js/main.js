@@ -12,7 +12,7 @@ import { nextQuestIn, earnedBadges, caseProgress } from './grading.js';
 import { updateScore } from './hud.js';
 import { WorldScene } from './world.js';
 import { reader } from './tools.js';
-import { nextWeather } from './weather.js';
+import { randomWeather } from './weather.js';
 import { applyUiText, toast, openModal, closeModal, confirmBox } from './ui.js';
 
 const $ = id => document.getElementById(id);
@@ -35,7 +35,7 @@ let bay = null;
 let introIdx = 0;
 
 // Bản đồ dừng người chơi khi đang ở màn hình chính, intro hoặc hộp thoại phụ.
-window.uiBlocked = () => titleOpen() || introOpen() || resultsOpen() || modalOpen() || dlg.isOpen();
+window.uiBlocked = () => titleOpen() || introOpen() || resultsOpen() || modalOpen() || dlg.blocksWorld();
 
 /** Bật/tắt class theo cài đặt. */
 function applySettings() {
@@ -334,23 +334,21 @@ function bindEvents() {
   on('action', () => {
     if (titleOpen() || modalOpen() || resultsOpen()) return;
     if (introOpen()) { if ($('intro-final').hidden) nextIntro(); return; }
+    if (dlg.isMinimized()) { dlg.restore(); return; }
     if (dlg.isOpen()) { dlg.advance(); return; }
     game?.scene.getScene('world')?.interact();
   });
   on('backpack', () => { if (!titleOpen() && !introOpen() && !modalOpen()) backpack.toggle(); });
   const openCases = () => { if (!titleOpen() && !introOpen() && !modalOpen()) backpack.open('quests'); };
   on('cases', openCases);
-  // Thời tiết: trời quang → mưa → sương mù → đêm (lưu trong cài đặt)
-  const cycleWeather = () => {
-    if (titleOpen() || introOpen() || modalOpen()) return;
-    const next = nextWeather(state.settings.weather || 'clear');
+  // Thời tiết thành phố đổi ngẫu nhiên mỗi 5 phút (chỉ có hiệu lực ngoài trời; lưu trong cài đặt)
+  setInterval(() => {
     const world = game?.scene.getScene('world');
-    if (world?.weather) world.weather.set(next);
-    else { state.settings.weather = next; saveSettings(); }
-    toast(t(`weather.${next}`));
-  };
-  on('weather', cycleWeather);
-  $('btn-weather').addEventListener('click', cycleWeather);
+    if (!world?.weather || titleOpen() || introOpen()) return;
+    const next = randomWeather(world.weather.global);
+    world.weather.set(next);
+    if (world.weather.outdoor) toast(`${t(`weather.${next}`)} · ${t(`weather.fx.${next}`)}`, 5000);
+  }, 5 * 60 * 1000);
   $('btn-cases').addEventListener('click', openCases);
   $('hud-track').addEventListener('click', openCases);
   on('escape', () => {
