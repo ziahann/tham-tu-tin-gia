@@ -1,8 +1,9 @@
 // Cốt truyện: chọn hội thoại khi nói chuyện với NPC, chạy nhiệm vụ trong hội thoại, xem đồ vật, cửa, khu vực.
-import { data, t, questById, evidenceById, sceneById, npcById, sourceById, shortCite } from './data.js';
+import { data, t, fill, questById, evidenceById, sceneById, npcById, sourceById, shortCite } from './data.js';
 import { state, questState, saveProgress, setFlag, hasFlag, addEvidence, isQuestDone } from './state.js';
 import * as dlg from './dialogue.js';
 import { matchField, checkCards, questPoints, isUnlocked, roomStatus } from './grading.js';
+import { exhibitFor, frameGrid, singleFrame } from './exhibits.js';
 import { sfx } from './audio.js';
 import { toast } from './ui.js';
 
@@ -102,7 +103,7 @@ async function runQuest(q, npc) {
     setFlag(`intro_${q.id}`);
     saveProgress();
   }
-  const result = q.mode === 'G2' ? await runCards(q, qs, npc) : await runFields(q, qs, npc);
+  const result = q.steps ? await runSteps(q, qs, npc) : q.mode === 'G2' ? await runCards(q, qs, npc) : await runFields(q, qs, npc);
   saveProgress();
   if (result !== 'done') return false;
   await completeQuest(q, qs, npc);
@@ -110,9 +111,9 @@ async function runQuest(q, npc) {
 }
 
 /** Mở các nguồn của nhiệm vụ (kèm tóm tắt dự phòng) cho tới khi người chơi đọc xong. */
-async function showSources(q, npc, text) {
+async function showSources(q, npc, text, ids = q.resources) {
   for (;;) {
-    const r = await dlg.links(q.resources || [], { speaker: npc, text });
+    const r = await dlg.links(ids || [], { speaker: npc, text });
     if (!r.backup) return;
     await dlg.say(npc, t('dialog.backupLine', { text: backupText(q) }));
   }
@@ -126,13 +127,14 @@ async function showSources(q, npc, text) {
 async function helpMenu(q, qs, npc, afterWrong, field = null) {
   const hints = field?.hints || q.hints || [];
   const walkthrough = field?.walkthrough || q.walkthrough;
+  const resources = field?.resources || q.resources;
   const key = field?.id || '_quest';
   qs.hintsBy ||= {};
   const used = qs.hintsBy[key] || 0;
   const options = [
     { id: 'retry', text: afterWrong ? t('dialog.retry') : t('dialog.backToAnswer') },
     ...(hints.length ? [{ id: 'hint', text: t('dialog.hint', { n: Math.min(used + 1, hints.length), max: hints.length }) }] : []),
-    ...(q.resources?.length ? [{ id: 'sources', text: t('dialog.reopenSources') }] : []),
+    ...(resources?.length ? [{ id: 'sources', text: t('dialog.reopenSources') }] : []),
     ...(walkthrough ? [{ id: 'walk', text: t('dialog.cantFind') }] : []),
     { id: 'later', text: t('dialog.later') }
   ];
@@ -147,7 +149,7 @@ async function helpMenu(q, qs, npc, afterWrong, field = null) {
       await dlg.say(npc, t('dialog.hintLine', { n: used + 1, max: hints.length, text: hints[used] }));
     }
   } else if (c.id === 'sources') {
-    await showSources(q, npc, t('dialog.openSourcesLine'));
+    await showSources(q, npc, t('dialog.openSourcesLine'), resources);
   } else if (c.id === 'walk') {
     qs.walkthrough = true;
     saveProgress();
@@ -226,6 +228,128 @@ async function runFields(q, qs, npc) {
   }
   return 'done';
 }
+
+/** Nhiệm vụ nhiều bước (choice | input | flaws | match); mỗi bước có tư liệu, gợi ý và hướng dẫn riêng. */
+async function runSteps(q, qs, npc) {
+  qs.stepOk ||= {};
+  if (!qs.started) {
+    await dlg.say(npc, q.question);
+    if (q.resources?.length) await showSources(q, npc, q.safetyNote || t('dialog.openSourcesLine'));
+    else if (q.safetyNote) await dlg.say(npc, q.safetyNote);
+    qs.started = true;
+    saveProgress();
+  }
+  for (const step of q.steps) {
+    while (!qs.stepOk[step.id]) {
+      const r = await STEP_RUNNERS[step.type](step, npc, qs);
+      if (r === 'help') {
+        if (await helpMenu(q, qs, npc, false, step) === 'later') return 'later';
+        continue;
+      }
+      if (r === 'ok') {
+        qs.stepOk[step.id] = true;
+        saveProgress();
+        break;
+      }
+      qs.fails++;
+      saveProgress();
+      sfx(r === 'partial' ? 'partial' : 'wrong');
+      if (await helpMenu(q, qs, npc, true, step) === 'later') return 'later';
+    }
+  }
+  return 'done';
+}
+
+/** Hàng nút cho bước tùy chỉnh. */
+function actionRow(...buttons) {
+  const row = document.createElement('div');
+  row.className = 'row';
+  row.append(...buttons);
+  return row;
+}
+
+// Mỗi loại bước trả về 'ok' | 'partial' | 'wrong' | 'help'.
+const STEP_RUNNERS = {
+  /** Chọn một đáp án; NPC nhận xét theo lựa chọn. */
+  async choice(step, npc) {
+    const options = step.options.map(o => ({ id: o.id, text: o.text, o }));
+    const c = await dlg.choose([...options, { id: '_help', text: t('dialog.help'), silent: true }],
+      { speaker: npc, text: step.ask, exhibit: exhibitFor(step) });
+    if (c.id === '_help') return 'help';
+    sfx(c.o.correct ? 'partial' : 'wrong');
+    await dlg.say(npc, `${c.o.correct ? '✓' : '✗'} ${c.o.feedback}`);
+    return c.o.correct ? 'ok' : 'wrong';
+  },
+
+  /** Gõ câu trả lời đọc được từ tư liệu. */
+  async input(step, npc, qs) {
+    const r = await dlg.input({ speaker: npc, text: step.ask, label: step.ask, placeholder: step.placeholder, exhibit: exhibitFor(step) });
+    if (r.help) return 'help';
+    qs.answers[step.id] = r.value;
+    const res = matchField(r.value, step.accepts, step.fuzzy !== false);
+    if (res === 'wrong') {
+      await dlg.say(npc, `✗ ${t('dialog.fieldWrong')}`);
+      return 'wrong';
+    }
+    sfx('partial');
+    await dlg.say(npc, res === 'right' ? `✓ ${t('dialog.fieldRight')}` : `✓ ${t('dialog.fieldAlmost', { answer: r.value })}`);
+    return 'ok';
+  },
+
+  /** Kính soi lỗi: đánh dấu các khung có dấu hiệu bất thường trên lưới mô phỏng. */
+  async flaws(step, npc, qs) {
+    const marked = new Set(qs.answers[step.id] || []);
+    const r = await dlg.interactive({ speaker: npc, text: step.ask, wide: true }, (box, done, help) => {
+      box.append(frameGrid(step.exhibit, {
+        marked,
+        onPick: n => { marked.has(n) ? marked.delete(n) : marked.add(n); sfx('click'); }
+      }));
+      box.append(actionRow(
+        dlg.makeButton('btn-primary', t('exhibit.submitMarks'), () => {
+          if (!marked.size) { toast(t('exhibit.emptyMarks')); return; }
+          const marks = [...marked].sort((a, b) => a - b);
+          done({ marks, log: `${t('exhibit.marked')}: ${marks.map(n => t('exhibit.frame', { n })).join(', ')}` });
+        }),
+        dlg.makeButton('btn', t('dialog.help'), help)
+      ));
+    });
+    if (r.help) return 'help';
+    qs.answers[step.id] = r.marks;
+    const m = new Set(r.marks);
+    let all = true, any = false;
+    for (const g of step.groups) {
+      if (g.frames.filter(n => m.has(n)).length >= g.min) { any = true; await dlg.say(npc, `✓ ${g.found}`); }
+      else { all = false; await dlg.say(npc, `? ${g.missing}`); }
+    }
+    if (step.bonus && step.bonus.frames.every(n => m.has(n))) await dlg.say(npc, `✓ ${step.bonus.text}`);
+    const trapped = step.traps.frames.some(n => m.has(n));
+    if (trapped) await dlg.say(npc, `✗ ${step.traps.text}`);
+    const known = new Set([...step.groups.flatMap(g => g.frames), ...step.traps.frames]);
+    const neutral = r.marks.filter(n => !known.has(n));
+    if (neutral.length) await dlg.say(npc, neutral.map(n => fill(step.neutral, { n })).join(' '));
+    if (all && !trapped) return 'ok';
+    return any ? 'partial' : 'wrong';
+  },
+
+  /** Đối chiếu: tìm ô trong lưới là cùng một ảnh với khung mẫu. */
+  async match(step, npc) {
+    const r = await dlg.interactive({ speaker: npc, text: step.ask, wide: true }, (box, done, help) => {
+      box.append(singleFrame(step.ref.set, step.ref.frame, t('exhibit.ref', { n: step.ref.frame })));
+      box.append(frameGrid(step.exhibit, {
+        onPick: n => done({ pick: n, log: t('dialog.youPicked', { text: t('exhibit.cell', { n }) }) })
+      }));
+      box.append(actionRow(dlg.makeButton('btn', t('dialog.help'), help)));
+    });
+    if (r.help) return 'help';
+    if (r.pick === step.answer) {
+      sfx('partial');
+      await dlg.say(npc, `✓ ${t('dialog.matchRight', { n: r.pick })}`);
+      return 'ok';
+    }
+    await dlg.say(npc, `✗ ${step.wrong?.[r.pick] || t('dialog.matchWrong')}`);
+    return 'wrong';
+  }
+};
 
 /** Hoàn thành nhiệm vụ: điểm, thẻ evidence, kết luận nhỏ, lời kết phòng. */
 async function completeQuest(q, qs, npc) {

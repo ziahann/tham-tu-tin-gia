@@ -6,6 +6,9 @@ import { normalize, containsPhrase, levenshtein } from './text.js';
 // Kiểu chơi đã dựng trong hội thoại. Phòng có kiểu khác hiện "Đang xây dựng".
 export const SUPPORTED_MODES = new Set(['G1', 'G2']);
 
+/** Nhiệm vụ đã dựng được trong hội thoại chưa (kiểu chơi cũ G1/G2, hoặc dạng nhiều bước). */
+export const isPlayable = q => !!q && (Array.isArray(q.steps) || (SUPPORTED_MODES.has(q.mode) && !q.options));
+
 /** So một câu trả lời với danh sách đáp án: 'right' | 'almost' | 'wrong'. */
 export function matchField(value, accepts, fuzzy = true) {
   const norm = normalize(value);
@@ -45,7 +48,7 @@ export function roomStatus(roomId, flags = []) {
   const room = data.quests.rooms.find(r => r.id === roomId);
   if (!room) return 'building';
   const quests = room.quests.map(questById);
-  if (quests.some(q => !q || !SUPPORTED_MODES.has(q.mode))) return 'building';
+  if (quests.some(q => !isPlayable(q))) return 'building';
   if (quests.filter(q => q.required !== false).every(q => isQuestDone(q.id))) return 'done';
   if ((room.requires || []).some(f => !flags.includes(f))) return 'locked';
   return quests.some(isUnlocked) ? 'open' : 'locked';
@@ -53,7 +56,7 @@ export function roomStatus(roomId, flags = []) {
 
 /** Trạng thái một nhiệm vụ để hiển thị: done | active | locked | building. */
 export function questStatus(q) {
-  if (!SUPPORTED_MODES.has(q.mode) || roomStatus(q.room) === 'building') return 'building';
+  if (!isPlayable(q) || roomStatus(q.room) === 'building') return 'building';
   if (isQuestDone(q.id)) return 'done';
   return isUnlocked(q) ? 'active' : 'locked';
 }

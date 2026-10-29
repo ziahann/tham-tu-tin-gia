@@ -409,13 +409,16 @@ function buildOfficeMap() {
     path_('lead_hoso', [[19, 20.5], [16.5, 20.5], [16.5, 17.5], [19.5, 17.5], [19.5, 12.5], [5, 12.5], [5, 9.8], [5, 7.5]]),
     path_('patrol_npc1_hoso', [[2.5, 7.5], [8.5, 7.5]]),
     point('station', 'npc1_hoso', 5, 7.5),
+    path_('patrol_npc2_s4', [[12.5, 7.5], [18.5, 7.5]]),
+    point('station', 'npc2_s4', 15.5, 7.5),
     // Đồ vật xem được
     rectT('inspect', 'inspect_notice', 6, 15, 1, 1, { text: 'inspect_notice' }),
     rectT('inspect', 'inspect_window_lobby', 3, 15, 1, 1, { text: 'inspect_window' }),
     rectT('inspect', 'inspect_reception', 17, 18, 6, 1, { text: 'inspect_reception' }),
     rectT('inspect', 'inspect_pinboard_S3', 4, 1, 2, 1, { text: 'inspect_pinboard' }),
     rectT('inspect', 'inspect_cabinet_S3', 1, 2, 3, 1, { text: 'inspect_cabinet' }),
-    rectT('inspect', 'inspect_bookshelf_lobby', 1, 16, 2, 1, { text: 'inspect_bookshelf' })
+    rectT('inspect', 'inspect_bookshelf_lobby', 1, 16, 2, 1, { text: 'inspect_bookshelf' }),
+    rectT('inspect', 'inspect_lab_S4', 12, 4, 7, 1, { text: 'inspect_lab' })
   ];
 
   const layer = (id, name, data) => ({ id, name, type: 'tilelayer', width: W, height: H, x: 0, y: 0, opacity: 1, visible: true, data });

@@ -128,29 +128,6 @@
         "correction": "Xóa sau không thu hồi được những gì đã lan."
       }
     ],
-    "q3_q6": [
-      {
-        "id": "q3",
-        "npc": "npc2",
-        "intro": "Tôi là Khải. Thử tìm ngược ảnh bằng Google Lens xem sao.",
-        "correct": "Ra toàn bài đính chính, không có bản gốc từ hãng tin. Nhưng chưa đủ kết luận ảnh là AI.",
-        "wrong": "Lens không phán thật/giả, nó chỉ cho biết ảnh xuất hiện ở đâu."
-      },
-      {
-        "id": "q4",
-        "npc": "npc2",
-        "intro": "Nhìn kỹ hình dạng tàu, chữ trên áo, chi tiết giữa các khung.",
-        "correct": "Đúng. Nhưng khung mờ (6, 10) thì không đánh giá.",
-        "wrong": "Hãy chỉ dựa vào dấu hiệu quan sát được."
-      },
-      {
-        "id": "q6",
-        "npc": "npc2",
-        "intro": "Công cụ phát hiện AI chỉ là phụ, đừng coi là phán quyết.",
-        "correct": "Đúng, kết hợp nhiều bằng chứng.",
-        "wrong": "Công cụ có thể sai. Hãy thêm bằng chứng độc lập."
-      }
-    ],
     "q7_q8": [
       {
         "id": "q7",
@@ -433,7 +410,7 @@
         },
         {
           "id": "s3_done_l2",
-          "text": "Các phòng khác đang được chuẩn bị. Khi sẵn sàng, tôi sẽ báo bạn."
+          "text": "Khải đang chờ bạn ở Phòng Phân tích ảnh, ngay cạnh phòng này."
         }
       ],
       "choices": [],
@@ -476,7 +453,106 @@
       "lines": [
         {
           "id": "npc2_idle_after_l1",
-          "text": "Nghe nói bạn đã xác lập xong sự kiện thật. Có mốc rồi thì soi ảnh mới có ý nghĩa."
+          "text": "Bạn đã xác lập xong sự kiện thật rồi à? Vào Phòng Phân tích ảnh đi, tôi đợi trong đó."
+        }
+      ],
+      "choices": [],
+      "next": "end"
+    },
+    {
+      "id": "s4_intro",
+      "screen": "S4",
+      "npc": "npc2",
+      "lines": [
+        {
+          "id": "s4_intro_l1",
+          "text": "Chào mừng tới Phòng Phân tích ảnh. Tôi là Khải."
+        },
+        {
+          "id": "s4_intro_l2",
+          "text": "Ở đây ta soi ảnh, nhưng nhớ: các khung ảnh trong phòng này là MÔ PHỎNG trừu tượng, không phải ảnh gốc. Ta không đăng lại ảnh giả."
+        }
+      ],
+      "choices": [],
+      "next": "end"
+    },
+    {
+      "id": "s4_q3_intro",
+      "screen": "S4",
+      "npc": "npc2",
+      "lines": [
+        {
+          "id": "s4_q3_intro_l1",
+          "text": "Bước đầu tiên khi gặp một bức ảnh lạ: tìm xem nó từng xuất hiện ở đâu."
+        }
+      ],
+      "choices": [],
+      "next": "end"
+    },
+    {
+      "id": "s4_q4_intro",
+      "screen": "S4",
+      "npc": "npc2",
+      "lines": [
+        {
+          "id": "s4_q4_intro_l1",
+          "text": "Giờ tới phần tôi thích nhất: phóng to thêm chút nữa. Ảnh AI hay để lại lỗi nhỏ."
+        }
+      ],
+      "choices": [],
+      "next": "end"
+    },
+    {
+      "id": "s4_q5_intro",
+      "screen": "S4",
+      "npc": "npc2",
+      "lines": [
+        {
+          "id": "s4_q5_intro_l1",
+          "text": "Có một chuyện lạ: hai fanpage khác nhau mà lại đăng những bức ảnh rất giống nhau."
+        }
+      ],
+      "choices": [],
+      "next": "end"
+    },
+    {
+      "id": "s4_q6_intro",
+      "screen": "S4",
+      "npc": "npc2",
+      "lines": [
+        {
+          "id": "s4_q6_intro_l1",
+          "text": "Cuối cùng là công cụ phát hiện AI. Hữu ích, nhưng đừng coi là phán quyết."
+        }
+      ],
+      "choices": [],
+      "next": "end"
+    },
+    {
+      "id": "s4_done",
+      "screen": "S4",
+      "npc": "npc2",
+      "lines": [
+        {
+          "id": "s4_done_l1",
+          "text": "Đủ bằng chứng về ảnh rồi: thiếu nguồn gốc, lỗi thị giác, ảnh dùng lại, VTV xác nhận, và công cụ bổ trợ."
+        },
+        {
+          "id": "s4_done_l2",
+          "text": "Các phòng tiếp theo đang được chuẩn bị. Khi sẵn sàng, chị Tuệ Lâm sẽ báo bạn."
+        }
+      ],
+      "choices": [],
+      "next": "end"
+    },
+    {
+      "id": "npc2_after_s4",
+      "screen": "S4",
+      "npc": "npc2",
+      "lines": [
+        {
+          "id": "npc2_after_s4_l1",
+          "text": "Nhớ nhé: không dựa vào một bằng chứng duy nhất, nhất là một con số từ công cụ."
         }
       ],
       "choices": [],
@@ -630,6 +706,30 @@
       },
       {
         "npc": "npc2",
+        "quest": "q3_lens"
+      },
+      {
+        "npc": "npc2",
+        "quest": "q4_flaws"
+      },
+      {
+        "npc": "npc2",
+        "quest": "q5_crosscheck"
+      },
+      {
+        "npc": "npc2",
+        "quest": "q6_detector"
+      },
+      {
+        "npc": "npc2",
+        "requires": [
+          "done_S4"
+        ],
+        "scene": "npc2_after_s4",
+        "idle": true
+      },
+      {
+        "npc": "npc2",
         "requires": [
           "done_S3"
         ],
@@ -652,12 +752,25 @@
         "station": "npc1_hoso",
         "patrol": "patrol_npc1_hoso"
       }
+    ],
+    "npc2": [
+      {
+        "requires": [
+          "done_S3"
+        ],
+        "station": "npc2_s4",
+        "patrol": "patrol_npc2_s4"
+      }
     ]
   },
   "zoneScenes": {
     "S3": {
       "scene": "s3_intro",
       "thenTalk": "npc1"
+    },
+    "S4": {
+      "scene": "s4_intro",
+      "thenTalk": "npc2"
     }
   },
   "inspect": {
@@ -678,6 +791,9 @@
     ],
     "inspect_bookshelf": [
       "Kệ sách: sổ tay kiểm chứng, tài liệu về SIFT và khung Information Disorder của Wardle và Derakhshan (2017)."
+    ],
+    "inspect_lab": [
+      "Hai màn hình lớn hiển thị bản ghi kết quả công cụ. Một tờ giấy dán: \"Không tải lại ảnh giả lên công cụ.\""
     ]
   }
 }
