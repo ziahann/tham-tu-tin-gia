@@ -260,7 +260,7 @@
           "ask": "Theo nguồn, tai nạn xảy ra ngày nào?",
           "hints": [
             "Tìm cụm từ chỉ thời gian ngay câu đầu bài VTV.",
-            "Bài viết \"xảy ra vào chiều .../7 trên Vịnh Hạ Long\".",
+            "Bài viết \"xảy ra vào chiều.../7 trên Vịnh Hạ Long\".",
             "Năm: xem ngày đăng bài (tháng 7/2025)."
           ],
           "walkthrough": "Mở bài VTV → đọc câu đầu tiên của bài → chép phần ngày tháng sau chữ \"chiều\"."
@@ -278,7 +278,7 @@
             "Địa danh nằm ngay trong tiêu đề bài VTV.",
             "Đó là một vịnh di sản thế giới ở tỉnh Quảng Ninh."
           ],
-          "walkthrough": "Mở bài VTV → đọc tiêu đề bài: \"...lật tàu du lịch ở vịnh ... để câu view bằng AI\"."
+          "walkthrough": "Mở bài VTV → đọc tiêu đề bài: \"...lật tàu du lịch ở vịnh... để câu view bằng AI\"."
         },
         {
           "id": "ship",
@@ -295,7 +295,7 @@
             "Tên tàu đứng ngay sau cụm \"vụ lật tàu du lịch\" trong bài VTV.",
             "Tên gồm hai chữ và một con số; số hiệu trong ngoặc bắt đầu bằng QN."
           ],
-          "walkthrough": "Mở bài VTV → tìm cụm \"Vụ lật tàu du lịch ...\" → chép tên tàu (hoặc số hiệu trong ngoặc)."
+          "walkthrough": "Mở bài VTV → tìm cụm \"Vụ lật tàu du lịch...\" → chép tên tàu (hoặc số hiệu trong ngoặc)."
         },
         {
           "id": "cause",
@@ -313,7 +313,7 @@
             "Tìm phát biểu của lãnh đạo tỉnh Quảng Ninh tại họp báo ngày 20/7.",
             "Đó là một hiện tượng thời tiết có gió xoáy mạnh, xuất hiện ngay trong tiêu đề bài SGGP."
           ],
-          "walkthrough": "Mở bài SGGP → đọc tiêu đề \"Tin cảnh báo ... được công bố khi tàu Vịnh Xanh 58 đã rời bến\" → tìm câu \"Đây là nguyên nhân khiến tàu Vịnh Xanh 58 bị lật\" và xem câu ngay trước nó."
+          "walkthrough": "Mở bài SGGP → đọc tiêu đề \"Tin cảnh báo... được công bố khi tàu Vịnh Xanh 58 đã rời bến\" → tìm câu \"Đây là nguyên nhân khiến tàu Vịnh Xanh 58 bị lật\" và xem câu ngay trước nó."
         }
       ],
       "feedback": {
@@ -805,7 +805,7 @@
             "Đọc bài VnExpress (Hoài Anh, 2025), đoạn nói về nguồn gốc các video.",
             "Cơn bão lớn đổ bộ miền Bắc năm 2024, tên bốn chữ cái."
           ],
-          "walkthrough": "Mở bài VnExpress → tìm câu \"Một số video lấy từ đợt bão ...\" → chép tên bão.",
+          "walkthrough": "Mở bài VnExpress → tìm câu \"Một số video lấy từ đợt bão...\" → chép tên bão.",
           "tool": "archive"
         },
         {
@@ -824,7 +824,7 @@
             "Vẫn trong bài VnExpress, ngay sau đoạn về bão.",
             "Một quốc gia ở châu Phi; sự việc tháng 10/2024."
           ],
-          "walkthrough": "Bài VnExpress → câu \"Một số khác là cảnh tàu chìm ở ... tháng 10/2024\".",
+          "walkthrough": "Bài VnExpress → câu \"Một số khác là cảnh tàu chìm ở... tháng 10/2024\".",
           "tool": "archive"
         },
         {
@@ -1286,7 +1286,7 @@
       "feedback": {
         "correct": "Chuẩn mực thẩm định: khẳng định điều bằng chứng cho phép, dừng đúng chỗ ở điều chưa biết."
       },
-      "conclusion": "Có thủ đoạn thu hút tương tác (link \"đọc tiếp\", trang nhiều quảng cáo, chú thích hư cấu khó thấy); chưa xác định người đứng sau, doanh thu và thời điểm đăng đầu tiên.",
+      "conclusion": "Có thủ đoạn thu hút tương tác; chưa xác định người đứng sau, doanh thu và thời điểm đăng đầu tiên.",
       "evidenceCards": [
         "ev_f12",
         "ev_f16",
@@ -1387,7 +1387,7 @@
             },
             {
               "id": "malinfo",
-              "text": "Ví dụ đối chứng (GIẢ LẬP): đăng công khai số điện thoại thật của người nhà nạn nhân để \"kêu gọi giúp đỡ\"",
+              "text": "Ví dụ đối chứng: đăng công khai số điện thoại thật của người nhà nạn nhân để \"kêu gọi giúp đỡ\"",
               "accept": [
                 "mal"
               ],
@@ -1572,7 +1572,7 @@
       "mode": "G7",
       "title": "(Tùy chọn) Thẩm vấn ở quán cà phê",
       "npcIntro": "cafe_q10b_intro",
-      "question": "Chú Sáu quản trị một nhóm mạng từng đăng lại bộ ảnh. Hỏi chú vài câu, rồi tìm chỗ mâu thuẫn. (Nhân vật và lời khai đều GIẢ LẬP.)",
+      "question": "Chú Sáu quản trị một nhóm mạng từng đăng lại bộ ảnh. Hỏi chú vài câu, rồi tìm chỗ mâu thuẫn.",
       "steps": [
         {
           "id": "s1",
@@ -1631,7 +1631,7 @@
         }
       ],
       "feedback": {
-        "correct": "Phát hiện tốt. Nhưng nhớ: lời khai của một nhân vật GIẢ LẬP chỉ để luyện kỹ năng, không phải bằng chứng thật về ai cả."
+        "correct": "Phát hiện tốt. Nhưng nhớ: lời khai của chú Sáu chỉ để luyện kỹ năng, không phải bằng chứng thật về ai cả."
       },
       "conclusion": "Lời khai thiếu nguồn và tự mâu thuẫn — chỉ là dữ kiện tham khảo, không đủ để kết luận chủ đích hay danh tính.",
       "evidenceCards": [],
@@ -1646,7 +1646,7 @@
       "mode": "G11",
       "title": "(Bonus) Trang mạo danh",
       "npcIntro": "bonus_intro",
-      "question": "Sau vụ việc, xuất hiện một trang mạo danh \"Quỹ Thiện nguyện Hải Đăng\" (tổ chức hư cấu). Tất cả là GIẢ LẬP — hãy tìm các dấu hiệu mạo danh.",
+      "question": "Sau vụ việc, xuất hiện một trang mạo danh \"Quỹ Thiện nguyện Hải Đăng\". Hãy tìm các dấu hiệu mạo danh.",
       "steps": [
         {
           "id": "s1",
@@ -2023,18 +2023,18 @@
     "street": "Phố chính",
     "pier": "Bến tàu du lịch",
     "newsroom": "Tòa soạn Tin Vịnh",
-    "agency": "Phòng xác minh (GIẢ LẬP)",
+    "agency": "Phòng xác minh",
     "park": "Công viên ven vịnh",
     "market": "Phố đi bộ",
     "coast": "Đường ven vịnh",
-    "office2": "Cao ốc văn phòng (GIẢ LẬP)",
-    "clinic": "Trung tâm y tế (GIẢ LẬP)",
-    "cafe2": "Cà phê Sương Sớm (GIẢ LẬP)"
+    "office2": "Cao ốc văn phòng",
+    "clinic": "Trung tâm y tế",
+    "cafe2": "Cà phê Sương Sớm"
   },
   "intro": {
     "skip": "Bỏ qua",
     "next": "Tiếp ▸",
-    "start": "Vào văn phòng",
+    "start": "Lên đường",
     "questionsTitle": "Ba câu hỏi xác minh của vụ án",
     "cards": [
       {
@@ -2088,8 +2088,14 @@
       },
       {
         "id": "i5",
-        "title": "Lời mời điều tra",
-        "text": "Bạn là sinh viên ngành Quan hệ công chúng – Truyền thông, Trường Đại học Văn Lang, đến Trụ sở Báo Thanh Niên hỗ trợ nhóm kiểm chứng (tình huống GIẢ LẬP). Nhiệm vụ: làm rõ đâu là thật, đâu là dựng, và có dấu hiệu cố ý hay không. Chỉ kết luận trong giới hạn bằng chứng.",
+        "title": "Cuộc gọi tới tòa soạn",
+        "text": "Bạn là sinh viên ngành Quan hệ công chúng – Truyền thông, Trường Đại học Văn Lang. Lướt mạng xã hội, bạn đọc được những bài đăng ấy và muốn biết chúng có đúng sự thật không. Bạn gọi tới Báo Thanh Niên, xin đến tận nơi để cùng kiểm chứng. Chị Tuệ Lâm, phụ trách nhóm kiểm chứng, hẹn bạn tới trụ sở.",
+        "scene": "dawn"
+      },
+      {
+        "id": "i6",
+        "title": "Trước khi bắt đầu",
+        "text": "Vụ tai nạn và các dữ kiện về nó là có thật, lấy từ báo chí. Mọi nhân vật, cuộc trò chuyện, tổ chức và công cụ trong game là GIẢ LẬP. Tòa nhà mang tên Báo Thanh Niên chỉ là bối cảnh; nhân vật và sự việc bên trong không đại diện cho Báo Thanh Niên. Game không có hình ảnh nạn nhân.",
         "scene": "dawn",
         "simulated": true
       }
@@ -2098,7 +2104,7 @@
   "exhibits": {
     "note": "Lưới ảnh là MÔ PHỎNG trừu tượng (khối hình, không có người/mặt người), không phải ảnh gốc. Bảng kết quả công cụ là bản ghi lại theo báo cáo của nhóm, giao diện MÔ PHỎNG.",
     "mpv12": {
-      "title": "Bộ ghép 12 khung — Fanpage M.P.V. (MÔ PHỎNG)",
+      "title": "Bộ ghép 12 khung — Fanpage M.P.V.",
       "cols": 4,
       "frames": [
         {
@@ -2161,7 +2167,7 @@
       ]
     },
     "mco9": {
-      "title": "Lưới 9 ảnh — Fanpage M.C.O. (MÔ PHỎNG)",
+      "title": "Lưới 9 ảnh — Fanpage M.C.O.",
       "cols": 3,
       "frames": [
         {
@@ -2206,7 +2212,7 @@
       ]
     },
     "lens": {
-      "title": "Bản ghi kết quả tìm ngược ảnh Google Lens (giao diện MÔ PHỎNG)",
+      "title": "Bản ghi kết quả tìm ngược ảnh Google Lens",
       "query": "Tìm ngược các khung trong hai bộ ảnh",
       "rows": [
         {
@@ -2237,7 +2243,7 @@
       ]
     },
     "hive": {
-      "title": "Bản ghi kết quả Hive Moderation (giao diện MÔ PHỎNG)",
+      "title": "Bản ghi kết quả Hive Moderation",
       "runDate": "Ngày chạy: 11/10/2026",
       "columns": [
         "",
@@ -2301,11 +2307,11 @@
       ]
     },
     "fakepage": {
-      "title": "Trang mạo danh (GIẢ LẬP — tên tổ chức hư cấu)",
+      "title": "Trang mạo danh",
       "name": "Quỹ Thiện nguyện Hải Đăngg ✔",
       "meta": "Trang · Tạo 2 ngày trước · 37 người theo dõi",
       "post": "THÔNG BÁO KHẨN: Quỹ Hải Đăng nhận quyên góp giúp gia đình nạn nhân. Chuyển khoản ngay vào tài khoản cá nhân bên dưới, xác nhận qua link: bit.ly/hd-ung-ho",
-      "note": "Toàn bộ là GIẢ LẬP để luyện nhận diện mạo danh. Không có tổ chức, tài khoản hay đường link nào là thật."
+      "note": "Đây là bài luyện nhận diện mạo danh: tổ chức, tài khoản và đường link trên trang đều không có thật."
     }
   },
   "results": {
