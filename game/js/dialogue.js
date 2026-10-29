@@ -1,6 +1,7 @@
 // Khung thoại kiểu game cốt truyện ở cạnh dưới: NPC nói, người chơi chọn / gõ / chọn thẻ / mở nguồn.
-import { data, t, fill, npcById, sourceById, shortCite } from './data.js';
-import { state, markSourceOpened } from './state.js';
+import { data, t, fill, npcById } from './data.js';
+import { reader } from './tools.js';
+import { state } from './state.js';
 import { appendMessage } from './history.js';
 import { releaseAll } from './input.js';
 import { sfx } from './audio.js';
@@ -10,6 +11,8 @@ import { toast } from './ui.js';
 const PORTRAITS = new Set(['npc1', 'npc2', 'npc3', 'npc4', 'npc5', 'npc6', 'boss']);
 const MOODS = ['neutral', 'happy', 'thinking', 'surprised', 'serious'];
 const BOSS_COL = { neutral: 0, thinking: 0, happy: 1, smug: 1, surprised: 2, cracked: 2, blank: 3, serious: 4, angry: 4 };
+/** Có chân dung không: NPC, boss, thiết bị (dev_*), đồ vật (obj_*). */
+const hasPortrait = id => !!id && (PORTRAITS.has(id) || /^(dev|obj)_/.test(id));
 /** File sprite / chân dung của thám tử theo mẫu nam / nữ. */
 const heroFile = () => `hero_${state.progress?.heroLook === 'f' ? 'f' : 'm'}`;
 const els = {};
@@ -36,10 +39,10 @@ export function initDialog() {
 
 export const isOpen = () => open;
 
-/** Mở khung thoại; partnerId là NPC đang trò chuyện (dùng để chia lịch sử theo NPC). */
-export function begin(partnerId) {
+/** Mở khung thoại; partnerId là NPC đang trò chuyện (dùng để chia lịch sử theo NPC); portrait: chân dung bên phải nếu khác. */
+export function begin(partnerId, portrait = null) {
   partner = partnerId;
-  rightId = PORTRAITS.has(partnerId) ? partnerId : null;
+  rightId = portrait || (hasPortrait(partnerId) ? partnerId : null);
   open = true;
   setPortrait(els.left, heroFile(), 'neutral');
   setPortrait(els.right, rightId, 'neutral');
@@ -102,14 +105,15 @@ function setSpeaker(id, text = '', mood = null) {
   if (id === 'hero' || id === 'inspect') {
     name = id === 'hero' ? heroTitle() : t('dialog.inspectSpeaker');
     setPortrait(els.left, heroFile(), mood || (id === 'inspect' ? 'thinking' : m));
+    if (id === 'inspect' && rightId) setPortrait(els.right, rightId, 'neutral');
     focus('left');
   } else if (id === 'system') {
     name = t('system'); fictional = false;
     focus(null);
   } else {
     const npc = npcById(id);
-    name = npc ? npc.name : id;
-    if (PORTRAITS.has(id)) { rightId = id; setPortrait(els.right, id, m); }
+    name = npc ? npc.name : id.startsWith('dev_') ? t(`devices.${id.slice(4)}.name`) : id;
+    if (hasPortrait(id)) { rightId = id; setPortrait(els.right, id, m); }
     // thám tử phản ứng theo lời NPC: đúng thì vui, sai thì giật mình
     setPortrait(els.left, heroFile(), m === 'happy' ? 'happy' : m === 'serious' ? 'surprised' : 'neutral');
     focus(rightId === id ? 'right' : null);
@@ -312,34 +316,14 @@ export function multi(cards, opts) {
   });
 }
 
-/** Các nút mở nguồn (tab mới) + tóm tắt dự phòng + "đã đọc xong". Trả về { done } hoặc { backup }. */
+/** Trình đọc báo trong game (không mở tab mới) + nút "đã đọc xong". Trả về { done }. */
 export function links(sourceIds, opts) {
   return new Promise(resolve => {
-    prompt(opts);
+    prompt({ ...opts, wide: true });
     const row = document.createElement('div');
     row.className = 'row';
-    for (const id of sourceIds) {
-      const src = sourceById(id);
-      if (!src?.url) continue;
-      const a = document.createElement('a');
-      a.className = 'btn-primary';
-      a.href = src.url;
-      a.target = '_blank';
-      a.rel = 'noopener noreferrer';
-      const opened = () => state.progress.sourcesOpened.includes(id);
-      const label = () => `${opened() ? '✓ ' : ''}${t('dialog.openSource', { outlet: `${src.outlet} (${shortCite(src)})` })}`;
-      a.textContent = label();
-      if (src.urlStatus === 'from_report_unverified') a.title = t('dialog.unverified');
-      a.addEventListener('click', () => { markSourceOpened(id); a.textContent = label(); logPlayer(a.textContent); });
-      row.append(a);
-    }
-    const row2 = document.createElement('div');
-    row2.className = 'row';
-    row2.append(
-      button('btn', t('dialog.backup'), () => { els.extra.innerHTML = ''; resolve({ backup: true }); }),
-      button('btn', t('dialog.doneReading'), () => { logPlayer(t('dialog.doneReading')); els.extra.innerHTML = ''; resolve({ done: true }); })
-    );
-    els.extra.append(row, row2);
-    row.querySelector('a')?.focus();
+    row.append(button('btn-primary', t('dialog.doneReading'), () => { logPlayer(t('dialog.doneReading')); els.extra.innerHTML = ''; resolve({ done: true }); }));
+    els.extra.append(reader(sourceIds), row);
+    row.querySelector('button').focus();
   });
 }

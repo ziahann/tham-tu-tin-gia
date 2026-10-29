@@ -1,7 +1,7 @@
 // Tư liệu hiển thị trong khung thoại: lưới ảnh MÔ PHỎNG (khối hình trừu tượng, không có người),
 // bản ghi kết quả công cụ (Google Lens, Hive) theo báo cáo, và nút mở nguồn.
 import { data, t, sourceById, shortCite } from './data.js';
-import { state, markSourceOpened } from './state.js';
+import { reader } from './tools.js';
 
 const FW = 64, FH = 48; // cỡ một khung mô phỏng (pixel gốc)
 
@@ -141,22 +141,11 @@ export function toolPanel(key) {
   return wrap;
 }
 
-/** Hàng nút mở nguồn (tab mới), đánh dấu đã mở. */
-export function sourceRow(ids) {
-  const row = el('div', 'row');
-  for (const id of ids) {
-    const src = sourceById(id);
-    if (!src?.url) continue;
-    const a = el('a', 'btn-primary');
-    a.href = src.url;
-    a.target = '_blank';
-    a.rel = 'noopener noreferrer';
-    const label = () => `${state.progress.sourcesOpened.includes(id) ? '✓ ' : ''}${t('dialog.openSource', { outlet: `${src.outlet} (${shortCite(src)})` })}`;
-    a.textContent = label();
-    a.addEventListener('click', () => { markSourceOpened(id); a.textContent = label(); });
-    row.append(a);
-  }
-  return row;
+/** Nguồn của bước: trình đọc báo trong game (mở / thu gọn), không mở tab mới. */
+function sourceRow(ids) {
+  const box = el('details', 'source-reader');
+  box.append(el('summary', null, t('reader.readInGame')), reader(ids));
+  return box;
 }
 
 /** Bảng định nghĩa khung Information Disorder. */

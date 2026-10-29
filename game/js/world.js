@@ -10,7 +10,7 @@ import { playMusic } from './music.js';
 import { buildGraph, guideTarget, updateTrackLine, GuideArrow } from './guide.js';
 
 const SPRITE_IDS = ['npc1', 'npc2', 'npc3', 'npc4', 'npc5', 'npc6', 'boss', 'boss_blank'];
-const MAPS = ['office', 'street', 'newsroom', 'cafe', 'boss'];
+const MAPS = ['office', 'street', 'newsroom', 'cafe', 'agency', 'boss'];
 const SPEED = 120;
 const BOSS_SCALE = 1.5;
 
@@ -63,6 +63,13 @@ export class WorldScene extends Phaser.Scene {
     this.exits = objs.filter(o => o.type === 'exit');
     this.portals = objs.filter(o => o.type === 'portal');
     this.inspects = objs.filter(o => o.type === 'inspect');
+    // Thiết bị ở Phòng thám tử: có dấu "!" khi hồ sơ đang chờ thiết bị đó.
+    this.devices = objs.filter(o => o.type === 'device').map(o => ({
+      obj: o,
+      id: propOf(o, 'device'),
+      marker: this.add.text(o.x + o.width / 2, o.y - 2, '!', { fontFamily: 'VT323', fontSize: '28px', color: '#f2d36b', stroke: '#0f0e17', strokeThickness: 4 })
+        .setOrigin(0.5, 1).setDepth(100000).setVisible(false)
+    }));
     this.doorObjs = objs.filter(o => o.type === 'door').map(o => ({
       obj: o,
       room: propOf(o, 'room'),
@@ -225,11 +232,18 @@ export class WorldScene extends Phaser.Scene {
     this.doors.setCollisionByProperty({ collides: true });
     this.updateStations();
     // Dấu trên đầu NPC: vàng "!" = có việc; xanh "▼" = người giao hồ sơ đang theo dõi.
-    const trackedNpc = story.giverOf(state.progress.tracked);
+    const tgt = story.trackTarget();
+    const trackedNpc = tgt?.kind === 'npc' ? tgt.id : null;
     this.npcs.forEach((npc, id) => {
       const isTracked = id === trackedNpc;
       npc.marker.setText(isTracked ? '▼' : '!').setColor(isTracked ? '#7fe3ff' : '#f2d36b');
       npc.marker.setVisible(id !== 'boss' && (isTracked || story.hasStoryFor(id)));
+    });
+    const tt = story.trackTarget();
+    this.devices.forEach(d => {
+      const isTracked = tt?.kind === 'device' && tt.id === d.id;
+      d.marker.setText(isTracked ? '▼' : '!').setColor(isTracked ? '#7fe3ff' : '#f2d36b');
+      d.marker.setVisible(!!story.questForDevice(d.id));
     });
     updateTrackLine();
   }
@@ -266,6 +280,8 @@ export class WorldScene extends Phaser.Scene {
       if (d < (big ? 64 : 34) && d < bestD) { best = { kind: 'npc', id, x: npc.sprite.x, y: npc.sprite.y - (big ? 80 : 54) }; bestD = d; }
     });
     if (best) return best;
+    const dev = this.devices.find(d => inRect(d.obj, fx, fy, 4));
+    if (dev) return { kind: 'device', id: dev.id, x: dev.obj.x + dev.obj.width / 2, y: dev.obj.y - 4 };
     const ins = this.inspects.find(o => inRect(o, fx, fy, 4));
     if (ins) return { kind: 'inspect', key: propOf(ins, 'text'), x: ins.x + ins.width / 2, y: ins.y - 4 };
     const door = this.doorObjs.find(d => inRect(d.obj, fx, fy, 4) && d.status !== 'open' && d.status !== 'done');
@@ -288,6 +304,7 @@ export class WorldScene extends Phaser.Scene {
       else story.notice(t('dialog.bossLocked'));
     }
     else if (tg.kind === 'inspect') story.inspect(tg.key);
+    else if (tg.kind === 'device') story.useDevice(tg.id);
     else if (tg.kind === 'door') {
       const room = data.quests.rooms.find(r => r.id === tg.door.room);
       story.notice(tg.door.status === 'locked' ? t('dialog.doorLocked') : t('dialog.doorBuilding', { room: room?.name || '' }));
@@ -347,6 +364,7 @@ export class WorldScene extends Phaser.Scene {
     }
     this.player.setDepth(this.player.y);
     this.npcs.forEach(n => n.update(delta, frozen, this.player));
+    if (!this.reduceMotion) this.devices.forEach((d, i) => d.marker.setY(d.obj.y - 2 + Math.round(Math.sin(time / 250 + i) * 2)));
 
     this.guide.draw(this.player, frozen ? null : guideTarget(this), time);
     if (frozen) { this.prompt.setVisible(false); return; }
