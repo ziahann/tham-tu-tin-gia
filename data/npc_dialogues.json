@@ -20,7 +20,7 @@
       "mustNot": "Không nói đáp án trực tiếp, không đùa về nạn nhân, không định danh người thật",
       "sprite": "npc1",
       "isFictional": true,
-      "sheetStatus": "đề xuất - chờ nhóm duyệt"
+      "sheetStatus": "đã duyệt 29/10/2026"
     },
     {
       "id": "npc2",
@@ -36,7 +36,7 @@
       "mustNot": "Không coi kết quả công cụ là phán quyết",
       "sprite": "npc2",
       "isFictional": true,
-      "sheetStatus": "đề xuất - chờ nhóm duyệt"
+      "sheetStatus": "đã duyệt 29/10/2026"
     },
     {
       "id": "npc3",
@@ -52,7 +52,7 @@
       "mustNot": "Không bịa thêm ngày tháng ngoài F1-F16",
       "sprite": "npc3",
       "isFictional": true,
-      "sheetStatus": "đề xuất - chờ nhóm duyệt"
+      "sheetStatus": "đã duyệt 29/10/2026"
     },
     {
       "id": "npc4",
@@ -68,7 +68,7 @@
       "mustNot": "Không được trình bày như lời khuyên đúng",
       "sprite": "npc4",
       "isFictional": true,
-      "sheetStatus": "đề xuất - chờ nhóm duyệt"
+      "sheetStatus": "đã duyệt 29/10/2026"
     },
     {
       "id": "npc5",
@@ -84,7 +84,7 @@
       "mustNot": "Không giống hay gợi tới ca sĩ/người nổi tiếng thật",
       "sprite": "npc5",
       "isFictional": true,
-      "sheetStatus": "đề xuất - chờ nhóm duyệt"
+      "sheetStatus": "đã duyệt 29/10/2026"
     },
     {
       "id": "npc6",
@@ -100,7 +100,7 @@
       "mustNot": "Lời khai không phải bằng chứng thật; không dùng để kết luận chủ đích hay danh tính",
       "sprite": "npc6",
       "isFictional": true,
-      "sheetStatus": "đề xuất - chờ nhóm duyệt"
+      "sheetStatus": "đã duyệt 29/10/2026"
     },
     {
       "id": "boss",
@@ -116,7 +116,7 @@
       "mustNot": "Không dùng lại ảnh AI giả, không gợi hình nạn nhân/tàu chìm/trẻ em",
       "sprite": "boss",
       "isFictional": true,
-      "sheetStatus": "đề xuất - chờ nhóm duyệt"
+      "sheetStatus": "đã duyệt 29/10/2026"
     }
   ],
   "dialogues": {
