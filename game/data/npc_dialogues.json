@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "note": "Toàn bộ NPC là nhân vật HƯ CẤU, nhãn GIẢ LẬP. Không dùng tên người/ca sĩ/tổ chức thật. Lớp B (chat người chơi) lưu localStorage key tfd_chat_log. \"scenes\" theo cấu trúc tài liệu 02 mục 6.1 (đã dùng cho S1, S3); \"dialogues\" là bản nháp cho các phòng chưa dựng.",
+  "note": "Toàn bộ NPC là nhân vật HƯ CẤU, nhãn GIẢ LẬP. Không dùng tên người/ca sĩ thật; tổ chức thật duy nhất là Báo Thanh Niên (tên tòa nhà, theo yêu cầu của nhóm), mọi nhân vật và sự việc trong đó là GIẢ LẬP. Lớp B (chat người chơi) lưu localStorage key tfd_chat_log. \"scenes\" theo cấu trúc tài liệu 02 mục 6.1 (đã dùng cho S1, S3); \"dialogues\" là bản nháp cho các phòng chưa dựng.",
   "storage": {
     "scripted": "data/npc_dialogues.json",
     "playerLog": "localStorage:tfd_chat_log"
@@ -9,10 +9,10 @@
     {
       "id": "npc1",
       "name": "Chị Tuệ Lâm",
-      "role": "Trưởng ban điều phối thông tin du lịch (hư cấu)",
-      "room": "S1, S3, S7, S8, S10",
+      "role": "Biên tập viên phụ trách kiểm chứng (nhân vật hư cấu)",
+      "room": "Trụ sở Báo Thanh Niên: tầng Hồ sơ, Tác động, Phân loại",
       "age": 38,
-      "job": "Điều phối viên, Ban Điều phối Thông tin Du lịch Hải Đăng (GIẢ LẬP)",
+      "job": "Biên tập viên phụ trách nhóm kiểm chứng tại Trụ sở Báo Thanh Niên (nhân vật GIẢ LẬP)",
       "personality": "Điềm tĩnh, chu đáo, làm việc theo quy trình",
       "voice": "Trang trọng, nhẹ nhàng khi nhắc đến người bị nạn",
       "catchphrase": "Nguồn nào nói vậy?",
@@ -25,10 +25,10 @@
     {
       "id": "npc2",
       "name": "Khải",
-      "role": "Chuyên viên phân tích ảnh",
-      "room": "S4",
+      "role": "Phóng viên ảnh (nhân vật hư cấu)",
+      "room": "Trụ sở Báo Thanh Niên: tầng Phân tích ảnh",
       "age": 27,
-      "job": "Chuyên viên phân tích ảnh",
+      "job": "Phóng viên ảnh, phụ trách phân tích ảnh (nhân vật GIẢ LẬP)",
       "personality": "Kỹ tính, mê chi tiết, nói ngắn",
       "voice": "Nhanh, chính xác, hay dùng từ kỹ thuật rồi tự giải thích",
       "catchphrase": "Phóng to thêm chút nữa.",
@@ -121,8 +121,8 @@
     {
       "id": "amb_guard",
       "name": "Chú Bảo Vệ Tấn",
-      "role": "Bảo vệ tòa nhà Ban Hải Đăng (GIẢ LẬP)",
-      "room": "Văn phòng Ban Hải Đăng",
+      "role": "Bảo vệ tòa nhà (GIẢ LẬP)",
+      "room": "Trụ sở Báo Thanh Niên",
       "sprite": "amb_guard",
       "isFictional": true,
       "ambient": true
@@ -130,8 +130,8 @@
     {
       "id": "amb_worker",
       "name": "Anh Văn Phòng",
-      "role": "Nhân viên Ban Hải Đăng (GIẢ LẬP)",
-      "room": "Văn phòng Ban Hải Đăng",
+      "role": "Nhân viên tòa soạn (GIẢ LẬP)",
+      "room": "Trụ sở Báo Thanh Niên",
       "sprite": "amb_worker",
       "isFictional": true,
       "ambient": true
@@ -261,7 +261,7 @@
       "lines": [
         {
           "id": "s1_intro_l1",
-          "text": "Chào {hero}. Tôi là Tuệ Lâm, {org}. Tổ chức và nhân vật ở đây đều là GIẢ LẬP."
+          "text": "Chào {hero}, bạn là sinh viên Quan hệ công chúng – Truyền thông Văn Lang đến hỗ trợ kiểm chứng phải không? Tôi là Tuệ Lâm, phụ trách nhóm kiểm chứng. Nhân vật và sự việc ở đây đều là GIẢ LẬP."
         },
         {
           "id": "s1_intro_l2",
@@ -551,7 +551,7 @@
       "lines": [
         {
           "id": "s5_intro_l1",
-          "text": "À, cháu là thẩm định viên Ban Hải Đăng nhờ tới phải không? Bác là Tín Thư, coi kho lưu trữ này."
+          "text": "À, cháu là sinh viên Văn Lang bên Báo Thanh Niên nhờ tới phải không? Bác là Tín Thư, coi kho lưu trữ này."
         },
         {
           "id": "s5_intro_l2",
@@ -750,7 +750,7 @@
       "lines": [
         {
           "id": "npc1_after_boss_l1",
-          "text": "Cảm ơn bạn. Nếu muốn, còn một hồ sơ nhỏ: có trang mạo danh chính Ban Hải Đăng đấy."
+          "text": "Cảm ơn bạn. Nếu muốn, còn một hồ sơ nhỏ: có một trang mạo danh quỹ thiện nguyện đang kêu gọi quyên góp."
         }
       ],
       "choices": [],
@@ -789,7 +789,7 @@
       "lines": [
         {
           "id": "npc3_wait_l1",
-          "text": "Bác ở kho lưu trữ đây. Khi nào xong việc bên Ban Hải Đăng thì ghé nhé."
+          "text": "Bác ở kho lưu trữ đây. Cháu cần gì ở kho lưu trữ thì ghé nhé."
         }
       ],
       "choices": [],
@@ -902,7 +902,7 @@
       "lines": [
         {
           "id": "bonus_intro_l1",
-          "text": "Có người báo một trang lạ dùng tên Ban Hải Đăng để kêu gọi quyên góp. Bạn xem giúp tôi."
+          "text": "Có người báo một trang lạ mạo danh \"Quỹ Thiện nguyện Hải Đăng\" (hư cấu) để kêu gọi quyên góp. Bạn xem giúp tôi."
         }
       ],
       "choices": [],
@@ -1263,7 +1263,7 @@
   },
   "inspect": {
     "inspect_notice": [
-      "Bảng tin của Ban Hải Đăng (GIẢ LẬP): lịch trực, nội quy, và một tờ giấy ghi \"Dừng lại trước khi chia sẻ\".",
+      "Bảng tin của tòa soạn (GIẢ LẬP): lịch trực, nội quy, và một tờ giấy ghi \"Dừng lại trước khi chia sẻ\".",
       "Kẹp bên cạnh là một bài báo in ra. Bạn đọc thử."
     ],
     "inspect_window": [
@@ -1276,7 +1276,7 @@
       "Bảng ghim của Phòng Hồ sơ. Các mảnh giấy được nối bằng dây đỏ, chờ thêm bằng chứng."
     ],
     "inspect_cabinet": [
-      "Tủ hồ sơ. Nhãn ghi: \"Ảnh chụp màn hình do báo chí đăng lại\". Báo cáo chỉ tiếp cận bài đăng qua các ảnh chụp này."
+      "Tủ hồ sơ. Nhãn ghi: \"Ảnh chụp màn hình do báo chí đăng lại\". Hồ sơ kiểm chứng chỉ tiếp cận bài đăng qua các ảnh chụp này."
     ],
     "inspect_bookshelf": [
       "Kệ sách: sổ tay kiểm chứng, tài liệu về SIFT và khung Information Disorder của Wardle và Derakhshan (2017)."
@@ -1307,7 +1307,7 @@
       "Thực đơn: cà phê muối, trà chanh, nước dừa. Tờ giấy dán quầy: \"Đọc kỹ trước khi chia sẻ\"."
     ],
     "inspect_office_sign": [
-      "Biển hiệu: Ban Điều phối Thông tin Du lịch Hải Đăng (GIẢ LẬP)."
+      "Biển hiệu: \"BÁO THANH NIÊN — Trụ sở\". Nhân vật và sự việc trong tòa nhà là GIẢ LẬP, không đại diện cho Báo Thanh Niên."
     ],
     "inspect_news_sign": [
       "Biển hiệu: Tòa soạn Tin Vịnh (GIẢ LẬP)."
@@ -1316,7 +1316,7 @@
       "Biển hiệu: Quán cà phê Gió Biển (GIẢ LẬP)."
     ],
     "inspect_agency_sign": [
-      "Biển hiệu: \"Phòng thám tử\". Bên trong có máy tìm ngược ảnh, bàn soi, máy dò ảnh AI, kho báo và bảng dòng thời gian. (GIẢ LẬP)"
+      "Biển hiệu: \"PHÒNG XÁC MINH — thiết bị thẩm định\". Bên trong có máy tìm ngược ảnh, bàn soi, máy dò ảnh AI, kho báo và bảng dòng thời gian. (GIẢ LẬP)"
     ],
     "inspect_tv": [
       "TV ở sảnh đang phát bản tin. Dòng chữ chạy: \"Cảnh giác với video gắn nhãn sai về vụ 19/7\".",
@@ -1393,7 +1393,7 @@
     ],
     "amb_worker": [
       "Máy in lại kẹt giấy rồi… Còn bạn thì sao, hồ sơ nào đang dở?",
-      "Sếp dặn: tiêu đề càng giật gân thì càng phải đọc kỹ ngày đăng."
+      "Chị biên tập dặn: tiêu đề càng giật gân thì càng phải đọc kỹ ngày đăng."
     ],
     "amb_barista": [
       "Cà phê nóng đây! Khách ở quán hay vừa uống vừa xem bản tin trên TV kia.",

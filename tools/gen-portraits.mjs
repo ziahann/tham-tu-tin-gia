@@ -78,9 +78,9 @@ function drawBody(f, s) {
     R(CX - 21, 78, 3, 2, '#c9d1dc'); R(CX + 18, 78, 3, 2, '#c9d1dc');
   }
   if (s.press) {
-    // dây đỏ + thẻ phóng viên thực tập
-    for (let y = 58; y < 72; y++) { R(CX - 8 + Math.floor((y - 58) / 3), y, 1, 1, '#c8323c'); R(CX + 8 - Math.floor((y - 58) / 3), y, 1, 1, '#c8323c'); }
-    R(CX - 6, 72, 13, 15, '#ffffff'); R(CX - 6, 72, 13, 3, '#3d7fd1');
+    // dây xanh than + thẻ sinh viên (dải đỏ)
+    for (let y = 58; y < 72; y++) { R(CX - 8 + Math.floor((y - 58) / 3), y, 1, 1, '#1f2a44'); R(CX + 8 - Math.floor((y - 58) / 3), y, 1, 1, '#1f2a44'); }
+    R(CX - 6, 72, 13, 15, '#ffffff'); R(CX - 6, 72, 13, 3, '#c8323c');
     R(CX - 4, 77, 4, 5, '#b4b8c5'); R(CX + 1, 77, 5, 1, '#5b5d6e'); R(CX + 1, 79, 4, 1, '#5b5d6e'); R(CX - 4, 84, 9, 1, '#5b5d6e');
   }
   if (s.lanyard) {

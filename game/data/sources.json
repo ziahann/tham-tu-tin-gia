@@ -8,8 +8,9 @@
       "outlet": "Báo cáo cuối kỳ của nhóm",
       "url": null,
       "urlStatus": "missing",
-      "note": "Tiêu đề trong APA ghi theo đề tài nền ở tài liệu cài đặt chung; nhóm đối chiếu lại đúng như bìa báo cáo.",
-      "short": "Trần Huỳnh Gia Hân & Đào Thị Mai Chi (2026)"
+      "note": "Tiêu đề trong APA ghi theo đề tài nền ở tài liệu cài đặt chung; nhóm đối chiếu lại đúng như bìa báo cáo. Báo cáo của nhóm, không phải nguồn chính thức: không hiển thị trong game (internal).",
+      "short": "Trần Huỳnh Gia Hân & Đào Thị Mai Chi (2026)",
+      "internal": true
     },
     {
       "id": "thuthao2025",

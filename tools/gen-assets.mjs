@@ -21,7 +21,7 @@ const TILES = [
   'bench', 'lamp', 'flowerbed',
   // phòng boss
   'void', 'frame_wall', 'frame', 'shard',
-  // phòng thám tử: thiết bị (mỗi thiết bị là một object 'device' trên bản đồ)
+  // phòng xác minh: thiết bị (mỗi thiết bị là một object 'device' trên bản đồ)
   'floor_dark', 'dev_pc', 'dev_lighttable', 'dev_detector', 'dev_reader', 'dev_monitors', 'dev_timeline', 'dev_evidence',
   // nội thất chi tiết
   'blinds', 'clock', 'poster', 'whiteboard', 'tv_wall', 'paper_desk', 'printer', 'water_cooler', 'filing_boxes', 'floor_lamp',
@@ -313,7 +313,7 @@ function drawTile(img, name, ox, oy, rnd) {
       R(8, 16, 6, 4, '#6b4630'); R(18, 15, 8, 5, '#6b4630'); R(15, 3, 1, 24, '#3a2a20');
       break;
     case 'neon':
-      // biển hiệu neon của Phòng thám tử (kính lúp phát sáng)
+      // biển hiệu neon của Phòng xác minh (kính lúp phát sáng)
       R(0, 0, T, T, '#4a5060'); R(1, 6, 30, 18, '#14161c');
       img.ellipse(ox + 12, oy + 14, 6, 6, '#7fe3ff'); img.ellipse(ox + 12, oy + 14, 4, 4, '#14161c');
       for (let i = 0; i < 6; i++) R(16 + i, 18 + i, 2, 2, '#7fe3ff');
@@ -581,8 +581,8 @@ function drawCharFrame(spec, dir, frame) {
   if (spec.badge && dir !== 'up') R(dir === 'right' ? 18 : 19, 25 + y0, 2, 2, '#c9d1dc');
   if (spec.camera && dir === 'down') { R(13, 27 + y0, 6, 4, '#2b2f3a'); R(15, 28 + y0, 2, 2, '#5fb3d9'); }
 
-  // Thẻ phóng viên thực tập (dây đỏ, thẻ trắng sọc xanh)
-  if (spec.press && dir === 'down') { R(13, 21 + y0, 1, 6, '#c8323c'); R(18, 21 + y0, 1, 6, '#c8323c'); R(13, 27 + y0, 6, 5, '#ffffff'); R(13, 27 + y0, 6, 1, '#3d7fd1'); R(14, 29 + y0, 4, 1, '#5b5d6e'); }
+  // Thẻ sinh viên Văn Lang (dây xanh than, thẻ trắng dải đỏ)
+  if (spec.press && dir === 'down') { R(13, 21 + y0, 1, 6, '#1f2a44'); R(18, 21 + y0, 1, 6, '#1f2a44'); R(13, 27 + y0, 6, 5, '#ffffff'); R(13, 27 + y0, 6, 1, '#c8323c'); R(14, 29 + y0, 4, 1, '#5b5d6e'); }
   if (spec.press && dir === 'right') { R(19, 26 + y0, 2, 4, '#ffffff'); }
   // Balo: quai đeo phía trước, thân balo phía sau / bên hông
   if (spec.backpack) {
@@ -658,7 +658,7 @@ function drawCharFrame(spec, dir, frame) {
     if (dir === 'right') { R(15, 7 + y0, 1, 6, '#f2d36b'); R(15, 6 + y0, 1, 1, '#c8323c'); }
   }
 
-  // Mũ cói (thám tử) / mũ lưỡi trai
+  // Mũ cói / mũ lưỡi trai
   if (spec.hat) {
     const h = spec.hat, hD = shade(h, -0.3);
     R(11, 0 + y0, 10, 6, h); R(11, 4 + y0, 10, 2, hD);
@@ -902,7 +902,7 @@ const office = buildMap('office', {
 
 // ---------------- Phố ven vịnh (thành phố mở rộng)
 // Tòa nhà (hàng 0–6): # mái, G máng xối, H kính, S biển hiệu, K gạch, k cửa sổ gạch, Z đá, z cửa sổ đá, N biển neon,
-// A máy lạnh, Y ban công, W tường, w cửa sổ, a mái hiên, U cửa kính quán; o/n/t/c cửa (văn phòng / tòa soạn / thám tử / quán).
+// A máy lạnh, Y ban công, W tường, w cửa sổ, a mái hiên, U cửa kính quán; o/n/t/c cửa (văn phòng / tòa soạn / phòng xác minh / quán).
 // Phố: _ vỉa hè, ^ mép vỉa trên, v mép vỉa dưới, = đường, - vạch giữa, % vạch qua đường, y hẻm sỏi, : lối sỏi, g cỏ,
 // , lối dạo, L đèn, T cây, B ghế, F bồn hoa, Q sạp báo, J trạm xe buýt, b thùng rác, l cọc chắn, M sạp chợ, h trụ nước,
 // p bảng bến tàu, | lan can, ~ nước, X cầu tàu, I đảo đá, O/R tàu neo (hai ô).
@@ -1089,7 +1089,7 @@ const cafe = buildMap('cafe', {
   ]
 });
 
-// ---------------- Phòng thám tử (GIẢ LẬP): các thiết bị mở giao diện công cụ mô phỏng
+// ---------------- Phòng xác minh (GIẢ LẬP): các thiết bị mở giao diện công cụ mô phỏng
 // e tường bằng chứng, V màn hình mạng xã hội, t bảng dòng thời gian, K máy tính tìm ngược ảnh,
 // M bàn soi kính lúp, A máy dò ảnh AI, Y đầu đọc kho báo.
 const AGENCY = [
@@ -1106,7 +1106,7 @@ const AGENCY = [
   '#######EE#########'
 ];
 const agency = buildMap('agency', {
-  rows: AGENCY, label: 'Phòng thám tử (GIẢ LẬP)', music: 'archive',
+  rows: AGENCY, label: 'Phòng xác minh (GIẢ LẬP)', music: 'archive',
   legend: { ...INDOOR, e: 'dev_evidence', V: 'dev_monitors', t: 'dev_timeline', K: 'dev_pc', M: 'dev_lighttable', A: 'dev_detector', Y: 'dev_reader' },
   ground: (ch, x, y) => (ch === 'E' ? 'exit_mat' : ch === '~' || y >= 6 ? 'carpet' : 'floor_dark'),
   objects: () => [

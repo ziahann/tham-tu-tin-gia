@@ -113,3 +113,15 @@
 | Thời tiết | Quang / mưa / sương mù / đêm (phím T), ánh sáng đêm từ đèn đường, cửa sổ, màn hình |
 | Âm thanh | Bước chân theo mặt sàn, giọng riêng từng nhân vật, âm thanh môi trường, nhạc nhỏ lại khi hội thoại; có nút tắt riêng |
 | Cần nhóm xem | Tên và câu thoại 9 người qua đường (`npc_dialogues.json → npcs`, `ambientLines`); vẫn giữ việc sửa F11/F12 trong báo cáo |
+
+## Chốt ngày 29/10/2026 (đợt 5)
+
+| Mục | Quyết định |
+|---|---|
+| Nguồn báo cáo nhóm | Không hiển thị trong game (đánh dấu `internal` trong sources.json); trong lời thoại gọi là "hồ sơ kiểm chứng" |
+| Tòa nhà chính | Trụ sở Báo Thanh Niên (tên thật, theo yêu cầu của nhóm), luôn kèm ghi chú: nhân vật và sự việc trong tòa nhà là GIẢ LẬP, không đại diện cho Báo Thanh Niên. Không đặt nhân vật bẫy hay trang mạo danh vào tòa này. Bỏ tổ chức "Ban Hải Đăng" |
+| Các tầng | Thanh Niên: sảnh + 4 tầng (S3 Hồ sơ, S4 Phân tích ảnh, S7 Tác động, S8 Phân loại) + tầng thượng Phòng họp (boss), đi bằng thang máy có chọn tầng. Tòa soạn hư cấu Tin Vịnh giữ S5, S6 và Phát Vội |
+| Nhân vật chính | Sinh viên ngành Quan hệ công chúng – Truyền thông, Trường Đại học Văn Lang; giữ tên game "Thám tử tin giả" (nghĩa bóng); "Phòng thám tử" → "Phòng xác minh" |
+| Màn bonus | Trang mạo danh một quỹ thiện nguyện hư cấu ("Quỹ Thiện nguyện Hải Đăng") |
+| Nhạc | Nhạc noir / bí ẩn của Kevin MacLeod (incompetech.com), CC BY 4.0, ghi công ở nút Nguồn và README |
+| Đồ họa | Kiến trúc lạnh, u tối; đồ vật đúng tỉ lệ với người (props nhiều ô); thành phố rộng hơn, có tòa nhà trang trí và biển ghi chức năng |
