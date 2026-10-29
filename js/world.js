@@ -185,6 +185,79 @@ export class WorldScene extends Phaser.Scene {
     this.reduceMotion = state.settings.reduceMotion;
     story.setWorld(this);
     this.refresh();
+    if (state.progress.introBus && this.mapKey === 'street') this.busIntro();
+  }
+
+  /**
+   * Cảnh mở đầu lượt mới: xe buýt chạy vào trạm trước Trụ sở Báo Thanh Niên, nhân vật xuống xe, xe đi tiếp.
+   * Bấm chuột / phím bất kỳ để bỏ qua. Chế độ giảm chuyển động: bỏ qua luôn.
+   */
+  busIntro() {
+    const done = () => {
+      if (!this.cutscene) return;
+      this.cutscene = false;
+      this.tweens.killTweensOf(this.player);
+      // xe buýt đang chạy đi thì để nó chạy hết; bỏ qua cảnh thì xóa luôn
+      if (!leaving) { this.tweens.killTweensOf(bus); bus.destroy(); }
+      bars.forEach(b => b.destroy());
+      cap.destroy();
+      this.player.view.setAlpha(1);
+      this.player.body.reset(spawn.x, spawn.y);
+      this.cameras.main.startFollow(this.player.view, true, 0.2, 0.2);
+      delete state.progress.introBus;
+      this.savePos();
+      window.removeEventListener('keydown', skip);
+    };
+    let leaving = false;
+    const skip = () => done();
+    const spawn = this.points.spawn_bus || { x: this.player.x, y: this.player.y };
+    if (this.reduceMotion) { delete state.progress.introBus; saveProgress(); return; }
+    this.cutscene = true;
+    // xe buýt diễn: ảnh isometric hướng tây, chạy trong làn sát vỉa hè bắc rồi dừng ngay trạm
+    const lane = this.traffic?.lanes.find(l => l.dir < 0 && Math.abs(l.bottom - spawn.y) < 100);
+    const by = lane ? lane.bottom - 4 : spawn.y + 70;
+    const stopX = spawn.x + 40;
+    const bus = this.add.sprite(stopX + 900, by, 'bus').setOrigin(0.5, 1);
+    const tex = this.textures.get('bus_w').getSourceImage();
+    this.views.add(bus, { isoTex: { key: 'bus_w', fw: 240, ay: 28 + 84, h: tex.height, d: 56 } });
+    // dọn xe cùng làn để không chồng lên xe buýt
+    if (lane) this.traffic.cars.filter(c => c.lane === lane).forEach(c => { c.sprite.destroy(); });
+    if (lane) this.traffic.cars = this.traffic.cars.filter(c => c.lane !== lane);
+    this.player.view.setAlpha(0);
+    this.player.body.reset(spawn.x, by - 20);
+    const cam = this.cameras.main;
+    cam.startFollow(bus.view, true, 0.08, 0.08);
+    // khung điện ảnh + dòng chú thích
+    const { width: w, height: h } = this.scale;
+    const bars = [this.add.rectangle(0, 0, w, 54, 0x05060a).setOrigin(0), this.add.rectangle(0, h - 54, w, 54, 0x05060a).setOrigin(0)];
+    bars.forEach(b => b.setScrollFactor(0).setDepth(200000));
+    const cap = this.add.text(w / 2, h - 27, t('intro.busCaption'), { fontFamily: 'VT323', fontSize: '22px', color: '#e8ecf2', align: 'center' })
+      .setOrigin(0.5).setScrollFactor(0).setDepth(200001);
+    this.time.delayedCall(400, () => window.addEventListener('keydown', skip, { once: true }));
+    this.input.once('pointerdown', skip);
+    this.tweens.add({
+      targets: bus, x: stopX, duration: 4200, ease: 'Sine.easeOut',
+      onComplete: () => {
+        if (!this.cutscene) return;
+        sfx('ding');
+        // nhân vật bước xuống, đi lên vỉa hè
+        this.player.view.setAlpha(1);
+        cam.startFollow(this.player.view, true, 0.1, 0.1);
+        this.player.anims.play('hero-walk-up', true);
+        this.tweens.add({
+          targets: this.player, y: spawn.y, x: spawn.x, duration: 900, delay: 400,
+          onComplete: () => {
+            if (!this.cutscene) return;
+            this.player.anims.stop();
+            this.facing = 'up';
+            this.player.setFrame(idleFrame('up'));
+            leaving = true;
+            this.tweens.add({ targets: bus, x: -400, duration: 5200, delay: 500, ease: 'Sine.easeIn', onComplete: () => bus.destroy() });
+            this.time.delayedCall(1800, done);
+          }
+        });
+      }
+    });
   }
 
   /** Lưu vị trí hiện tại (bản đồ, toạ độ, hướng nhìn). */
@@ -440,7 +513,7 @@ export class WorldScene extends Phaser.Scene {
 
   /** Người chơi nháy chuột / chạm vào bản đồ. */
   onClick(p) {
-    if (state.settings.clickMove === false || this.leaving || story.isBusy() || window.uiBlocked?.()) return;
+    if (state.settings.clickMove === false || this.leaving || this.cutscene || story.isBusy() || window.uiBlocked?.()) return;
     const { x: lx, y: ly } = this.toLogical(p.worldX, p.worldY);
     const goal = this.clickTarget(p.worldX, p.worldY, lx, ly);
     // đi tới trước mặt đồ vật (phía nam vùng tương tác), tới cạnh NPC
@@ -718,7 +791,7 @@ export class WorldScene extends Phaser.Scene {
 
   /** Vòng lặp mỗi khung hình. */
   update(time, delta) {
-    const frozen = this.leaving || story.isBusy() || window.uiBlocked?.() || time < (this.stunUntil || 0);
+    const frozen = this.leaving || this.cutscene || story.isBusy() || window.uiBlocked?.() || time < (this.stunUntil || 0);
     let { x, y } = frozen ? { x: 0, y: 0 } : direction();
     if (x && y) { x *= Math.SQRT1_2; y *= Math.SQRT1_2; }
     // đi theo đường nháy chuột (bấm phím thì hủy)
