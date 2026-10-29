@@ -30,8 +30,9 @@ export function isoGround(tileset, count) {
     for (let py = 0; py < 32; py++) for (let px = 0; px < 64; px++) {
       const sx = px - 32 + 0.5, sy = py + 0.5;
       const u = sy + sx / 2, v = sy - sx / 2;
-      if (u < 0 || v < 0 || u >= T || v >= T) continue;
-      const c = S(i, u, v);
+      // phủ chồng nửa điểm ra ngoài mép để các ô thoi khít nhau (không lộ khe tối)
+      if (u < -0.75 || v < -0.75 || u >= T + 0.75 || v >= T + 0.75) continue;
+      const c = S(i, Math.max(0, Math.min(T - 1, u)), Math.max(0, Math.min(T - 1, v)));
       if (c[3]) out.set(ox + px, oy + py, c);
     }
   }

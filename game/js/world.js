@@ -499,7 +499,7 @@ export class WorldScene extends Phaser.Scene {
       const make = (x, y) => { const im = this.add.image(x, y, 'props', o.name).setOrigin(ox, 1); if (mirror) im.setFlipX(true); return im; };
       // đồ dán tường: dùng bản cắt xiên <khóa>@iso; điểm neo là chân mép trái, nằm trên mặt tường
       const isoKey = `${o.name}@iso`, im2 = meta[isoKey];
-      const makeWall = (x, y) => this.add.image(x - m.w * ox, y + (m.w * ox) / 2, 'props', isoKey).setOrigin(0, im2.h0 / im2.h);
+      const makeWall = (x, y) => this.add.image(x - m.w * ox, y - (m.w * ox) / 2, 'props', isoKey).setOrigin(0, im2.h0 / im2.h);
       // khối isometric: <khóa>@iso (đồ vật, tàu; tàu quay ngược: @isoW) hoặc chính khóa (tòa nhà có meta.iso)
       const isoName = mirror && meta[`${o.name}@isoW`] ? `${o.name}@isoW` : meta[`${o.name}@iso`]?.iso ? `${o.name}@iso` : m.iso ? o.name : null;
       const im = isoName ? meta[isoName] : null;
@@ -513,6 +513,12 @@ export class WorldScene extends Phaser.Scene {
         img = this.add.image(q.x, q.y, 'props', isoName).setOrigin(0, im.iso.ay / im.h);
         img.setDepth(iso.depth(o.x, o.y - im.iso.d / 2));
         left = q.x; top = q.y - im.iso.ay; lights = im.lights;
+      } else if (m.flat && meta[`${o.name}@flat`]) {
+        // thảm: góc tây bắc của thảm (logic) ứng với điểm (cao, 0) của ảnh
+        const fm = meta[`${o.name}@flat`];
+        const q = iso.P(o.x - fm.fw / 2, o.y - fm.fh);
+        img = this.add.image(q.x - fm.fh, q.y, 'props', `${o.name}@flat`).setOrigin(0).setDepth(-5);
+        left = img.x; top = img.y;
       } else {
         img = make(p.x, p.y); img.setDepth(m.flat ? -5 : iso.depth(o.x, o.y - (bh || 16) / 2));
         left = img.x - m.w * ox; top = img.y - m.h;

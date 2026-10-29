@@ -71,6 +71,19 @@ export function shearIso(src) {
   return out;
 }
 
+/** Đồ phẳng (thảm) nhìn từ trên → hình bình hành trên sàn isometric. Điểm (h, 0) của ảnh ứng với góc tây bắc. */
+export function flatIso(src) {
+  const W = src.w + src.h, H = Math.ceil(W / 2) + 1;
+  const out = new Img(W, H);
+  for (let Y = 0; Y < H; Y++) for (let X = 0; X < W; X++) {
+    const a = Y + (X - src.h) / 2, b = Y - (X - src.h) / 2;
+    if (a < 0 || b < 0 || a >= src.w || b >= src.h) continue;
+    const c = src.get(Math.floor(a), Math.floor(b));
+    if (c[3]) out.set(X, Y, c);
+  }
+  return out;
+}
+
 /** Bóng đổ mềm dưới chân đồ vật. */
 const shadow = (img, cx, cy, rx, ry = 3) => img.ellipse(cx, cy, rx, ry, '#00000048');
 
@@ -748,8 +761,11 @@ export function isoExtrude(src, d, fromY = 0) {
       let c = src.get(x, y);
       if (isOut(c)) c = top && solid(x, y + 1) ? src.get(x, y + 1) : solid(x - 1, y) ? src.get(x - 1, y) : c;
       if (isOut(c)) continue;
-      const col = top ? shade(hex(c), k === d ? 0.2 : 0.07) : shade(hex(c), -0.42);
-      out.set(x + k, yo + y + Math.floor(x / 2) - Math.round(k / 2), col);
+      // mặt trên sáng (mép xa sáng nhất), mặt đông tối dần về phía sau
+      const col = top ? shade(hex(c), 0.1 + 0.1 * (k / d)) : shade(hex(c), -0.36 - 0.14 * (k / d));
+      const yy = yo + y + Math.floor(x / 2);
+      out.set(x + k, yy - Math.floor(k / 2), col);
+      out.set(x + k, yy - Math.ceil(k / 2), col);
     }
   }
   out.blit(sh, 0, 0, sh.w, sh.h, 0, yo);
@@ -831,6 +847,115 @@ function buildingIso(o) {
   return { img: out, meta: { base: [W - 4, D - 8], lights, sign, building: true, iso: { ay: y0 + H, fw: W, d: D } } };
 }
 
+
+/**
+ * Khối "voxel" isometric: chân đế w x d (px logic) chia ô cell x cell, mỗi ô là một cột cao height(i, j) px.
+ * Vẽ từ sau ra trước (i + j tăng dần). Tô khối theo ánh sáng từ trên trái: mặt trên sáng, mặt nam vừa, mặt đông tối,
+ * chân cột tối dần (bóng tiếp đất), thêm nhiễu nhẹ cho bề mặt. color(i, j, h) → màu gốc của cột.
+ * Neo: góc tây nam chân đế ở (0, ay) — cùng quy ước với isoExtrude (fw = w, d = d).
+ */
+export function voxel({ w, d, cell = 4, maxH, height, color, seed: sd = 3 }) {
+  let s0 = sd;
+  const r = () => ((s0 = (s0 * 16807) % 2147483647) / 2147483647);
+  const W = w + d + 2, H = Math.ceil((w + d) / 2) + maxH + 3;
+  const img = new Img(W, H);
+  const P = (a, b, z) => [a - b + d, (a + b) / 2 + maxH - z];
+  const ni = Math.ceil(w / cell), nj = Math.ceil(d / cell);
+  const cells = [];
+  for (let i = 0; i < ni; i++) for (let j = 0; j < nj; j++) cells.push([i, j]);
+  cells.sort((p, q) => (p[0] + p[1]) - (q[0] + q[1]) || p[0] - q[0]);
+  const set = (x, y, c) => img.set(Math.round(x), Math.round(y), c);
+  for (const [i, j] of cells) {
+    const h = Math.round(height(i, j));
+    if (h <= 0) continue;
+    const base = color(i, j, h);
+    const a0 = i * cell, b0 = j * cell;
+    const n = (r() - 0.5) * 0.08;
+    // mặt nam (b = b0 + cell) và mặt đông (a = a0 + cell): tối dần về chân cột
+    for (let a = a0; a < a0 + cell; a += 0.5) for (let z = 0; z < h; z++) {
+      const [x, y] = P(a, b0 + cell, z);
+      set(x, y, shade(base, -0.12 - 0.22 * (1 - z / h) * (z < 6 ? 1.4 : 1) + n));
+    }
+    for (let b = b0; b < b0 + cell; b += 0.5) for (let z = 0; z < h; z++) {
+      const [x, y] = P(a0 + cell, b, z);
+      set(x, y, shade(base, -0.38 - 0.16 * (1 - z / h) + n));
+    }
+    // mặt trên
+    const top = shade(base, 0.12 + n);
+    for (let a = a0; a < a0 + cell; a += 0.5) for (let b = b0; b < b0 + cell; b += 0.5) {
+      const [x, y] = P(a, b, h);
+      set(x, y, (a - a0 < 0.6 || b - b0 < 0.6) ? shade(base, 0.2 + n) : top);
+    }
+  }
+  return { img: outline(img), ay: Math.round(d / 2 + maxH), fw: w, d };
+}
+
+/** Các đồ ngoài trời dựng bằng voxel (đá vôi, ghế, bồn hoa, đài phun nước, hàng rào cây). */
+function voxelProps() {
+  const out = {};
+  const ell = (i, j, ni, nj) => { const x = (i + 0.5) / ni * 2 - 1, y = (j + 0.5) / nj * 2 - 1; return x * x + y * y; };
+  // đảo đá vôi: núi dựng đứng, đỉnh phủ cây, chân có ngấn nước
+  const karst = (w, d, maxH, sd) => {
+    let s1 = sd; const rr = () => ((s1 = (s1 * 48271) % 2147483647) / 2147483647);
+    const ni = Math.ceil(w / 6), nj = Math.ceil(d / 6);
+    const bumps = Array.from({ length: 5 }, () => [rr() * ni, rr() * nj, 0.3 + rr() * 0.5]);
+    return voxel({ w, d, cell: 6, maxH, seed: sd,
+      height: (i, j) => {
+        const e = ell(i, j, ni, nj);
+        if (e > 1) return 0;
+        let h = Math.pow(1 - e, 0.45);
+        for (const [bx, by, bh] of bumps) h = Math.max(h, bh * Math.pow(Math.max(0, 1 - ((i - bx) ** 2 + (j - by) ** 2) / 10), 0.6));
+        return maxH * h * (0.86 + rr() * 0.14);
+      },
+      color: (i, j, h) => h > maxH * 0.72 ? (rr() < 0.7 ? '#3a5a44' : '#2f4a3a') : h < 10 ? '#2a4a5a' : rr() < 0.2 ? '#5b6370' : '#6b7280'
+    });
+  };
+  out.karst_big = karst(150, 120, 210, 11);
+  out.karst = karst(96, 80, 130, 29);
+  // ghế công viên: lưng ghế cao ở hàng sau, mặt ngồi thấp
+  out.bench = voxel({ w: 64, d: 20, cell: 4, maxH: 26,
+    height: (i, j) => j === 0 ? 24 : (i === 0 || i === 15) ? 12 : 11,
+    color: (i, j) => (i === 0 || i === 15) ? '#2b303b' : j === 0 ? '#4a3c2e' : '#5b4a3a' });
+  // bồn hoa bên đường: thành bê tông, đất, hoa nhiều màu
+  const flowers = ['#9b5a7a', '#c8a24a', '#c9d1dc', '#8a2a30', '#6a8ab8'];
+  const planter = (w, d, wallH, sd) => {
+    let s1 = sd; const rr = () => ((s1 = (s1 * 48271) % 2147483647) / 2147483647);
+    const ni = w / 4, nj = d / 4;
+    return voxel({ w, d, cell: 4, maxH: wallH + 12, seed: sd,
+      height: (i, j) => {
+        const edge = i === 0 || j === 0 || i === ni - 1 || j === nj - 1;
+        if (edge) return wallH;
+        const f = rr();
+        return f < 0.35 ? wallH + 4 + rr() * 6 : f < 0.7 ? wallH + 2 : wallH - 2;
+      },
+      color: (i, j, h) => {
+        const edge = i === 0 || j === 0 || i === ni - 1 || j === nj - 1;
+        if (edge) return '#6b7280';
+        if (h >= wallH + 4) return flowers[Math.floor(rr() * flowers.length)];
+        if (h >= wallH + 2) return '#2f5446';
+        return '#3a3026';
+      }
+    });
+  };
+  out.planter = planter(64, 24, 12, 5);
+  out.flowerbed = planter(64, 64, 6, 17);
+  // hàng rào cây xén
+  out.hedge = voxel({ w: 96, d: 20, cell: 4, maxH: 22, seed: 23,
+    height: () => 16 + Math.floor(Math.random() * 3), color: (i, j, h) => h > 17 ? '#2f5446' : '#26463c' });
+  // đài phun nước: thành đá tròn, mặt nước, bệ giữa hai tầng, vòi
+  out.fountain = voxel({ w: 112, d: 112, cell: 4, maxH: 60, seed: 41,
+    height: (i, j) => {
+      const e = Math.sqrt(ell(i, j, 28, 28));
+      if (e > 1) return 0;
+      if (e > 0.86) return 14;          // thành bể
+      if (e > 0.34) return 5;           // mặt nước
+      if (e > 0.12) return 30;          // bệ tầng
+      return 52;                        // vòi
+    },
+    color: (i, j, h) => h === 14 ? '#8e97a8' : h === 5 ? ((i * 7 + j * 3) % 11 === 0 ? '#9fd8ff' : '#3f7899') : h === 30 ? '#7a8394' : '#9aa3b4' });
+  return out;
+}
+
 // ---------------------------------------------------------------- danh mục
 
 /** Tất cả props: khóa → { img, meta }. meta.base: [rộng, sâu] chân đế va chạm (0 = không va chạm); flat: nằm dưới chân; wall: dán tường. */
@@ -904,6 +1029,8 @@ export function allProps() {
     bld_warehouse: { deep: 6, cols: 12, floors: 1, style: 'warehouse', door: 4, shop: 'shutter', sign: false, signGlow: '#c9a24a', roof: ['vent', 'vent', 'skylight'] },
     bld_tenement: { deep: 5, cols: 6, floors: 4, style: 'brick', door: 1, fireEscape: true, sign: false, roof: ['tank', 'ac', 'antenna'] }
   };
+  // bản isometric của đồ phẳng (thảm)
+  for (const [k, p] of Object.entries(P)) if (p.meta.flat && !p.meta.shadow) P[`${k}@flat`] = { img: flatIso(p.img), meta: { base: [0, 0], flat: true, fw: p.img.w, fh: p.img.h } };
   // bản isometric của đồ dán tường (cắt xiên theo mặt tường)
   for (const [k, p] of Object.entries(P)) if (p.meta.wall) P[`${k}@iso`] = { img: shearIso(p.img), meta: { base: [0, 0], wall: true, isoOf: k, h0: p.img.h } };
   for (const [k, o] of Object.entries(B)) { const { img, meta } = buildingIso(o); P[k] = { img, meta }; }
@@ -925,6 +1052,12 @@ export function allProps() {
     };
     mk(p.img, `${k}@iso`);
     if (k === 'tour_boat') mk(mirror(p.img), `${k}@isoW`);
+  }
+  // đồ ngoài trời dựng bằng voxel thay bản cắt xiên (đá vôi, ghế, bồn hoa...) + đồ mới (đài phun nước, luống hoa, hàng rào)
+  for (const [k, v] of Object.entries(voxelProps())) {
+    const base = { karst_big: [140, 100], karst: [86, 66], bench: [60, 16], planter: [60, 20], flowerbed: [60, 60], hedge: [92, 16], fountain: [104, 104] }[k];
+    P[k] = { img: v.img, meta: { base, iso: { ay: v.ay, fw: v.fw, d: v.d } } };
+    delete P[`${k}@iso`];
   }
   return P;
 }
@@ -983,7 +1116,7 @@ export function vehicles() {
   };
   const out = {};
   for (const [id, img] of Object.entries(base)) {
-    const [d, fromY] = id === 'bus' ? [72, 0] : id.startsWith('bike') ? [14, 30] : [42, 0];
+    const [d, fromY] = id === 'bus' ? [56, 0] : id.startsWith('bike') ? [16, 30] : [40, 0];
     out[id] = img;
     out[`${id}_e`] = isoExtrude(img, d, fromY).img;
     out[`${id}_w`] = isoExtrude(mirror(img), d, fromY).img;
