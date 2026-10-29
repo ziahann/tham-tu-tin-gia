@@ -61,6 +61,9 @@
         "q4_flaws",
         "q5_crosscheck",
         "q6_detector"
+      ],
+      "requires": [
+        "done_S3"
       ]
     },
     {
@@ -302,179 +305,432 @@
       "room": "S4",
       "order": 3,
       "required": true,
-      "title": "Tìm ngược ảnh (Google Lens)",
-      "prompt": "Tìm ngược ảnh trong bộ 9 ảnh/12 khung. Kết quả cho thấy gì?",
-      "tool": {
-        "label": "Google Lens",
-        "sources": [
-          "google_lens"
-        ]
-      },
-      "options": [
+      "mode": "G1",
+      "title": "Dấu vết đầu tiên: tìm ngược ảnh",
+      "npcIntro": "s4_q3_intro",
+      "question": "Nhóm đã tìm ngược các khung ảnh bằng Google Lens. Đọc bản ghi kết quả và trả lời tôi.",
+      "resources": [
+        "google_lens"
+      ],
+      "safetyNote": "Đừng tải lại hay đăng lại ảnh giả. Link Google Lens chỉ để bạn thử cách dùng với một ảnh khác.",
+      "steps": [
         {
-          "id": "a",
-          "text": "Có bản gốc từ hãng tin/phóng viên/nhân chứng",
-          "correct": false,
-          "feedback": "Không. Google Lens không tìm thấy bản nào từ cơ quan báo chí, phóng viên hay nhân chứng."
+          "id": "s1",
+          "type": "choice",
+          "exhibit": "lens",
+          "ask": "Trong bản ghi, có kết quả nào là bản gốc từ hãng tin, phóng viên hay nhân chứng tại hiện trường không?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Có",
+              "correct": false,
+              "feedback": "Đọc lại dòng cuối của bản ghi."
+            },
+            {
+              "id": "b",
+              "text": "Không",
+              "correct": true,
+              "feedback": "Đúng. Không có bản gốc nào từ hiện trường (F5)."
+            }
+          ],
+          "hints": [
+            "Nhìn cột \"Loại kết quả\" trong bản ghi.",
+            "Đọc dòng ghi chú cuối bản ghi."
+          ],
+          "walkthrough": "Đọc dòng cuối bản ghi Lens: \"Không có kết quả nào từ hãng tin, phóng viên hay nhân chứng tại hiện trường.\""
         },
         {
-          "id": "b",
-          "text": "Chỉ thấy các bài đính chính/phản bác; không có nguồn gốc đáng tin",
-          "correct": true,
-          "feedback": "Đúng (F5). Kết quả khớp đều là bài đính chính. Lưu ý: không tìm thấy nguồn gốc KHÔNG tự chứng minh ảnh là AI — cần thêm bằng chứng."
+          "id": "s2",
+          "type": "choice",
+          "exhibit": "lens",
+          "ask": "Các kết quả trùng khớp chủ yếu thuộc loại nào?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Ảnh hiện trường",
+              "correct": false,
+              "feedback": "Không có kết quả nào là ảnh hiện trường."
+            },
+            {
+              "id": "b",
+              "text": "Bài cảnh báo / đính chính ảnh giả",
+              "correct": true,
+              "feedback": "Đúng. Các trang trùng khớp đều là bài cảnh báo ảnh giả: VTV, Dân trí, Báo Thanh tra, Home.vn và các bài đăng Facebook (F5)."
+            },
+            {
+              "id": "c",
+              "text": "Ảnh lưu trữ cũ",
+              "correct": false,
+              "feedback": "Bản ghi không có ảnh lưu trữ cũ."
+            },
+            {
+              "id": "d",
+              "text": "Không có kết quả",
+              "correct": false,
+              "feedback": "Lens có tìm thấy kết quả, hãy xem loại của chúng."
+            }
+          ],
+          "hints": [
+            "Cột bên phải của bản ghi ghi loại kết quả.",
+            "Các trang trong bản ghi đều đăng cùng một kiểu bài."
+          ],
+          "walkthrough": "Nhìn cột \"Loại kết quả\": cả 5 dòng đều là bài cảnh báo ảnh giả."
         },
         {
-          "id": "c",
-          "text": "Lens xác nhận ảnh là thật",
-          "correct": false,
-          "feedback": "Lens không xác nhận thật/giả; nó chỉ tìm nơi ảnh từng xuất hiện."
+          "id": "s3",
+          "type": "choice",
+          "ask": "Vậy kết quả Lens cho phép kết luận gì?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Ảnh chắc chắn do AI tạo",
+              "correct": false,
+              "feedback": "Chưa được. Không tìm thấy nguồn gốc KHÔNG tự chứng minh ảnh là AI; cần thêm bằng chứng khác."
+            },
+            {
+              "id": "b",
+              "text": "Chưa tìm thấy nguồn gốc đáng tin; cần thêm bằng chứng khác",
+              "correct": true,
+              "feedback": "Đúng. Lens chỉ cho biết ảnh từng xuất hiện ở đâu."
+            },
+            {
+              "id": "c",
+              "text": "Lens xác nhận ảnh là thật",
+              "correct": false,
+              "feedback": "Lens không xác nhận thật hay giả; nó chỉ tìm nơi ảnh từng xuất hiện."
+            }
+          ],
+          "hints": [
+            "Lens tìm nơi ảnh từng xuất hiện, không phán thật hay giả.",
+            "Thiếu nguồn gốc là một dấu hiệu, chưa phải bằng chứng đủ."
+          ],
+          "walkthrough": "Chọn kết luận dè dặt nhất: chưa tìm thấy nguồn gốc đáng tin, cần thêm bằng chứng."
         }
       ],
-      "hints": [
-        "Lens tìm nơi ảnh xuất hiện, không phán thật/giả.",
-        "Hãy nhìn loại trang trong kết quả.",
-        "Có hãng tin nào đăng bản gốc không?"
-      ],
-      "gives": [
+      "feedback": {
+        "correct": "Tốt. Không có nguồn hiện trường; kết quả trùng khớp chủ yếu là bài cảnh báo ảnh giả (F5)."
+      },
+      "conclusion": "Không có nguồn hiện trường cho các ảnh này; kết quả trùng khớp chủ yếu là bài cảnh báo ảnh giả. Chưa đủ để kết luận ảnh do AI tạo.",
+      "evidenceCards": [
         "ev_f5"
       ],
       "unlocks": [
         "q4_flaws"
       ],
-      "mode": "G1"
+      "sources": [
+        "baocao",
+        "google_lens"
+      ]
     },
     {
       "id": "q4_flaws",
       "room": "S4",
       "order": 4,
       "required": true,
-      "title": "Soi lỗi hình ảnh AI",
-      "prompt": "Chọn các dấu hiệu bất thường có thể quan sát (chọn nhiều).",
-      "multi": true,
-      "options": [
+      "mode": "G3",
+      "title": "Kính soi lỗi ảnh AI",
+      "npcIntro": "s4_q4_intro",
+      "question": "Soi bộ 12 khung. Đánh dấu các khung có dấu hiệu bất thường quan sát được.",
+      "steps": [
         {
-          "id": "a",
-          "text": "Hình dạng tàu khác nhau giữa các khung 2, 5, 7, 12 và khác tàu thật",
-          "correct": true,
-          "feedback": "Đúng (F6)."
+          "id": "s1",
+          "type": "flaws",
+          "exhibit": "mpv12",
+          "ask": "Bấm vào các khung có dấu hiệu bất thường (bấm lại để bỏ). Xong thì bấm \"Nộp\".",
+          "groups": [
+            {
+              "id": "ship",
+              "frames": [
+                2,
+                5,
+                7,
+                12
+              ],
+              "min": 2,
+              "found": "Hình dạng tàu khác nhau giữa các khung 2, 5, 7, 12 và không khớp tàu thật (F6).",
+              "missing": "Bạn chưa so hình dạng tàu giữa các khung."
+            },
+            {
+              "id": "text",
+              "frames": [
+                9
+              ],
+              "min": 1,
+              "found": "Chữ trên áo ở khung 9 méo, không đọc được — lỗi thường gặp của ảnh AI (F6).",
+              "missing": "Còn một khung có chữ bất thường."
+            }
+          ],
+          "bonus": {
+            "frames": [
+              5,
+              12
+            ],
+            "text": "Chi tiết thay đổi giữa khung 5 và khung 12 (phao đổi màu) (F6)."
+          },
+          "traps": {
+            "frames": [
+              6,
+              10
+            ],
+            "text": "Khung 6 và 10 bị mờ nên báo cáo KHÔNG đánh giá. Ảnh mờ không chứng minh gì (F13)."
+          },
+          "neutral": "Khung {n} không có dấu hiệu quan sát được rõ ràng.",
+          "hints": [
+            "So sánh hình dạng con tàu giữa các khung có tàu.",
+            "Nhìn kỹ khung có chiếc áo: chữ trên áo có đọc được không?",
+            "Khung mờ thì không đánh giá; đừng đánh dấu chúng."
+          ],
+          "walkthrough": "Đánh dấu các khung có tàu (2, 5, 7, 12) vì mỗi khung một hình dạng tàu, và khung 9 vì chữ trên áo bị méo. Không đánh dấu khung mờ 6 và 10."
         },
         {
-          "id": "b",
-          "text": "Chữ trên áo bị méo, không đọc được (khung 9)",
-          "correct": true,
-          "feedback": "Đúng (F6): chữ méo là lỗi thường gặp của ảnh AI."
-        },
-        {
-          "id": "c",
-          "text": "Chi tiết thay đổi giữa khung 5 và 12",
-          "correct": true,
-          "feedback": "Đúng (F6)."
-        },
-        {
-          "id": "d",
-          "text": "Góc chụp cận cảnh giữa biển, khó có người chụp hợp lý",
-          "correct": true,
-          "feedback": "Đúng (F6) — nhưng chỉ là dấu hiệu nghi vấn."
-        },
-        {
-          "id": "e",
-          "text": "Ảnh mờ nên chắc chắn là giả",
-          "correct": false,
-          "feedback": "Ảnh mờ không chứng minh gì. Khung 6 và 10 mờ nên báo cáo KHÔNG đánh giá (F13)."
+          "id": "s2",
+          "type": "choice",
+          "exhibit": "mpv12",
+          "ask": "Khung 6 và 10 bị mờ. Thẩm định viên nên xử lý thế nào?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Ảnh mờ nên chắc chắn là giả",
+              "correct": false,
+              "feedback": "Ảnh mờ không chứng minh gì."
+            },
+            {
+              "id": "b",
+              "text": "Không đánh giá, ghi vào phần giới hạn",
+              "correct": true,
+              "feedback": "Đúng. Báo cáo cũng không đánh giá khung 6 và 10 (F13)."
+            },
+            {
+              "id": "c",
+              "text": "Ảnh mờ nên chắc chắn là thật",
+              "correct": false,
+              "feedback": "Ảnh mờ không chứng minh gì."
+            }
+          ],
+          "hints": [
+            "Không nhìn rõ thì có kết luận được không?"
+          ],
+          "walkthrough": "Chọn \"Không đánh giá, ghi vào phần giới hạn\"."
         }
       ],
-      "hints": [
-        "So sánh hình dạng tàu giữa các khung.",
-        "Nhìn chữ trên trang phục.",
-        "Khung mờ thì không đánh giá."
-      ],
-      "feedback": "Dấu hiệu thị giác chỉ là chỉ báo, cần kết hợp bằng chứng khác.",
-      "gives": [
+      "feedback": {
+        "correct": "Chuẩn. Dấu hiệu thị giác chỉ là chỉ báo; cần kết hợp với bằng chứng khác. Báo cáo còn ghi một dấu hiệu nữa: góc chụp cận cảnh giữa biển lúc tàu chìm, khó có người chụp hợp lý (F6)."
+      },
+      "conclusion": "Có dấu hiệu AI quan sát được: tàu khác hình dạng giữa các khung, chữ trên áo méo, chi tiết đổi giữa khung 5 và 12. Khung mờ không đánh giá.",
+      "evidenceCards": [
         "ev_f6"
       ],
       "unlocks": [
         "q5_crosscheck"
       ],
-      "mode": "G3"
+      "sources": [
+        "baocao"
+      ]
     },
     {
       "id": "q5_crosscheck",
       "room": "S4",
       "order": 5,
       "required": true,
-      "title": "Đối chiếu báo chí & dùng lại ảnh",
-      "prompt": "Ảnh 'bố cài áo phao' xuất hiện ở đâu? VTV xác nhận gì?",
-      "tool": {
-        "label": "Bài VTV",
-        "sources": [
-          "thuthao2025"
-        ]
-      },
-      "options": [
+      "mode": "G6",
+      "title": "Một ảnh, hai trang",
+      "npcIntro": "s4_q5_intro",
+      "question": "Ảnh người cha cài áo phao cho con (khung 11 của M.P.V.) hình như tôi đã thấy ở đâu đó.",
+      "resources": [
+        "thuthao2025"
+      ],
+      "steps": [
         {
-          "id": "a",
-          "text": "Chỉ trong 1 bộ ảnh",
-          "correct": false,
-          "feedback": "Không. Ảnh xuất hiện ở cả lưới 9 ảnh và khung 11 của bộ 12 (F8)."
+          "id": "s1",
+          "type": "match",
+          "exhibit": "mco9",
+          "ref": {
+            "set": "mpv12",
+            "frame": 11
+          },
+          "answer": 4,
+          "ask": "Ô nào trong lưới 9 ảnh của M.C.O. là CÙNG MỘT ẢNH với khung 11 của M.P.V.?",
+          "wrong": {
+            "7": "Gần giống nhưng màu áo phao khác. So kỹ từng chi tiết."
+          },
+          "hints": [
+            "Tìm ô có hai chiếc áo phao.",
+            "Màu áo phao phải giống hệt khung 11."
+          ],
+          "walkthrough": "So khung 11 (hai áo phao màu cam) với từng ô: ô số 4 giống hệt; ô 7 có áo phao màu đỏ."
         },
         {
-          "id": "b",
-          "text": "Ở cả hai bộ; VTV xác nhận ảnh/câu chuyện do AI tạo và không có nguồn chính thức",
-          "correct": true,
-          "feedback": "Đúng (F8, F9). Việc dùng lại cùng ảnh ở hai bộ là một dấu hiệu bổ sung."
+          "id": "s2",
+          "type": "choice",
+          "ask": "Cùng một ảnh xuất hiện ở hai trang khác nhau cho thấy điều gì?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Hai trang cùng chụp tại hiện trường",
+              "correct": false,
+              "feedback": "Không có bằng chứng ai chụp tại hiện trường (F5)."
+            },
+            {
+              "id": "b",
+              "text": "Cùng một ảnh AI được nhiều trang dùng lại — thêm một dấu hiệu",
+              "correct": true,
+              "feedback": "Đúng (F8). Đây là dấu hiệu bổ sung, kết hợp với các dấu hiệu khác."
+            },
+            {
+              "id": "c",
+              "text": "Nhiều trang đăng nên ảnh chắc chắn là thật",
+              "correct": false,
+              "feedback": "Được đăng nhiều không làm ảnh thành thật."
+            }
+          ],
+          "hints": [
+            "Nhiều trang đăng cùng một ảnh có làm ảnh thật hơn không?"
+          ],
+          "walkthrough": "Chọn \"Cùng một ảnh AI được nhiều trang dùng lại\"."
+        },
+        {
+          "id": "s3",
+          "type": "choice",
+          "resources": [
+            "thuthao2025"
+          ],
+          "ask": "Mở bài VTV (Thu Thảo, 2025). Bài viết nói gì về các hình ảnh và câu chuyện này?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Do người trên tàu chụp lại",
+              "correct": false,
+              "feedback": "Bài VTV không nói vậy. Đọc lại đoạn giữa bài."
+            },
+            {
+              "id": "b",
+              "text": "Đều do AI dựng nên, không trích nguồn chính thống",
+              "correct": true,
+              "feedback": "Đúng. VTV viết: \"Tất cả hình ảnh và câu chuyện đều do AI dựng nên\" (F9)."
+            },
+            {
+              "id": "c",
+              "text": "Bài không nhắc tới",
+              "correct": false,
+              "feedback": "Bài có nhắc. Tìm câu có chữ \"AI dựng nên\"."
+            }
+          ],
+          "hints": [
+            "Tìm trong bài câu có cụm \"AI dựng nên\".",
+            "Bài cũng nói về chú thích \"tình tiết hư cấu\" khó nhìn thấy."
+          ],
+          "walkthrough": "Mở bài VTV → tìm câu \"Tất cả hình ảnh và câu chuyện đều do AI dựng nên\"."
         }
       ],
-      "hints": [
-        "Đếm số bộ ảnh có ảnh này.",
-        "Đọc phần VTV xác nhận."
-      ],
-      "gives": [
+      "feedback": {
+        "correct": "Rõ rồi. Ảnh được dùng lại ở hai trang, và VTV xác nhận hình ảnh, câu chuyện do AI dựng (F8, F9)."
+      },
+      "conclusion": "Cùng một ảnh AI xuất hiện ở cả hai bộ ảnh; VTV xác nhận hình ảnh và câu chuyện do AI dựng nên, không trích nguồn chính thống.",
+      "evidenceCards": [
         "ev_f8",
         "ev_f9"
       ],
       "unlocks": [
         "q6_detector"
       ],
-      "mode": "G6"
+      "sources": [
+        "baocao",
+        "thuthao2025"
+      ]
     },
     {
       "id": "q6_detector",
       "room": "S4",
       "order": 6,
       "required": true,
-      "title": "Công cụ phát hiện AI — chỉ là bằng chứng bổ trợ",
-      "prompt": "Hive cho khung 3 và 11: 99,9% AI. Dùng kết quả thế nào?",
-      "tool": {
-        "label": "Hive Moderation",
-        "sources": [
-          "hive"
-        ]
-      },
-      "options": [
+      "mode": "G5",
+      "title": "Công cụ phát hiện AI — chỉ là bổ trợ",
+      "npcIntro": "s4_q6_intro",
+      "question": "Nhóm đã chạy Hive Moderation cho khung 3 và khung 11. Đọc bản ghi kết quả.",
+      "resources": [
+        "hive"
+      ],
+      "safetyNote": "Link Hive chỉ để bạn thử với ảnh của chính mình. Không tải ảnh giả lên lại.",
+      "steps": [
         {
-          "id": "a",
-          "text": "Kết luận chắc chắn ảnh giả vì 99,9%",
-          "correct": false,
-          "feedback": "Sai. Công cụ phát hiện có thể sai; chỉ là bằng chứng bổ trợ (F7)."
+          "id": "s1",
+          "type": "input",
+          "exhibit": "hive",
+          "ask": "Theo bản ghi, Hive ước tính khả năng khung 3 là ảnh do AI tạo là bao nhiêu phần trăm?",
+          "accepts": [
+            "99,9",
+            "99.9",
+            "99 9"
+          ],
+          "fuzzy": false,
+          "placeholder": "ví dụ: 50%",
+          "hints": [
+            "Xem hàng đầu tiên của bản ghi Hive.",
+            "Con số gần 100%."
+          ],
+          "walkthrough": "Hàng \"Khả năng ảnh do AI tạo\", cột \"Khung 3\"."
         },
         {
-          "id": "b",
-          "text": "Dùng như bằng chứng bổ trợ, kết hợp lỗi thị giác, không có nguồn gốc, VTV xác nhận",
-          "correct": true,
-          "feedback": "Đúng (F7). Hive (chạy 11/10/2026): 99,9% AI, 0% deepfake; nguồn dự đoán Imagen 4 rồi Gemini; không có Content Credentials."
+          "id": "s2",
+          "type": "input",
+          "exhibit": "hive",
+          "ask": "Công cụ dự đoán nguồn tạo ảnh nhiều khả năng nhất là gì?",
+          "accepts": [
+            "imagen 4",
+            "imagen"
+          ],
+          "placeholder": "tên mô hình",
+          "hints": [
+            "Xem hàng \"Nguồn tạo dự đoán #1\"."
+          ],
+          "walkthrough": "Hàng \"Nguồn tạo dự đoán #1\": cả hai khung đều là Imagen 4."
+        },
+        {
+          "id": "s3",
+          "type": "choice",
+          "exhibit": "hive",
+          "ask": "Vậy dùng kết quả 99,9% này thế nào?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Kết luận chắc chắn ảnh giả vì 99,9%",
+              "correct": false,
+              "feedback": "Công cụ phát hiện có thể sai; chỉ là bằng chứng bổ trợ (F7)."
+            },
+            {
+              "id": "b",
+              "text": "Dùng làm bằng chứng bổ trợ, kết hợp lỗi thị giác, thiếu nguồn gốc và xác nhận của VTV",
+              "correct": true,
+              "feedback": "Đúng (F7). Nhiều bằng chứng độc lập mạnh hơn một con số."
+            },
+            {
+              "id": "c",
+              "text": "Bỏ qua vì công cụ có thể sai",
+              "correct": false,
+              "feedback": "Không bỏ, nhưng cũng không dựa riêng vào nó."
+            }
+          ],
+          "hints": [
+            "Dòng chú thích dưới bản ghi nói gì?",
+            "Bạn đã có những bằng chứng nào khác?"
+          ],
+          "walkthrough": "Chọn \"Dùng làm bằng chứng bổ trợ, kết hợp các bằng chứng khác\"."
         }
       ],
-      "hints": [
-        "Công cụ có thể sai.",
-        "Hãy kết hợp nhiều bằng chứng."
-      ],
-      "gives": [
+      "feedback": {
+        "correct": "Chuẩn. Detector chỉ là một mảnh ghép; chưa có Content Credentials cũng không nói lên ảnh thật hay giả (F7)."
+      },
+      "conclusion": "Hive cho khung 3 và 11: 99,9% khả năng ảnh AI, nguồn tạo dự đoán Imagen 4 — dùng làm bằng chứng bổ trợ, kết hợp các bằng chứng khác.",
+      "evidenceCards": [
         "ev_f7"
       ],
       "unlocks": [
         "q7_oldclips"
       ],
-      "mode": "G5"
+      "sources": [
+        "baocao",
+        "hive"
+      ]
     },
     {
       "id": "q7_oldclips",
@@ -869,6 +1125,52 @@
         "minhkhang2025",
         "baocao"
       ]
+    },
+    {
+      "id": "ev_f5",
+      "fact": "F5",
+      "title": "Không có bản gốc từ hiện trường",
+      "text": "Tìm ngược bằng Google Lens: không có phiên bản nào từ hãng tin, phóng viên hay nhân chứng; kết quả trùng khớp đều là bài cảnh báo ảnh giả.",
+      "sources": [
+        "baocao"
+      ]
+    },
+    {
+      "id": "ev_f6",
+      "fact": "F6",
+      "title": "Dấu hiệu AI quan sát được",
+      "text": "Tàu khác hình dạng ở khung 2, 5, 7, 12; chữ trên áo ở khung 9 méo; chi tiết đổi giữa khung 5 và 12; góc chụp cận cảnh giữa biển khó có người chụp hợp lý.",
+      "sources": [
+        "baocao"
+      ]
+    },
+    {
+      "id": "ev_f7",
+      "fact": "F7",
+      "title": "Công cụ phát hiện AI (bổ trợ)",
+      "text": "Hive (11/10/2026), khung 3 và 11: 99,9% khả năng ảnh AI, 0% deepfake; nguồn tạo dự đoán Imagen 4, kế đến Gemini; không có Content Credentials.",
+      "sources": [
+        "baocao",
+        "hive"
+      ]
+    },
+    {
+      "id": "ev_f8",
+      "fact": "F8",
+      "title": "Một ảnh AI được dùng lại",
+      "text": "Ảnh người cha cài áo phao cho con xuất hiện ở cả lưới 9 ảnh của M.C.O. và khung 11 của M.P.V.",
+      "sources": [
+        "baocao"
+      ]
+    },
+    {
+      "id": "ev_f9",
+      "fact": "F9",
+      "title": "VTV xác nhận do AI dựng",
+      "text": "VTV: hình ảnh và câu chuyện đều do AI dựng nên, không trích nguồn chính thống; nhiều bài không ghi chú hoặc ghi rất khó thấy.",
+      "sources": [
+        "thuthao2025"
+      ]
     }
   ],
   "areas": {
@@ -939,5 +1241,189 @@
         "simulated": true
       }
     ]
+  },
+  "exhibits": {
+    "note": "Lưới ảnh là MÔ PHỎNG trừu tượng (khối hình, không có người/mặt người), không phải ảnh gốc. Bảng kết quả công cụ là bản ghi lại theo báo cáo của nhóm, giao diện MÔ PHỎNG.",
+    "mpv12": {
+      "title": "Bộ ghép 12 khung — Fanpage M.P.V. (MÔ PHỎNG)",
+      "cols": 4,
+      "frames": [
+        {
+          "n": 1,
+          "kind": "sea"
+        },
+        {
+          "n": 2,
+          "kind": "boat",
+          "hull": "A"
+        },
+        {
+          "n": 3,
+          "kind": "storm"
+        },
+        {
+          "n": 4,
+          "kind": "karst"
+        },
+        {
+          "n": 5,
+          "kind": "boat",
+          "hull": "B",
+          "buoy": "red"
+        },
+        {
+          "n": 6,
+          "kind": "sea",
+          "blur": true
+        },
+        {
+          "n": 7,
+          "kind": "boat",
+          "hull": "C"
+        },
+        {
+          "n": 8,
+          "kind": "storm"
+        },
+        {
+          "n": 9,
+          "kind": "shirt"
+        },
+        {
+          "n": 10,
+          "kind": "karst",
+          "blur": true
+        },
+        {
+          "n": 11,
+          "kind": "vest",
+          "tone": "orange"
+        },
+        {
+          "n": 12,
+          "kind": "boat",
+          "hull": "D",
+          "buoy": "yellow"
+        }
+      ]
+    },
+    "mco9": {
+      "title": "Lưới 9 ảnh — Fanpage M.C.O. (MÔ PHỎNG)",
+      "cols": 3,
+      "frames": [
+        {
+          "n": 1,
+          "kind": "storm"
+        },
+        {
+          "n": 2,
+          "kind": "sea"
+        },
+        {
+          "n": 3,
+          "kind": "karst"
+        },
+        {
+          "n": 4,
+          "kind": "vest",
+          "tone": "orange"
+        },
+        {
+          "n": 5,
+          "kind": "boat",
+          "hull": "B"
+        },
+        {
+          "n": 6,
+          "kind": "shirt"
+        },
+        {
+          "n": 7,
+          "kind": "vest",
+          "tone": "red"
+        },
+        {
+          "n": 8,
+          "kind": "storm"
+        },
+        {
+          "n": 9,
+          "kind": "karst"
+        }
+      ]
+    },
+    "lens": {
+      "title": "Bản ghi kết quả Google Lens theo báo cáo (giao diện MÔ PHỎNG)",
+      "query": "Tìm ngược các khung trong hai bộ ảnh",
+      "rows": [
+        {
+          "site": "VTV",
+          "kind": "Bài cảnh báo ảnh giả"
+        },
+        {
+          "site": "Dân trí",
+          "kind": "Bài cảnh báo ảnh giả"
+        },
+        {
+          "site": "Báo Thanh tra",
+          "kind": "Bài cảnh báo ảnh giả"
+        },
+        {
+          "site": "Home.vn",
+          "kind": "Bài cảnh báo ảnh giả"
+        },
+        {
+          "site": "Các bài đăng Facebook",
+          "kind": "Bài đăng cảnh báo ảnh giả"
+        }
+      ],
+      "footer": "Không có kết quả nào từ hãng tin, phóng viên hay nhân chứng tại hiện trường.",
+      "fact": "F5",
+      "sources": [
+        "baocao"
+      ]
+    },
+    "hive": {
+      "title": "Bản ghi kết quả Hive Moderation theo báo cáo (giao diện MÔ PHỎNG)",
+      "runDate": "Ngày chạy: 11/10/2026",
+      "columns": [
+        "",
+        "Khung 3",
+        "Khung 11"
+      ],
+      "rows": [
+        [
+          "Khả năng ảnh do AI tạo",
+          "99,9%",
+          "99,9%"
+        ],
+        [
+          "Khả năng deepfake",
+          "0%",
+          "0%"
+        ],
+        [
+          "Nguồn tạo dự đoán #1",
+          "Imagen 4 (70%)",
+          "Imagen 4 (86,1%)"
+        ],
+        [
+          "Nguồn tạo dự đoán #2",
+          "Gemini (23,6%)",
+          "Gemini (12,6%)"
+        ],
+        [
+          "Content Credentials",
+          "Không tìm thấy",
+          "Không tìm thấy"
+        ]
+      ],
+      "footer": "Báo cáo coi đây là dữ liệu bổ trợ, không phải phán quyết.",
+      "fact": "F7",
+      "sources": [
+        "baocao",
+        "hive"
+      ]
+    }
   }
 }

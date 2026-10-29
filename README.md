@@ -53,7 +53,8 @@ GitHub Pages chỉ phục vụ từ thư mục gốc hoặc `/docs`, nên đẩy
 
 - Đã có (giai đoạn 1): màn hình chính có cảnh báo nội dung, văn phòng đi lại được, NPC đi tuần và dẫn đường, Phòng Hồ sơ (Q1, Q2) trong hội thoại, balo, lịch sử theo NPC.
 - Đã có: intro trên nền vịnh Hạ Long chuyển động (vẽ bằng code, `js/bay.js`) với 5 thẻ bối cảnh vụ án có trích nguồn.
-- Chưa có: art và nhạc thật (giai đoạn 2), bối cảnh ngoài trời (4), các phòng Q3–Q13 (5), boss và kết quả (6).
+- Đã có: Phòng Phân tích ảnh (Q3–Q6) với Khải — bản ghi Google Lens/Hive theo báo cáo, kính soi lỗi trên lưới 12 khung MÔ PHỎNG, tìm ảnh dùng lại giữa hai bộ.
+- Chưa có: art và nhạc thật, bối cảnh ngoài trời, các phòng Q7–Q13, boss và kết quả.
 
 ## Nguồn tài nguyên (giấy phép)
 
