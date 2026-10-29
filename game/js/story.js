@@ -298,7 +298,7 @@ let activeQuest = null; // nhiệm vụ đang chạy (để thiết bị kho bá
 
 /**
  * Nhiệm vụ nhiều bước (choice | input | flaws | match...); mỗi bước có tư liệu, gợi ý và hướng dẫn riêng.
- * Bước có `tool` chỉ làm được tại thiết bị đó ở Phòng thám tử: NPC gửi người chơi tới thiết bị, làm xong ở thiết bị
+ * Bước có `tool` chỉ làm được tại thiết bị đó ở Phòng xác minh: NPC gửi người chơi tới thiết bị, làm xong ở thiết bị
  * thì quay lại NPC. device: thiết bị đang dùng (null = đang nói chuyện với NPC). Trả về 'done' | 'later' | 'tool'.
  */
 async function runSteps(q, qs, npc, device = null) {
@@ -374,7 +374,7 @@ export function questForDevice(device) {
   return list.find(q => q.id === state.progress.tracked) || list[0] || null;
 }
 
-/** Người chơi dùng một thiết bị ở Phòng thám tử. */
+/** Người chơi dùng một thiết bị ở Phòng xác minh. */
 export async function useDevice(device) {
   const sp = deviceSpeaker(device);
   const q = questForDevice(device);

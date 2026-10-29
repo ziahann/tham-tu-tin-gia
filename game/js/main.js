@@ -1,5 +1,5 @@
 // Khởi động: tải dữ liệu, màn hình chính, Phaser, thanh trên, balo, cài đặt, nguồn.
-import { data, loadAll, t, sourceById, shortCite } from './data.js';
+import { data, loadAll, t, citeLine } from './data.js';
 import { Bay } from './bay.js';
 import { playMusic, unlockMusic, refreshMusic, musicSupported } from './music.js';
 import { stopAmbience } from './audio.js';
@@ -103,7 +103,7 @@ function renderIntroCard() {
   $('intro-step').textContent = t('intro.step', { n: introIdx + 1, total: intro.cards.length });
   $('intro-title').textContent = card.title + (card.simulated ? ` · ${t('simulated')}` : '');
   $('intro-text').textContent = card.text;
-  $('intro-cite').textContent = card.cite ? t('intro.sources', { list: card.cite.map(id => shortCite(sourceById(id))).join('; ') }) : '';
+  $('intro-cite').textContent = card.cite && citeLine(card.cite) ? t('intro.sources', { list: citeLine(card.cite) }) : '';
   $('intro-phone').hidden = !card.overlay;
   if (card.overlay) renderPhone(card.overlay === 'phone-fake');
   $('intro-next').focus();
@@ -128,7 +128,7 @@ function nextIntro() {
   else finishIntro();
 }
 
-/** Bước cuối intro: ba câu hỏi xác minh và ô đặt tên thám tử. */
+/** Bước cuối intro: ba câu hỏi xác minh và ô đặt tên nhân vật. */
 function finishIntro() {
   const intro = data.quests.intro;
   introIdx = intro.cards.length - 1;
@@ -180,7 +180,7 @@ function startGame(isNew) {
 /** Danh mục nguồn APA: đọc tóm tắt ngay trong game; link bài gốc chỉ là phụ. */
 function openSources() {
   const wrap = el('div');
-  for (const src of data.sources.sources) {
+  for (const src of data.sources.sources.filter(s => !s.internal)) {
     const box = el('div', 'resource');
     box.append(el('span', null, src.apa));
     const row = el('div', 'row');
