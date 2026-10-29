@@ -457,7 +457,20 @@ button.frame:hover { border-color: var(--grey); }
 .note-line .cite { display: block; }
 
 /* ---------- Huy hiệu kỹ năng (thay cho điểm) ---------- */
-.badge-shelf { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; margin: 6px 0; }
-.badge { display: flex; flex-direction: column; gap: 2px; background: rgb(255 200 87 / 0.1); border: 2px solid var(--straw); padding: 6px 8px; }
+.badge-shelf { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 8px; margin: 6px 0; }
+.badge { display: flex; gap: 8px; align-items: center; background: rgb(255 200 87 / 0.08); border: 2px solid var(--straw); padding: 6px 8px; }
+.badge-img { width: 48px; height: 56px; image-rendering: pixelated; flex: none; }
+.badge-txt { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .badge strong { color: var(--straw); font-weight: normal; }
 .badge span { font-size: 0.85em; color: var(--paper); }
+.badge.is-locked { border-color: var(--grey-dark); background: transparent; }
+.badge.is-locked .badge-img { filter: grayscale(1) brightness(0.45); }
+.badge.is-locked strong, .badge.is-locked span { color: var(--muted); }
+.badge-pop {
+  position: fixed; left: 50%; top: 30%; transform: translate(-50%, -50%); z-index: 60;
+  display: flex; flex-direction: column; align-items: center; gap: 6px; pointer-events: none;
+  background: rgb(14 20 34 / 0.92); border: var(--px) solid var(--straw); padding: 12px 18px; color: var(--straw);
+  animation: badge-in 0.5s steps(5);
+}
+.badge-pop img { width: 96px; height: 112px; image-rendering: pixelated; }
+@keyframes badge-in { from { transform: translate(-50%, -50%) scale(0.4); opacity: 0; } }

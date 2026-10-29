@@ -1,4 +1,5 @@
 // Cảnh bản đồ Phaser: bản đồ Tiled, người chơi đi lại, NPC, cửa phòng, khu vực, gợi ý tương tác.
+// Logic chạy trên lưới vuông; hiển thị isometric qua js/iso.js (sprite vật lý ẩn, ảnh hiển thị đặt theo phép chiếu).
 import { data, t } from './data.js';
 import { state, saveProgress, hasFlag } from './state.js';
 import { direction } from './input.js';
@@ -11,6 +12,7 @@ import { buildGraph, guideTarget, updateTrackLine, GuideArrow } from './guide.js
 import { Weather } from './weather.js';
 import { Traffic, VEHICLE_SPRITES } from './traffic.js';
 import { sfx, footstep, setAmbience } from './audio.js';
+import { iso, setupIso, buildGround, buildWalls, ViewLayer, fadeOccluders, shearedText, WALL_H } from './iso.js';
 
 const MAPS = ['tn_lobby', 'tn_f2', 'tn_f3', 'tn_f4', 'tn_f5', 'street', 'newsroom', 'cafe', 'agency', 'boss'];
 const SPEED = 120;
@@ -38,6 +40,9 @@ export class WorldScene extends Phaser.Scene {
     this.load.atlas('props', 'assets/props/props.png', 'assets/props/props.json');
     this.load.json('propsMeta', 'assets/props/props_meta.json');
     this.load.image('tiles', 'assets/tiles/tiles.png');
+    this.load.spritesheet('tilesheet', 'assets/tiles/tiles.png', { frameWidth: 32, frameHeight: 32 });
+    this.load.spritesheet('isoground', 'assets/iso/ground.png', { frameWidth: 64, frameHeight: 32 });
+    this.load.spritesheet('isowalls', 'assets/iso/walls.png', { frameWidth: 64, frameHeight: 32 + WALL_H });
     this.load.spritesheet('hero', `assets/sprites/${heroSprite()}.png`, { frameWidth: 32, frameHeight: 48 });
     spriteIds().forEach(id => this.load.spritesheet(id, `assets/sprites/${id}.png`, { frameWidth: 32, frameHeight: 48 }));
     VEHICLE_SPRITES.forEach(id => this.load.image(id, `assets/sprites/${id}.png`));
@@ -60,6 +65,12 @@ export class WorldScene extends Phaser.Scene {
     this.walls.setCollisionByProperty({ collides: true });
     this.doors.setCollisionByProperty({ collides: true });
     ['hero', ...spriteIds()].forEach(id => makeAnims(this, id));
+    // Hiển thị isometric: lớp tilemap chỉ để va chạm / tra cứu; nền và tường vẽ lại theo phép chiếu
+    this.isoSize = setupIso(map.widthInPixels, map.heightInPixels);
+    [this.ground, this.walls, this.doors].forEach(l => l.setVisible(false));
+    this.groundRTs = buildGround(this, map, this.ground, this.walls);
+    this.wallImgs = buildWalls(this, map, this.walls);
+    this.views = new ViewLayer(this);
 
     const objs = map.getObjectLayer('objects').objects;
     this.paths = {};
@@ -75,17 +86,16 @@ export class WorldScene extends Phaser.Scene {
     this.elevators = objs.filter(o => o.type === 'elevator');
     // Chữ trên tường / sàn (biển tầng, tên tòa nhà)
     for (const o of objs.filter(o => o.type === 'label')) {
-      this.add.text(o.x, o.y, propOf(o, 'text'), {
-        fontFamily: 'VT323', fontSize: `${propOf(o, 'size') || 16}px`, color: propOf(o, 'color') || '#e8ecf2', align: 'center',
-        // bảng tên tầng: nền tối có viền như biển gắn tường
-        ...(propOf(o, 'plate') ? { backgroundColor: '#0e1015', padding: { x: 8, y: 2 } } : {})
-      }).setOrigin(0.5).setDepth(2).setResolution(2);
+      // chữ vẽ cắt xiên nằm trên mặt tường (bảng tên tầng: nền tối)
+      const tx = shearedText(this, String(propOf(o, 'text')).split('\n'), { size: propOf(o, 'size') || 16, color: propOf(o, 'color') || '#e8ecf2', plate: !!propOf(o, 'plate') });
+      const make = (x, y) => this.add.image(x - tx.w / 2, y - tx.w / 4, tx.key).setOrigin(0, (tx.h0 / 2) / tx.h);
+      this.sliceOnWall(make, o.x, o.y, o.x - tx.w / 2);
     }
     // Thiết bị ở Phòng xác minh: có dấu "!" khi hồ sơ đang chờ thiết bị đó.
     this.devices = objs.filter(o => o.type === 'device').map(o => ({
       obj: o,
       id: propOf(o, 'device'),
-      marker: this.add.text(o.x + o.width / 2, o.y - 2, '!', { fontFamily: 'VT323', fontSize: '28px', color: '#f2d36b', stroke: '#0f0e17', strokeThickness: 4 })
+      marker: this.add.text(iso.P(o.x + o.width / 2, o.y).x, iso.P(o.x + o.width / 2, o.y).y - 40, '!', { fontFamily: 'VT323', fontSize: '28px', color: '#f2d36b', stroke: '#0f0e17', strokeThickness: 4 })
         .setOrigin(0.5, 1).setDepth(100000).setVisible(false)
     }));
     this.doorObjs = objs.filter(o => o.type === 'door').map(o => ({
@@ -101,6 +111,7 @@ export class WorldScene extends Phaser.Scene {
     this.player = this.physics.add.sprite(start.x, start.y, 'hero', 0);
     feetBody(this.player);
     this.player.setCollideWorldBounds(true);
+    this.views.add(this.player);
     this.facing = this.args.spawn ? (this.args.dir || 'down') : saved?.dir || 'up';
     this.savePos();
     this.player.setFrame(idleFrame(this.facing));
@@ -128,7 +139,7 @@ export class WorldScene extends Phaser.Scene {
 
     // Camera
     const cam = this.cameras.main;
-    cam.startFollow(this.player, true, 0.2, 0.2);
+    cam.startFollow(this.player.view, true, 0.2, 0.2);
     cam.setRoundPixels(true);
     this.fitCamera();
     this.scale.on('resize', () => this.fitCamera());
@@ -151,8 +162,9 @@ export class WorldScene extends Phaser.Scene {
     buildGraph(this, MAPS);
     this.guide = new GuideArrow(this);
     this.traffic = objs.some(o => o.type === 'lane') ? new Traffic(this, objs, this.player) : null;
-    this.weather = new Weather(this, () => [this.ground, this.walls, this.doors, this.player, ...this.props.map(p => p.img),
-      ...[...this.npcs.values()].map(n => n.sprite), ...(this.traffic?.sprites() || [])], () => this.propLights);
+    this.weather = new Weather(this, () => [...this.groundRTs, ...this.wallImgs, ...this.views.views(), ...this.props.map(p => p.img), ...this.propExtras],
+      () => this.propLights);
+    this.occluders = [...this.wallImgs.filter(w => w.tall), ...this.props.filter(p => !p.meta.flat && !p.meta.wall).map(p => p.img)];
     this.reduceMotion = state.settings.reduceMotion;
     story.setWorld(this);
     this.refresh();
@@ -194,8 +206,38 @@ export class WorldScene extends Phaser.Scene {
 
   /** Bong bóng biểu cảm trên đầu nhân vật chính ('hero') hoặc một NPC. */
   emote(who, ch) {
-    if (who === 'hero') showEmote(this, this.player, ch);
-    else { const npc = this.npcs.get(who); if (npc) showEmote(this, npc.sprite, ch); }
+    if (who === 'hero') showEmote(this, this.player.view, ch);
+    else { const npc = this.npcs.get(who); if (npc) showEmote(this, npc.sprite.view || npc.sprite, ch); }
+  }
+
+  /**
+   * Đồ / chữ gắn trên tường bắc: cắt thành cột rộng 32 px, mỗi cột có độ sâu ngay trên khối tường cùng cột,
+   * nên không bao giờ che người đứng trước tường. make() tạo một bản (ảnh hoặc chữ) đã đặt vị trí; lx, ly: toạ độ logic.
+   */
+  sliceOnWall(make, lx, ly, leftLX = null) {
+    // hàng tường trước cùng của cột này (ô tường cuối cùng trước khi gặp sàn): đồ dán lên mặt nam của nó
+    const tx = Math.max(0, Math.min(this.map.width - 1, Math.floor(lx / 32)));
+    let ty = Math.max(0, Math.floor(ly / 32));
+    while (ty < this.map.height && this.walls.getTileAt(tx, ty)) ty++;
+    const faceY = ty * 32;
+    const lift = Math.max(0, faceY - ly) * (WALL_H / 64); // độ cao trên tường (tường 2 ô ≈ WALL_H px)
+    const p = iso.P(lx, faceY);
+    const first = make(p.x, p.y - lift);
+    const w = first.width;
+    // ảnh cắt xiên: 1 px ngang trên màn hình = 1 px logic dọc tường; mép trái ứng với leftLX
+    const left = leftLX ?? lx - w * first.originX;
+    // cắt đúng ranh giới ô (mỗi phần nằm gọn trên mặt của một khối tường, độ sâu ngay trên khối đó)
+    const parts = [];
+    for (let cx = 0; cx < w;) {
+      const lxAt = left + cx;
+      const next = Math.min(w, (Math.floor(lxAt / 32) + 1) * 32 - left);
+      const o = cx === 0 ? first : make(p.x, p.y - lift);
+      o.setCrop(cx, 0, next - cx, o.height);
+      o.setDepth(iso.depth(Math.floor(lxAt / 32) * 32 + 16, faceY - 16) + 2);
+      parts.push(o);
+      cx = next;
+    }
+    return parts;
   }
 
   /** Gỡ mặt nạ boss: thay sprite bằng khung trống. */
@@ -208,8 +250,9 @@ export class WorldScene extends Phaser.Scene {
   fitCamera() {
     const { width, height } = this.scale;
     const cam = this.cameras.main;
-    cam.setZoom(Math.max(1, Math.floor(Math.min(width / 640, height / 360))));
-    cam.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
+    // ô thoi rộng 64 px: zoom theo bước 0,5 để vẫn nét
+    cam.setZoom(Math.max(1, Math.floor(Math.min(width / 900, height / 500) * 2) / 2));
+    cam.setBounds(0, -480, this.isoSize.width, this.isoSize.height + 560);
   }
 
   /** Các ô của lớp cửa nằm trong một object (để gỡ / đặt lại khi khóa mở). */
@@ -244,6 +287,7 @@ export class WorldScene extends Phaser.Scene {
     if (this.weather?.kind === 'night' && this.renderer.type === Phaser.WEBGL) npc.sprite.setPipeline('Light2D');
     this.npcs.set(id, npc);
     npc.collider = this.physics.add.collider(this.player, npc.sprite);
+    this.views.add(npc.sprite);
     this.placeNpc(id);
     return npc;
   }
@@ -351,7 +395,8 @@ export class WorldScene extends Phaser.Scene {
     npc.talking = talking;
     if (talking) {
       npc.face(this.player.x, this.player.y);
-      this.facing = dirFrom(npc.sprite.x - this.player.x, npc.sprite.y - this.player.y);
+      const d = iso.toScreenDir(npc.sprite.x - this.player.x, npc.sprite.y - this.player.y);
+      this.facing = dirFrom(d.x, d.y);
       this.player.setFrame(idleFrame(this.facing));
     }
   }
@@ -367,25 +412,30 @@ export class WorldScene extends Phaser.Scene {
 
   /** Thứ người chơi đang nhìn vào (NPC, đồ vật, cửa). */
   findTarget() {
-    const off = { down: [0, 18], up: [0, -26], left: [-22, -6], right: [22, -6] }[this.facing];
-    const fx = this.player.x + off[0], fy = this.player.y + off[1];
+    // điểm phía trước theo hướng nhìn trên màn hình, đổi về toạ độ logic (đi chéo vẫn trúng)
+    const sd = { down: [0, 1], up: [0, -1], left: [-1, 0], right: [1, 0] }[this.facing];
+    const ld = iso.toLogicalDir(sd[0], sd[1]);
+    const len = Math.hypot(ld.x, ld.y) || 1;
+    const fx = this.player.x + (ld.x / len) * 20, fy = this.player.y - 6 + (ld.y / len) * 20;
     let best = null, bestD = Infinity;
+    // kết quả mang toạ độ logic (x, y); gợi ý E được chiếu khi vẽ
     this.npcs.forEach((npc, id) => {
       const big = npc.sprite.scale > 1; // boss to hơn: tầm nói chuyện rộng hơn
-      const d = Phaser.Math.Distance.Between(fx, fy, npc.sprite.x, npc.sprite.y - 12);
-      if (d < (big ? 64 : 34) && d < bestD) { best = { kind: 'npc', id, x: npc.sprite.x, y: npc.sprite.y - (big ? 80 : 54) }; bestD = d; }
+      const d = Phaser.Math.Distance.Between(fx, fy, npc.sprite.x, npc.sprite.y - 6);
+      if (d < (big ? 70 : 40) && d < bestD) { best = { kind: 'npc', id, x: npc.sprite.x, y: npc.sprite.y, lift: big ? 84 : 58 }; bestD = d; }
     });
     if (best) return best;
-    const lift = this.elevators.find(o => inRect(o, fx, fy, 6));
-    if (lift) return { kind: 'elevator', x: lift.x + lift.width / 2, y: lift.y - 8 };
-    const dev = this.devices.find(d => inRect(d.obj, fx, fy, 4));
-    if (dev) return { kind: 'device', id: dev.id, x: dev.obj.x + dev.obj.width / 2, y: dev.obj.y - 4 };
-    const ins = this.inspects.find(o => inRect(o, fx, fy, 4));
-    if (ins) return { kind: 'inspect', key: propOf(ins, 'text'), x: ins.x + ins.width / 2, y: ins.y - 4 };
-    const door = this.doorObjs.find(d => inRect(d.obj, fx, fy, 4) && d.status !== 'open' && d.status !== 'done');
-    if (door) return { kind: 'door', door, x: door.obj.x + door.obj.width / 2, y: door.obj.y + door.obj.height - 40 };
-    const portal = this.portals.find(o => inRect(o, fx, fy, 6));
-    if (portal) return { kind: 'portal', portal, x: portal.x + portal.width / 2, y: portal.y - 6 };
+    const PAD = 10;
+    const lift = this.elevators.find(o => inRect(o, fx, fy, PAD));
+    if (lift) return { kind: 'elevator', x: lift.x + lift.width / 2, y: lift.y + lift.height, lift: 70 };
+    const dev = this.devices.find(d => inRect(d.obj, fx, fy, PAD));
+    if (dev) return { kind: 'device', id: dev.id, x: dev.obj.x + dev.obj.width / 2, y: dev.obj.y + dev.obj.height, lift: 50 };
+    const ins = this.inspects.find(o => inRect(o, fx, fy, PAD));
+    if (ins) return { kind: 'inspect', key: propOf(ins, 'text'), x: ins.x + ins.width / 2, y: ins.y + ins.height, lift: 40 };
+    const door = this.doorObjs.find(d => inRect(d.obj, fx, fy, PAD) && d.status !== 'open' && d.status !== 'done');
+    if (door) return { kind: 'door', door, x: door.obj.x + door.obj.width / 2, y: door.obj.y + door.obj.height, lift: 40 };
+    const portal = this.portals.find(o => inRect(o, fx, fy, PAD));
+    if (portal) return { kind: 'portal', portal, x: portal.x + portal.width / 2, y: portal.y + portal.height, lift: 40 };
     return null;
   }
 
@@ -436,33 +486,49 @@ export class WorldScene extends Phaser.Scene {
     this.props = [];
     this.propLights = [];
     this.propBodies = this.physics.add.staticGroup();
+    this.propExtras = [];
     for (const o of objs.filter(o => o.type === 'prop')) {
       const m = meta[o.name];
       if (!m) continue;
       // ox: tâm mặt tiền trong ảnh (tòa nhà giả 3D có mặt hông bên phải nên tâm ảnh lệch khỏi tâm mặt tiền)
       const mirror = propOf(o, 'flip') && !m.building;
       const ox = mirror ? 1 - (m.ox ?? 0.5) : m.ox ?? 0.5;
-      const img = this.add.image(o.x, o.y, 'props', o.name).setOrigin(ox, 1);
-      if (mirror) img.setFlipX(true);
-      img.setDepth(m.flat ? 0.5 : m.wall ? o.y - 40 : o.y);
-      const left = o.x - m.w * ox, top = o.y - m.h;
       const [bw, bh] = m.base || [0, 0];
+      // vị trí hiển thị: chân đồ vật chiếu isometric; đồ phẳng (thảm) nằm sát nền; đồ dán tường đặt trên mặt tường
+      const p = iso.P(o.x, o.y);
+      const make = (x, y) => { const im = this.add.image(x, y, 'props', o.name).setOrigin(ox, 1); if (mirror) im.setFlipX(true); return im; };
+      // đồ dán tường: dùng bản cắt xiên <khóa>@iso; điểm neo là chân mép trái, nằm trên mặt tường
+      const isoKey = `${o.name}@iso`, im2 = meta[isoKey];
+      const makeWall = (x, y) => this.add.image(x - m.w * ox, y + (m.w * ox) / 2, 'props', isoKey).setOrigin(0, im2.h0 / im2.h);
+      // khối isometric: <khóa>@iso (đồ vật, tàu; tàu quay ngược: @isoW) hoặc chính khóa (tòa nhà có meta.iso)
+      const isoName = mirror && meta[`${o.name}@isoW`] ? `${o.name}@isoW` : meta[`${o.name}@iso`]?.iso ? `${o.name}@iso` : m.iso ? o.name : null;
+      const im = isoName ? meta[isoName] : null;
+      let img, left, top, lights = m.lights;
+      if (m.wall) {
+        const parts = this.sliceOnWall(im2 ? makeWall : make, o.x, o.y, o.x - m.w * ox);
+        img = parts[0]; this.propExtras.push(...parts.slice(1));
+        left = img.x; top = img.y - img.height * img.originY; lights = [];
+      } else if (im) {
+        const q = iso.P(o.x - im.iso.fw / 2, o.y);
+        img = this.add.image(q.x, q.y, 'props', isoName).setOrigin(0, im.iso.ay / im.h);
+        img.setDepth(iso.depth(o.x, o.y - im.iso.d / 2));
+        left = q.x; top = q.y - im.iso.ay; lights = im.lights;
+      } else {
+        img = make(p.x, p.y); img.setDepth(m.flat ? -5 : iso.depth(o.x, o.y - (bh || 16) / 2));
+        left = img.x - m.w * ox; top = img.y - m.h;
+      }
       if (bw && bh && !m.flat && !m.wall) {
         const z = this.add.zone(o.x, o.y - bh / 2, bw, bh);
         this.propBodies.add(z);
       }
-      const flipped = propOf(o, 'flip') && !m.building;
-      (m.lights || []).forEach(([lx, ly, c, r, i]) => this.propLights.push([left + (flipped ? m.w - lx : lx), top + ly, c, r, i]));
+      (lights || []).forEach(([lx, ly, c, r, i]) => this.propLights.push([left + lx, top + ly, c, r, i]));
+      // biển hiệu tòa nhà: chữ cắt xiên nằm đúng trên mặt tiền
       const text = propOf(o, 'sign');
-      if (text && m.sign) {
-        const sx = left + m.sign.x + m.sign.w / 2, sy = top + m.sign.y + m.sign.h / 2;
-        const sub = propOf(o, 'sub');
-        this.add.text(sx, sy - (sub ? 6 : 0), text, { fontFamily: 'VT323', fontSize: '20px', color: propOf(o, 'signColor') || '#e8ecf2' })
-          .setOrigin(0.5).setDepth(img.depth + 1).setResolution(2);
-        if (sub) this.add.text(sx, sy + 9, sub, { fontFamily: 'VT323', fontSize: '11px', color: '#a3adbf' }).setOrigin(0.5).setDepth(img.depth + 1).setResolution(2);
+      const sg = im?.sign || m.sign;
+      if (text && sg) {
+        const tx = shearedText(this, [text], { size: 20, color: propOf(o, 'signColor') || '#e8ecf2', sub: propOf(o, 'sub'), fixed: { w: sg.w, h: sg.h } });
+        this.add.image(left + sg.x, top + sg.y, tx.key).setOrigin(0).setDepth(img.depth + 1);
       }
-      // bóng đổ chéo của tòa nhà (atlas: <khóa>_shadow), nằm sát mặt đất
-      if (m.building && meta[`${o.name}_shadow`]) this.add.image(left, o.y, 'props', `${o.name}_shadow`).setOrigin(0, 1).setDepth(0.5);
       this.props.push({ img, obj: o, meta: m });
     }
     this.physics.add.collider(this.player, this.propBodies);
@@ -502,7 +568,11 @@ export class WorldScene extends Phaser.Scene {
     const frozen = this.leaving || story.isBusy() || window.uiBlocked?.();
     let { x, y } = frozen ? { x: 0, y: 0 } : direction();
     if (x && y) { x *= Math.SQRT1_2; y *= Math.SQRT1_2; }
-    this.player.setVelocity(x * SPEED, y * SPEED);
+    // phím theo hướng màn hình → vận tốc logic (lên màn hình = lùi chéo về tây bắc trên lưới)
+    const lv = iso.toLogicalDir(x, y);
+    const ll = Math.hypot(lv.x, lv.y) || 1;
+    const sp = Math.hypot(x, y) * SPEED;
+    this.player.setVelocity((lv.x / ll) * sp, (lv.y / ll) * sp);
     if (x || y) {
       this.facing = dirFrom(x, y);
       this.player.anims.play(`hero-walk-${this.facing}`, true);
@@ -519,15 +589,17 @@ export class WorldScene extends Phaser.Scene {
       this.player.anims.stop();
       this.player.setFrame(idleFrame(this.facing));
     }
-    this.player.setDepth(this.player.y);
     this.npcs.forEach(n => n.update(delta, frozen, this.player));
     this.traffic?.update(delta, frozen);
-    if (!this.reduceMotion) this.devices.forEach((d, i) => d.marker.setY(d.obj.y - 2 + Math.round(Math.sin(time / 250 + i) * 2)));
+    this.views.sync();
+    fadeOccluders(this.occluders, this.player.view);
+    if (!this.reduceMotion) this.devices.forEach((d, i) => d.marker.setY(iso.P(d.obj.x + d.obj.width / 2, d.obj.y).y - 40 + Math.round(Math.sin(time / 250 + i) * 2)));
 
-    this.weather.update(delta, this.player);
+    this.weather.update(delta, this.player.view);
     this.ambIn -= delta;
     if (this.ambIn <= 0) { this.updateAmbience(250 - this.ambIn); this.ambIn = 250; }
-    this.guide.draw(this.player, frozen ? null : guideTarget(this), time);
+    const gt = frozen ? null : guideTarget(this);
+    this.guide.draw(this.player.view, gt && { ...iso.P(gt.x, gt.y), here: gt.here }, time);
     if (frozen) { this.prompt.setVisible(false); return; }
     this.checkZone();
     const exit = this.exits.find(o => inRect(o, this.player.x, this.player.y));
@@ -540,6 +612,6 @@ export class WorldScene extends Phaser.Scene {
     }
     this.target = this.findTarget();
     this.prompt.setVisible(!!this.target);
-    if (this.target) this.prompt.setPosition(this.target.x, this.target.y);
+    if (this.target) { const p = iso.P(this.target.x, this.target.y); this.prompt.setPosition(p.x, p.y - (this.target.lift || 40)); }
   }
 }

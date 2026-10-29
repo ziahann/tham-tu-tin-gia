@@ -63,6 +63,18 @@ export function render() {
   ({ notebook, quests, pinboard, history })[tab]();
 }
 
+/** Thẻ huy hiệu: hình huy hiệu (assets/badges/<mã>.png), tên, điều đã học; chưa nhận thì mờ và ẩn nội dung. */
+export function badgeCard(room, got) {
+  const d = el('div', `badge${got ? '' : ' is-locked'}`);
+  const img = el('img', 'badge-img');
+  img.src = `assets/badges/${room.id}.png`;
+  img.alt = '';
+  const txt = el('div', 'badge-txt');
+  txt.append(el('strong', null, room.badge.name), el('span', null, got ? room.badge.learned : t('backpack.badgeLocked', { room: room.name })));
+  d.append(img, txt);
+  return d;
+}
+
 /** Thẻ evidence có dẫn nguồn. */
 export function evidenceCard(ev) {
   const card = el('div', 'ev-card');
@@ -77,10 +89,10 @@ export function evidenceCard(ev) {
 /** Sổ tay: huy hiệu kỹ năng, câu hỏi xác minh, thẻ evidence, ghi chép từ báo. */
 function notebook() {
   els.body.append(el('h3', null, t('backpack.badges')));
-  const badges = earnedBadges(state.progress?.flags || []);
-  if (!badges.length) els.body.append(el('p', 'muted', t('backpack.noBadges')));
+  const earned = new Set(earnedBadges(state.progress?.flags || []).map(r => r.id));
+  if (!earned.size) els.body.append(el('p', 'muted', t('backpack.noBadges')));
   const shelf = el('div', 'badge-shelf');
-  badges.forEach(r => { const d = el('div', 'badge'); d.append(el('strong', null, `🏅 ${r.badge.name}`), el('span', null, r.badge.learned)); shelf.append(d); });
+  data.quests.rooms.filter(r => r.badge).forEach(r => shelf.append(badgeCard(r, earned.has(r.id))));
   els.body.append(shelf);
   els.body.append(el('h3', null, t('backpack.questions')));
   const ol = el('ol');
