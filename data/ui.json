@@ -137,7 +137,9 @@
     "giver": "{npc} · {place}",
     "bossCase": "Phòng họp — Kẻ Dệt Chuyện",
     "bossLocked": "Xuất hiện khi xong mọi hồ sơ bắt buộc ({done}/{total} nhiệm vụ, {cards}/{minCards} thẻ evidence).",
-    "bossOpen": "Cửa Phòng họp đã mở."
+    "bossOpen": "Cửa Phòng họp đã mở.",
+    "notes2": "Ghi chép từ báo",
+    "noNotes": "Chưa ghi chép gì. Đọc báo trong game và bấm một dòng để ghi lại."
   },
   "sourcesPanel": {
     "title": "Nguồn tham khảo",
@@ -210,5 +212,53 @@
   },
   "results": {
     "disclaimer": "Điểm số và chiến thắng chỉ đo kết quả chơi, không chứng minh thông tin đúng hay sai."
+  },
+  "devices": {
+    "place": "Phòng thám tử",
+    "goTo": "Phần này cần {device} ở Phòng thám tử (tòa nhà cuối phố, bên phải). Mũi tên vàng sẽ chỉ đường; xong thì quay lại báo tôi.",
+    "reportBack": "✓ Đã ghi kết quả. Quay lại gặp {npc} để báo cáo.",
+    "nextDevice": "Bước tiếp theo cần {device}.",
+    "scanning": "Đang xử lý…",
+    "off": "Tắt máy",
+    "browse": "Không có hồ sơ nào đang cần thiết bị này. Bạn có thể xem thử.",
+    "taskLine": "Việc của hồ sơ \"{title}\":",
+    "computer": {
+      "name": "Máy tính tìm ngược ảnh",
+      "app": "Tìm bằng hình ảnh · bản ghi theo báo cáo nhóm"
+    },
+    "magnifier": {
+      "name": "Bàn soi kính lúp",
+      "app": "Kính soi · khung ảnh mô phỏng"
+    },
+    "monitor": {
+      "name": "Màn hình theo dõi mạng xã hội",
+      "app": "Trình xem trang mạng"
+    },
+    "detector": {
+      "name": "Máy dò ảnh AI",
+      "app": "Máy dò ảnh AI · bản ghi Hive theo báo cáo"
+    },
+    "archive": {
+      "name": "Đầu đọc kho báo",
+      "app": "Kho báo · tóm tắt các bài đã kiểm tra"
+    },
+    "timeline": {
+      "name": "Bảng dòng thời gian",
+      "app": "Bảng mốc thời gian"
+    },
+    "evidence": {
+      "name": "Tường bằng chứng",
+      "app": "Tường bằng chứng · thẻ đã thu thập"
+    }
+  },
+  "reader": {
+    "summary": "Tóm tắt nội dung đã kiểm tra ngày {date} (không phải bản sao bài báo).",
+    "noSummary": "Chưa có tóm tắt đã kiểm tra cho nguồn này. Xem danh mục Nguồn để biết thêm.",
+    "note": "Bấm một dòng để ghi vào sổ tay.",
+    "noted": "Đã ghi vào sổ tay.",
+    "original": "Bài gốc ↗",
+    "readInGame": "Đọc trong game",
+    "tool": "Công cụ",
+    "report": "Tài liệu của nhóm"
   }
 }

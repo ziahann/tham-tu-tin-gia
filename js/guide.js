@@ -1,25 +1,27 @@
-// Dẫn đường: mũi tên quanh người chơi chỉ tới người giao hồ sơ đang theo dõi.
+// Dẫn đường: mũi tên quanh người chơi chỉ tới người giao hồ sơ (hoặc thiết bị) đang theo dõi.
 // NPC ở bản đồ khác thì mũi tên chỉ tới lối ra gần nhất trên đường đi (tìm theo đồ thị cửa giữa các bản đồ).
 import { data, t, npcById } from './data.js';
-import { state } from './state.js';
-import { giverOf, trackedRoom } from './story.js';
+import { trackTarget, trackedRoom } from './story.js';
 import { setTrack } from './hud.js';
 
 const propOf = (o, name) => (o.properties || []).find(p => p.name === name)?.value;
 
-let graph = null; // { edges: { map: [{ to, x, y }] }, npcMap: { npcId: map } }
+let graph = null; // { edges: { map: [{ to, x, y }] }, where: { 'npc:id' | 'device:id': { map, x, y } } }
 
 /** Đọc mọi bản đồ đã tải: lối ra / cổng nối các bản đồ, NPC đứng ở bản đồ nào. */
 export function buildGraph(scene, maps) {
   if (graph) return;
-  graph = { edges: {}, npcMap: {} };
+  graph = { edges: {}, where: {} };
   for (const key of maps) {
     const layer = scene.cache.tilemap.get(key)?.data.layers.find(l => l.name === 'objects');
     const objs = layer?.objects || [];
     graph.edges[key] = objs
       .filter(o => (o.type === 'exit' || o.type === 'portal') && maps.includes(propOf(o, 'target')))
       .map(o => ({ to: propOf(o, 'target'), x: o.x + o.width / 2, y: o.y + o.height / 2 }));
-    objs.filter(o => o.type === 'npc').forEach(o => { graph.npcMap[o.name] = key; });
+    objs.filter(o => o.type === 'npc').forEach(o => { graph.where[`npc:${o.name}`] = { map: key }; });
+    objs.filter(o => o.type === 'device').forEach(o => {
+      graph.where[`device:${propOf(o, 'device')}`] = { map: key, x: o.x + o.width / 2, y: o.y + o.height + 8 };
+    });
   }
 }
 
@@ -39,23 +41,25 @@ function firstHop(from, to) {
 
 /** Điểm mũi tên cần chỉ tới trên bản đồ hiện tại, hoặc null nếu không theo dõi gì. */
 export function guideTarget(scene) {
-  const npc = giverOf(state.progress?.tracked);
-  if (!npc || !graph) return null;
-  const map = graph.npcMap[npc];
-  if (map === scene.mapKey) {
-    const s = scene.npcs.get(npc)?.sprite;
-    return s ? { x: s.x, y: s.y - 20, npc, here: true } : null;
+  const tg = trackTarget();
+  const at = tg && graph?.where[`${tg.kind}:${tg.id}`];
+  if (!at) return null;
+  if (at.map === scene.mapKey) {
+    if (tg.kind === 'device') return { x: at.x, y: at.y, here: true };
+    const s = scene.npcs.get(tg.id)?.sprite;
+    return s ? { x: s.x, y: s.y - 20, here: true } : null;
   }
-  const hop = map && firstHop(scene.mapKey, map);
-  return hop ? { x: hop.x, y: hop.y, npc, here: false } : null;
+  const hop = firstHop(scene.mapKey, at.map);
+  return hop ? { x: hop.x, y: hop.y, here: false } : null;
 }
 
 /** Cập nhật dòng "đang theo dõi" trên thanh trên. */
 export function updateTrackLine() {
-  const npc = giverOf(state.progress?.tracked);
-  if (!npc) { setTrack(t('hud.trackNone'), false); return; }
+  const tg = trackTarget();
+  if (!tg) { setTrack(t('hud.trackNone'), false); return; }
+  if (tg.kind === 'device') { setTrack(t('hud.track', { npc: t(`devices.${tg.id}.name`), place: t('devices.place') }), true); return; }
   const room = data.quests.rooms.find(r => r.id === trackedRoom());
-  setTrack(t('hud.track', { npc: npcById(npc)?.name || npc, place: room?.name || '' }), true);
+  setTrack(t('hud.track', { npc: npcById(tg.id)?.name || tg.id, place: room?.name || '' }), true);
 }
 
 /** Mũi tên pixel vẽ bằng Graphics; gọi draw mỗi khung hình. */

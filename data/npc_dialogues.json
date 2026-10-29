@@ -1182,7 +1182,8 @@
   },
   "inspect": {
     "inspect_notice": [
-      "Bảng tin của Ban Hải Đăng (GIẢ LẬP): lịch trực, nội quy, và một tờ giấy ghi \"Dừng lại trước khi chia sẻ\"."
+      "Bảng tin của Ban Hải Đăng (GIẢ LẬP): lịch trực, nội quy, và một tờ giấy ghi \"Dừng lại trước khi chia sẻ\".",
+      "Kẹp bên cạnh là một bài báo in ra. Bạn đọc thử."
     ],
     "inspect_window": [
       "Ngoài cửa sổ là vịnh Hạ Long về đêm. Mặt nước yên lặng."
@@ -1203,16 +1204,20 @@
       "Hai màn hình lớn hiển thị bản ghi kết quả công cụ. Một tờ giấy dán: \"Không tải lại ảnh giả lên công cụ.\""
     ],
     "inspect_timeline": [
-      "Bảng dòng thời gian bằng gỗ, ghim đầy giấy note. Có chỗ trống ghi: \"Bài đăng đầu tiên: ???\""
+      "Bảng dòng thời gian bằng gỗ, ghim đầy giấy note. Có chỗ trống ghi: \"Bài đăng đầu tiên: ???\"",
+      "Dưới bảng có kẹp mấy bài báo, mỗi bài một ngày đăng."
     ],
     "inspect_archive": [
-      "Kệ báo lưu trữ, xếp theo ngày. Bác Tín Thư dán nhãn rất cẩn thận."
+      "Kệ báo lưu trữ, xếp theo ngày. Bác Tín Thư dán nhãn rất cẩn thận.",
+      "Bạn rút vài tờ báo ra đọc."
     ],
     "inspect_newsdesk": [
-      "Bàn biên tập: một màn hình đang mở bản nháp với tiêu đề viết hoa \"SỐC!!!\" chưa đăng."
+      "Bàn biên tập: một màn hình đang mở bản nháp với tiêu đề viết hoa \"SỐC!!!\" chưa đăng.",
+      "Bên cạnh là hai bài báo đã đăng về vụ việc. Bạn đọc thử."
     ],
     "inspect_pier_sign": [
-      "Bảng thông tin bến tàu (GIẢ LẬP): lịch tàu tham quan, số điện thoại cứu hộ, lời nhắc mặc áo phao."
+      "Bảng thông tin bến tàu (GIẢ LẬP): lịch tàu tham quan, số điện thoại cứu hộ, lời nhắc mặc áo phao.",
+      "Góc bảng có dán một bản tin về họp báo của tỉnh. Bạn đọc thử."
     ],
     "inspect_sea": [
       "Mặt vịnh yên ả. Những đảo đá vôi nhô lên xa xa."
@@ -1228,6 +1233,34 @@
     ],
     "inspect_cafe_sign": [
       "Biển hiệu: Quán cà phê Gió Biển (GIẢ LẬP)."
+    ],
+    "inspect_agency_sign": [
+      "Biển hiệu: \"Phòng thám tử\". Bên trong có máy tìm ngược ảnh, bàn soi, máy dò ảnh AI, kho báo và bảng dòng thời gian. (GIẢ LẬP)"
+    ]
+  },
+  "inspectSources": {
+    "note": "Đồ vật mở trình đọc báo trong game: người chơi tự đọc tóm tắt nguồn đã kiểm tra và ghi vào sổ.",
+    "inspect_notice": [
+      "manh2025"
+    ],
+    "inspect_pier_sign": [
+      "minhkhang2025"
+    ],
+    "inspect_newsdesk": [
+      "doquyen2025",
+      "dangkhoa2025"
+    ],
+    "inspect_archive": [
+      "thuthao2025",
+      "thuonghuyen2025",
+      "th2025",
+      "hoaianh2025",
+      "minhthu2025"
+    ],
+    "inspect_timeline": [
+      "thuthao2025",
+      "hoaianh2025",
+      "manh2025"
     ]
   }
 }

@@ -77,6 +77,16 @@ function notebook() {
   const cards = (state.progress?.evidenceCards || []).map(evidenceById).filter(Boolean);
   if (!cards.length) els.body.append(el('p', 'muted', t('backpack.noCards')));
   cards.forEach(ev => els.body.append(evidenceCard(ev)));
+  // Ghi chép từ trình đọc báo trong game
+  els.body.append(el('h3', null, t('backpack.notes2')));
+  const notes = state.progress?.notes || [];
+  if (!notes.length) els.body.append(el('p', 'muted', t('backpack.noNotes')));
+  notes.forEach(n => {
+    const p = el('p', 'note-line', n.text);
+    const src = sourceById(n.source);
+    if (src) p.append(el('span', 'cite', shortCite(src)));
+    els.body.append(p);
+  });
 }
 
 const STATUS_LABEL = { done: 'statusDone', active: 'statusActive', locked: 'statusLocked', building: 'statusBuilding' };

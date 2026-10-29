@@ -7,6 +7,7 @@ import { exhibitFor, frameGrid, singleFrame } from './exhibits.js';
 import { normalize, containsPhrase } from './text.js';
 import { sfx } from './audio.js';
 import { toast } from './ui.js';
+import { toolWindow, browseContent, deviceSpeaker } from './tools.js';
 
 let world = null;
 let busy = false;
@@ -93,10 +94,10 @@ async function pickQuest(npcId, room) {
 }
 
 /** Chạy một đoạn hội thoại có giới hạn: khóa điều khiển, mở khung thoại, đóng khi xong. */
-async function conversation(partner, body) {
+async function conversation(partner, body, portrait) {
   if (busy) return;
   busy = true;
-  dlg.begin(partner);
+  dlg.begin(partner, portrait);
   try { await body(); } finally {
     dlg.end();
     busy = false;
@@ -166,11 +167,7 @@ async function runQuest(q, npc) {
 
 /** Mở các nguồn của nhiệm vụ (kèm tóm tắt dự phòng) cho tới khi người chơi đọc xong. */
 async function showSources(q, npc, text, ids = q.resources) {
-  for (;;) {
-    const r = await dlg.links(ids || [], { speaker: npc, text });
-    if (!r.backup) return;
-    await dlg.say(npc, t('dialog.backupLine', { text: backupText(q) }));
-  }
+  await dlg.links(ids || [], { speaker: npc, text });
 }
 
 /**
@@ -243,10 +240,6 @@ async function runCards(q, qs, npc) {
   }
 }
 
-/** Tóm tắt dự phòng: các dữ kiện mà nhiệm vụ trao, kèm nguồn. */
-const backupText = q => (q.evidenceCards || []).map(evidenceById).filter(Boolean)
-  .map(ev => `${ev.text} (${ev.sources.map(s => shortCite(sourceById(s))).join('; ')})`).join(' ');
-
 /** G1: mở nguồn, rồi trả lời từng ô do NPC hỏi. */
 async function runFields(q, qs, npc) {
   if (!qs.readSources) {
@@ -283,21 +276,44 @@ async function runFields(q, qs, npc) {
   return 'done';
 }
 
-/** Nhiệm vụ nhiều bước (choice | input | flaws | match); mỗi bước có tư liệu, gợi ý và hướng dẫn riêng. */
-async function runSteps(q, qs, npc) {
+/** Bước chưa xong đầu tiên của một nhiệm vụ nhiều bước (hoặc null). */
+const nextStep = q => q.steps?.find(st => !state.progress.questProgress[q.id]?.stepOk?.[st.id]) || null;
+
+/** Tên thiết bị / NPC để chèn vào lời thoại. */
+const deviceName = id => t(`devices.${id}.name`);
+const npcName = id => npcById(id)?.name || id;
+
+let activeQuest = null; // nhiệm vụ đang chạy (để thiết bị kho báo mở đúng nguồn)
+
+/**
+ * Nhiệm vụ nhiều bước (choice | input | flaws | match...); mỗi bước có tư liệu, gợi ý và hướng dẫn riêng.
+ * Bước có `tool` chỉ làm được tại thiết bị đó ở Phòng thám tử: NPC gửi người chơi tới thiết bị, làm xong ở thiết bị
+ * thì quay lại NPC. device: thiết bị đang dùng (null = đang nói chuyện với NPC). Trả về 'done' | 'later' | 'tool'.
+ */
+async function runSteps(q, qs, npc, device = null) {
   qs.stepOk ||= {};
+  activeQuest = q;
+  const speaker = device ? deviceSpeaker(device) : npc;
   if (!qs.started) {
     await dlg.say(npc, q.question);
-    if (q.resources?.length) await showSources(q, npc, q.safetyNote || t('dialog.openSourcesLine'));
+    const readable = (q.resources || []).filter(id => sourceById(id)?.urlStatus !== 'tool');
+    if (readable.length) await showSources(q, npc, q.safetyNote || t('dialog.openSourcesLine'), readable);
     else if (q.safetyNote) await dlg.say(npc, q.safetyNote);
     qs.started = true;
     saveProgress();
   }
   for (const step of q.steps) {
+    if (qs.stepOk[step.id]) continue;
+    if ((step.tool || null) !== device) {
+      // Bước này phải làm ở nơi khác: tới thiết bị, hoặc quay về báo cáo NPC.
+      if (step.tool) await dlg.say(speaker, device ? t('devices.nextDevice', { device: deviceName(step.tool) }) : t('devices.goTo', { device: deviceName(step.tool) }));
+      else await dlg.say(speaker, t('devices.reportBack', { npc: npcName(giverOf(q.id) || npc) }), { mood: 'happy' });
+      return 'tool';
+    }
     while (!qs.stepOk[step.id]) {
-      const r = await STEP_RUNNERS[step.type](step, npc, qs);
+      const r = await STEP_RUNNERS[step.type](step, speaker, qs);
       if (r === 'help') {
-        if (await helpMenu(q, qs, npc, false, step) === 'later') return 'later';
+        if (await helpMenu(q, qs, speaker, false, step) === 'later') return 'later';
         continue;
       }
       if (r === 'again') continue;
@@ -309,10 +325,73 @@ async function runSteps(q, qs, npc) {
       qs.fails++;
       saveProgress();
       sfx(r === 'partial' ? 'partial' : 'wrong');
-      if (await helpMenu(q, qs, npc, true, step) === 'later') return 'later';
+      if (await helpMenu(q, qs, speaker, true, step) === 'later') return 'later';
     }
   }
+  if (device) {
+    await dlg.say(speaker, t('devices.reportBack', { npc: npcName(giverOf(q.id) || npc) }), { mood: 'happy' });
+    return 'tool';
+  }
   return 'done';
+}
+
+/** Tư liệu của bước; bước làm ở thiết bị thì bọc trong cửa sổ công cụ (kho báo: trình đọc các nguồn của nhiệm vụ). */
+function exhibitOf(step) {
+  if (!step.tool) return exhibitFor(step);
+  const body = document.createElement('div');
+  if (step.tool === 'archive') body.append(exhibitFor({ resources: activeQuest?.resources }) || '');
+  body.querySelector('details')?.setAttribute('open', '');
+  const ex = exhibitFor(step.tool === 'archive' ? { ...step, resources: null } : step);
+  if (ex) body.append(ex);
+  // bước tương tác (xếp mốc, soi lỗi...) tự dựng cửa sổ công cụ qua toolHost
+  return body.childNodes.length ? toolWindow(step.tool, body) : null;
+}
+
+/** Chỗ gắn giao diện của bước tùy chỉnh: trong cửa sổ công cụ nếu bước làm ở thiết bị. */
+function toolHost(box, step) {
+  if (!step.tool) return box;
+  const inner = document.createElement('div');
+  if (step.tool === 'timeline' && activeQuest?.resources) inner.append(exhibitFor({ resources: activeQuest.resources }));
+  box.append(toolWindow(step.tool, inner));
+  return inner;
+}
+
+/** Hồ sơ đang chờ một thiết bị (bước kế tiếp cần thiết bị này); ưu tiên hồ sơ đang theo dõi. */
+export function questForDevice(device) {
+  const list = data.quests.quests.filter(q => q.steps && isPlayable(q) && !isQuestDone(q.id) && isUnlocked(q)
+    && state.progress.questProgress[q.id]?.started && nextStep(q)?.tool === device);
+  return list.find(q => q.id === state.progress.tracked) || list[0] || null;
+}
+
+/** Người chơi dùng một thiết bị ở Phòng thám tử. */
+export async function useDevice(device) {
+  const sp = deviceSpeaker(device);
+  const q = questForDevice(device);
+  await conversation(sp, async () => {
+    if (q) {
+      const qs = questState(q.id);
+      await dlg.say(sp, `${t('devices.taskLine', { title: q.title })} ${q.question}`, { mood: 'thinking' });
+      const r = await runSteps(q, qs, giverOf(q.id), device);
+      saveProgress();
+      if (r === 'done') await completeQuest(q, qs, giverOf(q.id));
+      return;
+    }
+    await dlg.interactive({ speaker: sp, text: t('devices.browse'), wide: true }, (box, done) => {
+      box.append(toolWindow(device, browseContent(device, exhibitFor)), actionRow(dlg.makeButton('btn-primary', t('devices.off'), () => done({}))));
+    });
+  });
+  world?.refresh();
+}
+
+/** Mục tiêu dẫn đường của hồ sơ đang theo dõi: { kind: 'npc' | 'device', id } hoặc null. */
+export function trackTarget() {
+  const id = state.progress?.tracked;
+  if (!id) return null;
+  const q = questById(id);
+  const st = q && state.progress.questProgress[q.id]?.started && nextStep(q);
+  if (st?.tool) return { kind: 'device', id: st.tool };
+  const npc = giverOf(id);
+  return npc ? { kind: 'npc', id: npc } : null;
 }
 
 /** Hàng nút cho bước tùy chỉnh. */
@@ -329,7 +408,7 @@ const STEP_RUNNERS = {
   async choice(step, npc) {
     const options = step.options.map(o => ({ id: o.id, text: o.text, o }));
     const c = await dlg.choose([...options, { id: '_help', text: t('dialog.help'), silent: true }],
-      { speaker: npc, text: step.ask, exhibit: exhibitFor(step) });
+      { speaker: npc, text: step.ask, exhibit: exhibitOf(step) });
     if (c.id === '_help') return 'help';
     sfx(c.o.correct ? 'partial' : 'wrong');
     await dlg.say(npc, `${c.o.correct ? '✓' : '✗'} ${c.o.feedback}`);
@@ -338,7 +417,7 @@ const STEP_RUNNERS = {
 
   /** Gõ câu trả lời đọc được từ tư liệu. */
   async input(step, npc, qs) {
-    const r = await dlg.input({ speaker: npc, text: step.ask, label: step.ask, placeholder: step.placeholder, exhibit: exhibitFor(step) });
+    const r = await dlg.input({ speaker: npc, text: step.ask, label: step.ask, placeholder: step.placeholder, exhibit: exhibitOf(step) });
     if (r.help) return 'help';
     qs.answers[step.id] = r.value;
     const res = matchField(r.value, step.accepts, step.fuzzy !== false);
@@ -354,7 +433,8 @@ const STEP_RUNNERS = {
   /** Kính soi lỗi: đánh dấu các khung có dấu hiệu bất thường trên lưới mô phỏng. */
   async flaws(step, npc, qs) {
     const marked = new Set(qs.answers[step.id] || []);
-    const r = await dlg.interactive({ speaker: npc, text: step.ask, wide: true }, (box, done, help) => {
+    const r = await dlg.interactive({ speaker: npc, text: step.ask, wide: true }, (outer, done, help) => {
+      const box = toolHost(outer, step);
       box.append(frameGrid(step.exhibit, {
         marked,
         onPick: n => { marked.has(n) ? marked.delete(n) : marked.add(n); sfx('click'); }
@@ -388,7 +468,8 @@ const STEP_RUNNERS = {
 
   /** Đối chiếu: tìm ô trong lưới là cùng một ảnh với khung mẫu. */
   async match(step, npc) {
-    const r = await dlg.interactive({ speaker: npc, text: step.ask, wide: true }, (box, done, help) => {
+    const r = await dlg.interactive({ speaker: npc, text: step.ask, wide: true }, (outer, done, help) => {
+      const box = toolHost(outer, step);
       box.append(singleFrame(step.ref.set, step.ref.frame, t('exhibit.ref', { n: step.ref.frame })));
       box.append(frameGrid(step.exhibit, {
         onPick: n => done({ pick: n, log: t('dialog.youPicked', { text: t('exhibit.cell', { n }) }) })
@@ -426,7 +507,7 @@ Object.assign(STEP_RUNNERS, {
 
   /** Chọn nhiều thẻ: đúng khi chọn đủ thẻ đúng và không chọn thẻ sai. */
   async multi(step, npc, qs) {
-    const r = await dlg.multi(step.cards, { speaker: npc, text: step.ask, exhibit: exhibitFor(step), picked: qs.answers[step.id] || [] });
+    const r = await dlg.multi(step.cards, { speaker: npc, text: step.ask, exhibit: exhibitOf(step), picked: qs.answers[step.id] || [] });
     if (r.help) return 'help';
     qs.answers[step.id] = r.ids;
     const res = checkCards(step, r.ids);
@@ -443,7 +524,8 @@ Object.assign(STEP_RUNNERS, {
   /** Xếp thứ tự: bấm lần lượt các mốc từ sớm đến muộn. */
   async order(step, npc, qs) {
     const pool = shuffled(step.items);
-    const r = await dlg.interactive({ speaker: npc, text: step.ask, exhibit: exhibitFor(step), wide: true }, (box, done, help) => {
+    const r = await dlg.interactive({ speaker: npc, text: step.ask, exhibit: exhibitOf(step), wide: true }, (outer, done, help) => {
+      const box = toolHost(outer, step);
       const seq = [];
       const out = el('ol', 'order-seq');
       const left = el('div', 'order-pool');
@@ -481,7 +563,7 @@ Object.assign(STEP_RUNNERS, {
   /** Phân nhóm: mỗi mục chọn một nhóm; một mục có thể chấp nhận nhiều nhóm. */
   async sort(step, npc, qs) {
     const choice = { ...(qs.answers[step.id] || {}) };
-    const r = await dlg.interactive({ speaker: npc, text: step.ask, exhibit: exhibitFor(step), wide: true }, (box, done, help) => {
+    const r = await dlg.interactive({ speaker: npc, text: step.ask, exhibit: exhibitOf(step), wide: true }, (box, done, help) => {
       for (const item of step.items) {
         const row = el('div', 'sort-item');
         const btns = el('div', 'sort-cats');
@@ -591,13 +673,19 @@ async function completeQuest(q, qs, npc) {
 
 // ---------------------------------------------------------------- đồ vật, cửa, khu vực
 
-/** Xem một đồ vật trên bản đồ. */
+/**
+ * Xem một đồ vật trên bản đồ. Đồ vật có nguồn (npc_dialogues.json → inspectSources) mở trình đọc báo
+ * để người chơi tự khám phá dữ kiện; chân dung bên phải là hình đồ vật.
+ */
 export function inspect(key) {
   const lines = data.npcs.inspect?.[key];
   if (!lines) return;
+  const sources = data.npcs.inspectSources?.[key];
+  const art = sources ? 'obj_paper' : /sign/.test(key) ? 'obj_sign' : null;
   conversation('notes', async () => {
     for (const line of lines) await dlg.say('inspect', line);
-  });
+    if (sources) await dlg.links(sources, { speaker: 'inspect', text: t('reader.note') });
+  }, art);
 }
 
 /** Thông báo một câu của hệ thống (cửa khóa, khu chưa mở...). */
