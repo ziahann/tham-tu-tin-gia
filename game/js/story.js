@@ -414,6 +414,12 @@ export async function useDevice(device) {
   const q = questForDevice(device);
   sfx('boot');
   await conversation(sp, async () => {
+    // Lần đầu dùng thiết bị: hướng dẫn ngắn cách dùng
+    if (!hasFlag(`tut_${device}`)) {
+      for (const line of data.ui.devices[device]?.tutorial || []) await dlg.say(sp, line, { mood: 'thinking' });
+      setFlag(`tut_${device}`);
+      saveProgress();
+    }
     if (q) {
       const qs = questState(q.id);
       await dlg.say(sp, `${t('devices.taskLine', { title: q.title })} ${q.question}`, { mood: 'thinking' });
@@ -422,9 +428,12 @@ export async function useDevice(device) {
       if (r === 'done') await completeQuest(q, qs, giverOf(q.id));
       return;
     }
-    await dlg.interactive({ speaker: sp, text: t('devices.browse'), wide: true }, (box, done) => {
-      box.append(toolWindow(device, browseContent(device, exhibitFor)), actionRow(dlg.makeButton('btn-primary', t('devices.off'), () => done({}))));
+    const r = await dlg.interactive({ speaker: sp, text: t('devices.browse'), wide: true }, (box, done) => {
+      box.append(toolWindow(device, browseContent(device, exhibitFor)), actionRow(
+        dlg.makeButton('btn-primary', t('devices.off'), () => done({})),
+        dlg.makeButton('btn', t('devices.tutorialAgain'), () => done({ tut: true }))));
     });
+    if (r?.tut) for (const line of data.ui.devices[device]?.tutorial || []) await dlg.say(sp, line, { mood: 'thinking' });
   });
   world?.refresh();
 }
