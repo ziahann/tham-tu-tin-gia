@@ -62,6 +62,7 @@ export function track(id, quiet = false) {
   state.progress.tracked = id;
   saveProgress();
   if (id && !quiet) {
+    sfx('track');
     const title = id === 'boss' ? t('backpack.bossCase') : questById(id)?.title;
     toast(t('dialog.tracking', { title }));
   }
@@ -377,6 +378,7 @@ export function questForDevice(device) {
 export async function useDevice(device) {
   const sp = deviceSpeaker(device);
   const q = questForDevice(device);
+  sfx('boot');
   await conversation(sp, async () => {
     if (q) {
       const qs = questState(q.id);

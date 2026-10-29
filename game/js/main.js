@@ -2,6 +2,7 @@
 import { data, loadAll, t, sourceById, shortCite } from './data.js';
 import { Bay } from './bay.js';
 import { playMusic, unlockMusic, refreshMusic, musicSupported } from './music.js';
+import { stopAmbience } from './audio.js';
 import { state, loadState, saveSettings, startNewProgress } from './state.js';
 import { initInput, on, releaseAll } from './input.js';
 import * as dlg from './dialogue.js';
@@ -57,6 +58,7 @@ function showTitle() {
   const has = !!state.progress;
   $('title').hidden = false;
   $('intro').hidden = true;
+  stopAmbience();
   $('hud').hidden = true;
   $('title-start').hidden = has;
   $('title-continue').hidden = !has;
@@ -205,7 +207,7 @@ function openSources() {
 /** Cài đặt: âm thanh, ảnh nhạy cảm, giảm chuyển động, về màn hình chính. */
 function openSettings() {
   const wrap = el('div');
-  [['hideSensitiveImages', 'hideSensitive'], ['muted', 'mute'], ['reduceMotion', 'reduceMotion']].forEach(([key, label]) => {
+  [['hideSensitiveImages', 'hideSensitive'], ['muted', 'mute'], ['ambience', 'ambience'], ['reduceMotion', 'reduceMotion']].forEach(([key, label]) => {
     const row = el('label', 'setting');
     const box = el('input');
     box.type = 'checkbox';

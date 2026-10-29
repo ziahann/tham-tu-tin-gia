@@ -10,6 +10,7 @@ import { playMusic } from './music.js';
 import { buildGraph, guideTarget, updateTrackLine, GuideArrow } from './guide.js';
 import { Weather } from './weather.js';
 import { Traffic, VEHICLE_SPRITES } from './traffic.js';
+import { sfx, footstep, setAmbience } from './audio.js';
 
 const MAPS = ['office', 'street', 'newsroom', 'cafe', 'agency', 'boss'];
 const SPEED = 120;
@@ -128,6 +129,14 @@ export class WorldScene extends Phaser.Scene {
     this.mapMusic = propOf({ properties: map.properties }, 'music');
     playMusic(this.mapMusic);
     this.lastSave = 0;
+    this.stepIn = 0;
+    this.ambIn = 0;
+    // mép nước gần nhất (để nghe tiếng sóng) và trục đường (tiếng xe)
+    let waterY = Infinity;
+    this.ground.forEachTile(t => { if (t.properties?.name === 'water' && t.pixelY < waterY) waterY = t.pixelY; });
+    this.waterY = waterY;
+    const lanes = objs.filter(o => o.type === 'lane');
+    this.roadY = lanes.length ? lanes.reduce((a, o) => a + o.y + o.height / 2, 0) / lanes.length : null;
     this.leaving = false;
     this.zoneKey = null;
     if (!state.settings.reduceMotion) cam.fadeIn(250, 15, 14, 23);
@@ -153,12 +162,27 @@ export class WorldScene extends Phaser.Scene {
     if (this.leaving) return;
     this.leaving = true;
     this.player.setVelocity(0, 0);
+    sfx('door');
     state.progress.pos = { map: target, spawnName: spawn };
     saveProgress();
     const go = () => this.scene.restart({ map: target, spawn, dir: target === 'street' ? 'down' : 'up' });
     if (state.settings.reduceMotion) { go(); return; }
     this.cameras.main.fadeOut(250, 15, 14, 23);
     this.cameras.main.once('camerafadeoutcomplete', go);
+  }
+
+  /** Âm thanh môi trường theo thời tiết và vị trí: mưa, gió, sóng gần mặt nước, xe gần đường. */
+  updateAmbience(delta) {
+    const kind = this.weather?.kind;
+    const out = this.weather?.outdoor;
+    const near = (d, range) => Math.max(0, Math.min(1, 1 - d / range));
+    setAmbience({
+      rain: kind === 'rain' ? (out ? 1 : 0.55) : 0,
+      wind: kind === 'fog' ? (out ? 0.9 : 0.25) : out ? 0.2 : 0,
+      waves: out && this.waterY < Infinity ? near(Math.max(0, this.waterY - this.player.y), 520) : 0,
+      traffic: this.roadY != null ? near(Math.abs(this.player.y - this.roadY), 420) * Math.min(1, (this.traffic?.cars.length || 0) / 4) : 0,
+      indoor: !out
+    }, delta);
   }
 
   /** Bong bóng biểu cảm trên đầu thám tử ('hero') hoặc một NPC. */
@@ -371,6 +395,11 @@ export class WorldScene extends Phaser.Scene {
     if (x || y) {
       this.facing = dirFrom(x, y);
       this.player.anims.play(`hero-walk-${this.facing}`, true);
+      this.stepIn -= delta;
+      if (this.stepIn <= 0) {
+        this.stepIn = 300;
+        footstep(this.ground.getTileAtWorldXY(this.player.x, this.player.y - 2)?.properties?.name, this.weather?.kind === 'rain');
+      }
       if (time - this.lastSave > 1000) {
         this.lastSave = time;
         this.savePos();
@@ -385,6 +414,8 @@ export class WorldScene extends Phaser.Scene {
     if (!this.reduceMotion) this.devices.forEach((d, i) => d.marker.setY(d.obj.y - 2 + Math.round(Math.sin(time / 250 + i) * 2)));
 
     this.weather.update(delta, this.player);
+    this.ambIn -= delta;
+    if (this.ambIn <= 0) { this.updateAmbience(250 - this.ambIn); this.ambIn = 250; }
     this.guide.draw(this.player, frozen ? null : guideTarget(this), time);
     if (frozen) { this.prompt.setVisible(false); return; }
     this.checkZone();
