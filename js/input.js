@@ -19,8 +19,10 @@ export function emit(name) {
   (listeners[name] || []).forEach(fn => fn());
 }
 
-/** Người chơi đang gõ chữ hoặc đang dùng nút gốc của trình duyệt. */
-const isFormTarget = t => t instanceof HTMLElement && (t.matches('input, textarea, select, button, a') || t.isContentEditable);
+/** Người chơi đang gõ chữ (ô nhập): mọi phím thuộc về ô nhập. */
+const isTextTarget = t => t instanceof HTMLElement && (t.matches('input, textarea, select') || t.isContentEditable);
+/** Đang focus một nút / link: Space, Enter để trình duyệt bấm nút; phím đi lại và E vẫn điều khiển game. */
+const isButtonTarget = t => t instanceof HTMLElement && t.matches('button, a, summary');
 
 /** Hướng di chuyển hiện tại {x, y} trong khoảng -1..1. */
 export function direction() {
@@ -38,11 +40,12 @@ export function releaseAll() {
 export function initInput() {
   window.addEventListener('keydown', e => {
     if (e.key === 'Escape') { emit('escape'); return; }
-    if (isFormTarget(e.target)) return;
+    if (isTextTarget(e.target)) return;
     const d = KEY_DIR[e.code];
     if (d) { held.add(d); e.preventDefault(); return; }
     if (e.repeat) return;
-    if (e.code === 'KeyE' || e.code === 'Space' || e.code === 'Enter') { e.preventDefault(); emit('action'); }
+    const onButton = isButtonTarget(e.target);
+    if (e.code === 'KeyE' || (!onButton && (e.code === 'Space' || e.code === 'Enter'))) { e.preventDefault(); emit('action'); }
     else if (e.code === 'KeyB') { emit('backpack'); }
     else if (e.code === 'KeyJ') { emit('cases'); }
     else if (e.code === 'KeyT') { emit('weather'); }
@@ -52,6 +55,11 @@ export function initInput() {
     if (d) held.delete(d);
   });
   window.addEventListener('blur', releaseAll);
+  // Bấm chuột vào nút ngoài khung thoại (thanh trên, balo): bỏ focus để phím quay về điều khiển nhân vật.
+  document.addEventListener('click', e => {
+    const b = e.target instanceof Element && e.target.closest('button, summary');
+    if (b && e.detail > 0 && !b.closest('#dialog, #modal, #intro, #title, #results')) b.blur();
+  });
 
   const touch = document.getElementById('touch');
   if (window.matchMedia('(pointer: coarse)').matches) touch.hidden = false;
