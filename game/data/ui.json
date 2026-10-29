@@ -62,7 +62,7 @@
     "later": "Để sau",
     "laterLine": "Được. Khi nào sẵn sàng thì quay lại gặp tôi, tôi vẫn giữ những gì bạn đã trả lời.",
     "backToAnswer": "Quay lại trả lời",
-    "openSourcesLine": "Mở nguồn bên dưới (tab mới) và tự tìm thông tin. Đọc xong thì báo tôi.",
+    "openSourcesLine": "Đọc nguồn bên dưới và tự tìm thông tin. Đọc xong thì báo tôi.",
     "openSource": "Mở nguồn: {outlet}",
     "unverified": "link chưa kiểm tra",
     "backup": "Xem tóm tắt dự phòng",
