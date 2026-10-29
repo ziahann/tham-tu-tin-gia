@@ -40,7 +40,7 @@ Game pixel-art HTML/CSS/JS (không backend) cho bài tập mục 08, môn Thẩm
 - Nhiệm vụ chạy trong hội thoại (`js/story.js`); chân dung lớn hai bên khung thoại, ai nói thì sáng (`mood` trên câu thoại). Dạng mới: `steps` trong quests.json, mỗi bước `choice | input | flaws | match | multi | order | sort | open | interview | say` có `ask`, `hints`, `walkthrough`, `tool` (tùy chọn), tư liệu `exhibit` (`lens`, `hive`, `mpv12`, `mco9` trong `quests.json → exhibits`, vẽ bởi `js/exhibits.js`). Q1/Q2 dùng dạng cũ G2/G1. Phòng có nhiệm vụ chưa dựng hiện "Đang xây dựng" (`js/grading.js → isPlayable`).
 - Mọi đáp án phải tra được: từ link nguồn đã đọc nội dung (`sources.json → urlStatus: verified`) hoặc từ tư liệu trong game có trích báo cáo.
 - Test: `cd game && python -m http.server 8000`; thêm `?debug` vào URL để lộ `window.__game` cho công cụ test.
-- Hosting: GitHub Pages. Code trong `game/`.
+- Hosting: GitHub Pages https://ziahann.github.io/tham-tu-tin-gia/ (repo `ziahann/tham-tu-tin-gia`), phục vụ từ nhánh `gh-pages` = nội dung `game/`. Cập nhật bản online sau khi đẩy `master`: `git subtree split --prefix game -b gh-pages && git push origin gh-pages` (token hiện chưa có quyền `workflow` nên không dùng GitHub Actions).
 
 ## Cách làm việc
 - Việc lớn: dùng plan mode trước, làm từng bước nhỏ, commit thường xuyên.
