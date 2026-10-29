@@ -680,7 +680,18 @@ async function awardBadge(roomId) {
   if (!b) return;
   sfx('unlock');
   onChange();
-  toast(t('dialog.badge', { name: b.name, learned: '' }));
+  // hình huy hiệu nổi giữa màn hình trong vài giây
+  const pop = document.createElement('div');
+  pop.className = 'badge-pop';
+  pop.setAttribute('role', 'status');
+  const img = document.createElement('img');
+  img.src = `assets/badges/${roomId}.png`;
+  img.alt = '';
+  const cap = document.createElement('div');
+  cap.textContent = `${t('backpack.newBadge')}: ${b.name}`;
+  pop.append(img, cap);
+  document.body.append(pop);
+  setTimeout(() => pop.remove(), 3800);
   await dlg.say('system', t('dialog.badge', b));
 }
 

@@ -1,4 +1,6 @@
 // Nhân vật trên bản đồ: hoạt ảnh 4 hướng, NPC đi tuần / dẫn đường / quay mặt khi nói chuyện.
+// Vị trí logic trên lưới vuông; hướng nhìn tính theo hướng trên màn hình isometric (js/iso.js).
+import { iso } from './iso.js';
 
 // Sprite sheet: 3 cột (đứng, bước 1, bước 2) x 4 hàng (xuống, trái, phải, lên), mỗi khung 32x48.
 export const DIRS = ['down', 'left', 'right', 'up'];
@@ -86,9 +88,10 @@ export class Npc {
     this.onDone = onDone;
   }
 
-  /** Quay mặt về một điểm. */
+  /** Quay mặt về một điểm (toạ độ logic). */
   face(x, y) {
-    this.facing = dirFrom(x - this.sprite.x, y - this.sprite.y);
+    const d = iso.toScreenDir(x - this.sprite.x, y - this.sprite.y);
+    this.facing = dirFrom(d.x, d.y);
     this.stand();
   }
 
@@ -102,11 +105,11 @@ export class Npc {
   /** Cập nhật mỗi khung hình. */
   update(delta, frozen, player) {
     const s = this.sprite;
-    s.setDepth(s.y);
-    this.marker.setPosition(s.x, s.y - 50 + Math.round(Math.sin(this.scene.time.now / 250) * 2)).setDepth(s.y + 1);
+    const v = s.view || s;
+    this.marker.setPosition(v.x, v.y - 50 * (v.scaleY || 1) + Math.round(Math.sin(this.scene.time.now / 250) * 2)).setDepth(100000);
     if (this.ambient && !frozen && !this.talking) {
       this.emoteIn -= delta;
-      if (this.emoteIn <= 0) { this.emoteIn = 7000 + Math.random() * 9000; showEmote(this.scene, s, Phaser.Utils.Array.GetRandom(EMOTES)); }
+      if (this.emoteIn <= 0) { this.emoteIn = 7000 + Math.random() * 9000; showEmote(this.scene, s.view || s, Phaser.Utils.Array.GetRandom(EMOTES)); }
     }
     if (this.talking || frozen || this.mode === 'idle') { this.stand(); return; }
     // Đang đi tuần mà người chơi lại gần: dừng lại, quay sang chờ nói chuyện.
@@ -125,7 +128,8 @@ export class Npc {
     if (dist < 2) { this.arrive(); return; }
     const speed = this.mode === 'lead' ? LEAD_SPEED : PATROL_SPEED;
     s.body.setVelocity((dx / dist) * speed, (dy / dist) * speed);
-    this.facing = dirFrom(dx, dy);
+    const sd = iso.toScreenDir(dx, dy);
+    this.facing = dirFrom(sd.x, sd.y);
     s.anims.play(`${this.id}-walk-${this.facing}`, true);
   }
 

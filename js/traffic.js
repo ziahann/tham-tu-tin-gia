@@ -2,7 +2,9 @@
 // Xe dừng trước vạch qua đường khi có người đang băng qua, dừng khi gặp người chơi hoặc xe phía trước; không gây hại.
 const propOf = (o, name) => (o.properties || []).find(p => p.name === name)?.value;
 
-export const VEHICLE_SPRITES = ['car1', 'car2', 'car3', 'car4', 'bus', 'bike1', 'bike2'];
+export const VEHICLE_SPRITES = ['car1', 'car2', 'car3', 'car4', 'bus', 'bike1', 'bike2'].flatMap(k => [k, `${k}_e`, `${k}_w`]);
+/** Kích thước bản isometric của xe (xem tools/props.mjs → vehicles): bề rộng mặt nam, cao ảnh gốc, chiều sâu. */
+const ISO_SIZE = { car: [96, 50, 42], bus: [240, 84, 72], bike: [50, 50, 14] };
 const KINDS = {
   car: [['car1', 110], ['car2', 100], ['car3', 120], ['car4', 105], ['bus', 75]],
   bike: [['bike1', 85], ['bike2', 78]]
@@ -27,7 +29,7 @@ export class Traffic {
   }
 
   /** Sprite xe (để bật ánh sáng ban đêm). */
-  sprites() { return this.cars.map(c => c.sprite); }
+  sprites() { return this.cars.map(c => c.sprite.view || c.sprite); }
 
   /** Thêm một xe vào làn; x mặc định ở mép bản đồ phía xe đi tới. */
   spawn(lane, x) {
@@ -41,9 +43,13 @@ export class Traffic {
     s.body.setSize(w - 8, h).setOffset(lane.dir < 0 ? depth + 4 : 4, s.height - h - 2);
     s.body.pushable = false;
     if (this.scene.weather?.kind === 'night' && this.scene.renderer.type === Phaser.WEBGL) s.setPipeline('Light2D');
+    const [fw, fh, d] = ISO_SIZE[key === 'bus' ? 'bus' : key.startsWith('bike') ? 'bike' : 'car'];
+    const isoKey = `${key}_${lane.dir > 0 ? 'e' : 'w'}`;
+    const tex = this.scene.textures.get(isoKey).getSourceImage();
+    this.scene.views?.add(s, { isoTex: { key: isoKey, fw, ay: Math.ceil(d / 2) + fh, h: tex.height, d } });
     const car = { sprite: s, lane, max: speed * (0.9 + Math.random() * 0.2), v: speed, half: w / 2 };
     // không đè lên xe khác lúc rải sẵn
-    if (this.cars.some(c => c.lane === lane && Math.abs(c.sprite.x - sx) < c.half + car.half + GAP)) { s.destroy(); return; }
+    if (this.cars.some(c => c.lane === lane && Math.abs(c.sprite.x - sx) < c.half + car.half + GAP)) { s.view?.destroy(); s.destroy(); return; }
     this.cars.push(car);
   }
 
@@ -86,7 +92,6 @@ export class Traffic {
       const target = frozen ? 0 : room < GAP ? 0 : room < LOOK ? car.max * ((room - GAP) / (LOOK - GAP)) : car.max;
       car.v = target < car.v ? target : Math.min(target, car.v + ACCEL * dt);
       s.body.setVelocityX(d * car.v);
-      s.setDepth(s.y);
     }
     // bỏ xe đã ra khỏi bản đồ
     this.cars = this.cars.filter(c => {

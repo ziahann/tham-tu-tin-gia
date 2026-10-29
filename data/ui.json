@@ -147,7 +147,9 @@
     "notes2": "Ghi chép từ báo",
     "noNotes": "Chưa ghi chép gì. Đọc báo trong game và bấm một dòng để ghi lại.",
     "badges": "Huy hiệu kỹ năng",
-    "noBadges": "Chưa có huy hiệu. Khép một hồ sơ để nhận huy hiệu kỹ năng."
+    "noBadges": "Chưa có huy hiệu. Khép một hồ sơ để nhận huy hiệu kỹ năng.",
+    "badgeLocked": "Khép hồ sơ \"{room}\" để nhận.",
+    "newBadge": "Huy hiệu mới"
   },
   "sourcesPanel": {
     "title": "Nguồn tham khảo",
