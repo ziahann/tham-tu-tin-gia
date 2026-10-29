@@ -439,16 +439,19 @@ export class WorldScene extends Phaser.Scene {
     for (const o of objs.filter(o => o.type === 'prop')) {
       const m = meta[o.name];
       if (!m) continue;
-      const img = this.add.image(o.x, o.y, 'props', o.name).setOrigin(0.5, 1);
-      if (propOf(o, 'flip')) img.setFlipX(true);
+      // ox: tâm mặt tiền trong ảnh (tòa nhà giả 3D có mặt hông bên phải nên tâm ảnh lệch khỏi tâm mặt tiền)
+      const ox = m.ox ?? 0.5;
+      const img = this.add.image(o.x, o.y, 'props', o.name).setOrigin(ox, 1);
+      if (propOf(o, 'flip') && !m.building) img.setFlipX(true);
       img.setDepth(m.flat ? 0.5 : m.wall ? o.y - 40 : o.y);
-      const left = o.x - m.w / 2, top = o.y - m.h;
+      const left = o.x - m.w * ox, top = o.y - m.h;
       const [bw, bh] = m.base || [0, 0];
       if (bw && bh && !m.flat && !m.wall) {
         const z = this.add.zone(o.x, o.y - bh / 2, bw, bh);
         this.propBodies.add(z);
       }
-      (m.lights || []).forEach(([lx, ly, c, r, i]) => this.propLights.push([left + (propOf(o, 'flip') ? m.w - lx : lx), top + ly, c, r, i]));
+      const flipped = propOf(o, 'flip') && !m.building;
+      (m.lights || []).forEach(([lx, ly, c, r, i]) => this.propLights.push([left + (flipped ? m.w - lx : lx), top + ly, c, r, i]));
       const text = propOf(o, 'sign');
       if (text && m.sign) {
         const sx = left + m.sign.x + m.sign.w / 2, sy = top + m.sign.y + m.sign.h / 2;
