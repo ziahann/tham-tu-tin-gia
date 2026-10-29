@@ -1,0 +1,87 @@
+{
+  "version": 1,
+  "note": "Toàn bộ NPC là nhân vật HƯ CẤU, nhãn GIẢ LẬP. Không dùng tên người/ca sĩ/tổ chức thật. Lớp B (chat người chơi) lưu localStorage key tfd_chat_log.",
+  "storage": { "scripted": "data/npc_dialogues.json", "playerLog": "localStorage:tfd_chat_log" },
+  "npcs": [
+    { "id": "npc1", "name": "Chị Tuệ Lâm", "role": "Trưởng ban điều phối thông tin du lịch (hư cấu)", "room": "S1" },
+    { "id": "npc2", "name": "Khải", "role": "Chuyên viên phân tích ảnh", "room": "S3" },
+    { "id": "npc3", "name": "Bác Tín Thư", "role": "Thủ thư lưu trữ báo chí", "room": "S4" },
+    { "id": "npc4", "name": "Phát Vội", "role": "Biên tập viên đăng tin vội (bẫy)", "room": "S6" },
+    { "id": "npc5", "name": "Bông Mây", "role": "Nghệ sĩ hư cấu (bẫy)", "room": "S6" },
+    { "id": "npc6", "name": "Chú Sáu Nhóm", "role": "Quản trị nhóm mạng (phỏng vấn tùy chọn)", "room": "S5" },
+    { "id": "boss", "name": "Kẻ Dệt Chuyện", "role": "Boss hư cấu — đại diện hành vi lan truyền tin giả", "room": "S9" }
+  ],
+  "dialogues": {
+    "S1_intro": [
+      { "npc": "npc1", "text": "Chào {hero}. Bộ ảnh về vụ lật tàu đang lan khắp nơi. Nhớ: đây là tình huống GIẢ LẬP dựa trên vụ việc có thật, hãy giữ sự tôn trọng với nạn nhân." },
+      { "npc": "npc1", "text": "Tôi cần bạn kiểm tra trước khi ai đó chia sẻ thêm. Bắt đầu nhé?" }
+    ],
+    "S1_replies": [
+      { "id": "r1", "player": "Tôi sẽ dừng lại và kiểm tra.", "npc": "npc1", "text": "Tốt. Dừng lại là bước đầu của SIFT." },
+      { "id": "r2", "player": "Chia sẻ trước đã, kiểm tra sau.", "npc": "npc1", "text": "Khoan. Tin sai lan nhanh hơn bản đính chính. Hãy dừng lại trước." }
+    ],
+    "q1_intro": [{ "npc": "npc1", "text": "Bạn thấy bài đăng với lời kêu gọi 'chia sẻ ngay'. Bạn làm gì đầu tiên?" }],
+    "q1_denial_trap": [{ "npc": "npc4", "text": "Ảnh xúc động thế này mà không đăng à? Đăng trước, sai thì xóa sau!", "trap": true, "correction": "Xóa sau không thu hồi được những gì đã lan." }],
+    "q2_intro": [{ "npc": "npc1", "text": "Trước hết cần mốc sự thật: ngày, nơi, tàu, nguyên nhân theo báo. Đừng tự suy đoán." }],
+    "q3_q6": [
+      { "id": "q3", "npc": "npc2", "intro": "Tôi là Khải. Thử tìm ngược ảnh bằng Google Lens xem sao.", "correct": "Ra toàn bài đính chính, không có bản gốc từ hãng tin. Nhưng chưa đủ kết luận ảnh là AI.", "wrong": "Lens không phán thật/giả, nó chỉ cho biết ảnh xuất hiện ở đâu." },
+      { "id": "q4", "npc": "npc2", "intro": "Nhìn kỹ hình dạng tàu, chữ trên áo, chi tiết giữa các khung.", "correct": "Đúng. Nhưng khung mờ (6, 10) thì không đánh giá.", "wrong": "Hãy chỉ dựa vào dấu hiệu quan sát được." },
+      { "id": "q6", "npc": "npc2", "intro": "Công cụ phát hiện AI chỉ là phụ, đừng coi là phán quyết.", "correct": "Đúng, kết hợp nhiều bằng chứng.", "wrong": "Công cụ có thể sai. Hãy thêm bằng chứng độc lập." }
+    ],
+    "q7_q8": [
+      { "id": "q7", "npc": "npc3", "intro": "Tôi là Bác Tín Thư. Clip này quay lúc nào? Ngày quay quan trọng lắm.", "correct": "Clip cũ gắn nhãn sai bối cảnh: vẫn là thông tin sai.", "wrong": "Nội dung thật nhưng sai ngữ cảnh thì vẫn gây hiểu lầm." },
+      { "id": "q8", "npc": "npc3", "intro": "Sắp xếp các mốc theo thứ tự thời gian.", "correct": "Đúng. Lưu ý: ta không biết bài đăng đầu tiên là lúc nào.", "wrong": "Bắt đầu từ sự kiện thật rồi mới tới tin giả." }
+    ],
+    "q9_q10": [
+      { "id": "q9", "npc": "npc1", "intro": "Tách số liệu đã ghi nhận khỏi rủi ro nhé.", "correct": "Đúng. Số liệu một bài không phải tổng tiếp cận.", "wrong": "Nếu không có số liệu nguồn nêu thì đó là rủi ro, không phải sự thật đã ghi nhận." },
+      { "id": "q10", "npc": "npc1", "intro": "Có thủ đoạn nào cho thấy chủ đích? Nhưng cẩn thận kết luận vượt bằng chứng.", "correct": "Đúng, không suy đoán tiền bạc hay danh tính.", "wrong": "Bằng chứng chưa nói điều đó." }
+    ],
+    "npc6_interview": {
+      "npc": "npc6",
+      "label": "GIẢ LẬP — nhân vật hư cấu, lời khai KHÔNG phải bằng chứng thật",
+      "nodes": [
+        { "id": "n1", "player": "Chú đăng bộ ảnh này lấy từ đâu?", "npc": "Tôi thấy người ta chia sẻ, tôi đăng lại thôi.", "flag": "no_source" },
+        { "id": "n2", "player": "Sao không ghi chú là truyện hư cấu?", "npc": "À… có ghi nhưng nhỏ xíu, ai cũng thấy mà.", "flag": "contradiction_note_hidden" },
+        { "id": "n3", "player": "Link 'Xem tiếp' dẫn đi đâu?", "npc": "Cái đó… quảng cáo thôi, chắc không sao.", "flag": "external_link" }
+      ],
+      "lesson": "Lời khai chỉ là dữ kiện tham khảo; không đủ để kết luận chủ đích hay danh tính ai đó."
+    },
+    "q11_traps": [
+      { "npc": "npc4", "text": "Cứ gọi hết là tin giả cố ý đi cho nhanh!", "trap": true, "correction": "Phân loại theo từng nhóm đối tượng, cần xét chủ đích." },
+      { "npc": "npc5", "text": "Tôi đã đăng vì thương nạn nhân, vậy là đúng đúng không?", "trap": true, "correction": "Chia sẻ vì thương cảm vẫn có thể là Misinformation." }
+    ],
+    "q12_q13": [
+      { "id": "q12", "npc": "npc1", "intro": "Bạn phát hiện bài giả đang lan. Làm gì?", "correct": "Báo cáo, không chia sẻ lại, dùng nguồn chính thống.", "wrong": "Tránh khuếch đại và tránh lộ thông tin cá nhân." },
+      { "id": "q13", "npc": "npc1", "intro": "Theo bạn nền tảng nên làm gì?", "correct": "Câu mở — mọi gợi ý hợp lý đều được ghi nhận.", "wrong": "" }
+    ],
+    "boss_intro": [
+      { "npc": "boss", "text": "Hừ… ngươi đã lần theo được đến đây. (Nhân vật hư cấu, đại diện hành vi lan tin giả.)" },
+      { "npc": "boss", "text": "Chứng minh đi. Chỉ bằng chứng thật mới làm ta lung lay." }
+    ],
+    "boss_phase_claims": {
+      "p1": "Ảnh này là thật, do người trên tàu chụp!",
+      "p2": "Tôi chỉ chia sẻ video có thật thôi!",
+      "p3": "Tôi chỉ muốn mọi người quan tâm. Ai nói tôi cố ý?"
+    },
+    "boss_phase_defeats": {
+      "p1": "Không có nguồn gốc, lỗi hình ảnh, ảnh dùng lại ở hai bộ, VTV xác nhận AI… Ta không cãi được.",
+      "p2": "Video quay từ năm 2024… ta gắn nhãn sai.",
+      "p3": "Thủ đoạn câu tương tác… nhưng ngươi không thể biết ta là ai."
+    },
+    "boss_trap_b": [
+      { "npc": "boss", "text": "Ha! Ngươi buộc tội ta kiếm tiền, lộ mặt ta? Bằng chứng đâu?", "feedback": "Không có dữ liệu doanh thu/danh tính (F13). Kết luận vượt bằng chứng." }
+    ],
+    "boss_endings": {
+      "A": [
+        { "npc": "boss", "text": "Gương mặt trống… ngươi chỉ chứng minh những gì có thể chứng minh." },
+        { "npc": "npc1", "text": "Đúng chuẩn thẩm định: đủ căn cứ về nội dung và thủ đoạn, chưa đủ căn cứ xác định danh tính." }
+      ],
+      "B": [
+        { "npc": "npc1", "text": "Bạn đã kết luận vượt bằng chứng. Thử lại: chỉ khẳng định điều dữ liệu cho phép." }
+      ]
+    },
+    "S10_wrapup": [
+      { "npc": "npc1", "text": "Cảm ơn {hero}. Điểm số chỉ để chơi, KHÔNG phải bằng chứng cho tin thật/giả. Kiểm chứng luôn dựa vào nguồn và bằng chứng." }
+    ]
+  }
+}
