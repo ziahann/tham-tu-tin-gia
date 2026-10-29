@@ -59,7 +59,7 @@ GitHub Pages chỉ phục vụ từ thư mục gốc hoặc `/docs`, nên đẩy
 | Địa điểm (bản đồ) | Nhiệm vụ | NPC |
 |---|---|---|
 | Trụ sở Báo Thanh Niên (`tn_lobby`, `tn_f2`–`tn_f5`; tên thật theo yêu cầu của nhóm, nhân vật và sự việc bên trong là GIẢ LẬP) | Sảnh; tầng 2 S3 Hồ sơ Q1–Q2; tầng 3 S4 Phân tích ảnh Q3–Q6; tầng 4 S7 Tác động Q9–Q10; tầng 5 S8 Phân loại Q11–Q13; tầng thượng Phòng họp (Boss). Đi bằng thang máy | Tuệ Lâm, Khải, bảo vệ, nhân viên |
-| Khu phố ven vịnh (`street`, 96x64) | Phố chính và đường ven vịnh có xe, phố đi bộ, công viên, lối dạo, bến tàu (tàu tham quan neo, không có tàu gặp nạn); 4 tòa vào được + nhiều tòa trang trí có biển ghi chức năng | Bông Mây, người qua đường |
+| Khu phố ven vịnh (`street`, 96x64) | Phố chính và đường ven vịnh có xe, phố đi bộ, công viên, lối dạo, bến tàu (tàu tham quan neo, không có tàu gặp nạn); 4 tòa vào được có biển hiệu, các tòa trang trí không có biển | Bông Mây, người qua đường |
 | Phòng xác minh (`agency`) | Thiết bị: máy tìm ngược ảnh (Q3), bàn soi (Q4), màn hình mạng xã hội (Q5, bonus), máy dò AI (Q6), kho báo (Q7), bảng dòng thời gian (Q8), tường bằng chứng | — |
 | Tòa soạn Tin Vịnh (`newsroom`, trang tin hư cấu) | S5 Lưu trữ Q7; S6 Dòng thời gian Q8 | Bác Tín Thư, Phát Vội |
 | Quán cà phê Gió Biển (`cafe`) | Q10b thẩm vấn (tùy chọn) | Chú Sáu Nhóm |
