@@ -173,3 +173,14 @@
 | Đồ trên bàn | Màn hình, giấy, đèn bàn, cốc là khối 3D riêng trên mặt bàn; tủ / kệ áp tường quay mặt vào trong phòng |
 | Nhận diện | Nhân vật đeo balo Văn Lang (đỏ – xanh than, khiên trắng) và thẻ sinh viên dây xanh ngọc; Sổ tay có thẻ sinh viên mô phỏng (tên, ngành Quan hệ công chúng – Truyền thông, uy tín) |
 | Hướng dẫn | Lần đầu dùng mỗi thiết bị ở Phòng xác minh: hướng dẫn ngắn; xem lại bằng nút "Xem hướng dẫn" |
+
+## Chốt ngày 29/10/2026 (đợt 11)
+
+| Mục | Quyết định |
+|---|---|
+| Nhãn GIẢ LẬP | Bỏ hết trong lúc chơi (lời thoại, nhãn tên, thanh trên, tòa nhà, tường, khu vực) và các chú thích "(hư cấu)" không cần thiết. Disclaimer chỉ ở màn hình chính và thẻ cuối intro, nêu rõ không đại diện cho Báo Thanh Niên |
+| Mở đầu | Người chơi là sinh viên Văn Lang đọc bài đăng trên mạng xã hội, gọi tới Báo Thanh Niên xin tới kiểm chứng; chị Tuệ Lâm xác nhận cuộc gọi và dẫn vào các hồ sơ. Cảnh xe buýt tới trạm trước tòa nhà |
+| Hội thoại | Không tự bắt chuyện khi lên tầng / vào phòng: người chơi phải bấm tương tác. NPC chào hỏi, làm quen ở lần gặp đầu. Khung thoại thu nhỏ được, khi thu nhỏ vẫn đi lại |
+| Thời tiết | Ngẫu nhiên mỗi 5 phút, chỉ ngoài trời; mưa đi chậm, sương tầm nhìn hẹp, đêm kẻ tung tin đuổi xa hơn và hạn chót nhanh hơn. Bỏ nút đổi thời tiết |
+| Người chơi | Tên để trống, bắt buộc nhập. Mẫu nữ: tóc dài nâu ánh sáng, nơ đỏ, áo khoác hồng, váy xanh than |
+| Tác giả | Trần Huỳnh Gia Hân và Đào Thị Mai Chi (màn hình chính, danh mục nguồn) |

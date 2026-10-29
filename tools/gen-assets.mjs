@@ -1092,7 +1092,7 @@ const street = buildMap('street', {
     ...[4, 24, 40, 56, 72, 92].map((x, i) => pp('street_lamp', x, 20.2, i % 2 ? { flip: true } : {})),
     pp('tree', 9.6, 20.6), pp('tree', 34.5, 20.6), pp('tree', 61.5, 20.6), pp('tree', 89, 20.6),
     // trạm xe buýt trước Trụ sở Báo Thanh Niên (intro: nhân vật xuống xe buýt ở đây)
-    pp('bus_stop', 11.6, 20.9), point('spawn', 'spawn_bus', 13.4, 21.3),
+    pp('bus_stop', 13.8, 20.9), point('spawn', 'spawn_bus', 15.4, 21.3),
     pp('hydrant', 23, 20.5), pp('street_bin', 49.8, 20.5), pp('street_bin', 75.6, 20.5), pp('kiosk', 31.5, 20.8),
     pp('bus_stop', 10, 29.8), pp('bollard', 19.3, 28.8), pp('bollard', 22.7, 28.8), pp('bollard', 59.3, 28.8), pp('bollard', 62.7, 28.8),
     ...[30, 52, 66, 86].map(x => pp('street_lamp', x, 29.6)),
