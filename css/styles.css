@@ -385,3 +385,36 @@ button.frame:hover { border-color: var(--grey); }
 .look-img { width: 64px; height: 64px; background-repeat: no-repeat; background-size: 192px 384px; background-position: 0 -4px; image-rendering: pixelated; }
 .look[data-look="m"] .look-img { background-image: url(../assets/sprites/hero_m.png); }
 .look[data-look="f"] .look-img { background-image: url(../assets/sprites/hero_f.png); }
+
+/* ---------- Thiết bị Phòng thám tử: cửa sổ công cụ MÔ PHỎNG ---------- */
+.tool-window { position: relative; border: var(--px) solid var(--ink); background: #10141f; box-shadow: 0 0 0 2px #2c6a8f; margin: 4px 0; }
+.tool-bar { display: flex; align-items: center; gap: 8px; padding: 2px 8px; background: #2c3a55; color: var(--paper); font-size: 0.9em; }
+.tool-dots { width: 34px; height: 10px; background: radial-gradient(circle at 5px 5px, #c8323c 4px, transparent 5px), radial-gradient(circle at 17px 5px, #f2d36b 4px, transparent 5px), radial-gradient(circle at 29px 5px, #4aa35b 4px, transparent 5px); }
+.tool-title { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tool-body { padding: 8px; }
+.tool-scan { position: absolute; inset: 26px 0 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; background: #10141f; color: #7fe3ff; }
+.tool-progress { width: 60%; height: 10px; border: 2px solid #7fe3ff; background: linear-gradient(#7fe3ff, #7fe3ff) 0 0 / 0 100% no-repeat; animation: tool-load 0.6s steps(6) forwards; }
+@keyframes tool-load { to { background-size: 100% 100%; } }
+
+/* ---------- Trình đọc báo trong game ---------- */
+.source-reader > summary { cursor: pointer; color: var(--straw); padding: 4px 0; }
+.reader { display: flex; flex-direction: column; gap: 6px; }
+.reader-tabs { display: flex; flex-wrap: wrap; gap: 4px; }
+.reader-tabs button { font: inherit; font-size: 0.85em; padding: 2px 8px; color: var(--paper); background: #2c3a55; border: 2px solid var(--ink); cursor: pointer; }
+.reader-tabs button[aria-pressed="true"] { background: var(--paper); color: var(--ink); }
+.paper { background: #efe9da; color: #1d1a16; padding: 10px 14px; border: 2px solid var(--ink); box-shadow: 4px 4px 0 rgb(0 0 0 / 0.35); }
+.paper-mast { font-size: 1.4em; border-bottom: 3px double #1d1a16; letter-spacing: 1px; }
+.paper-date { font-size: 0.8em; color: #5b5547; }
+.paper .paper-title { color: #1d1a16; font-size: 1.1em; margin: 6px 0; }
+.paper-note, .paper-hint { font-size: 0.8em; color: #5b5547; }
+.paper-facts { list-style: none; padding: 0; margin: 4px 0; display: flex; flex-direction: column; gap: 3px; }
+.paper-facts button { font: inherit; text-align: left; width: 100%; padding: 3px 6px; background: transparent; color: #1d1a16; border: 0; border-left: 4px solid #b9ae95; cursor: pointer; }
+.paper-facts button:hover, .paper-facts button:focus-visible { background: #fff6c9; }
+.paper-facts button.is-noted { border-left-color: var(--teal); background: #e3f1ec; }
+.paper-facts button.is-noted::after { content: " ✎"; color: var(--teal); }
+.paper-apa { font-size: 0.75em; color: #5b5547; border-top: 1px solid #b9ae95; padding-top: 4px; }
+.timeline-board { margin: 0; padding-left: 1.2em; }
+.timeline-board li { margin: 4px 0; }
+.timeline-board strong { color: var(--straw); }
+.note-line { border-left: 4px solid var(--teal); padding-left: 8px; margin: 4px 0; }
+.note-line .cite { display: block; }
