@@ -178,7 +178,7 @@ export function fadeOccluders(list, hero) {
   const hb = hero.getBounds();
   for (const o of list) {
     if (!o.active) continue;
-    const covers = o.depth > hero.depth && Phaser.Geom.Intersects.RectangleToRectangle(o.getBounds(), hb);
+    const covers = o.depth > hero.depth && Phaser.Geom.Intersects.RectangleToRectangle(o.cropBounds || o.getBounds(), hb);
     const a = covers ? 0.35 : 1;
     if (o.alpha !== a) o.setAlpha(a);
   }

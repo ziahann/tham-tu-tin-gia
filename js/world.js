@@ -182,7 +182,7 @@ export class WorldScene extends Phaser.Scene {
     this.traffic = objs.some(o => o.type === 'lane') ? new Traffic(this, objs, this.player) : null;
     this.weather = new Weather(this, () => [...this.groundRTs, ...this.wallImgs, ...this.views.views(), ...this.props.map(p => p.img), ...this.propExtras],
       () => this.propLights);
-    this.occluders = [...this.wallImgs.filter(w => w.tall), ...this.props.filter(p => !p.meta.flat && !p.meta.wall).map(p => p.img)];
+    this.occluders = [...this.wallImgs.filter(w => w.tall), ...this.props.filter(p => !p.meta.flat && !p.meta.wall).flatMap(p => p.parts || [p.img])];
     this.reduceMotion = state.settings.reduceMotion;
     story.setWorld(this);
     this.refresh();
@@ -720,7 +720,7 @@ export class WorldScene extends Phaser.Scene {
       const east = propOf(o, 'face') === 'e' && meta[`${o.name}@isoE`];
       const isoName = east ? `${o.name}@isoE` : mirror && meta[`${o.name}@isoW`] ? `${o.name}@isoW` : meta[`${o.name}@iso`]?.iso ? `${o.name}@iso` : m.iso ? o.name : null;
       const im = isoName ? meta[isoName] : null;
-      let img, left, top, lights = m.lights;
+      let img, left, top, lights = m.lights, parts = null;
       if (m.wall) {
         const parts = this.sliceOnWall(im2 ? makeWall : make, o.x, o.y, o.x - m.w * ox);
         img = parts[0]; this.propExtras.push(...parts.slice(1));
@@ -731,11 +731,13 @@ export class WorldScene extends Phaser.Scene {
         img = this.add.image(q.x, q.y, 'props', isoName).setOrigin(1, im.iso.ay / im.h);
         img.setDepth(iso.depth(o.x - im.iso.d / 2, o.y));
         left = q.x - im.w; top = q.y - im.iso.ay; lights = [];
+        parts = this.sliceIso(img, im, o.x + o.y - im.iso.fw / 2, true, left, top);
       } else if (im) {
         const q = iso.P(o.x - im.iso.fw / 2, o.y);
         img = this.add.image(q.x, q.y, 'props', isoName).setOrigin(0, im.iso.ay / im.h);
         img.setDepth(iso.depth(o.x, o.y - im.iso.d / 2));
         left = q.x; top = q.y - im.iso.ay; lights = im.lights;
+        parts = this.sliceIso(img, im, o.x - im.iso.fw / 2 + o.y, false, left, top);
       } else if (m.flat && meta[`${o.name}@flat`]) {
         // thảm: góc tây bắc của thảm (logic) ứng với điểm (cao, 0) của ảnh
         const fm = meta[`${o.name}@flat`];
@@ -757,11 +759,34 @@ export class WorldScene extends Phaser.Scene {
       const sg = im?.sign || m.sign;
       if (text && sg) {
         const tx = shearedText(this, [text], { size: 20, color: propOf(o, 'signColor') || '#e8ecf2', sub: propOf(o, 'sub'), fixed: { w: sg.w, h: sg.h } });
-        this.add.image(left + sg.x, top + sg.y, tx.key).setOrigin(0).setDepth(img.depth + 1);
+        this.add.image(left + sg.x, top + sg.y, tx.key).setOrigin(0).setDepth(Math.max(...(parts || [img]).map(p => p.depth)) + 1);
       }
-      this.props.push({ img, obj: o, meta: m });
+      if (parts) this.propExtras.push(...parts.slice(1));
+      this.props.push({ img, obj: o, meta: m, parts });
     }
     this.physics.add.collider(this.player, this.propBodies);
+  }
+
+  /**
+   * Cắt khối isometric rộng thành các cột 16 px, mỗi cột một độ sâu riêng: độ sâu = điểm gần người xem nhất của cột
+   * (mặt trước hoặc mặt hông). Người đứng trước / sau một đầu quầy dài, tòa nhà... được vẽ đúng thứ tự.
+   * base = x + y của góc neo (góc tây nam mặt trước; quay về đông: góc bắc mép trước); east: ảnh neo ở mép phải.
+   */
+  sliceIso(img, im, base, east, left, top) {
+    const W = im.w, H = im.h, fw = im.iso.fw, STEP = 16;
+    img.cropBounds = new Phaser.Geom.Rectangle(left, top, W, H);
+    if (W <= 40) return [img];
+    const parts = [];
+    for (let c = 0; c < W; c += STEP) {
+      const w = Math.min(STEP, W - c);
+      const part = c === 0 ? img : this.add.image(img.x, img.y, img.texture.key, img.frame.name).setOrigin(img.originX, img.originY);
+      part.setCrop(c, 0, w, H);
+      const cc = east ? W - (c + w / 2) : c + w / 2;
+      part.setDepth(base + (cc < fw ? cc : 2 * fw - cc) - 1);
+      part.cropBounds = new Phaser.Geom.Rectangle(left + c, top, w, H);
+      parts.push(part);
+    }
+    return parts;
   }
 
   /** Dữ liệu cho bản đồ nhỏ trong balo. */
