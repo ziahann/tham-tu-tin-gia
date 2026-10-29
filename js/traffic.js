@@ -104,7 +104,9 @@ export class Traffic {
         const gap = d * (edge - front);
         if (gap > -4 && gap < room) room = gap;
       }
-      const target = frozen ? 0 : room < GAP ? 0 : room < LOOK ? car.max * ((room - GAP) / (LOOK - GAP)) : car.max;
+      // trời mưa: xe giảm tốc từ xa hơn (phanh dài)
+      const look = LOOK * (this.scene.fx?.().brake || 1);
+      const target = frozen ? 0 : room < GAP ? 0 : room < look ? car.max * ((room - GAP) / (look - GAP)) : car.max;
       car.v = target < car.v ? target : Math.min(target, car.v + ACCEL * dt);
       s.body.setVelocityX(d * car.v);
     }

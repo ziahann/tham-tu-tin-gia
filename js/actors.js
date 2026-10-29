@@ -119,7 +119,7 @@ export class Npc {
     if (this.chaser) {
       this.cool = Math.max(0, (this.cool || 0) - delta);
       const d = Phaser.Math.Distance.Between(s.x, s.y, player.x, player.y);
-      if (!this.cool && this.scene.canChase?.() && d < CHASE_DIST) {
+      if (!this.cool && this.scene.canChase?.() && d < CHASE_DIST * (this.scene.fx?.().chase || 1)) {
         if (d < CATCH_DIST) { this.cool = 25000; this.face(player.x, player.y); this.scene.onCaught?.(this.id); return; }
         const dx = player.x - s.x, dy = player.y - s.y;
         s.body.setVelocity((dx / d) * CHASE_SPEED, (dy / d) * CHASE_SPEED);

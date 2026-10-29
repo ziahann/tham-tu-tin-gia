@@ -32,14 +32,60 @@ export function initDialog() {
     const [k, v] = id.split(':');
     els[k] = document.getElementById(v);
   }
-  els.tag.textContent = t('simulated');
+  els.tag.textContent = '';
   els.root.addEventListener('click', e => {
     if (e.target.closest('button, a, input')) return;
     advance();
   });
+  // Thu nhỏ khung thoại: thành thanh nhỏ ở đáy, người chơi đi lại tự do; bấm thanh (hoặc E) để mở lại đúng chỗ đang dở
+  const min = document.createElement('button');
+  min.type = 'button';
+  min.className = 'dialog-min-btn';
+  min.textContent = '—';
+  min.title = t('dialog.minimize');
+  min.setAttribute('aria-label', t('dialog.minimize'));
+  min.addEventListener('click', e => { e.stopPropagation(); minimize(); });
+  els.root.querySelector('.dialog-box').append(min);
+  els.mini = document.createElement('button');
+  els.mini.type = 'button';
+  els.mini.className = 'dialog-mini';
+  els.mini.hidden = true;
+  els.mini.addEventListener('click', restore);
+  document.body.append(els.mini);
 }
 
+let minimized = false;
 export const isOpen = () => open;
+/** Khung thoại đang thu nhỏ (cuộc trò chuyện vẫn dở, người chơi được đi lại). */
+export const isMinimized = () => open && minimized;
+/** Khung thoại đang chặn điều khiển nhân vật. */
+export const blocksWorld = () => open && !minimized;
+
+/** Thu nhỏ khung thoại đang mở. */
+export function minimize() {
+  if (!open || minimized) return;
+  minimized = true;
+  els.root.hidden = true;
+  const who = els.name.textContent || '';
+  els.mini.textContent = t('dialog.minimized', { name: who });
+  els.mini.hidden = false;
+  document.activeElement?.blur?.();
+  document.getElementById('touch').classList.remove('is-dialog');
+  duckMusic(false);
+}
+
+/** Mở lại khung thoại đã thu nhỏ. */
+export function restore() {
+  if (!minimized) return;
+  minimized = false;
+  els.mini.hidden = true;
+  if (!open) return;
+  els.root.hidden = false;
+  document.getElementById('touch').classList.add('is-dialog');
+  duckMusic(true);
+  releaseAll();
+  els.extra.querySelector('button, input')?.focus();
+}
 
 /** Mở khung thoại; partnerId là NPC đang trò chuyện (dùng để chia lịch sử theo NPC); portrait: chân dung bên phải nếu khác. */
 export function begin(partnerId, portrait = null) {
@@ -57,6 +103,8 @@ export function begin(partnerId, portrait = null) {
 
 /** Đóng khung thoại. */
 export function end() {
+  minimized = false;
+  els.mini.hidden = true;
   open = false;
   duckMusic(false);
   Object.keys(pinned).forEach(k => delete pinned[k]);
