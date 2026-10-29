@@ -1064,9 +1064,13 @@ const street = buildMap('street', {
     ...[30, 52, 66, 86].map(x => pp('street_lamp', x, 29.6)),
     pp('planter', 38, 29.6), pp('planter', 80, 29.6),
     // --- công viên
-    pp('tree_big', 4, 33.6), pp('tree_big', 15, 33.4), pp('tree', 27, 32.4), pp('tree_big', 36, 33.8), pp('tree', 9, 37.4), pp('tree', 31, 37.6),
-    pp('bench', 11, 31.6), pp('bench', 26, 31.6), pp('bench', 26, 36.6), pp('bench', 39.5, 36.6),
-    pp('planter', 4.5, 36.8), pp('planter', 17, 36.8), pp('kiosk', 12.4, 37.6), pp('street_lamp', 20, 33.5), pp('street_lamp', 41, 33.5),
+    // đài phun nước giữa công viên, luống hoa quanh, hàng rào cây dọc mép, ghế hướng vào đài phun
+    pp('fountain', 28.5, 37.2),
+    pp('flowerbed', 24.2, 32.4), pp('flowerbed', 33, 32.4), pp('flowerbed', 24.2, 37.4), pp('flowerbed', 33, 37.4),
+    pp('hedge', 2.5, 30.7), pp('hedge', 8.5, 30.7), pp('hedge', 35.5, 30.7), pp('hedge', 41.5, 30.7),
+    pp('tree_big', 4, 34.4), pp('tree_big', 14, 34.2), pp('tree', 9, 37.6), pp('tree_big', 40, 35.2), pp('tree', 17.6, 31.6),
+    pp('bench', 11, 32.6), pp('bench', 28.5, 31.4), pp('bench', 38, 37.6), pp('bench', 18.5, 37.6),
+    pp('kiosk', 12.4, 37.6), pp('street_lamp', 22.2, 34.4), pp('street_lamp', 35.4, 34.4), pp('street_lamp', 3, 37.4),
     // --- phố đi bộ (chợ)
     pp('market_stall', 45.5, 31.4), pp('market_stall', 45.5, 35.4), pp('street_bin', 48.6, 37.2),
     // --- vỉa hè ven vịnh, lối dạo
@@ -1083,14 +1087,11 @@ const street = buildMap('street', {
     rectT('zone', 'zone_market', 44, 28, 5, 11, { area: 'market' }),
     rectT('zone', 'zone_coast', 0, 38, CW, 12, { area: 'coast' }),
     rectT('zone', 'zone_pier', 44, 50, 3, 9, { area: 'pier' }),
-    rectT('lane', 'lane_w_car', 0, 22, CW, 1, { dir: -1, kind: 'car' }),
-    rectT('lane', 'lane_w_bike', 0, 23, CW, 1, { dir: -1, kind: 'bike' }),
-    rectT('lane', 'lane_e_bike', 0, 25, CW, 1, { dir: 1, kind: 'bike' }),
-    rectT('lane', 'lane_e_car', 0, 26, CW, 1, { dir: 1, kind: 'car' }),
-    rectT('lane', 'lane2_w_car', 0, 41, CW, 1, { dir: -1, kind: 'car' }),
-    rectT('lane', 'lane2_w_bike', 0, 42, CW, 1, { dir: -1, kind: 'bike' }),
-    rectT('lane', 'lane2_e_bike', 0, 44, CW, 1, { dir: 1, kind: 'bike' }),
-    rectT('lane', 'lane2_e_car', 0, 45, CW, 1, { dir: 1, kind: 'car' }),
+    // mỗi chiều một làn rộng 2 ô (ô tô, xe buýt, xe máy chạy chung, nối đuôi nhau)
+    rectT('lane', 'lane_w', 0, 22, CW, 2, { dir: -1, kind: 'mixed' }),
+    rectT('lane', 'lane_e', 0, 25, CW, 2, { dir: 1, kind: 'mixed' }),
+    rectT('lane', 'lane2_w', 0, 41, CW, 2, { dir: -1, kind: 'mixed' }),
+    rectT('lane', 'lane2_e', 0, 44, CW, 2, { dir: 1, kind: 'mixed' }),
     ...[[20, 22], [60, 22], [20, 41], [46, 41], [74, 41]].map(([x, y], i) => rectT('crosswalk', `cross_${i}`, x, y, 2, 5)),
     // --- người
     point('npc', 'npc5', 14, 48.4, { patrol: 'patrol_npc5' }),
