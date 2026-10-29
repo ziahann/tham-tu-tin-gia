@@ -35,8 +35,10 @@ export class Traffic {
     const W = this.scene.map.widthInPixels;
     const sx = x ?? (lane.dir > 0 ? -60 : W + 60);
     const s = this.group.create(sx, lane.y + 18, key).setOrigin(0.5, 1).setFlipX(lane.dir < 0);
-    const w = s.width, h = Math.min(18, s.height * 0.5);
-    s.body.setSize(w - 8, h).setOffset(4, s.height - h - 2);
+    // ảnh xe giả 3D rộng thêm phần mặt hông: thân va chạm chỉ theo mặt trước (bên trái ảnh khi xe hướng phải)
+    const depth = key === 'bus' ? 20 : key.startsWith('bike') ? 6 : 14;
+    const w = s.width - depth, h = Math.min(18, s.height * 0.5);
+    s.body.setSize(w - 8, h).setOffset(lane.dir < 0 ? depth + 4 : 4, s.height - h - 2);
     s.body.pushable = false;
     if (this.scene.weather?.kind === 'night' && this.scene.renderer.type === Phaser.WEBGL) s.setPipeline('Light2D');
     const car = { sprite: s, lane, max: speed * (0.9 + Math.random() * 0.2), v: speed, half: w / 2 };
