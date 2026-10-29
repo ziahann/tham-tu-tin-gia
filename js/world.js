@@ -143,7 +143,7 @@ export class WorldScene extends Phaser.Scene {
     this.ground.forEachTile(t => { if (t.properties?.name === 'water' && t.pixelY < waterY) waterY = t.pixelY; });
     this.waterY = waterY;
     const lanes = objs.filter(o => o.type === 'lane');
-    this.roadY = lanes.length ? lanes.reduce((a, o) => a + o.y + o.height / 2, 0) / lanes.length : null;
+    this.laneYs = lanes.map(o => o.y + o.height / 2);
     this.leaving = false;
     this.zoneKey = null;
     if (!state.settings.reduceMotion) cam.fadeIn(250, 15, 14, 23);
@@ -187,7 +187,7 @@ export class WorldScene extends Phaser.Scene {
       rain: kind === 'rain' ? (out ? 1 : 0.55) : 0,
       wind: kind === 'fog' ? (out ? 0.9 : 0.25) : out ? 0.2 : 0,
       waves: out && this.waterY < Infinity ? near(Math.max(0, this.waterY - this.player.y), 520) : 0,
-      traffic: this.roadY != null ? near(Math.abs(this.player.y - this.roadY), 420) * Math.min(1, (this.traffic?.cars.length || 0) / 4) : 0,
+      traffic: this.laneYs.length ? near(Math.min(...this.laneYs.map(y => Math.abs(this.player.y - y))), 380) * Math.min(1, (this.traffic?.cars.length || 0) / 4) : 0,
       indoor: !out
     }, delta);
   }
@@ -453,9 +453,9 @@ export class WorldScene extends Phaser.Scene {
       if (text && m.sign) {
         const sx = left + m.sign.x + m.sign.w / 2, sy = top + m.sign.y + m.sign.h / 2;
         const sub = propOf(o, 'sub');
-        this.add.text(sx, sy - (sub ? 4 : 0), text, { fontFamily: 'VT323', fontSize: '20px', color: propOf(o, 'signColor') || '#e8ecf2' })
+        this.add.text(sx, sy - (sub ? 6 : 0), text, { fontFamily: 'VT323', fontSize: '20px', color: propOf(o, 'signColor') || '#e8ecf2' })
           .setOrigin(0.5).setDepth(img.depth + 1).setResolution(2);
-        if (sub) this.add.text(sx, sy + 8, sub, { fontFamily: 'VT323', fontSize: '11px', color: '#a3adbf' }).setOrigin(0.5).setDepth(img.depth + 1).setResolution(2);
+        if (sub) this.add.text(sx, sy + 9, sub, { fontFamily: 'VT323', fontSize: '11px', color: '#a3adbf' }).setOrigin(0.5).setDepth(img.depth + 1).setResolution(2);
       }
       this.props.push({ img, obj: o, meta: m });
     }
