@@ -156,10 +156,11 @@
   "settingsPanel": {
     "title": "Cài đặt",
     "hideSensitive": "Ẩn hình ảnh nhạy cảm",
-    "mute": "Tắt hiệu ứng âm thanh",
+    "mute": "Tắt hiệu ứng âm thanh (bước chân, giọng nói, thiết bị)",
     "music": "Nhạc nền (CC0, Juhani Junkala)",
     "reduceMotion": "Giảm chuyển động (hiện chữ ngay)",
-    "home": "Về màn hình chính"
+    "home": "Về màn hình chính",
+    "ambience": "Âm thanh môi trường (mưa, gió, sóng, xe cộ)"
   },
   "result": {
     "correct": "✓ Đúng.",
