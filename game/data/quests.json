@@ -24,14 +24,14 @@
     "titles": [
       {
         "min": 0,
-        "title": "Thực tập"
+        "title": "Thực tập sinh kiểm chứng"
       },
       {
-        "min": 60,
+        "min": 80,
         "title": "Thẩm định viên"
       },
       {
-        "min": 120,
+        "min": 140,
         "title": "Thám tử kiểm chứng"
       }
     ],
@@ -50,7 +50,8 @@
       ],
       "requires": [
         "s1_done"
-      ]
+      ],
+      "place": "Văn phòng Ban Hải Đăng"
     },
     {
       "id": "S4",
@@ -64,19 +65,25 @@
       ],
       "requires": [
         "done_S3"
-      ]
+      ],
+      "place": "Văn phòng Ban Hải Đăng"
     },
     {
       "id": "S5",
       "name": "Phòng Lưu trữ báo chí",
+      "place": "Tòa soạn Tin Vịnh",
       "npc": "npc3",
       "quests": [
         "q7_oldclips"
+      ],
+      "requires": [
+        "done_S4"
       ]
     },
     {
       "id": "S6",
       "name": "Phòng Dòng thời gian",
+      "place": "Tòa soạn Tin Vịnh",
       "npc": "npc3",
       "quests": [
         "q8_timeline"
@@ -89,7 +96,8 @@
       "quests": [
         "q9_impact",
         "q10_intent"
-      ]
+      ],
+      "place": "Văn phòng Ban Hải Đăng"
     },
     {
       "id": "S8",
@@ -99,15 +107,36 @@
         "q11_classify",
         "q12_response",
         "q13_platform"
-      ]
+      ],
+      "place": "Văn phòng Ban Hải Đăng"
+    },
+    {
+      "id": "CAFE",
+      "name": "Quán cà phê Gió Biển",
+      "place": "Phố ven vịnh",
+      "npc": "npc6",
+      "quests": [
+        "q10b_interview"
+      ],
+      "optional": true
     },
     {
       "id": "S9",
-      "name": "Phòng Boss",
+      "name": "Phòng họp (Phòng Boss)",
+      "place": "Văn phòng Ban Hải Đăng",
       "npc": "boss",
+      "quests": [],
+      "boss": true
+    },
+    {
+      "id": "BONUS",
+      "name": "Màn bonus",
+      "place": "Văn phòng Ban Hải Đăng",
+      "npc": "npc1",
       "quests": [
-        "boss"
-      ]
+        "bonus_impersonation"
+      ],
+      "optional": true
     }
   ],
   "quests": [
@@ -737,146 +766,509 @@
       "room": "S5",
       "order": 7,
       "required": true,
-      "title": "Clip cũ gắn nhãn sai",
-      "prompt": "Video bão Yagi (2024) và Congo (10/2024) bị gắn là vụ 19/7. Điều này cho thấy gì?",
-      "tool": {
-        "label": "Báo chí đối chiếu",
-        "sources": [
-          "hoaianh2025"
-        ]
-      },
-      "options": [
+      "mode": "G6",
+      "title": "Clip cũ, nhãn mới",
+      "npcIntro": "s5_q7_intro",
+      "question": "Có những video và ảnh có thật, nhưng bị gắn vào vụ 19/7. Đối chiếu báo chí để tìm chúng thật ra từ đâu.",
+      "resources": [
+        "hoaianh2025",
+        "minhthu2025"
+      ],
+      "steps": [
         {
-          "id": "a",
-          "text": "Nội dung thật nên chia sẻ được",
-          "correct": false,
-          "feedback": "Clip thật nhưng gắn sai bối cảnh vẫn là thông tin sai."
+          "id": "s1",
+          "type": "input",
+          "resources": [
+            "hoaianh2025"
+          ],
+          "ask": "Theo VnExpress, một số video được gắn là vụ 19/7 thật ra quay trong đợt bão nào?",
+          "accepts": [
+            "yagi"
+          ],
+          "placeholder": "tên cơn bão",
+          "hints": [
+            "Đọc bài VnExpress (Hoài Anh, 2025), đoạn nói về nguồn gốc các video.",
+            "Cơn bão lớn đổ bộ miền Bắc năm 2024, tên bốn chữ cái."
+          ],
+          "walkthrough": "Mở bài VnExpress → tìm câu \"Một số video lấy từ đợt bão ...\" → chép tên bão."
         },
         {
-          "id": "b",
-          "text": "Nội dung có thật nhưng sai ngữ cảnh/thời gian — cần đối chiếu nguồn",
-          "correct": true,
-          "feedback": "Đúng (F10). Nhóm chủ yếu dựa đối chiếu báo chí, không tự tìm ngược."
+          "id": "s2",
+          "type": "input",
+          "resources": [
+            "hoaianh2025"
+          ],
+          "ask": "Video tàu chìm còn lại thật ra quay ở quốc gia nào?",
+          "accepts": [
+            "congo",
+            "cong go"
+          ],
+          "placeholder": "tên quốc gia",
+          "hints": [
+            "Vẫn trong bài VnExpress, ngay sau đoạn về bão.",
+            "Một quốc gia ở châu Phi; sự việc tháng 10/2024."
+          ],
+          "walkthrough": "Bài VnExpress → câu \"Một số khác là cảnh tàu chìm ở ... tháng 10/2024\"."
+        },
+        {
+          "id": "s3",
+          "type": "input",
+          "resources": [
+            "minhthu2025"
+          ],
+          "ask": "Theo VietnamPlus, ảnh nhóm trẻ em tham quan vịnh thật ra được chụp năm nào?",
+          "accepts": [
+            "2024",
+            "8/2024",
+            "thang 8 2024"
+          ],
+          "fuzzy": false,
+          "placeholder": "năm",
+          "hints": [
+            "Đọc bài VietnamPlus (Minh Thu, 2025), đoạn chủ ảnh lên tiếng.",
+            "Ảnh chụp trong chuyến du lịch của gia đình chủ ảnh, trước vụ tai nạn một năm."
+          ],
+          "walkthrough": "Mở bài VietnamPlus → tìm câu \"chụp trong chuyến du lịch Hạ Long của gia đình vào tháng 8/...\"."
+        },
+        {
+          "id": "s4",
+          "type": "choice",
+          "ask": "Vậy những video và ảnh này thuộc loại nội dung nào?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Nội dung có thật nên chia sẻ được",
+              "correct": false,
+              "feedback": "Có thật nhưng gắn sai bối cảnh thì vẫn khiến người xem hiểu sai."
+            },
+            {
+              "id": "b",
+              "text": "Nội dung có thật nhưng sai bối cảnh / thời gian",
+              "correct": true,
+              "feedback": "Đúng (F10). Kiểm tra ngày quay và nơi quay quan trọng không kém kiểm tra ảnh AI."
+            },
+            {
+              "id": "c",
+              "text": "Ảnh do AI tạo",
+              "correct": false,
+              "feedback": "Không. Đây là video, ảnh thật từ sự kiện khác."
+            }
+          ],
+          "hints": [
+            "Các video này có thật không? Có đúng là vụ 19/7 không?"
+          ],
+          "walkthrough": "Chọn \"Nội dung có thật nhưng sai bối cảnh / thời gian\"."
         }
       ],
-      "hints": [
-        "Chú ý ngày quay của clip.",
-        "Nội dung thật vẫn có thể sai ngữ cảnh."
-      ],
-      "gives": [
+      "feedback": {
+        "correct": "Chính xác. Nhóm không tự tìm ngược các video này mà dựa vào đối chiếu báo chí — cũng là một cách kiểm chứng (F10)."
+      },
+      "conclusion": "Video bão Yagi, tàu chìm ở Congo (10/2024) và ảnh nhóm trẻ em năm 2024 là nội dung thật nhưng bị gắn sai bối cảnh vụ 19/7.",
+      "evidenceCards": [
         "ev_f10"
       ],
       "unlocks": [
         "q8_timeline"
       ],
-      "mode": "G6"
+      "sources": [
+        "hoaianh2025",
+        "minhthu2025",
+        "baocao"
+      ]
     },
     {
       "id": "q8_timeline",
       "room": "S6",
       "order": 8,
       "required": true,
+      "mode": "G4",
       "title": "Dựng dòng thời gian",
-      "prompt": "Sắp xếp các mốc: 19/7 lật tàu; chiều 19/7 xuất hiện tin giả; 20–22/7 lan mạnh; 21/7 công an thông báo xử lý; 22/7 VTV đăng.",
-      "order_answer": [
-        "19/7 lật tàu",
-        "chiều 19/7 tin giả xuất hiện",
-        "20–22/7 lan mạnh",
-        "21/7 công an thông báo xử lý",
-        "22/7 VTV đăng"
+      "npcIntro": "s6_q8_intro",
+      "question": "Xếp các mốc theo đúng thứ tự thời gian. Ngày của mỗi mốc đều có trong các bài báo.",
+      "resources": [
+        "thuthao2025",
+        "hoaianh2025",
+        "manh2025"
       ],
-      "limits": "Không xác định được thời điểm đăng đầu tiên (F13).",
-      "hints": [
-        "Bắt đầu từ sự kiện thật.",
-        "Tin giả xuất hiện ngay chiều hôm đó."
+      "steps": [
+        {
+          "id": "s1",
+          "type": "order",
+          "resources": [
+            "hoaianh2025",
+            "manh2025",
+            "thuthao2025"
+          ],
+          "ask": "Bấm các mốc lần lượt từ sớm nhất đến muộn nhất.",
+          "items": [
+            {
+              "id": "a",
+              "text": "Chiều 19/7: tàu Vịnh Xanh 58 bị lật trên vịnh Hạ Long"
+            },
+            {
+              "id": "b",
+              "text": "Tối 19/7: video gắn nhãn \"vụ lật tàu 19/7\" bắt đầu được đăng"
+            },
+            {
+              "id": "c",
+              "text": "VnExpress đăng bài về loạt video giả"
+            },
+            {
+              "id": "d",
+              "text": "Tuổi Trẻ đưa tin Công an tỉnh Quảng Ninh xử lý người đăng tin sai"
+            },
+            {
+              "id": "e",
+              "text": "VTV đăng bài xác nhận hình ảnh, câu chuyện do AI dựng"
+            }
+          ],
+          "answer": [
+            "a",
+            "b",
+            "c",
+            "d",
+            "e"
+          ],
+          "hints": [
+            "Bắt đầu từ sự kiện thật, rồi tới lúc tin sai xuất hiện.",
+            "Ba bài báo: xem ngày đăng ở đầu mỗi bài (20/7, 21/7, 22/7)."
+          ],
+          "walkthrough": "Tai nạn (chiều 19/7) → video sai (tối 19/7) → VnExpress (20/7) → Tuổi Trẻ (21/7) → VTV (22/7)."
+        },
+        {
+          "id": "s2",
+          "type": "choice",
+          "ask": "Ta có biết chính xác bài đăng sai ĐẦU TIÊN xuất hiện lúc nào không?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Có, đúng lúc 23h30 ngày 19/7",
+              "correct": false,
+              "feedback": "Đó là giờ một người bình luận sai bị xử lý, không phải bài đăng sai đầu tiên."
+            },
+            {
+              "id": "b",
+              "text": "Chưa xác định được — đây là giới hạn của báo cáo",
+              "correct": true,
+              "feedback": "Đúng (F13). Báo cáo chỉ tiếp cận bài đăng qua ảnh chụp màn hình báo chí đăng lại."
+            },
+            {
+              "id": "c",
+              "text": "Có, ngày 22/7 khi VTV đăng bài",
+              "correct": false,
+              "feedback": "VTV đăng bài đính chính, không phải bài sai đầu tiên."
+            }
+          ],
+          "hints": [
+            "Báo cáo tiếp cận bài đăng gốc bằng cách nào?"
+          ],
+          "walkthrough": "Chọn \"Chưa xác định được\"."
+        }
       ],
-      "gives": [
+      "feedback": {
+        "correct": "Dòng thời gian đã rõ: tin sai xuất hiện ngay trong ngày xảy ra tai nạn và lan mạnh trong ba ngày sau (F3, F14)."
+      },
+      "conclusion": "Tin sai xuất hiện từ chiều–tối 19/7, lan mạnh 20–22/7; Công an tỉnh đã xử lý người đăng tin sai; chưa xác định được thời điểm đăng đầu tiên.",
+      "evidenceCards": [
         "ev_f3",
         "ev_f14"
       ],
       "unlocks": [
         "q9_impact"
       ],
-      "mode": "G4"
+      "sources": [
+        "hoaianh2025",
+        "manh2025",
+        "thuthao2025",
+        "baocao"
+      ]
     },
     {
       "id": "q9_impact",
       "room": "S7",
       "order": 9,
       "required": true,
-      "title": "Phân biệt tác động đã ghi nhận và rủi ro",
-      "prompt": "Phân loại: bài 'anh Quý' ~89.000 cảm xúc/23.700 bình luận/1.000 chia sẻ; fanpage 260.000+ người theo dõi.",
-      "items": [
+      "mode": "G6",
+      "title": "Tác động: đã ghi nhận hay chỉ là nguy cơ?",
+      "npcIntro": "s7_q9_intro",
+      "question": "Tách những gì đã được ghi nhận (có số liệu, có phát ngôn) khỏi những gì mới là nguy cơ.",
+      "resources": [
+        "th2025",
+        "thuthao2025",
+        "hoaianh2025"
+      ],
+      "steps": [
         {
-          "text": "1 bài ~89.000 cảm xúc, 23.700 bình luận, 1.000 chia sẻ",
-          "type": "recorded",
-          "note": "Chỉ là số liệu của MỘT bài, không phải tổng tiếp cận."
+          "id": "s1",
+          "type": "sort",
+          "resources": [
+            "th2025",
+            "thuthao2025",
+            "hoaianh2025"
+          ],
+          "ask": "Xếp từng mục vào đúng nhóm.",
+          "categories": [
+            {
+              "id": "recorded",
+              "label": "Đã ghi nhận"
+            },
+            {
+              "id": "risk",
+              "label": "Mới là nguy cơ"
+            }
+          ],
+          "items": [
+            {
+              "id": "i1",
+              "text": "Bài \"gia đình anh Quý\": 22.000 lượt tương tác, 1.400 chia sẻ, hơn 4.000 bình luận (VOH)",
+              "accept": [
+                "recorded"
+              ],
+              "feedback": "Có số liệu do báo chí nêu."
+            },
+            {
+              "id": "i2",
+              "text": "Tài khoản đăng bài có hơn 260.000 người theo dõi (VOH)",
+              "accept": [
+                "recorded"
+              ],
+              "feedback": "Có số liệu — nhưng là quy mô tài khoản, không phải số người đã xem."
+            },
+            {
+              "id": "i3",
+              "text": "Fanpage M.P.V. đăng hơn 10 bài về vụ việc tính đến 21/7 (VTV)",
+              "accept": [
+                "recorded"
+              ],
+              "feedback": "Có số liệu do VTV nêu."
+            },
+            {
+              "id": "i4",
+              "text": "Sở Du lịch Quảng Ninh: nội dung sai gây hoang mang, ảnh hưởng hình ảnh du lịch (VnExpress)",
+              "accept": [
+                "recorded"
+              ],
+              "feedback": "Đã ghi nhận qua phát ngôn chính thức."
+            },
+            {
+              "id": "i5",
+              "text": "Doanh thu du lịch Hạ Long sụt giảm vì tin giả",
+              "accept": [
+                "risk"
+              ],
+              "feedback": "Chưa có số liệu; VnExpress chỉ có dự báo bán tour sẽ khó hơn (F15)."
+            },
+            {
+              "id": "i6",
+              "text": "Gia đình nạn nhân bị tổn thương thêm",
+              "accept": [
+                "risk"
+              ],
+              "feedback": "Nguy cơ rất đáng lo, nhưng chưa có phát ngôn trực tiếp được ghi nhận (F15)."
+            }
+          ],
+          "hints": [
+            "Mục nào có con số hoặc lời phát biểu được báo chí trích dẫn?",
+            "Dự báo hay lo ngại chưa có số liệu thì là nguy cơ."
+          ],
+          "walkthrough": "Bốn mục có số liệu/phát ngôn trong bài VOH, VTV, VnExpress là \"Đã ghi nhận\"; doanh thu sụt giảm và tổn thương của gia đình là \"Mới là nguy cơ\"."
         },
         {
-          "text": "Fanpage 260.000+ người theo dõi",
-          "type": "recorded",
-          "note": "Quy mô trang, không đồng nghĩa mọi người đã thấy bài."
+          "id": "s2",
+          "type": "choice",
+          "ask": "\"22.000 lượt tương tác\" là con số của…",
+          "options": [
+            {
+              "id": "a",
+              "text": "Toàn bộ tin giả về vụ việc",
+              "correct": false,
+              "feedback": "Không. Chỉ là số liệu của một bài."
+            },
+            {
+              "id": "b",
+              "text": "Một bài viết duy nhất",
+              "correct": true,
+              "feedback": "Đúng. Số liệu một bài không phải tổng tiếp cận."
+            },
+            {
+              "id": "c",
+              "text": "Tổng số người đã xem",
+              "correct": false,
+              "feedback": "Tương tác khác lượt xem; và đây chỉ là một bài."
+            }
+          ],
+          "hints": [
+            "Đọc lại mục số liệu: đó là bài nào?"
+          ],
+          "walkthrough": "Chọn \"Một bài viết duy nhất\"."
         },
         {
-          "text": "Gây tổn thương thêm cho người nhà nạn nhân",
-          "type": "risk",
-          "note": "Rủi ro, chưa có dữ liệu đo."
-        },
-        {
-          "text": "Thiệt hại du lịch Vịnh Hạ Long",
-          "type": "risk",
-          "note": "Rủi ro/nhận định, chưa có số liệu doanh thu trong báo cáo."
+          "id": "s3",
+          "type": "choice",
+          "ask": "Tài khoản có hơn 260.000 người theo dõi. Có phải 260.000 người đã xem bài?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Đúng, tất cả người theo dõi đều thấy bài",
+              "correct": false,
+              "feedback": "Không phải mọi người theo dõi đều thấy mọi bài."
+            },
+            {
+              "id": "b",
+              "text": "Không, đó là quy mô tài khoản, không đồng nghĩa với lượt xem",
+              "correct": true,
+              "feedback": "Đúng. Đừng biến quy mô tài khoản thành số người bị ảnh hưởng."
+            }
+          ],
+          "hints": [
+            "Người theo dõi có thấy hết mọi bài không?"
+          ],
+          "walkthrough": "Chọn \"Không, đó là quy mô tài khoản\"."
         }
       ],
-      "hints": [
-        "Có con số nguồn nêu không?",
-        "Phân biệt đã xảy ra và có thể xảy ra."
-      ],
-      "gives": [
+      "feedback": {
+        "correct": "Tốt. Nói đúng mức tác động cũng là một phần của kiểm chứng (F11, F15)."
+      },
+      "conclusion": "Đã ghi nhận: số liệu tương tác của một bài, quy mô tài khoản, số bài của fanpage, phát ngôn của ngành du lịch. Mới là nguy cơ: thiệt hại doanh thu, tổn thương của gia đình nạn nhân.",
+      "evidenceCards": [
         "ev_f11",
         "ev_f15"
       ],
       "unlocks": [
-        "q10_intent"
+        "q10_intent",
+        "q10b_interview"
       ],
-      "mode": "G6"
+      "sources": [
+        "th2025",
+        "thuthao2025",
+        "hoaianh2025",
+        "baocao"
+      ]
     },
     {
       "id": "q10_intent",
       "room": "S7",
       "order": 10,
       "required": true,
+      "mode": "G7",
       "title": "Chủ đích: điều gì chứng minh được?",
-      "prompt": "Chọn nhận định phù hợp bằng chứng về thủ đoạn.",
-      "options": [
+      "npcIntro": "s7_q10_intro",
+      "question": "Có dấu hiệu nào cho thấy người đăng cố ý thu hút tương tác không? Và điều gì ta CHƯA biết?",
+      "resources": [
+        "thuonghuyen2025",
+        "thuthao2025"
+      ],
+      "steps": [
         {
-          "id": "a",
-          "text": "Chủ trang chắc chắn kiếm tiền từ vụ việc",
-          "correct": false,
-          "feedback": "Không có dữ liệu doanh thu (F13). Không suy đoán động cơ tài chính khi chưa có dữ liệu."
+          "id": "s1",
+          "type": "multi",
+          "resources": [
+            "thuonghuyen2025",
+            "thuthao2025"
+          ],
+          "ask": "Chọn các bằng chứng về THỦ ĐOẠN thu hút tương tác (đọc bài Dân trí và VTV).",
+          "cards": [
+            {
+              "id": "c1",
+              "text": "Yêu cầu người xem bấm link trong phần bình luận để \"đọc tiếp\" (Dân trí)",
+              "correct": true
+            },
+            {
+              "id": "c2",
+              "text": "Link dẫn sang trang \"Tin Hay\" với nhiều quảng cáo che màn hình (Dân trí)",
+              "correct": true
+            },
+            {
+              "id": "c3",
+              "text": "Dòng \"Đây là các tình tiết hư cấu\" rất nhỏ, nhiều bài không ghi (Dân trí, VTV)",
+              "correct": true
+            },
+            {
+              "id": "c4",
+              "text": "Nhiều người để lại lời chia buồn dưới bài",
+              "correct": false,
+              "feedback": "Đó là tác động lên người xem, không phải thủ đoạn của người đăng."
+            },
+            {
+              "id": "c5",
+              "text": "Ảnh có màu sắc đẹp, độ phân giải cao",
+              "correct": false,
+              "feedback": "Chất lượng ảnh không nói lên chủ đích."
+            }
+          ],
+          "hints": [
+            "Thủ đoạn là việc người đăng LÀM để kéo tương tác.",
+            "Bài Dân trí mô tả các đường link và dòng chữ nhỏ."
+          ],
+          "walkthrough": "Chọn: link \"đọc tiếp\" trong bình luận, link sang trang \"Tin Hay\", dòng chú thích hư cấu rất nhỏ hoặc không có."
         },
         {
-          "id": "b",
-          "text": "Có thủ đoạn thu hút: cắt truyện ở đoạn cao trào, link 'Xem tiếp/Đoạn kết' sang web ngoài; nhiều bài không ghi chú hư cấu hoặc ghi rất khó thấy",
-          "correct": true,
-          "feedback": "Đúng (F12, F16). Đây là gợi ý có chủ đích, nhưng không phải kết luận về từng cá nhân; chưa xác định ai đứng sau trang."
+          "id": "s2",
+          "type": "multi",
+          "ask": "Điều nào CHƯA có dữ liệu để kết luận?",
+          "cards": [
+            {
+              "id": "c1",
+              "text": "Ai là người đứng sau các fanpage",
+              "correct": true
+            },
+            {
+              "id": "c2",
+              "text": "Người đăng có thu được tiền hay không, bao nhiêu",
+              "correct": true
+            },
+            {
+              "id": "c3",
+              "text": "Thời điểm bài sai đầu tiên được đăng",
+              "correct": true
+            },
+            {
+              "id": "c4",
+              "text": "Bài có dẫn link \"đọc tiếp\" trong bình luận",
+              "correct": false,
+              "feedback": "Điều này đã có dữ liệu từ báo chí."
+            }
+          ],
+          "hints": [
+            "Đọc lại giới hạn của báo cáo (F13)."
+          ],
+          "walkthrough": "Chọn danh tính người đứng sau, doanh thu, thời điểm đăng đầu tiên."
         },
         {
-          "id": "c",
-          "text": "Biết danh tính người đứng sau",
-          "correct": false,
-          "feedback": "Không xác định được cá nhân đứng sau (F13). Không doxxing."
+          "id": "s3",
+          "type": "choice",
+          "ask": "Vậy nhận định nào đúng với bằng chứng?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Chủ trang chắc chắn kiếm tiền từ vụ việc",
+              "correct": false,
+              "feedback": "Không có dữ liệu doanh thu (F13)."
+            },
+            {
+              "id": "b",
+              "text": "Có thủ đoạn thu hút tương tác, cho thấy chủ đích; nhưng chưa xác định ai đứng sau và động cơ tài chính",
+              "correct": true,
+              "feedback": "Đúng (F12, F16, F13). Chỉ kết luận trong giới hạn bằng chứng."
+            },
+            {
+              "id": "c",
+              "text": "Đã biết danh tính người đứng sau",
+              "correct": false,
+              "feedback": "Chưa xác định được cá nhân nào (F13). Không suy đoán, không công khai thông tin cá nhân."
+            }
+          ],
+          "hints": [
+            "Có bằng chứng về thủ đoạn; có bằng chứng về tiền hay danh tính không?"
+          ],
+          "walkthrough": "Chọn nhận định có cả hai vế: có thủ đoạn, nhưng chưa biết ai đứng sau và động cơ tài chính."
         }
       ],
-      "hints": [
-        "Đọc F12 và F16.",
-        "Điều gì CHƯA có dữ liệu?"
-      ],
-      "optionalInterview": {
-        "npc": "npc6",
-        "note": "Phỏng vấn chú Sáu Nhóm (NPC giả lập) để thấy mâu thuẫn lời khai; không dùng như bằng chứng thật."
+      "feedback": {
+        "correct": "Chuẩn mực thẩm định: khẳng định điều bằng chứng cho phép, dừng đúng chỗ ở điều chưa biết."
       },
-      "gives": [
+      "conclusion": "Có thủ đoạn thu hút tương tác (link \"đọc tiếp\", trang nhiều quảng cáo, chú thích hư cấu khó thấy); chưa xác định người đứng sau, doanh thu và thời điểm đăng đầu tiên.",
+      "evidenceCards": [
         "ev_f12",
         "ev_f16",
         "ev_f13"
@@ -884,127 +1276,422 @@
       "unlocks": [
         "q11_classify"
       ],
-      "mode": "G7"
+      "sources": [
+        "thuonghuyen2025",
+        "thuthao2025",
+        "baocao"
+      ]
     },
     {
       "id": "q11_classify",
       "room": "S8",
       "order": 11,
       "required": true,
-      "title": "Phân loại rối loạn thông tin (Wardle & Derakhshan)",
-      "prompt": "Phân loại theo từng nhóm đối tượng.",
-      "framework": "wardle2017",
-      "groups": [
+      "mode": "G8",
+      "title": "Phân loại rối loạn thông tin",
+      "npcIntro": "s8_q11_intro",
+      "question": "Dùng khung của Wardle và Derakhshan để phân loại TỪNG nhóm đối tượng.",
+      "resources": [
+        "wardle2017"
+      ],
+      "steps": [
         {
-          "id": "ai_sets",
-          "text": "Hai bộ ảnh AI (9 ảnh, 12 khung)",
-          "answer": "Disinformation",
-          "teamDecision": false,
-          "feedback": "Nội dung bịa, có dấu hiệu chủ đích (thủ đoạn câu tương tác, ghi chú hư cấu khó thấy/không có)."
+          "id": "s0",
+          "type": "say",
+          "lines": [
+            {
+              "npc": "npc4",
+              "text": "(gọi điện tới) Cứ gọi hết là tin giả cố ý cho nhanh! Đăng bài kết luận luôn đi!"
+            },
+            {
+              "npc": "npc1",
+              "text": "Không được gộp. Mỗi nhóm có mức chủ đích khác nhau, phải xét từng nhóm."
+            },
+            {
+              "npc": "npc5",
+              "text": "(nhắn tin) Mình đăng lại vì thương nạn nhân thôi mà, vậy là đúng phải không?"
+            },
+            {
+              "npc": "npc1",
+              "text": "Thương cảm là thật. Nhưng chia sẻ tin sai dù không cố ý vẫn là một dạng rối loạn thông tin."
+            }
+          ]
         },
         {
-          "id": "old_clips",
-          "text": "Clip cũ gắn nhãn sai (Yagi, Congo, ảnh trẻ 2024)",
-          "answer": "Disinformation",
-          "accept": [
-            "Disinformation",
-            "Misinformation",
-            "Chưa đủ căn cứ về chủ đích"
+          "id": "s1",
+          "type": "sort",
+          "exhibit": "wardle",
+          "ask": "Xếp từng nhóm vào đúng loại.",
+          "categories": [
+            {
+              "id": "dis",
+              "label": "Disinformation"
+            },
+            {
+              "id": "mis",
+              "label": "Misinformation"
+            },
+            {
+              "id": "mal",
+              "label": "Malinformation"
+            },
+            {
+              "id": "unsure",
+              "label": "Chưa đủ căn cứ về chủ đích"
+            }
           ],
-          "teamDecision": false,
-          "feedback": "Cả Misinformation và \"chưa đủ căn cứ về chủ đích\" đều được chấp nhận: báo cáo xếp Disinformation chung nhưng tự nêu hạn chế; chưa có bằng chứng về chủ đích của từng người đăng (F13)."
-        },
-        {
-          "id": "sharers",
-          "text": "Người dùng chia sẻ vì thương cảm",
-          "answer": "Misinformation",
-          "feedback": "Chia sẻ tin sai nhưng không có ý định gây hại → Misinformation."
-        },
-        {
-          "id": "malinfo_trap",
-          "text": "Đăng thông tin thật nhưng nhằm gây hại (ví dụ lộ thông tin cá nhân)",
-          "answer": "Malinformation",
-          "feedback": "Malinformation: thông tin thật dùng để gây hại. Không có trong dữ liệu vụ này, chỉ để phân biệt khái niệm."
+          "items": [
+            {
+              "id": "ai_sets",
+              "text": "Hai bộ ảnh AI và câu chuyện \"nạn nhân\" trên các fanpage",
+              "accept": [
+                "dis"
+              ],
+              "feedback": "Nội dung bịa, kèm thủ đoạn thu hút tương tác và chú thích hư cấu khó thấy → Disinformation (F12, F16)."
+            },
+            {
+              "id": "old_clips",
+              "text": "Video bão Yagi, tàu chìm Congo, ảnh trẻ em 2024 bị gắn là vụ 19/7",
+              "accept": [
+                "mis",
+                "unsure"
+              ],
+              "feedback": "Chưa có bằng chứng về chủ đích của từng người đăng → Misinformation hoặc \"chưa đủ căn cứ về chủ đích\" đều chấp nhận (F13)."
+            },
+            {
+              "id": "sharers",
+              "text": "Người dùng chia sẻ vì thương cảm, tưởng là thật",
+              "accept": [
+                "mis"
+              ],
+              "feedback": "Chia sẻ tin sai nhưng không có ý gây hại → Misinformation."
+            },
+            {
+              "id": "malinfo",
+              "text": "Ví dụ đối chứng (GIẢ LẬP): đăng công khai số điện thoại thật của người nhà nạn nhân để \"kêu gọi giúp đỡ\"",
+              "accept": [
+                "mal"
+              ],
+              "feedback": "Thông tin thật nhưng công khai gây tổn hại → Malinformation. Ví dụ này không có trong dữ liệu vụ việc, chỉ để phân biệt khái niệm."
+            }
+          ],
+          "hints": [
+            "Hai câu hỏi: nội dung sai hay thật? Có bằng chứng về ý định gây hại / trục lợi không?",
+            "Nhóm clip cũ: ta có biết từng người đăng có cố ý không?"
+          ],
+          "walkthrough": "Ảnh AI trên fanpage → Disinformation; clip cũ → Misinformation (hoặc chưa đủ căn cứ); người chia sẻ vì thương cảm → Misinformation; công khai thông tin thật gây hại → Malinformation."
         }
       ],
-      "trapNpcs": [
-        "npc4",
-        "npc5"
-      ],
-      "hints": [
-        "Hai yếu tố: sai hay đúng? Có ý định gây hại không?",
-        "Phân loại từng nhóm, không gộp."
-      ],
-      "gives": [
+      "feedback": {
+        "correct": "Phân loại đúng từng nhóm. Gộp tất cả thành \"tin giả cố ý\" là sai về phương pháp."
+      },
+      "conclusion": "Ảnh AI trên fanpage: Disinformation. Clip cũ gắn sai: Misinformation / chưa đủ căn cứ về chủ đích. Người chia sẻ vì thương cảm: Misinformation.",
+      "evidenceCards": [
         "ev_class"
       ],
       "unlocks": [
         "q12_response"
       ],
-      "mode": "G8"
+      "sources": [
+        "wardle2017",
+        "baocao"
+      ]
     },
     {
       "id": "q12_response",
       "room": "S8",
       "order": 12,
       "required": true,
+      "mode": "G9",
       "title": "Ứng xử có trách nhiệm",
-      "prompt": "Bạn phát hiện bài đăng giả đang lan. Chọn hành động đúng.",
-      "options": [
+      "npcIntro": "s8_q12_intro",
+      "question": "Bạn thấy một bài đăng giả đang lan. Bạn sẽ làm gì?",
+      "steps": [
         {
-          "id": "a",
-          "text": "Báo cáo bài đăng với nền tảng, không chia sẻ lại, đăng thông tin đính chính từ nguồn chính thống",
-          "correct": true,
-          "feedback": "Đúng. Không khuếch đại bài giả (kể cả để chê), dùng nguồn chính thống."
-        },
-        {
-          "id": "b",
-          "text": "Công khai tên và nơi ở người đăng",
-          "correct": false,
-          "feedback": "Không doxxing. Việc xử lý thuộc cơ quan chức năng (F14)."
-        },
-        {
-          "id": "c",
-          "text": "Bấm 'Xem tiếp' để xem hết câu chuyện",
-          "correct": false,
-          "feedback": "Link ngoài có thể rủi ro (Dân trí cảnh báo, F12)."
+          "id": "s1",
+          "type": "multi",
+          "ask": "Chọn TẤT CẢ hành động nên làm.",
+          "cards": [
+            {
+              "id": "r1",
+              "text": "Báo cáo bài đăng với nền tảng",
+              "correct": true
+            },
+            {
+              "id": "r2",
+              "text": "Không chia sẻ lại, kể cả để chê",
+              "correct": true
+            },
+            {
+              "id": "r3",
+              "text": "Chia sẻ thông tin đính chính từ nguồn chính thống",
+              "correct": true
+            },
+            {
+              "id": "r4",
+              "text": "Nếu phải dẫn lại ảnh giả để đính chính: làm mờ, gạch chéo, ghi rõ ẢNH GIẢ",
+              "correct": true
+            },
+            {
+              "id": "w1",
+              "text": "Công khai tên và nơi ở của người đăng",
+              "correct": false,
+              "feedback": "Không doxxing. Việc xử lý thuộc cơ quan chức năng — Công an tỉnh đã xử lý người đăng tin sai (F14)."
+            },
+            {
+              "id": "w2",
+              "text": "Bấm link \"đọc tiếp\" để xem hết câu chuyện",
+              "correct": false,
+              "feedback": "Dân trí cảnh báo các link này có thể tiềm ẩn nhiều nguy cơ (F12)."
+            },
+            {
+              "id": "w3",
+              "text": "Bình luận thật gay gắt dưới bài để cảnh báo",
+              "correct": false,
+              "feedback": "Bình luận cũng làm bài được đẩy lên, lan rộng hơn."
+            }
+          ],
+          "hints": [
+            "Đừng khuếch đại bài giả.",
+            "Bảo vệ người xem khỏi ảnh giả, và đừng làm tổn hại người khác."
+          ],
+          "walkthrough": "Chọn: báo cáo, không chia sẻ lại, chia sẻ đính chính chính thống, làm mờ/gạch chéo ảnh giả khi buộc phải dẫn lại."
         }
       ],
-      "hints": [
-        "Đừng khuếch đại.",
-        "Chỉ dựa nguồn chính thống."
-      ],
-      "gives": [
+      "feedback": {
+        "correct": "Đính chính nhân văn: không khuếch đại, không gây hại thêm, dựa vào nguồn chính thống."
+      },
+      "conclusion": "Báo cáo, không chia sẻ lại, đính chính bằng nguồn chính thống, làm mờ ảnh giả khi buộc phải dẫn lại; không doxxing, không bấm link lạ.",
+      "evidenceCards": [
         "ev_response"
       ],
       "unlocks": [
         "q13_platform"
       ],
-      "mode": "G9"
+      "sources": [
+        "thuonghuyen2025",
+        "manh2025"
+      ]
     },
     {
       "id": "q13_platform",
       "room": "S8",
       "order": 13,
       "required": false,
+      "mode": "G9",
       "title": "(Tùy chọn) Trách nhiệm của nền tảng",
-      "prompt": "Nêu một biện pháp nền tảng nên làm (gắn nhãn nội dung AI, giảm lan truyền, xử lý tài khoản vi phạm).",
-      "freeText": true,
-      "feedback": "Câu mở, không chấm đúng/sai. Không tư vấn pháp lý; văn bản quy định nêu trong báo cáo.",
-      "gives": [
+      "npcIntro": "s8_q13_intro",
+      "question": "Câu hỏi mở, không chấm đúng sai.",
+      "steps": [
+        {
+          "id": "s1",
+          "type": "open",
+          "ask": "Theo bạn, nền tảng mạng xã hội nên làm gì với những nội dung như vụ này?",
+          "placeholder": "Viết ý kiến của bạn",
+          "ideas": [
+            {
+              "keywords": [
+                "nhan",
+                "gan nhan",
+                "danh dau",
+                "ai"
+              ],
+              "text": "gắn nhãn nội dung do AI tạo"
+            },
+            {
+              "keywords": [
+                "giam",
+                "han che",
+                "chan",
+                "hien thi",
+                "lan truyen"
+              ],
+              "text": "giảm lan truyền nội dung bị đánh dấu sai"
+            },
+            {
+              "keywords": [
+                "khoa",
+                "xu ly",
+                "tai khoan",
+                "cam"
+              ],
+              "text": "xử lý tài khoản vi phạm"
+            },
+            {
+              "keywords": [
+                "link",
+                "duong dan",
+                "lua dao",
+                "quang cao"
+              ],
+              "text": "kiểm soát đường link dẫn sang trang lạ"
+            }
+          ],
+          "hints": [
+            "Nghĩ về nhãn, phạm vi lan truyền, tài khoản vi phạm."
+          ],
+          "walkthrough": "Ví dụ: \"Gắn nhãn ảnh do AI tạo và giảm hiển thị bài đã bị đính chính.\""
+        }
+      ],
+      "feedback": {
+        "correct": "Cảm ơn ý kiến của bạn. Báo cáo có dẫn một số văn bản quy định liên quan; game không tư vấn pháp lý."
+      },
+      "conclusion": "Nền tảng có thể gắn nhãn nội dung AI, giảm lan truyền và xử lý tài khoản vi phạm.",
+      "evidenceCards": [
         "ev_platform"
       ],
-      "unlocks": [
-        "boss"
+      "unlocks": [],
+      "sources": [
+        "vanban"
+      ]
+    },
+    {
+      "id": "q10b_interview",
+      "room": "CAFE",
+      "order": 14,
+      "required": false,
+      "mode": "G7",
+      "title": "(Tùy chọn) Thẩm vấn ở quán cà phê",
+      "npcIntro": "cafe_q10b_intro",
+      "question": "Chú Sáu quản trị một nhóm mạng từng đăng lại bộ ảnh. Hỏi chú vài câu, rồi tìm chỗ mâu thuẫn. (Nhân vật và lời khai đều GIẢ LẬP.)",
+      "steps": [
+        {
+          "id": "s1",
+          "type": "interview",
+          "ask": "Bạn muốn hỏi gì?",
+          "questions": [
+            {
+              "id": "n1",
+              "text": "Chú đăng bộ ảnh này lấy từ đâu?",
+              "answer": "Tôi thấy người ta chia sẻ, tôi đăng lại thôi."
+            },
+            {
+              "id": "n2",
+              "text": "Sao không ghi chú đây là truyện hư cấu?",
+              "answer": "À… có ghi chứ, nhỏ xíu thôi, nhưng ai cũng thấy mà."
+            },
+            {
+              "id": "n3",
+              "text": "Link \"đọc tiếp\" dưới bài dẫn đi đâu?",
+              "answer": "Cái đó… quảng cáo thôi, chắc không sao đâu."
+            }
+          ],
+          "hints": [
+            "Hỏi đủ cả ba câu."
+          ],
+          "walkthrough": "Bấm lần lượt cả ba câu hỏi."
+        },
+        {
+          "id": "s2",
+          "type": "choice",
+          "ask": "Câu trả lời nào tự mâu thuẫn?",
+          "options": [
+            {
+              "id": "a",
+              "text": "\"Tôi thấy người ta chia sẻ, tôi đăng lại thôi.\"",
+              "correct": false,
+              "feedback": "Câu này thiếu nguồn, nhưng không tự mâu thuẫn."
+            },
+            {
+              "id": "b",
+              "text": "\"Có ghi chứ, nhỏ xíu thôi, nhưng ai cũng thấy mà.\"",
+              "correct": true,
+              "feedback": "Đúng: \"nhỏ xíu\" mà \"ai cũng thấy\" là tự mâu thuẫn — giống cách báo chí mô tả chú thích hư cấu khó nhìn (F16)."
+            },
+            {
+              "id": "c",
+              "text": "\"Quảng cáo thôi, chắc không sao đâu.\"",
+              "correct": false,
+              "feedback": "Câu này né tránh, nhưng không tự mâu thuẫn."
+            }
+          ],
+          "hints": [
+            "Tìm câu có hai vế ngược nhau."
+          ],
+          "walkthrough": "Chọn câu về chú thích \"nhỏ xíu\" mà \"ai cũng thấy\"."
+        }
       ],
-      "mode": "G9"
+      "feedback": {
+        "correct": "Phát hiện tốt. Nhưng nhớ: lời khai của một nhân vật GIẢ LẬP chỉ để luyện kỹ năng, không phải bằng chứng thật về ai cả."
+      },
+      "conclusion": "Lời khai thiếu nguồn và tự mâu thuẫn — chỉ là dữ kiện tham khảo, không đủ để kết luận chủ đích hay danh tính.",
+      "evidenceCards": [],
+      "unlocks": [],
+      "sources": []
+    },
+    {
+      "id": "bonus_impersonation",
+      "room": "BONUS",
+      "order": 15,
+      "required": false,
+      "mode": "G11",
+      "title": "(Bonus) Trang mạo danh",
+      "npcIntro": "bonus_intro",
+      "question": "Sau vụ việc, xuất hiện một trang mạo danh chính Ban Hải Đăng. Tất cả là GIẢ LẬP — hãy tìm các dấu hiệu mạo danh.",
+      "steps": [
+        {
+          "id": "s1",
+          "type": "multi",
+          "exhibit": "fakepage",
+          "ask": "Chọn các dấu hiệu mạo danh.",
+          "cards": [
+            {
+              "id": "b1",
+              "text": "Tên trang sai chính tả (\"Hải Đăngg\")",
+              "correct": true
+            },
+            {
+              "id": "b2",
+              "text": "Dấu tích xanh là ký tự gõ vào tên, không phải xác minh của nền tảng",
+              "correct": true
+            },
+            {
+              "id": "b3",
+              "text": "Trang mới tạo 2 ngày, rất ít người theo dõi",
+              "correct": true
+            },
+            {
+              "id": "b4",
+              "text": "Kêu gọi chuyển khoản vào tài khoản cá nhân",
+              "correct": true
+            },
+            {
+              "id": "b5",
+              "text": "Đường link rút gọn lạ để \"xác nhận\"",
+              "correct": true
+            },
+            {
+              "id": "w1",
+              "text": "Bài viết dùng giọng khẩn cấp, xúc động",
+              "correct": false,
+              "feedback": "Đây là dấu hiệu đáng ngờ, nhưng tổ chức thật cũng có thể đăng tin khẩn. Hãy dựa vào các dấu hiệu kiểm chứng được."
+            }
+          ],
+          "hints": [
+            "So tên trang với tên thật của Ban.",
+            "Tổ chức thật có nhận quyên góp vào tài khoản cá nhân không?"
+          ],
+          "walkthrough": "Chọn: sai chính tả, tích xanh giả, trang mới tạo, tài khoản cá nhân, link rút gọn."
+        }
+      ],
+      "feedback": {
+        "correct": "Bạn đã nhận diện được trang mạo danh. Khi nghi ngờ, hãy liên hệ kênh chính thức của tổ chức."
+      },
+      "conclusion": "Dấu hiệu mạo danh: tên sai chính tả, tích xanh giả, trang mới tạo, tài khoản cá nhân, link rút gọn lạ.",
+      "evidenceCards": [],
+      "unlocks": [],
+      "sources": [],
+      "unlockFlags": [
+        "boss_done"
+      ]
     }
   ],
   "boss": {
     "id": "boss",
     "room": "S9",
     "name": "Kẻ Dệt Chuyện",
-    "note": "Nhân vật hư cấu đại diện cho hành vi lan truyền tin giả, KHÔNG đại diện cá nhân thật.",
+    "alias": "Kẻ Giấu Mặt",
+    "note": "Nhân vật hư cấu đại diện cho KIỂU HÀNH VI lan truyền tin giả, không đại diện cá nhân, trang hay cơ quan thật.",
     "requires": {
       "minCards": 8,
       "requiredQuests": [
@@ -1022,68 +1709,83 @@
         "q12_response"
       ]
     },
+    "guessCards": [
+      "ev_money",
+      "ev_identity"
+    ],
     "phases": [
       {
         "id": "p1",
         "name": "Ảnh dựng",
-        "claim": "Ảnh này là thật, do người trên tàu chụp!",
-        "correctCards": [
+        "claim": "Những bức ảnh này là thật, do người trên tàu chụp lại. Nhìn là biết!",
+        "core": [
           "ev_f5",
           "ev_f6",
           "ev_f8",
           "ev_f9"
         ],
-        "trapCards": [
-          "ev_f7_alone"
+        "support": [
+          "ev_f7"
         ],
-        "defeat": "Không có nguồn gốc, lỗi thị giác, dùng lại ảnh, VTV xác nhận AI. Detector chỉ bổ trợ.",
-        "explain": "Dùng nhiều bằng chứng độc lập, không dựa một công cụ."
+        "min": 2,
+        "soloSupport": "Chỉ một con số từ công cụ thì ta cãi được: \"công cụ có thể sai\". Cần bằng chứng độc lập!",
+        "weak": "Bằng chứng đó không nói gì về những bức ảnh này.",
+        "defeat": "Không có nguồn gốc, lỗi thị giác, ảnh dùng lại, VTV xác nhận AI… Ta không cãi được.",
+        "explain": "Nhiều bằng chứng độc lập mạnh hơn một công cụ duy nhất."
       },
       {
         "id": "p2",
         "name": "Cắt ghép",
-        "claim": "Tôi chỉ chia sẻ video có thật thôi!",
-        "correctCards": [
-          "ev_f10",
-          "ev_f3"
+        "claim": "Thì có những video thật mà! Sao lại bảo là sai?",
+        "core": [
+          "ev_f10"
         ],
-        "trapCards": [],
-        "defeat": "Video thật nhưng quay năm 2024, gắn nhãn sai bối cảnh.",
-        "explain": "Thông tin thật sai ngữ cảnh vẫn là tin sai."
+        "support": [
+          "ev_f3",
+          "ev_f14"
+        ],
+        "min": 1,
+        "weak": "Bằng chứng đó không chứng minh video bị gắn sai bối cảnh.",
+        "defeat": "Video quay từ đợt bão Yagi và ở Congo năm 2024… ta gắn nhãn sai.",
+        "explain": "Nội dung thật nhưng sai ngữ cảnh vẫn là tin sai."
       },
       {
         "id": "p3",
         "name": "Mặt nạ",
-        "claim": "Tôi chỉ muốn mọi người quan tâm. Bằng chứng nào cho thấy tôi cố ý?",
-        "correctCards": [
+        "claim": "Ta chỉ muốn mọi người quan tâm thôi. Ngươi biết ta là ai, ta kiếm được bao nhiêu chứ?",
+        "core": [
           "ev_f12",
-          "ev_f16",
+          "ev_f16"
+        ],
+        "need": [
           "ev_f13"
         ],
-        "trapCards": [
-          "ev_money",
-          "ev_identity"
-        ],
-        "defeat": "Có thủ đoạn câu tương tác và ghi chú hư cấu khó thấy; nhưng không có dữ liệu doanh thu/danh tính.",
-        "explain": "Chỉ kết luận trong giới hạn bằng chứng."
+        "min": 1,
+        "missingLimit": "Ngươi chứng minh được thủ đoạn… nhưng ngươi đang ngầm nói rằng ngươi biết hết về ta?",
+        "weak": "Bằng chứng đó không nói về chủ đích.",
+        "defeat": "Thủ đoạn câu tương tác, chú thích hư cấu giấu đi… nhưng ngươi không thể biết ta là ai.",
+        "explain": "Có dấu hiệu chủ đích ≠ biết danh tính ≠ biết động cơ tài chính."
       }
     ],
     "trapB": {
-      "text": "Buộc tội động cơ tiền bạc/danh tính cá nhân",
-      "feedback": "Không có dữ liệu (F13). Buộc tội quá mức là sai."
+      "cards": [
+        "ev_money",
+        "ev_identity"
+      ],
+      "text": "Buộc tội động cơ tiền bạc / danh tính khi chưa có dữ liệu",
+      "feedback": "Không có dữ liệu doanh thu hay danh tính (F13). Kết luận vượt bằng chứng có thể gây hại cho người vô can."
     },
     "endings": {
       "A": {
         "title": "Gương mặt trống",
-        "text": "Bạn chứng minh được thủ đoạn và nội dung giả nhưng KHÔNG đủ căn cứ xác định danh tính. Kết thúc đúng chuẩn thẩm định."
+        "text": "Bạn chứng minh được nội dung là giả và có dấu hiệu chủ đích thu hút tương tác, nhưng KHÔNG đủ căn cứ xác định danh tính hay động cơ tài chính. Kiểm chứng tốt là biết dừng đúng chỗ."
       },
       "B": {
         "title": "Buộc tội quá mức",
-        "text": "Bạn kết luận vượt bằng chứng. Thẩm định viên không suy đoán ngoài dữ liệu.",
-        "trigger": "Chọn thẻ \"tiết lộ danh tính\" (ev_identity) hoặc \"chắc chắn trục lợi tài chính\" (ev_money) ở pha 3; sau đó cho chơi lại pha 3."
+        "text": "Bạn kết luận vượt bằng chứng. Thẩm định viên không suy đoán ngoài dữ liệu. Hãy thử lại pha cuối.",
+        "trigger": "Chọn thẻ suy đoán (ev_money hoặc ev_identity) ở pha 3; sau đó chơi lại pha 3."
       }
-    },
-    "alias": "Kẻ Giấu Mặt"
+    }
   },
   "organization": {
     "name": "Ban Điều phối Thông tin Du lịch Hải Đăng",
@@ -1171,12 +1873,136 @@
       "sources": [
         "thuthao2025"
       ]
+    },
+    {
+      "id": "ev_f10",
+      "fact": "F10",
+      "title": "Nội dung thật, sai bối cảnh",
+      "text": "Video bão Yagi, tàu chìm ở Congo (10/2024) và ảnh nhóm trẻ em chụp tháng 8/2024 bị gắn là vụ 19/7.",
+      "sources": [
+        "hoaianh2025",
+        "minhthu2025"
+      ]
+    },
+    {
+      "id": "ev_f3",
+      "fact": "F3",
+      "title": "Tin sai xuất hiện ngay trong ngày",
+      "text": "Thông tin sai bắt đầu từ chiều–tối 19/7, lan mạnh 20–22/7/2025 qua Facebook, TikTok, hội nhóm, video ngắn.",
+      "sources": [
+        "baocao",
+        "hoaianh2025"
+      ]
+    },
+    {
+      "id": "ev_f14",
+      "fact": "F14",
+      "title": "Cơ quan chức năng đã xử lý",
+      "text": "Tuổi Trẻ (21/7/2025): Công an tỉnh Quảng Ninh xử lý một người bình luận sai sự thật về số người tử vong.",
+      "sources": [
+        "manh2025"
+      ]
+    },
+    {
+      "id": "ev_f11",
+      "fact": "F11",
+      "title": "Số liệu tương tác của một bài",
+      "text": "Bài \"gia đình anh Quý\" trên một tài khoản cá nhân hơn 260.000 người theo dõi: 22.000 lượt tương tác, 1.400 chia sẻ, hơn 4.000 bình luận (VOH). Fanpage M.P.V. đăng hơn 10 bài đến 21/7 (VTV).",
+      "sources": [
+        "th2025",
+        "thuthao2025"
+      ],
+      "note": "Sửa theo VOH 29/10/2026: báo cáo ghi 89.000/23.700/1.000 nhưng không tìm thấy trong nguồn."
+    },
+    {
+      "id": "ev_f15",
+      "fact": "F15",
+      "title": "Đã ghi nhận và nguy cơ",
+      "text": "Đã ghi nhận: người dùng nhầm nhân vật AI, phát ngôn của ngành du lịch. Mới là nguy cơ: tổn thương của gia đình nạn nhân, thiệt hại doanh thu du lịch.",
+      "sources": [
+        "baocao",
+        "hoaianh2025"
+      ]
+    },
+    {
+      "id": "ev_f12",
+      "fact": "F12",
+      "title": "Thủ đoạn câu tương tác",
+      "text": "Bài kể chuyện ngắt quãng, yêu cầu bấm link trong bình luận để \"đọc tiếp\", dẫn sang trang \"Tin Hay\" nhiều quảng cáo; Dân trí cảnh báo link có thể tiềm ẩn nhiều nguy cơ.",
+      "sources": [
+        "thuonghuyen2025"
+      ]
+    },
+    {
+      "id": "ev_f16",
+      "fact": "F16",
+      "title": "Chú thích hư cấu khó thấy",
+      "text": "Một số bài có dòng \"tình tiết hư cấu\" nhưng rất khó nhìn; nhiều bài không ghi chú thích.",
+      "sources": [
+        "thuthao2025",
+        "thuonghuyen2025"
+      ]
+    },
+    {
+      "id": "ev_f13",
+      "fact": "F13",
+      "title": "Giới hạn: chưa đủ căn cứ",
+      "text": "Chưa định danh được người đứng sau các fanpage, chưa có dữ liệu doanh thu, chưa xác định thời điểm đăng đầu tiên; khung 6 và 10 mờ nên không đánh giá.",
+      "sources": [
+        "baocao"
+      ]
+    },
+    {
+      "id": "ev_class",
+      "fact": "Phân loại",
+      "title": "Phân loại theo từng nhóm",
+      "text": "Ảnh AI trên fanpage: Disinformation; clip cũ gắn sai: Misinformation / chưa đủ căn cứ; người chia sẻ vì thương cảm: Misinformation.",
+      "sources": [
+        "wardle2017",
+        "baocao"
+      ]
+    },
+    {
+      "id": "ev_response",
+      "fact": "Ứng xử",
+      "title": "Đính chính nhân văn",
+      "text": "Báo cáo, không chia sẻ lại, đính chính bằng nguồn chính thống, làm mờ ảnh giả khi buộc phải dẫn lại; không doxxing.",
+      "sources": [
+        "baocao"
+      ]
+    },
+    {
+      "id": "ev_platform",
+      "fact": "Ý kiến",
+      "title": "Trách nhiệm nền tảng",
+      "text": "Gắn nhãn nội dung AI, giảm lan truyền, xử lý tài khoản vi phạm (ý kiến của bạn).",
+      "sources": [
+        "vanban"
+      ]
+    },
+    {
+      "id": "ev_money",
+      "fact": "Suy đoán",
+      "title": "Thẻ suy đoán: chủ trang chắc chắn kiếm tiền",
+      "text": "Một lời đồn trên mạng. Không có dữ liệu doanh thu nào.",
+      "sources": [],
+      "guess": true
+    },
+    {
+      "id": "ev_identity",
+      "fact": "Suy đoán",
+      "title": "Thẻ suy đoán: công khai danh tính \"chủ trang\"",
+      "text": "Một người trên mạng chỉ đích danh ai đó là chủ trang. Chưa được xác minh.",
+      "sources": [],
+      "guess": true
     }
   ],
   "areas": {
     "corridor": "Hành lang",
     "lobby": "Sảnh",
-    "street": "Phố ven vịnh"
+    "street": "Phố ven vịnh",
+    "pier": "Bến tàu du lịch",
+    "newsroom": "Tòa soạn Tin Vịnh"
   },
   "intro": {
     "skip": "Bỏ qua",
@@ -1424,6 +2250,59 @@
         "baocao",
         "hive"
       ]
+    },
+    "wardle": {
+      "title": "Khung Information Disorder (Wardle & Derakhshan, 2017)",
+      "rows": [
+        [
+          "Misinformation",
+          "Nội dung sai hoặc gây hiểu sai, nhưng chưa có đủ bằng chứng về chủ đích gây hại."
+        ],
+        [
+          "Disinformation",
+          "Nội dung sai, kèm bằng chứng về hành vi cố ý đánh lừa, gây hại hoặc trục lợi."
+        ],
+        [
+          "Malinformation",
+          "Thông tin có cơ sở là thật, nhưng được dùng hoặc công khai nhằm gây tổn hại."
+        ]
+      ],
+      "footer": "Phân loại theo TỪNG nhóm đối tượng, không gộp chung.",
+      "fact": "Khung lý thuyết",
+      "sources": [
+        "wardle2017"
+      ]
+    },
+    "fakepage": {
+      "title": "Trang mạo danh (GIẢ LẬP — tên tổ chức hư cấu)",
+      "name": "Ban Điều phối Thông tin Du lịch Hải Đăngg ✔",
+      "meta": "Trang · Tạo 2 ngày trước · 37 người theo dõi",
+      "post": "THÔNG BÁO KHẨN: Ban Hải Đăng nhận quyên góp giúp gia đình nạn nhân. Chuyển khoản ngay vào tài khoản cá nhân bên dưới, xác nhận qua link: bit.ly/hd-ung-ho",
+      "note": "Toàn bộ là GIẢ LẬP để luyện nhận diện mạo danh. Không có tổ chức, tài khoản hay đường link nào là thật."
     }
+  },
+  "results": {
+    "title": "Hồ sơ vụ án đã khép lại",
+    "verifiedTitle": "Đã xác minh (có căn cứ)",
+    "verified": [
+      "Tai nạn tàu Vịnh Xanh 58 chiều 19/7/2025 là có thật (F1).",
+      "Hai bộ ảnh và câu chuyện \"nạn nhân\" do AI dựng: không có nguồn gốc, có lỗi thị giác, ảnh dùng lại, VTV xác nhận (F5, F6, F8, F9; F7 bổ trợ).",
+      "Video và ảnh cũ bị gắn sai bối cảnh vụ 19/7 (F10).",
+      "Có thủ đoạn thu hút tương tác: link \"đọc tiếp\", chú thích hư cấu khó thấy (F12, F16)."
+    ],
+    "unsureTitle": "Chưa đủ căn cứ (F13)",
+    "unsure": [
+      "Ai đứng sau các fanpage.",
+      "Người đăng có thu lợi tài chính hay không.",
+      "Thời điểm bài sai đầu tiên được đăng.",
+      "Tên nhân vật trong truyện chưa đối chiếu với danh sách nạn nhân chính thức."
+    ],
+    "takeaway": "Dừng lại trước khi chia sẻ. Kiểm tra nguồn, đối chiếu nhiều bằng chứng độc lập, và chỉ kết luận trong giới hạn bằng chứng.",
+    "replay": "Chơi lại từ đầu",
+    "sources": "Xem nguồn",
+    "keepPlaying": "Tiếp tục khám phá (màn bonus)",
+    "cards": "Thẻ evidence",
+    "score": "Điểm",
+    "rank": "Danh hiệu"
   }
 }

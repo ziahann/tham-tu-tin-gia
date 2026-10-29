@@ -20,9 +20,16 @@ function shade(hex, k) {
 const TILES = [
   'floor_wood', 'floor_lobby', 'carpet', 'wall_top', 'wall_face', 'door_closed', 'window', 'pinboard',
   'desk', 'cabinet', 'bookshelf', 'plant', 'chair', 'rug', 'sofa', 'reception',
-  'doorway', 'exit_mat'
+  'doorway', 'exit_mat',
+  // ngoài trời
+  'grass', 'sidewalk', 'promenade', 'road', 'road_line', 'water', 'karst', 'railing',
+  'dock', 'roof', 'facade', 'facade_window', 'shop_door', 'awning', 'signboard', 'tree',
+  'bench', 'lamp', 'flowerbed',
+  // phòng boss
+  'void', 'frame_wall', 'frame', 'shard'
 ];
-const COLLIDES = new Set(['wall_top', 'wall_face', 'door_closed', 'window', 'pinboard', 'desk', 'cabinet', 'bookshelf', 'plant', 'sofa', 'reception']);
+const COLLIDES = new Set(['wall_top', 'wall_face', 'door_closed', 'window', 'pinboard', 'desk', 'cabinet', 'bookshelf', 'plant', 'sofa', 'reception',
+  'water', 'karst', 'railing', 'roof', 'facade', 'facade_window', 'awning', 'signboard', 'tree', 'bench', 'lamp', 'flowerbed', 'frame_wall', 'frame']);
 const tid = name => TILES.indexOf(name);
 
 /** Vẽ một ô 32x32 theo tên tại (ox, oy). */
@@ -141,6 +148,103 @@ function drawTile(img, name, ox, oy, rnd) {
       R(0, 0, T, T, '#d8d0bf');
       R(2, 4, 28, 24, '#3a3f4d'); for (let y = 6; y < 26; y += 3) R(4, y, 24, 1, '#4c5262');
       break;
+    case 'grass':
+      R(0, 0, T, T, '#6aa84f'); noise('#6aa84f', 0.25, 70);
+      for (let i = 0; i < 6; i++) R(Math.floor(rnd() * 30), Math.floor(rnd() * 30), 1, 2, '#8cc56a');
+      break;
+    case 'sidewalk':
+      R(0, 0, T, T, '#c9c2b4');
+      for (let y = 0; y < T; y += 8) R(0, y, T, 1, '#b2aa9a');
+      for (let y = 0; y < T; y += 8) R((y / 8) % 2 ? 0 : 16, y, 1, 8, '#b2aa9a');
+      noise('#c9c2b4', 0.08, 20);
+      break;
+    case 'promenade':
+      R(0, 0, T, T, '#e3cfa6');
+      R(0, 0, 16, 16, '#d9c294'); R(16, 16, 16, 16, '#d9c294');
+      noise('#e3cfa6', 0.1, 30);
+      break;
+    case 'road':
+      R(0, 0, T, T, '#4a4d57'); noise('#4a4d57', 0.18, 60);
+      break;
+    case 'road_line':
+      R(0, 0, T, T, '#4a4d57'); noise('#4a4d57', 0.18, 60); R(4, 14, 16, 3, '#f2d36b');
+      break;
+    case 'water':
+      R(0, 0, T, T, '#2f7f9f');
+      for (let i = 0; i < 5; i++) { const x = Math.floor(rnd() * 24), y = Math.floor(rnd() * 30); R(x, y, 6, 1, '#5aa8c4'); }
+      noise('#2f7f9f', 0.12, 30);
+      break;
+    case 'karst':
+      R(0, 0, T, T, '#2f7f9f');
+      img.ellipse(ox + 16, oy + 28, 14, 4, '#25657f');
+      R(6, 6, 20, 22, '#5d6b5a'); R(9, 2, 14, 6, '#5d6b5a'); R(6, 6, 5, 22, '#77866f');
+      R(9, 2, 14, 2, '#4f7a4a'); R(13, 0, 6, 2, '#4f7a4a'); R(23, 10, 3, 18, '#4a5648');
+      break;
+    case 'railing':
+      R(0, 0, T, T, '#e3cfa6');
+      R(0, 14, T, 3, '#f4eedc'); R(0, 22, T, 2, '#f4eedc'); R(2, 12, 3, 16, '#d0d4dc'); R(26, 12, 3, 16, '#d0d4dc'); R(0, 28, T, 4, '#2f7f9f');
+      break;
+    case 'dock':
+      R(0, 0, T, T, '#a77b52');
+      for (let x = 0; x < T; x += 8) R(x, 0, 1, T, '#7d5537');
+      R(0, 0, 2, T, '#5a3a24'); R(30, 0, 2, T, '#5a3a24');
+      break;
+    case 'roof':
+      R(0, 0, T, T, '#b5533c');
+      for (let y = 0; y < T; y += 6) R(0, y, T, 2, '#9a432f');
+      for (let y = 3; y < T; y += 6) for (let x = (y % 12 ? 0 : 4); x < T; x += 8) R(x, y, 1, 3, '#9a432f');
+      break;
+    case 'facade':
+      R(0, 0, T, T, '#efe2c4'); R(0, 0, T, 2, '#d8c8a4'); noise('#efe2c4', 0.06, 20);
+      break;
+    case 'facade_window':
+      R(0, 0, T, T, '#efe2c4'); R(5, 5, 22, 20, '#7d5537'); R(7, 7, 18, 16, '#9fd0e6'); R(15, 7, 2, 16, '#7d5537'); R(7, 9, 6, 2, '#ffffff'); R(4, 25, 24, 3, '#6aa84f');
+      break;
+    case 'shop_door':
+      R(0, 0, T, T, '#efe2c4'); R(3, 0, 26, T, '#5a3a24'); R(5, 2, 22, 30, '#9fd0e6'); R(15, 2, 2, 30, '#5a3a24'); R(11, 16, 2, 3, '#f2d36b'); R(19, 16, 2, 3, '#f2d36b');
+      break;
+    case 'awning':
+      R(0, 0, T, T, '#efe2c4');
+      for (let x = 0; x < T; x += 8) { R(x, 0, 4, 20, '#c8323c'); R(x + 4, 0, 4, 20, '#f4eedc'); }
+      for (let x = 0; x < T; x += 8) { R(x, 20, 4, 3, '#a82a32'); R(x + 4, 20, 4, 2, '#dcd6c4'); }
+      break;
+    case 'signboard':
+      R(0, 0, T, T, '#efe2c4'); R(1, 6, 30, 16, '#2a4f7a'); R(3, 8, 26, 12, '#3d6ea6'); R(6, 12, 20, 2, '#f4eedc'); R(8, 16, 14, 1, '#f2d36b');
+      break;
+    case 'tree':
+      R(0, 0, T, T, '#00000000');
+      img.ellipse(ox + 16, oy + 29, 10, 3, '#00000044');
+      R(14, 18, 4, 11, '#6b4630');
+      img.ellipse(ox + 16, oy + 12, 13, 11, '#2f7d3b'); img.ellipse(ox + 11, oy + 9, 6, 5, '#3f9a4b'); img.ellipse(ox + 21, oy + 14, 6, 5, '#3f9a4b'); img.ellipse(ox + 15, oy + 5, 5, 3, '#57b864');
+      break;
+    case 'bench':
+      R(0, 0, T, T, '#00000000');
+      R(2, 10, 28, 4, '#8a5c3d'); R(2, 16, 28, 4, '#a77b52'); R(4, 20, 3, 8, '#3a3f4d'); R(25, 20, 3, 8, '#3a3f4d'); R(2, 10, 28, 1, '#b98b62');
+      break;
+    case 'lamp':
+      R(0, 0, T, T, '#00000000');
+      img.ellipse(ox + 16, oy + 30, 6, 2, '#00000044'); R(15, 6, 3, 24, '#3a3f4d'); R(11, 2, 11, 6, '#3a3f4d'); R(12, 4, 9, 3, '#f2d36b'); R(12, 28, 9, 3, '#3a3f4d');
+      break;
+    case 'flowerbed':
+      R(0, 0, T, T, '#6aa84f'); R(2, 4, 28, 24, '#7d5537'); R(4, 6, 24, 20, '#4f7a4a');
+      [[7, 9, '#e79aa0'], [15, 12, '#f2d36b'], [22, 8, '#ffffff'], [10, 19, '#c8323c'], [20, 20, '#e79aa0']].forEach(([x, y, c]) => R(x, y, 3, 3, c));
+      break;
+    case 'void':
+      R(0, 0, T, T, '#14101f'); R(0, 0, T, 1, '#1d1830'); R(0, 0, 1, T, '#1d1830');
+      for (let i = 0; i < 4; i++) R(Math.floor(rnd() * 30), Math.floor(rnd() * 30), 1, 1, '#3b2c4a');
+      break;
+    case 'frame_wall':
+      R(0, 0, T, T, '#221a33'); img.frame(ox + 4, oy + 4, 24, 20, '#8c7bb8'); img.frame(ox + 6, oy + 6, 20, 16, '#5a4a7a');
+      R(10, 10, 12, 1, '#3b2c4a');
+      break;
+    case 'frame':
+      R(0, 0, T, T, '#14101f'); img.frame(ox + 5, oy + 3, 22, 26, '#b4b8c5'); img.frame(ox + 7, oy + 5, 18, 22, '#5b5d6e');
+      R(9, 14, 8, 1, '#b4b8c5'); R(16, 15, 1, 6, '#b4b8c5'); R(12, 20, 5, 1, '#b4b8c5');
+      break;
+    case 'shard':
+      R(0, 0, T, T, '#14101f'); R(0, 0, T, 1, '#1d1830');
+      R(8, 12, 6, 2, '#c9d1dc'); R(10, 10, 2, 2, '#c9d1dc'); R(20, 20, 4, 1, '#8c7bb8'); R(22, 18, 1, 2, '#8c7bb8');
+      break;
     default:
       R(0, 0, T, T, '#ff00ff');
   }
@@ -150,7 +254,7 @@ function buildTileset() {
   const cols = 8, rows = Math.ceil(TILES.length / cols);
   const img = new Img(cols * T, rows * T);
   TILES.forEach((name, i) => drawTile(img, name, (i % cols) * T, Math.floor(i / cols) * T, seeded(i + 7)));
-  img.save(path.join(ROOT, 'assets/tiles/office.png'));
+  img.save(path.join(ROOT, 'assets/tiles/tiles.png'));
   return { cols, rows };
 }
 
@@ -158,7 +262,9 @@ function buildTileset() {
 
 // Thông số từng nhân vật (thiết kế gốc). skirt: váy; hair: short | long | spiky | grey | bob.
 const CHARACTERS = {
-  hero: { skin: '#f1c7a0', hair: '#2b1d1a', hairStyle: 'short', top: '#d08a3a', bottom: '#2d3a5a', shoes: '#3b2418', hat: '#e9c46a', scarf: '#2a9d8f', badge: true },
+  // Thám tử: sinh viên báo chí — áo khoác dù, balo, thẻ phóng viên thực tập, bút gài tai. Hai mẫu nam / nữ.
+  hero_m: { skin: '#f1c7a0', hair: '#2b1d1a', hairStyle: 'short', top: '#3d7fd1', inner: '#f4eedc', bottom: '#2d3a5a', shoes: '#3b2418', backpack: '#6b7a3a', press: true, pen: true },
+  hero_f: { skin: '#f3cdb0', hair: '#3a2318', hairStyle: 'bob', top: '#e07a5f', inner: '#f4eedc', bottom: '#3a4466', shoes: '#2b2b2b', backpack: '#2a9d8f', press: true, pen: true },
   npc1: { skin: '#f0c4a4', hair: '#1b1418', hairStyle: 'long', top: '#3d5a98', inner: '#f4eedc', bottom: '#4a4e5c', skirt: true, shoes: '#1d1d24', glasses: true, lanyard: true },
   npc2: { skin: '#e6b48f', hair: '#3a2a20', hairStyle: 'spiky', top: '#5f8a6b', bottom: '#2f2f38', shoes: '#22222a', glasses: true, camera: true },
   npc3: { skin: '#e9c2a0', hair: '#cfcfcf', hairStyle: 'grey', top: '#8a6b4f', inner: '#e8dcc0', bottom: '#4b4b4b', shoes: '#2b2b2b', glasses: true },
@@ -203,6 +309,17 @@ function drawCharFrame(spec, dir, frame) {
   if (spec.lanyard && dir === 'down') { R(13, 21 + y0, 1, 7, '#c8323c'); R(18, 21 + y0, 1, 7, '#c8323c'); R(14, 28 + y0, 4, 4, '#f2d36b'); }
   if (spec.badge && dir !== 'up') R(dir === 'right' ? 18 : 19, 25 + y0, 2, 2, '#c9d1dc');
   if (spec.camera && dir === 'down') { R(13, 27 + y0, 6, 4, '#2b2f3a'); R(15, 28 + y0, 2, 2, '#5fb3d9'); }
+
+  // Thẻ phóng viên thực tập (dây đỏ, thẻ trắng sọc xanh)
+  if (spec.press && dir === 'down') { R(13, 21 + y0, 1, 6, '#c8323c'); R(18, 21 + y0, 1, 6, '#c8323c'); R(13, 27 + y0, 6, 5, '#ffffff'); R(13, 27 + y0, 6, 1, '#3d7fd1'); R(14, 29 + y0, 4, 1, '#5b5d6e'); }
+  if (spec.press && dir === 'right') { R(19, 26 + y0, 2, 4, '#ffffff'); }
+  // Balo: quai đeo phía trước, thân balo phía sau / bên hông
+  if (spec.backpack) {
+    const bp = spec.backpack, bpD = shade(bp, -0.3);
+    if (dir === 'down') { R(10, 20 + y0, 2, 9, bpD); R(20, 20 + y0, 2, 9, bpD); }
+    if (dir === 'up') { R(10, 21 + y0, 12, 12, bp); R(10, 21 + y0, 12, 3, shade(bp, 0.15)); R(13, 26 + y0, 6, 4, bpD); }
+    if (dir === 'right') { R(8, 21 + y0, 4, 11, bp); R(8, 21 + y0, 4, 2, shade(bp, 0.15)); R(12, 20 + y0, 1, 8, bpD); }
+  }
 
   // Tay (đung đưa ngược chân)
   if (dir === 'right') {
@@ -260,6 +377,14 @@ function drawCharFrame(spec, dir, frame) {
     R(11, 10 + y0, 4, 1, hairDark); R(17, 10 + y0, 4, 1, hairDark);
     if (hs === 'spiky') { R(10, 1 + y0, 2, 3, hair); R(15, 1 + y0, 2, 3, hair); R(20, 1 + y0, 2, 3, hair); }
     if (hs === 'grey') R(9, 4 + y0, 14, 1, '#ffffff');
+    if (hs === 'bob') { R(8, 8 + y0, 3, 10, hair); R(21, 8 + y0, 3, 10, hair); R(8, 17 + y0, 3, 1, hairDark); R(21, 17 + y0, 3, 1, hairDark); }
+  }
+  if (hs === 'bob' && dir === 'up') R(8, 15 + y0, 16, 4, hairDark);
+  if (hs === 'bob' && dir === 'right') { R(9, 8 + y0, 6, 10, hair); R(9, 17 + y0, 6, 1, hairDark); }
+  // Bút gài sau tai
+  if (spec.pen) {
+    if (dir === 'down') { R(22, 7 + y0, 1, 6, '#f2d36b'); R(22, 6 + y0, 1, 1, '#c8323c'); }
+    if (dir === 'right') { R(15, 7 + y0, 1, 6, '#f2d36b'); R(15, 6 + y0, 1, 1, '#c8323c'); }
   }
 
   // Mũ cói (thám tử) / mũ lưỡi trai
@@ -292,6 +417,43 @@ function drawCharFrame(spec, dir, frame) {
   return out;
 }
 
+/** Boss "Kẻ Dệt Chuyện": áo choàng ghép từ khung ảnh trống, mặt nạ gương nứt. blank = đã gỡ mặt nạ (khung trống). */
+function drawBossFrame(blank) {
+  const f = new Img(32, 48);
+  const R = (x, y, w, h, c) => f.rect(x, y, w, h, c);
+  // áo choàng hình thang
+  for (let y = 14; y < 46; y++) { const w = 12 + Math.floor((y - 14) * 0.55); R(16 - w, y, w * 2, 1, '#2a2140'); }
+  // các khung ảnh trống ghép trên áo
+  [[8, 20, 7, 6], [17, 18, 8, 6], [11, 28, 8, 7], [21, 30, 6, 6], [6, 37, 7, 6], [16, 38, 9, 6]].forEach(([x, y, w, h]) => { f.frame(x, y, w, h, '#b4b8c5'); R(x + 1, y + 1, w - 2, h - 2, '#3b2c4a'); });
+  // mũ trùm
+  R(9, 4, 14, 12, '#2a2140'); R(8, 8, 16, 8, '#2a2140');
+  if (blank) {
+    f.frame(11, 6, 10, 9, '#b4b8c5'); R(12, 7, 8, 7, '#14101f');
+  } else {
+    R(11, 6, 10, 9, '#c9d1dc'); R(12, 7, 8, 7, '#e6ebf2');
+    R(14, 6, 1, 3, '#5b5d6e'); R(15, 9, 1, 2, '#5b5d6e'); R(16, 11, 2, 1, '#5b5d6e'); R(18, 12, 1, 3, '#5b5d6e');
+    R(13, 9, 2, 1, '#14101f'); R(17, 9, 2, 1, '#14101f');
+  }
+  const out = new Img(32, 48);
+  out.ellipse(16, 46, 12, 2, '#00000060');
+  for (let y = 0; y < 48; y++) for (let x = 0; x < 32; x++) {
+    if (f.get(x, y)[3] > 200) continue;
+    if ([[1, 0], [-1, 0], [0, 1], [0, -1]].some(([dx, dy]) => { const nx = x + dx, ny = y + dy; return nx >= 0 && ny >= 0 && nx < 32 && ny < 48 && f.get(nx, ny)[3] > 200; })) out.set(x, y, '#0b0912');
+  }
+  out.blit(f, 0, 0, 32, 48, 0, 0);
+  return out;
+}
+
+/** Sprite sheet của boss (cùng bố cục 3x4 với nhân vật để dùng chung code) + bản đã gỡ mặt nạ. */
+function buildBoss() {
+  for (const [id, blank] of [['boss', false], ['boss_blank', true]]) {
+    const sheet = new Img(96, 192);
+    const frame = drawBossFrame(blank);
+    for (let row = 0; row < 4; row++) for (let c = 0; c < 3; c++) sheet.blit(frame, 0, 0, 32, 48, c * 32, row * 48);
+    sheet.save(path.join(ROOT, `assets/sprites/${id}.png`));
+  }
+}
+
 /** Sprite sheet 3 cột (đứng, bước 1, bước 2) x 4 hàng (xuống, trái, phải, lên). */
 function buildCharacter(id, spec) {
   const sheet = new Img(96, 192);
@@ -304,9 +466,65 @@ function buildCharacter(id, spec) {
   sheet.save(path.join(ROOT, `assets/sprites/${id}.png`));
 }
 
-// ---------------------------------------------------------------- bản đồ văn phòng
+// ---------------------------------------------------------------- bản đồ
 
-// Ký hiệu: # tường trên, W mặt tường, w cửa sổ, p bảng ghim, D lối cửa phòng, E cửa ra phố,
+let nextId = 1;
+const prop = (name, value) => ({ name, type: typeof value === 'number' ? 'float' : 'string', value });
+
+/** Tạo object Tiled. */
+function obj(type, name, x, y, w = 0, h = 0, props = {}, extra = {}) {
+  return { id: nextId++, name, type, x, y, width: w, height: h, rotation: 0, visible: true, properties: Object.entries(props).map(([k, v]) => prop(k, v)), ...extra };
+}
+const rectT = (type, name, tx, ty, tw, th, props) => obj(type, name, tx * T, ty * T, tw * T, th * T, props);
+const point = (type, name, tx, ty, props) => obj(type, name, tx * T, ty * T, 0, 0, props, { point: true });
+const path_ = (name, pts) => {
+  const [sx, sy] = pts[0];
+  return obj('path', name, sx * T, sy * T, 0, 0, {}, { polyline: pts.map(([x, y]) => ({ x: (x - sx) * T, y: (y - sy) * T })) });
+};
+
+/**
+ * Dựng bản đồ Tiled từ lưới ký tự.
+ * legend: ký tự → tên ô ở lớp walls (va chạm theo thuộc tính collides); ground(ch, x, y): tên ô nền;
+ * doors: [[x, y, tên ô]] lớp cửa đóng (gỡ khi phòng mở).
+ */
+function buildMap(key, { rows, legend, ground, doors = [], objects, label, music }) {
+  nextId = 1;
+  const W = rows[0].length, H = rows.length;
+  rows.forEach((r, i) => { if (r.length !== W) throw new Error(`${key}: hàng ${i} dài ${r.length}, cần ${W}`); });
+  const g = [], w = [], d = new Array(W * H).fill(0);
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    const ch = rows[y][x];
+    g.push(tid(ground(ch, x, y)) + 1);
+    w.push(legend[ch] ? tid(legend[ch]) + 1 : 0);
+  }
+  for (const [x, y, tile] of doors) d[y * W + x] = tid(tile) + 1;
+  const objs = objects();
+  const layer = (id, name, data) => ({ id, name, type: 'tilelayer', width: W, height: H, x: 0, y: 0, opacity: 1, visible: true, data });
+  const cols = 8, trows = Math.ceil(TILES.length / cols);
+  const map = {
+    compressionlevel: -1, type: 'map', version: '1.10', tiledversion: '1.10.2', orientation: 'orthogonal', renderorder: 'right-down',
+    infinite: false, width: W, height: H, tilewidth: T, tileheight: T, nextlayerid: 5, nextobjectid: nextId,
+    properties: [prop('label', label), prop('music', music)],
+    layers: [layer(1, 'ground', g), layer(2, 'walls', w), layer(3, 'doors', d),
+      { id: 4, name: 'objects', type: 'objectgroup', draworder: 'topdown', x: 0, y: 0, opacity: 1, visible: true, objects: objs }],
+    tilesets: [{
+      firstgid: 1, name: 'tiles', image: '../assets/tiles/tiles.png', imagewidth: cols * T, imageheight: trows * T,
+      tilewidth: T, tileheight: T, tilecount: TILES.length, columns: cols, margin: 0, spacing: 0,
+      tiles: TILES.map((n, id) => ({ id, properties: [prop('name', n), { name: 'collides', type: 'bool', value: COLLIDES.has(n) }] }))
+    }]
+  };
+  fs.mkdirSync(path.join(ROOT, 'maps'), { recursive: true });
+  fs.writeFileSync(path.join(ROOT, `maps/${key}.json`), JSON.stringify(map));
+  return `${key} ${W}x${H} (${objs.length} object)`;
+}
+
+/** Cửa phòng đóng 2 ô ngang ở hàng tường trên (y) và mặt tường (y + 1). */
+const roomDoor = (x, y) => [[x, y, 'wall_top'], [x + 1, y, 'wall_top'], [x, y + 1, 'door_closed'], [x + 1, y + 1, 'door_closed']];
+
+const INDOOR = { '#': 'wall_top', W: 'wall_face', w: 'window', p: 'pinboard', d: 'desk', c: 'cabinet', b: 'bookshelf', P: 'plant', h: 'chair', s: 'sofa', R: 'reception', Q: 'door_closed' };
+
+// ---------------- Văn phòng Ban Hải Đăng
+// # tường trên, W mặt tường, w cửa sổ, p bảng ghim, D lối cửa phòng, E cửa ra phố, Q cửa Phòng họp (boss),
 // . sàn gỗ, ~ thảm hành lang, , sàn sảnh, d bàn, c tủ hồ sơ, b kệ sách, P cây, h ghế, s sofa, R quầy lễ tân.
 const OFFICE = [
   '########################################',
@@ -324,7 +542,7 @@ const OFFICE = [
   '#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#',
   '#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#',
   '################,,,,,,,,################',
-  '#WWwWWpWWWwWWWWW,,,,,,,,WWWWWwWWWWWwWWW#',
+  '#WWwWWpWWWwWWWWW,,,,,,,,WWWWWwWQQWWwWWW#',
   '#bb.............P,,,,,,P...............#',
   '#,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,#',
   '#,,,,,,,,,,,,,,,,RRRRRR,,,,,,,,,,,,,,,,#',
@@ -337,73 +555,36 @@ const OFFICE = [
   '#,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,#',
   '#P,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,P#',
   '###################EE###################'
-].map(r => r.replace(/,/g, ',').replace(/(.)/g, '$1'));
+];
+const OFFICE_RUGS = [[2, 21, 6, 4], [32, 21, 6, 4], [3, 6, 5, 2]];
 
-// Thảm đỏ trong sảnh và trong Phòng Hồ sơ (lớp nền).
-const RUGS = [[2, 21, 6, 4], [32, 21, 6, 4], [3, 6, 5, 2]];
-
-const FURNITURE = { '#': 'wall_top', W: 'wall_face', w: 'window', p: 'pinboard', d: 'desk', c: 'cabinet', b: 'bookshelf', P: 'plant', h: 'chair', s: 'sofa', R: 'reception' };
-
-/** Nền của một ô theo khu vực (phòng: gỗ, hành lang: thảm, sảnh: gạch). */
-function groundFor(ch, y) {
-  if (ch === 'D') return 'doorway';
-  if (ch === 'E') return 'exit_mat';
-  if (ch === '~') return 'carpet';
-  if (y >= 14) return 'floor_lobby';
-  if (y >= 11) return 'carpet';
-  return 'floor_wood';
-}
-
-const px = (tx, ty) => ({ x: tx * T, y: ty * T });
-let nextId = 1;
-const prop = (name, value) => ({ name, type: typeof value === 'number' ? 'float' : 'string', value });
-
-/** Tạo object Tiled. */
-function obj(type, name, x, y, w = 0, h = 0, props = {}, extra = {}) {
-  return { id: nextId++, name, type, x, y, width: w, height: h, rotation: 0, visible: true, properties: Object.entries(props).map(([k, v]) => prop(k, v)), ...extra };
-}
-const rectT = (type, name, tx, ty, tw, th, props) => obj(type, name, tx * T, ty * T, tw * T, th * T, props);
-const point = (type, name, tx, ty, props) => obj(type, name, tx * T, ty * T, 0, 0, props, { point: true });
-const path_ = (name, pts) => {
-  const [sx, sy] = pts[0];
-  return obj('path', name, sx * T, sy * T, 0, 0, {}, { polyline: pts.map(([x, y]) => ({ x: (x - sx) * T, y: (y - sy) * T })) });
-};
-
-function buildOfficeMap() {
-  const W = OFFICE[0].length, H = OFFICE.length;
-  OFFICE.forEach((r, i) => { if (r.length !== W) throw new Error(`hàng ${i} dài ${r.length}, cần ${W}`); });
-  const ground = [], walls = [], doors = new Array(W * H).fill(0);
-  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
-    const ch = OFFICE[y][x];
-    let g = groundFor(ch, y);
-    if (RUGS.some(([rx, ry, rw, rh]) => x >= rx && x < rx + rw && y >= ry && y < ry + rh) && !FURNITURE[ch]) g = 'rug';
-    ground.push(tid(g) + 1);
-    walls.push(FURNITURE[ch] ? tid(FURNITURE[ch]) + 1 : 0);
-  }
-  // Cửa phòng đóng (lớp riêng, gỡ khi phòng mở khóa).
-  const doorCols = { S3: 4, S4: 16, S7: 26, S8: 35 };
-  for (const cx of Object.values(doorCols)) for (const dx of [0, 1]) {
-    doors[9 * W + cx + dx] = tid('wall_top') + 1;
-    doors[10 * W + cx + dx] = tid('door_closed') + 1;
-  }
-
-  const objects = [
+const office = buildMap('office', {
+  rows: OFFICE, legend: INDOOR, label: 'Văn phòng Ban Điều phối Thông tin Du lịch Hải Đăng', music: 'office',
+  ground: (ch, x, y) => {
+    if (ch === 'D') return 'doorway';
+    if (ch === 'E') return 'exit_mat';
+    if (ch === '~') return 'carpet';
+    if (OFFICE_RUGS.some(([rx, ry, rw, rh]) => x >= rx && x < rx + rw && y >= ry && y < ry + rh) && !INDOOR[ch]) return 'rug';
+    if (y >= 14) return 'floor_lobby';
+    if (y >= 11) return 'carpet';
+    return 'floor_wood';
+  },
+  doors: [...roomDoor(4, 9), ...roomDoor(16, 9), ...roomDoor(26, 9), ...roomDoor(35, 9)],
+  objects: () => [
     point('spawn', 'spawn_start', 20, 25.5),
     point('spawn', 'spawn_from_street', 20, 25.5),
-    // Khu vực (đổi nhãn vị trí, phát lời giới thiệu phòng)
+    point('spawn', 'spawn_from_boss', 32, 17),
     rectT('zone', 'zone_S3', 1, 1, 9, 8, { room: 'S3' }),
     rectT('zone', 'zone_S4', 11, 1, 9, 8, { room: 'S4' }),
     rectT('zone', 'zone_S7', 21, 1, 9, 8, { room: 'S7' }),
     rectT('zone', 'zone_S8', 31, 1, 8, 8, { room: 'S8' }),
     rectT('zone', 'zone_corridor', 1, 11, 38, 3, { area: 'corridor' }),
     rectT('zone', 'zone_lobby', 1, 14, 38, 13, { area: 'lobby' }),
-    // Cửa phòng
-    ...Object.entries(doorCols).map(([room, cx]) => rectT('door', `door_${room}`, cx, 9, 2, 2, { room })),
+    ...[['S3', 4], ['S4', 16], ['S7', 26], ['S8', 35]].map(([room, cx]) => rectT('door', `door_${room}`, cx, 9, 2, 2, { room })),
     rectT('exit', 'exit_street', 19, 26.6, 2, 1.4, { target: 'street', spawn: 'spawn_from_office' }),
-    // NPC
+    rectT('portal', 'portal_boss', 31, 15, 2, 1, { target: 'boss', spawn: 'spawn_from_office', room: 'S9' }),
     point('npc', 'npc1', 19, 20.5, { patrol: 'patrol_npc1_lobby' }),
     point('npc', 'npc2', 8, 12.5, { patrol: 'patrol_npc2' }),
-    // Đường đi
     path_('patrol_npc1_lobby', [[16.5, 20.5], [23.5, 20.5]]),
     path_('patrol_npc2', [[3, 12.5], [36, 12.5]]),
     path_('lead_hoso', [[19, 20.5], [16.5, 20.5], [16.5, 17.5], [19.5, 17.5], [19.5, 12.5], [5, 12.5], [5, 9.8], [5, 7.5]]),
@@ -411,7 +592,12 @@ function buildOfficeMap() {
     point('station', 'npc1_hoso', 5, 7.5),
     path_('patrol_npc2_s4', [[12.5, 7.5], [18.5, 7.5]]),
     point('station', 'npc2_s4', 15.5, 7.5),
-    // Đồ vật xem được
+    path_('patrol_npc1_s7', [[22.5, 7.5], [28.5, 7.5]]),
+    point('station', 'npc1_s7', 25.5, 7.5),
+    path_('patrol_npc1_s8', [[32.5, 7.5], [37.5, 7.5]]),
+    point('station', 'npc1_s8', 35.5, 7.5),
+    path_('patrol_npc1_end', [[28.5, 17.5], [35.5, 17.5]]),
+    point('station', 'npc1_lobby_end', 30, 17.5),
     rectT('inspect', 'inspect_notice', 6, 15, 1, 1, { text: 'inspect_notice' }),
     rectT('inspect', 'inspect_window_lobby', 3, 15, 1, 1, { text: 'inspect_window' }),
     rectT('inspect', 'inspect_reception', 17, 18, 6, 1, { text: 'inspect_reception' }),
@@ -419,32 +605,172 @@ function buildOfficeMap() {
     rectT('inspect', 'inspect_cabinet_S3', 1, 2, 3, 1, { text: 'inspect_cabinet' }),
     rectT('inspect', 'inspect_bookshelf_lobby', 1, 16, 2, 1, { text: 'inspect_bookshelf' }),
     rectT('inspect', 'inspect_lab_S4', 12, 4, 7, 1, { text: 'inspect_lab' })
-  ];
+  ]
+});
 
-  const layer = (id, name, data) => ({ id, name, type: 'tilelayer', width: W, height: H, x: 0, y: 0, opacity: 1, visible: true, data });
-  const { cols, rows } = { cols: 8, rows: Math.ceil(TILES.length / 8) };
-  const map = {
-    compressionlevel: -1, type: 'map', version: '1.10', tiledversion: '1.10.2', orientation: 'orthogonal', renderorder: 'right-down',
-    infinite: false, width: W, height: H, tilewidth: T, tileheight: T, nextlayerid: 5, nextobjectid: nextId,
-    properties: [prop('label', 'Văn phòng Ban Điều phối Thông tin Du lịch Hải Đăng'), prop('music', 'office')],
-    layers: [
-      layer(1, 'ground', ground),
-      layer(2, 'walls', walls),
-      layer(3, 'doors', doors),
-      { id: 4, name: 'objects', type: 'objectgroup', draworder: 'topdown', x: 0, y: 0, opacity: 1, visible: true, objects }
-    ],
-    tilesets: [{
-      firstgid: 1, name: 'office', image: '../assets/tiles/office.png', imagewidth: cols * T, imageheight: rows * T,
-      tilewidth: T, tileheight: T, tilecount: TILES.length, columns: cols, margin: 0, spacing: 0,
-      tiles: TILES.map((n, id) => ({ id, properties: [prop('name', n), { name: 'collides', type: 'bool', value: COLLIDES.has(n) }] }))
-    }]
-  };
-  fs.mkdirSync(path.join(ROOT, 'maps'), { recursive: true });
-  fs.writeFileSync(path.join(ROOT, 'maps/office.json'), JSON.stringify(map));
-  return { W, H, objects: objects.length };
-}
+// ---------------- Phố ven vịnh
+// # mái, W tường mặt tiền, w cửa sổ, S biển hiệu, a mái hiên quán, o/n/c cửa tòa nhà (văn phòng / tòa soạn / quán),
+// g cỏ, _ vỉa hè, = đường, - vạch kẻ, , lối đi dạo, T cây, B ghế đá, L đèn, F bồn hoa, | lan can, ~ nước, K đảo đá, X cầu tàu.
+const sRow = (a, b, c) => 'gg' + a + 'gggg' + b + 'gggg' + c + 'gggg';
+const STREET = [
+  sRow('############', '############', '##########'),
+  sRow('############', '############', '##########'),
+  sRow('WwWwWwWwWwWW', 'WwWwWwWwWwWW', 'aaaaaaaaaa'),
+  sRow('WwWWSWWWwWWW', 'WwWWSWWWwWWW', 'WwWWSWWwWW'),
+  sRow('WwWwWWWWwWwW', 'WwWwWWWWwWwW', 'WwWWWWWwWW'),
+  sRow('WWWWWooWWWWW', 'WWWWWnnWWWWW', 'WWWWccWWWW'),
+  '_'.repeat(48),
+  '_'.repeat(16) + 'L' + '_'.repeat(15) + 'L' + '_'.repeat(15),
+  '='.repeat(48),
+  '-'.repeat(48),
+  '='.repeat(48),
+  '_'.repeat(48),
+  ',,,T,,,,BB,,,T,,L,,,,BB,,,,,T,,BB,,L,,,,,,,,,,T,',
+  ','.repeat(48),
+  ',,FF,,,,,,,,,,,,,,,,,FF,,,,,,,,,,,,,,,,,,,,,,FF,',
+  '|'.repeat(37) + 'XXX' + '|'.repeat(8),
+  ...Array.from({ length: 10 }, (_, i) => '~'.repeat(37) + (i < 7 ? 'XXX' : '~~~') + '~'.repeat(8))
+];
+// đảo đá trên mặt nước, bảng thông tin cuối cầu tàu
+const setCh = (x, y, ch) => { STREET[y] = STREET[y].slice(0, x) + ch + STREET[y].slice(x + 1); };
+[[6, 19], [7, 19], [6, 20], [7, 20], [8, 20], [14, 23], [14, 24], [24, 18], [25, 18], [25, 19], [26, 19], [44, 20], [45, 20], [45, 21], [30, 24], [3, 24]]
+  .forEach(([x, y]) => setCh(x, y, 'K'));
+setCh(40, 21, 'S');
+
+const street = buildMap('street', {
+  rows: STREET, label: 'Phố ven vịnh Hạ Long', music: 'street',
+  legend: { '#': 'roof', W: 'facade', w: 'facade_window', S: 'signboard', a: 'awning', T: 'tree', B: 'bench', L: 'lamp', F: 'flowerbed', '|': 'railing', '~': 'water', K: 'karst' },
+  ground: (ch, x, y) => {
+    if ('onc'.includes(ch)) return 'shop_door';
+    if (ch === 'g') return 'grass';
+    if (ch === '=') return 'road';
+    if (ch === '-') return x % 3 === 0 ? 'road' : 'road_line';
+    if (ch === 'X') return 'dock';
+    if (y >= 15) return 'water';
+    if (y >= 12) return 'promenade';
+    return 'sidewalk';
+  },
+  objects: () => [
+    point('spawn', 'spawn_from_office', 8, 6.9),
+    point('spawn', 'spawn_from_news', 24, 6.9),
+    point('spawn', 'spawn_from_cafe', 39, 6.9),
+    rectT('zone', 'zone_street', 0, 6, 48, 9, { area: 'street' }),
+    rectT('zone', 'zone_pier', 37, 15, 3, 8, { area: 'pier' }),
+    rectT('exit', 'door_office', 7, 5, 2, 1, { target: 'office', spawn: 'spawn_from_street' }),
+    rectT('exit', 'door_news', 23, 5, 2, 1, { target: 'newsroom', spawn: 'spawn_from_street' }),
+    rectT('exit', 'door_cafe', 38, 5, 2, 1, { target: 'cafe', spawn: 'spawn_from_street' }),
+    point('npc', 'npc5', 12, 13.5, { patrol: 'patrol_npc5' }),
+    path_('patrol_npc5', [[5, 13.5], [20, 13.5]]),
+    rectT('inspect', 'inspect_office_sign', 6, 3, 1, 1, { text: 'inspect_office_sign' }),
+    rectT('inspect', 'inspect_news_sign', 22, 3, 1, 1, { text: 'inspect_news_sign' }),
+    rectT('inspect', 'inspect_cafe_sign', 38, 3, 1, 1, { text: 'inspect_cafe_sign' }),
+    rectT('inspect', 'inspect_pier_sign', 40, 21, 1, 1, { text: 'inspect_pier_sign' }),
+    rectT('inspect', 'inspect_sea', 0, 15, 37, 1, { text: 'inspect_sea' })
+  ]
+});
+
+// ---------------- Tòa soạn Tin Vịnh (S5 Lưu trữ, S6 Dòng thời gian)
+const NEWS = [
+  '##########################',
+  '#bbbbbWbbbbb#WppWpppWppWW#',
+  '#...........#............#',
+  '#...dd......#............#',
+  '#...h.......#............#',
+  '#...........#............#',
+  '#P.........P#P..........P#',
+  '#####DD############DD#####',
+  '#WwWWDDWWWwWWWWWwWWDDWWwW#',
+  '#P......................P#',
+  '#..ddd....ddd....ddd.....#',
+  '#...h......h......h......#',
+  '#........................#',
+  '#........................#',
+  '#P......................P#',
+  '############EE############'
+];
+const newsroom = buildMap('newsroom', {
+  rows: NEWS, legend: INDOOR, label: 'Tòa soạn Tin Vịnh', music: 'archive',
+  ground: ch => (ch === 'D' ? 'doorway' : ch === 'E' ? 'exit_mat' : 'floor_wood'),
+  doors: [...roomDoor(5, 7), ...roomDoor(18, 7)],
+  objects: () => [
+    point('spawn', 'spawn_from_street', 13, 14),
+    rectT('zone', 'zone_S5', 1, 1, 11, 6, { room: 'S5' }),
+    rectT('zone', 'zone_S6', 13, 1, 12, 6, { room: 'S6' }),
+    rectT('zone', 'zone_newsroom', 1, 9, 24, 6, { area: 'newsroom' }),
+    rectT('door', 'door_S5', 5, 7, 2, 2, { room: 'S5' }),
+    rectT('door', 'door_S6', 18, 7, 2, 2, { room: 'S6' }),
+    rectT('exit', 'exit_street', 12, 14.6, 2, 1.4, { target: 'street', spawn: 'spawn_from_news' }),
+    point('npc', 'npc3', 6, 12.5, { patrol: 'patrol_npc3_home' }),
+    path_('patrol_npc3_home', [[2.5, 12.5], [9.5, 12.5]]),
+    point('station', 'npc3_s5', 6, 5.5),
+    path_('patrol_npc3_s5', [[2.5, 5.5], [10.5, 5.5]]),
+    point('station', 'npc3_s6', 18.5, 5.5),
+    path_('patrol_npc3_s6', [[14.5, 5.5], [23.5, 5.5]]),
+    point('npc', 'npc4', 16, 12.5, { patrol: 'patrol_npc4' }),
+    path_('patrol_npc4', [[13.5, 12.5], [22.5, 12.5]]),
+    rectT('inspect', 'inspect_archive', 1, 1, 5, 1, { text: 'inspect_archive' }),
+    rectT('inspect', 'inspect_timeline', 13, 1, 12, 1, { text: 'inspect_timeline' }),
+    rectT('inspect', 'inspect_newsdesk', 10, 10, 3, 1, { text: 'inspect_newsdesk' })
+  ]
+});
+
+// ---------------- Quán cà phê Gió Biển
+const CAFE = [
+  '##################',
+  '#WWwWWWwWWWwWWWwW#',
+  '#RRRR........P...#',
+  '#................#',
+  '#..dd....dd......#',
+  '#..hh....hh......#',
+  '#................#',
+  '#..dd....dd....P.#',
+  '#..hh....hh......#',
+  '#P..............P#',
+  '#................#',
+  '########EE########'
+];
+const cafe = buildMap('cafe', {
+  rows: CAFE, legend: INDOOR, label: 'Quán cà phê Gió Biển', music: 'cafe',
+  ground: (ch, x, y) => (ch === 'E' ? 'exit_mat' : (x + y) % 2 ? 'floor_wood' : 'floor_lobby'),
+  objects: () => [
+    point('spawn', 'spawn_from_street', 9, 10.4),
+    rectT('zone', 'zone_cafe', 1, 1, 16, 10, { room: 'CAFE' }),
+    rectT('exit', 'exit_street', 8, 10.6, 2, 1.4, { target: 'street', spawn: 'spawn_from_cafe' }),
+    point('npc', 'npc6', 11, 6.6),
+    rectT('inspect', 'inspect_cafe_menu', 1, 2, 4, 1, { text: 'inspect_cafe_menu' })
+  ]
+});
+
+// ---------------- Phòng Boss (không gian trừu tượng)
+const BOSS = [
+  '####################',
+  '#XXXXXXXXXXXXXXXXXX#',
+  '#vvvvvvvvvvvvvvvvvv#',
+  '#vfvvvvvvvvvvvvvvfv#',
+  '#vvvvvvvvvvvvvvvvvv#',
+  '#vvvvsvvvvvvvvsvvvv#',
+  '#vfvvvvvvvvvvvvvvfv#',
+  '#vvvvvvvvvvvvvvvvvv#',
+  '#vvvsvvvvvvvvvvsvvv#',
+  '#vfvvvvvvvvvvvvvvfv#',
+  '#vvvvvvvvvvvvvvvvvv#',
+  '#vvvvvvvvvvvvvvvvvv#',
+  '#vvvvvvvvvvvvvvvvvv#',
+  '#########EE#########'
+];
+const boss = buildMap('boss', {
+  rows: BOSS, label: 'Phòng họp — nơi Kẻ Dệt Chuyện ẩn mình (GIẢ LẬP)', music: 'boss',
+  legend: { '#': 'wall_top', X: 'frame_wall', f: 'frame' },
+  ground: ch => (ch === 's' ? 'shard' : ch === 'E' ? 'exit_mat' : 'void'),
+  objects: () => [
+    point('spawn', 'spawn_from_office', 10, 12.4),
+    rectT('zone', 'zone_boss', 1, 1, 18, 12, { room: 'S9' }),
+    rectT('exit', 'exit_office', 9, 12.7, 2, 1.3, { target: 'office', spawn: 'spawn_from_boss' }),
+    point('npc', 'boss', 10, 5)
+  ]
+});
 
 buildTileset();
 for (const [id, spec] of Object.entries(CHARACTERS)) buildCharacter(id, spec);
-const m = buildOfficeMap();
-console.log(`ok: tileset ${TILES.length} ô, ${Object.keys(CHARACTERS).length} nhân vật, bản đồ ${m.W}x${m.H}, ${m.objects} object`);
+buildBoss();
+console.log(['ok:', `tileset ${TILES.length} ô`, office, street, newsroom, cafe, boss].join('\n  '));

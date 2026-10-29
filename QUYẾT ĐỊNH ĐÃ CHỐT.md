@@ -65,3 +65,12 @@
 | GitHub | Tài khoản `ziahann` (chưa có repo công khai nào, kiểm tra 29/10/2026). Tạo repo + bật Pages khi game gần xong; Claude chỉ push khi được yêu cầu |
 | Thời hạn | Ngày nộp còn rất lâu; không cần cắt phạm vi |
 | Màn ghi công | Không cần (nguồn đã có ở nút Nguồn và README) |
+
+## Đối chiếu nguồn Q7–Q13 (29/10/2026) — nhóm cần sửa báo cáo
+
+| Dữ kiện | Báo cáo ghi | Nguồn thực tế (đã đọc) | Game dùng |
+|---|---|---|---|
+| F11 | Bài "anh Quý" ~89.000 cảm xúc, 23.700 bình luận, 1.000 chia sẻ; **fanpage** 260.000+ người theo dõi | VOH (21/7/2025): 22.000 lượt tương tác, 1.400 chia sẻ, hơn 4.000 bình luận; **tài khoản cá nhân** D.N.Q. hơn 260.000 người theo dõi. Không tìm thấy con số 89.000 ở nguồn nào (Dân trí không có số liệu) | Số liệu VOH, có trích nguồn |
+| F12 | Link "Xem tiếp", "Đoạn kết", "Trọn vẹn câu chuyện" | Dân trí: "nhấp vào các đường link trong phần bình luận để đọc tiếp", trang "Tin Hay" nhiều quảng cáo, "có thể tiềm ẩn nhiều nguy cơ". VietTimes không có các cụm trên | Câu chữ của Dân trí |
+| F14 | Công an thông báo xử lý (21/7) | Tuổi Trẻ đăng 21/7: Công an tỉnh làm việc ngày 20/7 với người bình luận sai về số người tử vong (23h30 ngày 19/7) | "Tuổi Trẻ đưa tin (21/7)" |
+| F10 | Bão Yagi (2024) | VnExpress không ghi năm cơn bão; Congo tháng 10/2024; VietnamPlus: ảnh chụp tháng 8/2024 | Hỏi tên bão, quốc gia, năm chụp ảnh |
