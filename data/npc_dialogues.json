@@ -1430,7 +1430,7 @@
       "Sạp chợ nhỏ bán trái cây. Cô chủ đang xem điện thoại, lẩm bẩm: \"Ảnh này ai đăng vậy ta?\""
     ],
     "inspect_boat": [
-      "Tàu tham quan neo ở bến, chờ khách như mọi ngày. (Cảnh bình thường.)"
+      "Tàu tham quan (hư cấu) neo sát bến, cầu lên tàu có tay vịn. Cảnh bình thường của một bến tàu du lịch."
     ],
     "inspect_news_tv": [
       "Màn hình tòa soạn chiếu lại một bản tin. Bạn đọc tóm tắt bài báo liên quan."
@@ -1440,6 +1440,9 @@
     ],
     "inspect_barrier": [
       "Rào chắn: \"Vỉa hè đang thi công\" (GIẢ LẬP). Muốn đi tiếp thì sang đường ở vạch kẻ, đi vỉa hè bên kia."
+    ],
+    "inspect_ticket": [
+      "Quầy vé tàu tham quan (GIẢ LẬP): \"Mỗi hành khách một áo phao. Tàu chỉ rời bến khi thời tiết cho phép.\""
     ]
   },
   "inspectSources": {
