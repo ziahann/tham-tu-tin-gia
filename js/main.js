@@ -8,7 +8,7 @@ import { initInput, on, releaseAll } from './input.js';
 import * as dlg from './dialogue.js';
 import * as backpack from './backpack.js';
 import { setOnChange, setOnEnding, track } from './story.js';
-import { nextQuestIn } from './grading.js';
+import { nextQuestIn, earnedBadges, caseProgress } from './grading.js';
 import { updateScore } from './hud.js';
 import { WorldScene } from './world.js';
 import { reader } from './tools.js';
@@ -244,11 +244,6 @@ function openSettings() {
 
 // ---------------------------------------------------------------- S10: kết quả
 
-/** Danh hiệu theo điểm (chỉ để chơi). */
-function rankFor(score) {
-  return data.quests.settings.titles.filter(x => score >= x.min).pop()?.title || '';
-}
-
 /** Màn kết quả sau khi thắng boss. */
 function showResults() {
   const r = data.quests.results;
@@ -256,11 +251,16 @@ function showResults() {
   $('results-title').textContent = r.title;
   const stats = $('results-stats');
   stats.innerHTML = '';
-  [[r.rank, rankFor(p.score)], [r.score, p.score], [r.cards, p.evidenceCards.length]].forEach(([k, v]) => {
+  const prog = caseProgress(p.flags);
+  [[r.closed, `${prog.done}/${prog.total}`], [r.cards, p.evidenceCards.length]].forEach(([k, v]) => {
     const span = el('span', null, `${k}: `);
     span.append(el('strong', null, String(v)));
     stats.append(span);
   });
+  // Bộ huy hiệu kỹ năng (thay cho điểm và danh hiệu)
+  const shelf = el('div', 'badge-shelf');
+  earnedBadges(p.flags).forEach(b => { const d = el('div', 'badge'); d.append(el('strong', null, `🏅 ${b.badge.name}`), el('span', null, b.badge.learned)); shelf.append(d); });
+  stats.append(el('h2', null, r.badges), shelf);
   $('results-verified-title').textContent = `✓ ${r.verifiedTitle}`;
   $('results-unsure-title').textContent = `? ${r.unsureTitle}`;
   const fill = (id, items) => { const ul = $(id); ul.innerHTML = ''; items.forEach(x => ul.append(el('li', null, x))); };

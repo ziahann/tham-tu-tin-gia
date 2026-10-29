@@ -53,8 +53,7 @@ function freshProgress(heroName, heroLook = 'm') {
     evidenceCards: [],
     sourcesOpened: [],
     pos: null,
-    tracked: null,
-    score: 0
+    tracked: null
   };
 }
 

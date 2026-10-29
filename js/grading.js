@@ -29,12 +29,15 @@ export function checkCards(quest, picked) {
   return { status, wrong, missing };
 }
 
-/** Điểm khi hoàn thành: trừ theo gợi ý và số lần sai, giới hạn khi xem hướng dẫn. */
-export function questPoints(qs) {
-  const sc = data.quests.settings.scoring;
-  let points = Math.max(sc.minAfterHints, sc.firstTry - sc.hintPenaltyPerLevel * qs.hints - 2 * qs.fails);
-  if (qs.walkthrough) points = Math.min(points, sc.partial);
-  return points;
+/** Huy hiệu kỹ năng đã nhận: mỗi hồ sơ (phòng) khép lại trao một huy hiệu; Phòng họp tính khi thắng boss. */
+export function earnedBadges(flags = []) {
+  return data.quests.rooms.filter(r => r.badge && flags.includes(r.boss ? 'boss_done' : `done_${r.id}`));
+}
+
+/** Tiến độ: số hồ sơ bắt buộc đã khép / tổng (không tính hồ sơ tùy chọn, Phòng họp). */
+export function caseProgress(flags = []) {
+  const req = data.quests.rooms.filter(r => !r.optional && !r.boss);
+  return { done: req.filter(r => flags.includes(`done_${r.id}`)).length, total: req.length };
 }
 
 /**
