@@ -2,7 +2,7 @@
 import { data, t, fill, questById, evidenceById, sceneById, npcById, sourceById, shortCite } from './data.js';
 import { state, questState, saveProgress, setFlag, hasFlag, addEvidence, isQuestDone } from './state.js';
 import * as dlg from './dialogue.js';
-import { matchField, checkCards, questPoints, isUnlocked, roomStatus } from './grading.js';
+import { matchField, checkCards, questPoints, isUnlocked, isPlayable, roomStatus, bossStatus, nextQuestIn } from './grading.js';
 import { exhibitFor, frameGrid, singleFrame } from './exhibits.js';
 import { normalize, containsPhrase } from './text.js';
 import { sfx } from './audio.js';
@@ -35,10 +35,61 @@ export function interactionFor(npcId) {
   return null;
 }
 
+/** Các nhiệm vụ đang mở mà NPC này giao (mỗi hồ sơ tối đa một nhiệm vụ, vì trong hồ sơ làm theo thứ tự). */
+export function questsFor(npcId) {
+  return data.npcs.interactions.list
+    .filter(e => e.npc === npcId && e.quest && matchesFlags(e))
+    .map(e => questById(e.quest))
+    .filter(q => q && isPlayable(q) && !isQuestDone(q.id) && isUnlocked(q));
+}
+
+/** NPC giao một nhiệm vụ ('boss' cho Phòng họp). */
+export function giverOf(questId) {
+  if (questId === 'boss') return 'boss';
+  return data.npcs.interactions.list.find(e => e.quest === questId)?.npc || null;
+}
+
+/** Phòng (hồ sơ) của nhiệm vụ đang theo dõi, hoặc null. */
+export function trackedRoom() {
+  const id = state.progress?.tracked;
+  if (id === 'boss') return 'S9';
+  return id ? questById(id)?.room || null : null;
+}
+
+/** Theo dõi một nhiệm vụ (id, 'boss' hoặc null): mũi tên chỉ tới người giao việc. */
+export function track(id, quiet = false) {
+  state.progress.tracked = id;
+  saveProgress();
+  if (id && !quiet) {
+    const title = id === 'boss' ? t('backpack.bossCase') : questById(id)?.title;
+    toast(t('dialog.tracking', { title }));
+  }
+  onChange();
+  world?.refresh();
+}
+
 /** NPC có việc cốt truyện / nhiệm vụ đang chờ không (để hiện dấu !). */
 export function hasStoryFor(npcId) {
   const e = interactionFor(npcId);
-  return !!e && !e.idle;
+  return (!!e && !e.idle) || questsFor(npcId).length > 0;
+}
+
+/** Hỏi người chơi muốn làm hồ sơ nào khi NPC có nhiều hồ sơ đang mở; null = để sau. */
+async function pickQuest(npcId, room) {
+  const list = questsFor(npcId);
+  if (list.length <= 1) return list[0] || null;
+  const inRoom = room && list.find(q => q.room === room);
+  if (inRoom) return inRoom;
+  // Hồ sơ đang theo dõi và hồ sơ của phòng đang đứng lên đầu.
+  const here = world?.zoneRoom?.();
+  const rank = q => (q.id === state.progress.tracked ? 0 : q.room === here ? 1 : 2);
+  list.sort((a, b) => rank(a) - rank(b));
+  const roomName = id => data.quests.rooms.find(r => r.id === id)?.name || id;
+  const c = await dlg.choose([
+    ...list.map(q => ({ id: q.id, text: t('dialog.caseOption', { room: roomName(q.room), title: q.title }) })),
+    { id: '_later', text: t('dialog.notNow') }
+  ], { speaker: npcId, text: t('dialog.pickCase') });
+  return c.id === '_later' ? null : questById(c.id);
 }
 
 /** Chạy một đoạn hội thoại có giới hạn: khóa điều khiển, mở khung thoại, đóng khi xong. */
@@ -67,26 +118,28 @@ async function playScene(sceneId) {
   }
 }
 
-/** Người chơi nói chuyện với NPC. */
-export async function talkTo(npcId) {
+/** Người chơi nói chuyện với NPC. room: vừa bước vào phòng này thì làm luôn hồ sơ của phòng. */
+export async function talkTo(npcId, room = null) {
   let lead = null;
   world?.setTalking(npcId, true);
   await conversation(npcId, async () => {
-    let e = interactionFor(npcId);
+    const e = interactionFor(npcId);
     if (!e) return;
     if (e.scene) {
       await playScene(e.scene);
       (e.setFlags || []).forEach(setFlag);
       saveProgress();
       lead = e.lead || null;
-      return;
+      // Cảnh cốt truyện (không phải câu chào thường) xong thì chuyển sang chọn hồ sơ.
+      if (e.idle) return;
     }
-    // Nhiệm vụ: làm liên tiếp các nhiệm vụ của cùng NPC nếu người chơi không dừng giữa chừng.
-    while (e?.quest) {
-      const done = await runQuest(questById(e.quest), npcId);
-      if (!done) return;
-      e = interactionFor(npcId);
-      if (e?.scene && !e.quest) return;
+    // Nhiệm vụ: làm liên tiếp trong cùng hồ sơ nếu người chơi không dừng giữa chừng.
+    let q = await pickQuest(npcId, room);
+    while (q) {
+      if (state.progress.tracked !== q.id) track(q.id, true);
+      if (!(await runQuest(q, npcId))) return;
+      const next = nextQuestIn(q.room);
+      q = next && giverOf(next.id) === npcId ? next : null;
     }
   });
   world?.setTalking(npcId, false);
@@ -521,10 +574,18 @@ async function completeQuest(q, qs, npc) {
   }
   await dlg.say('system', t('dialog.points', { n: points }));
   const room = q.room;
+  if (state.progress.tracked === q.id) track(nextQuestIn(room)?.id || null, true);
   if (roomStatus(room, state.progress.flags) === 'done' && !hasFlag(`done_${room}`)) {
     setFlag(`done_${room}`);
     saveProgress();
     if (sceneById(`${room.toLowerCase()}_done`)) await playScene(`${room.toLowerCase()}_done`);
+  }
+  // Xong mọi hồ sơ bắt buộc: Kẻ Dệt Chuyện xuất hiện, mũi tên chỉ tới Phòng họp.
+  if (bossStatus(state.progress.flags) === 'open' && !hasFlag('boss_announced')) {
+    setFlag('boss_announced');
+    saveProgress();
+    await playScene('boss_appears');
+    track('boss', true);
   }
 }
 
@@ -552,19 +613,21 @@ export async function onZoneEnter(roomId) {
   saveProgress();
   const scene = sceneById(zs.scene);
   await conversation(scene.npc, () => playScene(zs.scene));
-  if (zs.thenTalk && interactionFor(zs.thenTalk)) await talkTo(zs.thenTalk);
+  if (zs.thenTalk && interactionFor(zs.thenTalk)) await talkTo(zs.thenTalk, roomId);
 }
 
-/** Mục tiêu hiện tại (hiện trong balo). */
+/** Mục tiêu hiện tại (hiện trong balo): nhiệm vụ đang theo dõi. */
 export function objective() {
-  if (!hasFlag('s1_done')) return t('backpack.objectiveMeetNpc1');
-  for (const e of data.npcs.interactions.list) {
-    if (!e.quest || interactionFor(e.npc) !== e) continue;
-    const q = questById(e.quest);
+  const id = state.progress?.tracked;
+  if (id === 'boss') return t('backpack.bossOpen');
+  const q = id && questById(id);
+  if (q && !isQuestDone(q.id)) {
     const room = data.quests.rooms.find(r => r.id === q.room);
-    return t('backpack.objectiveQuest', { title: q.title, npc: npcById(e.npc)?.name || e.npc, place: room?.name || '' });
+    const npc = giverOf(q.id);
+    return t('backpack.objectiveQuest', { title: q.title, npc: npcById(npc)?.name || npc, place: room?.name || '' });
   }
-  return t('backpack.objectiveWait');
+  const anyOpen = data.quests.rooms.some(r => nextQuestIn(r.id));
+  return anyOpen ? t('backpack.objectiveMeetNpc1') : t('backpack.objectiveWait');
 }
 
 // ---------------------------------------------------------------- boss

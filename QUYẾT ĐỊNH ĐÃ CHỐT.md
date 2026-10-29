@@ -84,3 +84,19 @@
 | Nhạc | CC0 của Juhani Junkala (JRPG Music Pack #2, #3, #4), 7 bản theo mốc |
 | Đồ họa | Vẫn vẽ bằng code (`tools/gen-assets.mjs`), đã chỉnh tông ấm. Chưa ghép gói tile CC0: các gói CC0 phổ biến dùng ô 16px, phóng lên 32px sẽ lệch nét với nhân vật và vịnh đã vẽ. Nếu nhóm muốn, chọn một gói rồi Claude ghép lại |
 | Video demo | Kịch bản ở `KỊCH BẢN VIDEO DEMO.md` |
+
+## Chốt ngày 29/10/2026 (đợt 4 — thế giới mở, trinh thám)
+
+> Thay thế các mục tương ứng ở đợt 1–3 (thứ tự phòng, mở khóa, âm thanh, bảng màu, nguồn mở tab mới).
+
+| Mục | Quyết định |
+|---|---|
+| Thứ tự chơi | Thế giới mở: mọi hồ sơ (phòng) và NPC có ngay từ đầu, chọn hồ sơ nào làm trước cũng được; các bước trong một hồ sơ vẫn theo thứ tự. Xong mọi nhiệm vụ bắt buộc (và đủ thẻ evidence) thì Kẻ Dệt Chuyện xuất hiện |
+| Theo dõi hồ sơ | Bảng Hồ sơ vụ án (phím J / nút trên thanh trên); chọn "Theo dõi" thì mũi tên vàng chỉ tới người giao việc, kể cả ở bản đồ khác |
+| Phòng thám tử | Phòng có thiết bị (máy tính tìm ngược ảnh, kính soi, máy dò AI, kho lưu trữ, bảng dòng thời gian…); giao diện công cụ **mô phỏng** trong game, kết quả lấy từ dữ liệu đã kiểm chứng, không gọi API thật |
+| Nguồn | Đọc ngay trong game (trang báo pixel tóm tắt nội dung đã kiểm tra), không mở tab mới; dữ kiện cũng rải trong thế giới để người chơi tự khám phá |
+| Đồ họa | Chuyển sang tông lạnh kiểu trinh thám; phòng nhỏ lại nhưng chi tiết hơn; thành phố rộng hơn, có xe cộ và NPC qua đường |
+| Thời tiết | Nắng / mưa / sương mù / đêm, người chơi đổi được (không có tuyết vì phi thực tế ở Hạ Long) |
+| Hội thoại | Chân dung lớn có biểu cảm: người đang nói sáng lên, người kia mờ đi; khi người chơi trả lời thì chân dung thám tử bên trái sáng |
+| Âm thanh | Âm thanh phản hồi theo tương tác (bước chân theo mặt sàn, cửa, thiết bị, giọng "bíp" riêng của từng NPC, tiếng mưa/sóng/xe), tạo bằng WebAudio; nhạc nền CC0 vẫn giữ |
+| Màn hình chính | Làm nổi tên trò chơi, môn học, chủ đề vụ án; cảnh báo nội dung thu nhỏ (vẫn đọc được trước khi chơi) |

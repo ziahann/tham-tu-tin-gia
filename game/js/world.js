@@ -7,6 +7,7 @@ import { roomStatus } from './grading.js';
 import * as story from './story.js';
 import { setPlace } from './hud.js';
 import { playMusic } from './music.js';
+import { buildGraph, guideTarget, updateTrackLine, GuideArrow } from './guide.js';
 
 const SPRITE_IDS = ['npc1', 'npc2', 'npc3', 'npc4', 'npc5', 'npc6', 'boss', 'boss_blank'];
 const MAPS = ['office', 'street', 'newsroom', 'cafe', 'boss'];
@@ -116,6 +117,9 @@ export class WorldScene extends Phaser.Scene {
     this.zoneKey = null;
     if (!state.settings.reduceMotion) cam.fadeIn(250, 15, 14, 23);
     this.target = null;
+    buildGraph(this, MAPS);
+    this.guide = new GuideArrow(this);
+    this.reduceMotion = state.settings.reduceMotion;
     story.setWorld(this);
     this.refresh();
   }
@@ -166,12 +170,32 @@ export class WorldScene extends Phaser.Scene {
     return list;
   }
 
-  /** Đặt NPC theo trạm hiện tại (data.npcs.stations) hoặc vị trí gốc trên bản đồ. */
+  /** Phòng (hồ sơ) của khu vực người chơi đang đứng, hoặc null. */
+  zoneRoom() {
+    return propOf(this.zones?.find(z => z.name === this.zoneKey) || {}, 'room') || null;
+  }
+
+  /**
+   * Trạm của NPC (data.npcs.stations): mục có cờ bắt buộc và không gắn phòng thắng trước;
+   * rồi tới mục gắn phòng người chơi đang đứng, phòng của hồ sơ đang theo dõi; cuối cùng mục mặc định.
+   */
+  stationFor(id) {
+    const list = (data.npcs.stations?.[id] || []).filter(s => (s.requires || []).every(hasFlag));
+    const forced = list.find(s => s.requires?.length && !s.room);
+    if (forced) return forced;
+    for (const room of [this.zoneRoom(), story.trackedRoom()]) {
+      const s = room && list.find(x => x.room === room);
+      if (s) return s;
+    }
+    return list.find(s => !s.room) || null;
+  }
+
+  /** Đặt NPC theo trạm hiện tại hoặc vị trí gốc trên bản đồ. */
   placeNpc(id) {
     const npc = this.npcs.get(id);
-    const st = (data.npcs.stations?.[id] || []).find(s => (s.requires || []).every(hasFlag));
+    const st = this.stationFor(id);
     npc.stationKey = st?.station || 'home';
-    if (st) {
+    if (st && this.points[st.station]) {
       npc.teleport(this.points[st.station]);
       npc.patrol(this.paths[st.patrol]);
     } else {
@@ -183,8 +207,7 @@ export class WorldScene extends Phaser.Scene {
   updateStations() {
     this.npcs.forEach((npc, id) => {
       if (npc.mode === 'lead' || npc.talking) return;
-      const st = (data.npcs.stations?.[id] || []).find(s => (s.requires || []).every(hasFlag));
-      if ((st?.station || 'home') !== npc.stationKey) this.placeNpc(id);
+      if ((this.stationFor(id)?.station || 'home') !== npc.stationKey) this.placeNpc(id);
     });
   }
 
@@ -201,7 +224,14 @@ export class WorldScene extends Phaser.Scene {
     }
     this.doors.setCollisionByProperty({ collides: true });
     this.updateStations();
-    this.npcs.forEach((npc, id) => npc.marker.setVisible(story.hasStoryFor(id)));
+    // Dấu trên đầu NPC: vàng "!" = có việc; xanh "▼" = người giao hồ sơ đang theo dõi.
+    const trackedNpc = story.giverOf(state.progress.tracked);
+    this.npcs.forEach((npc, id) => {
+      const isTracked = id === trackedNpc;
+      npc.marker.setText(isTracked ? '▼' : '!').setColor(isTracked ? '#7fe3ff' : '#f2d36b');
+      npc.marker.setVisible(id !== 'boss' && (isTracked || story.hasStoryFor(id)));
+    });
+    updateTrackLine();
   }
 
   /** Bắt đầu / kết thúc trò chuyện: NPC dừng và quay mặt về người chơi, người chơi nhìn NPC. */
@@ -271,6 +301,7 @@ export class WorldScene extends Phaser.Scene {
     const key = zone?.name || null;
     if (key === this.zoneKey) return;
     this.zoneKey = key;
+    this.updateStations();
     const room = propOf(zone || {}, 'room');
     const area = propOf(zone || {}, 'area');
     const label = room ? data.quests.rooms.find(r => r.id === room)?.name : data.quests.areas?.[area];
@@ -317,6 +348,7 @@ export class WorldScene extends Phaser.Scene {
     this.player.setDepth(this.player.y);
     this.npcs.forEach(n => n.update(delta, frozen, this.player));
 
+    this.guide.draw(this.player, frozen ? null : guideTarget(this), time);
     if (frozen) { this.prompt.setVisible(false); return; }
     this.checkZone();
     const exit = this.exits.find(o => inRect(o, this.player.x, this.player.y));

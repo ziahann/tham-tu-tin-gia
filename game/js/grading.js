@@ -37,14 +37,23 @@ export function questPoints(qs) {
   return points;
 }
 
-/** Nhiệm vụ đã mở khóa chưa (nhiệm vụ đầu tiên, hoặc có nhiệm vụ đã xong mở khóa nó). */
+/**
+ * Nhiệm vụ đã mở chưa. Thế giới mở: nhiệm vụ đầu của mỗi hồ sơ (phòng) mở ngay;
+ * nhiệm vụ sau trong cùng hồ sơ mở khi nhiệm vụ trước nó (theo unlocks) đã xong.
+ */
 export function isUnlocked(q) {
   if (q.unlockFlags) return q.unlockFlags.every(hasFlag);
-  if (q.order === 1) return true;
-  return data.quests.quests.some(o => isQuestDone(o.id) && (o.unlocks || []).includes(q.id));
+  const prev = data.quests.quests.filter(o => o.room === q.room && (o.unlocks || []).includes(q.id));
+  return !prev.length || prev.some(o => isQuestDone(o.id));
 }
 
-/** Trạng thái phòng: done | open | locked | building. flags: cờ hiện có (so với room.requires). */
+/** Nhiệm vụ đang mở tiếp theo của một hồ sơ (phòng), hoặc null. */
+export function nextQuestIn(roomId) {
+  const room = data.quests.rooms.find(r => r.id === roomId);
+  return (room?.quests || []).map(questById).find(q => q && !isQuestDone(q.id) && isUnlocked(q) && isPlayable(q)) || null;
+}
+
+/** Trạng thái phòng: done | open | locked | building. flags: cờ hiện có (dùng cho phòng Boss). */
 export function roomStatus(roomId, flags = []) {
   const room = data.quests.rooms.find(r => r.id === roomId);
   if (!room) return 'building';
@@ -52,7 +61,6 @@ export function roomStatus(roomId, flags = []) {
   const quests = room.quests.map(questById);
   if (quests.some(q => !isPlayable(q))) return 'building';
   if (quests.filter(q => q.required !== false).every(q => isQuestDone(q.id))) return 'done';
-  if ((room.requires || []).some(f => !flags.includes(f))) return 'locked';
   return quests.some(isUnlocked) ? 'open' : 'locked';
 }
 
