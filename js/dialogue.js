@@ -14,7 +14,7 @@ const MOODS = ['neutral', 'happy', 'thinking', 'surprised', 'serious'];
 const BOSS_COL = { neutral: 0, thinking: 0, happy: 1, smug: 1, surprised: 2, cracked: 2, blank: 3, serious: 4, angry: 4 };
 /** Có chân dung không: NPC, boss, thiết bị (dev_*), đồ vật (obj_*). */
 const hasPortrait = id => !!id && (PORTRAITS.has(id) || !!npcById(id) || /^(dev|obj)_/.test(id));
-/** File sprite / chân dung của thám tử theo mẫu nam / nữ. */
+/** File sprite / chân dung của nhân vật chính theo mẫu nam / nữ. */
 const heroFile = () => `hero_${state.progress?.heroLook === 'f' ? 'f' : 'm'}`;
 const els = {};
 let partner = null;
@@ -66,7 +66,7 @@ export function end() {
   document.getElementById('touch').classList.remove('is-dialog');
 }
 
-/** Tên hiển thị của thám tử theo tên người chơi đặt. */
+/** Tên hiển thị của nhân vật chính theo tên người chơi đặt. */
 export function heroTitle() {
   const hero = data.quests.hero;
   return fill(hero.titleFormat, { name: state.progress?.heroName || hero.displayName });
@@ -119,7 +119,7 @@ function setSpeaker(id, text = '', mood = null) {
     const npc = npcById(id);
     name = npc ? npc.name : id.startsWith('dev_') ? t(`devices.${id.slice(4)}.name`) : id;
     if (hasPortrait(id)) { rightId = id; setPortrait(els.right, id, m); }
-    // thám tử phản ứng theo lời NPC: đúng thì vui, sai thì giật mình
+    // nhân vật chính phản ứng theo lời NPC: đúng thì vui, sai thì giật mình
     setPortrait(els.left, heroFile(), m === 'happy' ? 'happy' : m === 'serious' ? 'surprised' : 'neutral');
     focus(rightId === id ? 'right' : null);
   }
@@ -191,7 +191,7 @@ function prompt(opts) {
   advanceFn = null;
   els.next.textContent = '';
   els.extra.innerHTML = '';
-  // Tới lượt người chơi trả lời: chân dung thám tử sáng lên, đang suy nghĩ.
+  // Tới lượt người chơi trả lời: chân dung nhân vật chính sáng lên, đang suy nghĩ.
   setPortrait(els.left, heroFile(), 'thinking');
   focus('left');
   els.root.classList.toggle('has-exhibit', !!(opts?.exhibit || opts?.wide));

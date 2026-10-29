@@ -23,19 +23,19 @@
   "title": {
     "warningTitle": "Cảnh báo nội dung",
     "warning": "Game dựa trên một vụ tai nạn có thật. Nội dung nhắc đến thiệt hại về người. Game không hiển thị hình ảnh nạn nhân; ảnh giả chỉ là mô phỏng pixel trừu tượng có nhãn ẢNH GIẢ. Bạn có thể thoát bất cứ lúc nào.",
-    "simulatedNote": "Nhân vật, tổ chức, văn phòng điều tra và công cụ mô phỏng đều là GIẢ LẬP. Dữ kiện về vụ việc lấy từ báo chí, có ghi nguồn.",
+    "simulatedNote": "Nhân vật, tình huống và công cụ mô phỏng đều là GIẢ LẬP. Nhân vật và sự việc trong tòa nhà là GIẢ LẬP, không đại diện cho Báo Thanh Niên. Dữ kiện về vụ việc lấy từ báo chí, có ghi nguồn.",
     "start": "Bắt đầu",
     "continue": "Chơi tiếp",
     "restart": "Chơi lại từ đầu",
     "restartConfirm": "Bắt đầu lượt chơi mới? Tiến trình hiện tại sẽ bị xóa (lịch sử trò chuyện cũ vẫn được giữ).",
-    "nameLabel": "Tên thám tử của bạn",
+    "nameLabel": "Tên của bạn",
     "nameHint": "Không cần dùng tên thật.",
     "nameConfirm": "Vào văn phòng",
     "controlsTitle": "Cách chơi",
     "controls": "Đi lại: WASD hoặc phím mũi tên (điện thoại: phím ảo). Nói chuyện / xem đồ vật / tiếp lời thoại: E, Space hoặc Enter (điện thoại: nút A). Mở balo: B. Chọn hồ sơ để theo dõi: J (mũi tên vàng chỉ đường). Đổi thời tiết: T. Đóng: Esc.",
     "firstHint": "Mọi hồ sơ đều đã mở. Bấm J (hoặc nút Hồ sơ) để chọn hồ sơ muốn điều tra; mũi tên vàng sẽ chỉ đường.",
     "bayAlt": "Hình nền chuyển động: vịnh Hạ Long với các đảo đá vôi, mặt nước gợn sóng, mây và chim bay. Hình minh họa.",
-    "lookLabel": "Chọn mẫu thám tử",
+    "lookLabel": "Chọn mẫu nhân vật",
     "lookM": "Nam",
     "lookF": "Nữ",
     "course": "Môn Thẩm định tin tức · Trường Đại học Văn Lang",
@@ -222,8 +222,8 @@
     "disclaimer": "Điểm số và chiến thắng chỉ đo kết quả chơi, không chứng minh thông tin đúng hay sai."
   },
   "devices": {
-    "place": "Phòng thám tử",
-    "goTo": "Phần này cần {device} ở Phòng thám tử (tòa nhà cuối phố, bên phải). Mũi tên vàng sẽ chỉ đường; xong thì quay lại báo tôi.",
+    "place": "Phòng xác minh",
+    "goTo": "Phần này cần {device} ở Phòng xác minh (tòa nhà có biển \"PHÒNG XÁC MINH\" trên phố). Mũi tên vàng sẽ chỉ đường; xong thì quay lại báo tôi.",
     "reportBack": "✓ Đã ghi kết quả. Quay lại gặp {npc} để báo cáo.",
     "nextDevice": "Bước tiếp theo cần {device}.",
     "scanning": "Đang xử lý…",
@@ -232,7 +232,7 @@
     "taskLine": "Việc của hồ sơ \"{title}\":",
     "computer": {
       "name": "Máy tính tìm ngược ảnh",
-      "app": "Tìm bằng hình ảnh · bản ghi theo báo cáo nhóm"
+      "app": "Tìm bằng hình ảnh · bản ghi kết quả"
     },
     "magnifier": {
       "name": "Bàn soi kính lúp",
@@ -244,7 +244,7 @@
     },
     "detector": {
       "name": "Máy dò ảnh AI",
-      "app": "Máy dò ảnh AI · bản ghi Hive theo báo cáo"
+      "app": "Máy dò ảnh AI · bản ghi Hive"
     },
     "archive": {
       "name": "Đầu đọc kho báo",

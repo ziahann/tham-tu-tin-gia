@@ -1,5 +1,5 @@
 // Balo: khung dọc bên phải với Sổ tay, Nhiệm vụ + bản đồ nhỏ, Bảng ghim, Lịch sử trò chuyện theo NPC.
-import { data, t, evidenceById, sourceById, shortCite, npcById, questById } from './data.js';
+import { data, t, evidenceById, sourceById, shortCite, citeLine, npcById, questById } from './data.js';
 import { state, clearAllStorage, isQuestDone } from './state.js';
 import { questStatus, nextQuestIn, isUnlocked, bossStatus } from './grading.js';
 import { objective, track, giverOf } from './story.js';
@@ -68,7 +68,9 @@ export function evidenceCard(ev) {
   const card = el('div', 'ev-card');
   const h = el('h3');
   h.append(el('span', 'fact', ev.fact), document.createTextNode(ev.title));
-  card.append(h, el('p', null, ev.text), el('p', 'cite', `Nguồn: ${ev.sources.map(s => shortCite(sourceById(s))).join('; ')}`));
+  const cite = citeLine(ev.sources);
+  card.append(h, el('p', null, ev.text));
+  if (cite) card.append(el('p', 'cite', `Nguồn: ${cite}`));
   return card;
 }
 
