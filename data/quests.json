@@ -5,12 +5,13 @@
   "hero": {
     "id": "hero",
     "displayName": "Tầm",
-    "titleFormat": "Thám tử {name}",
+    "titleFormat": "{name}",
     "playerCanRename": true,
     "age": 19,
-    "look": "Sinh viên báo chí: áo khoác dù, balo, thẻ phóng viên thực tập, sổ tay và bút gài sau tai. Người chơi chọn mẫu nam hoặc nữ (chưa dựng).",
+    "look": "Sinh viên ngành Quan hệ công chúng – Truyền thông, Trường Đại học Văn Lang: áo khoác dù, balo, thẻ sinh viên, sổ tay và bút gài sau tai. Người chơi chọn mẫu nam hoặc nữ.",
     "catchphrase": "Chưa có bằng chứng thì chưa kết luận.",
-    "note": "Nhân vật ORIGINAL. Không dùng tên/câu nói/hình ảnh của nhân vật có bản quyền. displayName là tên mặc định; người chơi tự đặt tên ở cuối intro."
+    "note": "Nhân vật ORIGINAL. Không dùng tên/câu nói/hình ảnh của nhân vật có bản quyền. displayName là tên mặc định; người chơi tự đặt tên ở cuối intro.",
+    "role": "Sinh viên Quan hệ công chúng – Truyền thông, Trường Đại học Văn Lang"
   },
   "settings": {
     "minCardsForBoss": 8,
@@ -32,7 +33,7 @@
       },
       {
         "min": 140,
-        "title": "Thám tử kiểm chứng"
+        "title": "Cây bút kiểm chứng"
       }
     ],
     "scoreDisclaimer": "Điểm chỉ để chơi, KHÔNG phải bằng chứng thật/giả của tin.",
@@ -48,7 +49,7 @@
         "q1_stop",
         "q2_event"
       ],
-      "place": "Văn phòng Ban Hải Đăng"
+      "place": "Trụ sở Báo Thanh Niên"
     },
     {
       "id": "S4",
@@ -60,7 +61,7 @@
         "q5_crosscheck",
         "q6_detector"
       ],
-      "place": "Văn phòng Ban Hải Đăng"
+      "place": "Trụ sở Báo Thanh Niên"
     },
     {
       "id": "S5",
@@ -88,7 +89,7 @@
         "q9_impact",
         "q10_intent"
       ],
-      "place": "Văn phòng Ban Hải Đăng"
+      "place": "Trụ sở Báo Thanh Niên"
     },
     {
       "id": "S8",
@@ -99,7 +100,7 @@
         "q12_response",
         "q13_platform"
       ],
-      "place": "Văn phòng Ban Hải Đăng"
+      "place": "Trụ sở Báo Thanh Niên"
     },
     {
       "id": "CAFE",
@@ -114,7 +115,7 @@
     {
       "id": "S9",
       "name": "Phòng họp (Phòng Boss)",
-      "place": "Văn phòng Ban Hải Đăng",
+      "place": "Trụ sở Báo Thanh Niên",
       "npc": "boss",
       "quests": [],
       "boss": true
@@ -122,7 +123,7 @@
     {
       "id": "BONUS",
       "name": "Màn bonus",
-      "place": "Văn phòng Ban Hải Đăng",
+      "place": "Trụ sở Báo Thanh Niên",
       "npc": "npc1",
       "quests": [
         "bonus_impersonation"
@@ -494,7 +495,7 @@
               6,
               10
             ],
-            "text": "Khung 6 và 10 bị mờ nên báo cáo KHÔNG đánh giá. Ảnh mờ không chứng minh gì (F13)."
+            "text": "Khung 6 và 10 bị mờ nên hồ sơ kiểm chứng KHÔNG đánh giá. Ảnh mờ không chứng minh gì (F13)."
           },
           "neutral": "Khung {n} không có dấu hiệu quan sát được rõ ràng.",
           "hints": [
@@ -521,7 +522,7 @@
               "id": "b",
               "text": "Không đánh giá, ghi vào phần giới hạn",
               "correct": true,
-              "feedback": "Đúng. Báo cáo cũng không đánh giá khung 6 và 10 (F13)."
+              "feedback": "Đúng. Hồ sơ kiểm chứng cũng không đánh giá khung 6 và 10 (F13)."
             },
             {
               "id": "c",
@@ -538,7 +539,7 @@
         }
       ],
       "feedback": {
-        "correct": "Chuẩn. Dấu hiệu thị giác chỉ là chỉ báo; cần kết hợp với bằng chứng khác. Báo cáo còn ghi một dấu hiệu nữa: góc chụp cận cảnh giữa biển lúc tàu chìm, khó có người chụp hợp lý (F6)."
+        "correct": "Chuẩn. Dấu hiệu thị giác chỉ là chỉ báo; cần kết hợp với bằng chứng khác. Hồ sơ kiểm chứng còn ghi một dấu hiệu nữa: góc chụp cận cảnh giữa biển lúc tàu chìm, khó có người chụp hợp lý (F6)."
       },
       "conclusion": "Có dấu hiệu AI quan sát được: tàu khác hình dạng giữa các khung, chữ trên áo méo, chi tiết đổi giữa khung 5 và 12. Khung mờ không đánh giá.",
       "evidenceCards": [
@@ -951,9 +952,9 @@
             },
             {
               "id": "b",
-              "text": "Chưa xác định được — đây là giới hạn của báo cáo",
+              "text": "Chưa xác định được — đây là giới hạn của hồ sơ kiểm chứng",
               "correct": true,
-              "feedback": "Đúng (F13). Báo cáo chỉ tiếp cận bài đăng qua ảnh chụp màn hình báo chí đăng lại."
+              "feedback": "Đúng (F13). Hồ sơ kiểm chứng chỉ tiếp cận bài đăng qua ảnh chụp màn hình báo chí đăng lại."
             },
             {
               "id": "c",
@@ -963,7 +964,7 @@
             }
           ],
           "hints": [
-            "Báo cáo tiếp cận bài đăng gốc bằng cách nào?"
+            "Hồ sơ kiểm chứng tiếp cận bài đăng gốc bằng cách nào?"
           ],
           "walkthrough": "Chọn \"Chưa xác định được\"."
         }
@@ -1233,7 +1234,7 @@
             }
           ],
           "hints": [
-            "Đọc lại giới hạn của báo cáo (F13)."
+            "Đọc lại giới hạn của hồ sơ kiểm chứng (F13)."
           ],
           "walkthrough": "Chọn danh tính người đứng sau, doanh thu, thời điểm đăng đầu tiên."
         },
@@ -1537,7 +1538,7 @@
         }
       ],
       "feedback": {
-        "correct": "Cảm ơn ý kiến của bạn. Báo cáo có dẫn một số văn bản quy định liên quan; game không tư vấn pháp lý."
+        "correct": "Cảm ơn ý kiến của bạn. Có một số văn bản quy định liên quan; game không tư vấn pháp lý."
       },
       "conclusion": "Nền tảng có thể gắn nhãn nội dung AI, giảm lan truyền và xử lý tài khoản vi phạm.",
       "evidenceCards": [
@@ -1630,7 +1631,7 @@
       "mode": "G11",
       "title": "(Bonus) Trang mạo danh",
       "npcIntro": "bonus_intro",
-      "question": "Sau vụ việc, xuất hiện một trang mạo danh chính Ban Hải Đăng. Tất cả là GIẢ LẬP — hãy tìm các dấu hiệu mạo danh.",
+      "question": "Sau vụ việc, xuất hiện một trang mạo danh \"Quỹ Thiện nguyện Hải Đăng\" (tổ chức hư cấu). Tất cả là GIẢ LẬP — hãy tìm các dấu hiệu mạo danh.",
       "steps": [
         {
           "id": "s1",
@@ -1640,7 +1641,7 @@
           "cards": [
             {
               "id": "b1",
-              "text": "Tên trang sai chính tả (\"Hải Đăngg\")",
+              "text": "Tên trang sai chính tả (\"Hải Đăngg\" thay vì \"Hải Đăng\")",
               "correct": true
             },
             {
@@ -1792,9 +1793,9 @@
     }
   },
   "organization": {
-    "name": "Ban Điều phối Thông tin Du lịch Hải Đăng",
+    "name": "Báo Thanh Niên",
     "label": "GIẢ LẬP",
-    "note": "Tổ chức hư cấu nhờ điều tra."
+    "note": "Tòa nhà mang tên thật theo yêu cầu của nhóm. Nhân vật và sự việc trong tòa nhà là GIẢ LẬP, không đại diện cho Báo Thanh Niên."
   },
   "verificationQuestions": [
     "Các bức ảnh là ảnh thật hay do AI tạo?",
@@ -1826,7 +1827,7 @@
       "id": "ev_f2",
       "fact": "F2",
       "title": "Nguyên nhân theo nguồn",
-      "text": "Theo báo cáo và phát biểu của lãnh đạo UBND tỉnh Quảng Ninh tại họp báo ngày 20/7/2025: dông (giông) lốc rất lớn chiều 19/7 là nguyên nhân khiến tàu bị lật.",
+      "text": "Theo phát biểu của lãnh đạo UBND tỉnh Quảng Ninh tại họp báo ngày 20/7/2025: dông (giông) lốc rất lớn chiều 19/7 là nguyên nhân khiến tàu bị lật.",
       "sources": [
         "minhkhang2025",
         "baocao"
@@ -2007,7 +2008,7 @@
     "street": "Phố ven vịnh",
     "pier": "Bến tàu du lịch",
     "newsroom": "Tòa soạn Tin Vịnh",
-    "agency": "Phòng thám tử (GIẢ LẬP)",
+    "agency": "Phòng xác minh (GIẢ LẬP)",
     "park": "Công viên ven vịnh"
   },
   "intro": {
@@ -2068,7 +2069,7 @@
       {
         "id": "i5",
         "title": "Lời mời điều tra",
-        "text": "Ban Điều phối Thông tin Du lịch Hải Đăng (GIẢ LẬP) mời bạn, một thẩm định viên, làm rõ: đâu là thật, đâu là dựng, và có dấu hiệu cố ý hay không. Chỉ kết luận trong giới hạn bằng chứng.",
+        "text": "Bạn là sinh viên ngành Quan hệ công chúng – Truyền thông, Trường Đại học Văn Lang, đến Trụ sở Báo Thanh Niên hỗ trợ nhóm kiểm chứng (tình huống GIẢ LẬP). Nhiệm vụ: làm rõ đâu là thật, đâu là dựng, và có dấu hiệu cố ý hay không. Chỉ kết luận trong giới hạn bằng chứng.",
         "scene": "dawn",
         "simulated": true
       }
@@ -2185,7 +2186,7 @@
       ]
     },
     "lens": {
-      "title": "Bản ghi kết quả Google Lens theo báo cáo (giao diện MÔ PHỎNG)",
+      "title": "Bản ghi kết quả tìm ngược ảnh Google Lens (giao diện MÔ PHỎNG)",
       "query": "Tìm ngược các khung trong hai bộ ảnh",
       "rows": [
         {
@@ -2216,7 +2217,7 @@
       ]
     },
     "hive": {
-      "title": "Bản ghi kết quả Hive Moderation theo báo cáo (giao diện MÔ PHỎNG)",
+      "title": "Bản ghi kết quả Hive Moderation (giao diện MÔ PHỎNG)",
       "runDate": "Ngày chạy: 11/10/2026",
       "columns": [
         "",
@@ -2250,7 +2251,7 @@
           "Không tìm thấy"
         ]
       ],
-      "footer": "Báo cáo coi đây là dữ liệu bổ trợ, không phải phán quyết.",
+      "footer": "Đây là dữ liệu bổ trợ, không phải phán quyết.",
       "fact": "F7",
       "sources": [
         "baocao",
@@ -2281,9 +2282,9 @@
     },
     "fakepage": {
       "title": "Trang mạo danh (GIẢ LẬP — tên tổ chức hư cấu)",
-      "name": "Ban Điều phối Thông tin Du lịch Hải Đăngg ✔",
+      "name": "Quỹ Thiện nguyện Hải Đăngg ✔",
       "meta": "Trang · Tạo 2 ngày trước · 37 người theo dõi",
-      "post": "THÔNG BÁO KHẨN: Ban Hải Đăng nhận quyên góp giúp gia đình nạn nhân. Chuyển khoản ngay vào tài khoản cá nhân bên dưới, xác nhận qua link: bit.ly/hd-ung-ho",
+      "post": "THÔNG BÁO KHẨN: Quỹ Hải Đăng nhận quyên góp giúp gia đình nạn nhân. Chuyển khoản ngay vào tài khoản cá nhân bên dưới, xác nhận qua link: bit.ly/hd-ung-ho",
       "note": "Toàn bộ là GIẢ LẬP để luyện nhận diện mạo danh. Không có tổ chức, tài khoản hay đường link nào là thật."
     }
   },

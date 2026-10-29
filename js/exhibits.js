@@ -1,6 +1,6 @@
 // Tư liệu hiển thị trong khung thoại: lưới ảnh MÔ PHỎNG (khối hình trừu tượng, không có người),
 // bản ghi kết quả công cụ (Google Lens, Hive) theo báo cáo, và nút mở nguồn.
-import { data, t, sourceById, shortCite } from './data.js';
+import { data, t, citeLine } from './data.js';
 import { reader } from './tools.js';
 
 const FW = 64, FH = 48; // cỡ một khung mô phỏng (pixel gốc)
@@ -137,7 +137,8 @@ export function toolPanel(key) {
     table.append(head);
     ex.rows.forEach(r => { const tr = el('tr'); r.forEach((c, i) => tr.append(el(i ? 'td' : 'th', null, c))); table.append(tr); });
   }
-  wrap.append(table, el('p', null, ex.footer), el('p', 'cite', `${ex.fact} · Nguồn: ${ex.sources.map(s => shortCite(sourceById(s))).join('; ')}`));
+  const cite = citeLine(ex.sources);
+  wrap.append(table, el('p', null, ex.footer), el('p', 'cite', cite ? `${ex.fact} · Nguồn: ${cite}` : ex.fact));
   return wrap;
 }
 
@@ -155,7 +156,9 @@ function wardlePanel() {
   wrap.append(el('figcaption', null, ex.title));
   const table = el('table');
   ex.rows.forEach(([term, def]) => { const tr = el('tr'); tr.append(el('td', null, term), el('td', null, def)); table.append(tr); });
-  wrap.append(table, el('p', null, ex.footer), el('p', 'cite', `Nguồn: ${ex.sources.map(s => shortCite(sourceById(s))).join('; ')}`));
+  const cite = citeLine(ex.sources);
+  wrap.append(table, el('p', null, ex.footer));
+  if (cite) wrap.append(el('p', 'cite', `Nguồn: ${cite}`));
   return wrap;
 }
 

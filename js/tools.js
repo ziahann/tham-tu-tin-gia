@@ -1,4 +1,4 @@
-// Phòng thám tử: khung cửa sổ công cụ MÔ PHỎNG bọc quanh tư liệu, trình đọc báo trong game, chế độ xem thử.
+// Phòng xác minh: khung cửa sổ công cụ MÔ PHỎNG bọc quanh tư liệu, trình đọc báo trong game, chế độ xem thử.
 // Kết quả trong công cụ lấy từ bản ghi của nhóm (quests.json → exhibits) và tóm tắt nguồn đã kiểm tra (sources.json).
 import { data, t, sourceById, shortCite, evidenceById } from './data.js';
 import { state, saveProgress, markSourceOpened } from './state.js';
@@ -69,7 +69,7 @@ function addNote(sourceId, text) {
  * Bấm một dòng để ghi vào sổ tay. Không mở tab mới.
  */
 export function reader(sourceIds) {
-  const ids = sourceIds.filter(id => sourceById(id));
+  const ids = sourceIds.filter(id => sourceById(id) && !sourceById(id).internal);
   const wrap = el('div', 'reader');
   const tabs = el('div', 'reader-tabs');
   const page = el('article', 'paper');

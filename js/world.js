@@ -20,7 +20,7 @@ const BOSS_SCALE = 1.5;
 /** Sprite của mọi nhân vật trong npc_dialogues.json (NPC chính, người qua đường, boss) + boss đã gỡ mặt nạ. */
 const spriteIds = () => [...new Set([...data.npcs.npcs.map(n => n.sprite || n.id), 'boss', 'boss_blank'])];
 
-/** File sprite của thám tử theo mẫu người chơi chọn (nam / nữ). */
+/** File sprite của nhân vật chính theo mẫu người chơi chọn (nam / nữ). */
 export const heroSprite = () => `hero_${state.progress?.heroLook === 'f' ? 'f' : 'm'}`;
 
 /** Lấy thuộc tính tùy chỉnh của object Tiled. */
@@ -70,7 +70,7 @@ export class WorldScene extends Phaser.Scene {
     this.exits = objs.filter(o => o.type === 'exit');
     this.portals = objs.filter(o => o.type === 'portal');
     this.inspects = objs.filter(o => o.type === 'inspect');
-    // Thiết bị ở Phòng thám tử: có dấu "!" khi hồ sơ đang chờ thiết bị đó.
+    // Thiết bị ở Phòng xác minh: có dấu "!" khi hồ sơ đang chờ thiết bị đó.
     this.devices = objs.filter(o => o.type === 'device').map(o => ({
       obj: o,
       id: propOf(o, 'device'),
@@ -185,7 +185,7 @@ export class WorldScene extends Phaser.Scene {
     }, delta);
   }
 
-  /** Bong bóng biểu cảm trên đầu thám tử ('hero') hoặc một NPC. */
+  /** Bong bóng biểu cảm trên đầu nhân vật chính ('hero') hoặc một NPC. */
   emote(who, ch) {
     if (who === 'hero') showEmote(this, this.player, ch);
     else { const npc = this.npcs.get(who); if (npc) showEmote(this, npc.sprite, ch); }
