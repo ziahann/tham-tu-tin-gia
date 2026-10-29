@@ -4,10 +4,11 @@ const propOf = (o, name) => (o.properties || []).find(p => p.name === name)?.val
 
 export const VEHICLE_SPRITES = ['car1', 'car2', 'car3', 'car4', 'bus', 'bike1', 'bike2'].flatMap(k => [k, `${k}_e`, `${k}_w`]);
 /** Kích thước bản isometric của xe (xem tools/props.mjs → vehicles): bề rộng mặt nam, cao ảnh gốc, chiều sâu. */
-const ISO_SIZE = { car: [96, 50, 42], bus: [240, 84, 72], bike: [50, 50, 14] };
+const ISO_SIZE = { car: [96, 50, 40], bus: [240, 84, 56], bike: [50, 50, 16] };
 const KINDS = {
   car: [['car1', 110], ['car2', 100], ['car3', 120], ['car4', 105], ['bus', 75]],
-  bike: [['bike1', 85], ['bike2', 78]]
+  bike: [['bike1', 85], ['bike2', 78]],
+  mixed: [['car1', 110], ['car2', 100], ['car3', 120], ['car4', 105], ['bus', 75], ['bike1', 85], ['bike2', 78], ['car1', 110], ['bike1', 85]]
 };
 const GAP = 26;         // khoảng cách tối thiểu tới xe phía trước
 const LOOK = 70;        // tầm nhìn phía trước để dừng xe
@@ -18,7 +19,7 @@ export class Traffic {
     this.scene = scene;
     this.player = player;
     this.lanes = objs.filter(o => o.type === 'lane').map(o => ({
-      y: o.y + o.height / 2, dir: propOf(o, 'dir') || 1, kind: propOf(o, 'kind') || 'car', timer: 400 + Math.random() * 2500
+      y: o.y + o.height / 2, top: o.y, bottom: o.y + o.height, dir: propOf(o, 'dir') || 1, kind: propOf(o, 'kind') || 'car', timer: 400 + Math.random() * 2500
     }));
     this.crossings = objs.filter(o => o.type === 'crosswalk');
     this.cars = [];
@@ -36,11 +37,11 @@ export class Traffic {
     const [key, speed] = Phaser.Utils.Array.GetRandom(KINDS[lane.kind]);
     const W = this.scene.map.widthInPixels;
     const sx = x ?? (lane.dir > 0 ? -60 : W + 60);
-    const s = this.group.create(sx, lane.y + 18, key).setOrigin(0.5, 1).setFlipX(lane.dir < 0);
-    // ảnh xe giả 3D rộng thêm phần mặt hông: thân va chạm chỉ theo mặt trước (bên trái ảnh khi xe hướng phải)
-    const depth = key === 'bus' ? 20 : key.startsWith('bike') ? 6 : 14;
-    const w = s.width - depth, h = Math.min(18, s.height * 0.5);
-    s.body.setSize(w - 8, h).setOffset(lane.dir < 0 ? depth + 4 : 4, s.height - h - 2);
+    // chân xe sát mép ngoài của làn; thân va chạm = chân đế thật (dài x sâu) của xe
+    const [fw0, , d0] = ISO_SIZE[key === 'bus' ? 'bus' : key.startsWith('bike') ? 'bike' : 'car'];
+    const s = this.group.create(sx, lane.bottom - 4, key).setOrigin(0.5, 1).setFlipX(lane.dir < 0);
+    const w = s.width;
+    s.body.setSize(fw0 - 8, d0 - 4).setOffset(4, s.height - d0 + 4);
     s.body.pushable = false;
     if (this.scene.weather?.kind === 'night' && this.scene.renderer.type === Phaser.WEBGL) s.setPipeline('Light2D');
     const [fw, fh, d] = ISO_SIZE[key === 'bus' ? 'bus' : key.startsWith('bike') ? 'bike' : 'car'];
@@ -79,7 +80,7 @@ export class Traffic {
         if (gap >= -4 && gap < room) room = gap;
       }
       // người chơi đứng trong làn phía trước
-      if (Math.abs(p.y - (car.lane.y + 10)) < 26) {
+      if (p.y > car.lane.top - 4 && p.y < car.lane.bottom + 8) {
         const gap = d * (p.x - front);
         if (gap > -8 && gap < room) room = gap;
       }
