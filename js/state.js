@@ -2,7 +2,7 @@
 
 const PROGRESS_KEY = 'tfd_progress';
 const SETTINGS_KEY = 'tfd_settings';
-const SCHEMA = 1;
+const SCHEMA = 2;
 
 const defaultSettings = () => ({
   hideSensitiveImages: true,
@@ -52,6 +52,7 @@ function freshProgress(heroName, heroLook = 'm') {
     evidenceCards: [],
     sourcesOpened: [],
     pos: null,
+    tracked: null,
     score: 0
   };
 }
@@ -59,6 +60,8 @@ function freshProgress(heroName, heroLook = 'm') {
 /** Nạp tiến trình và cài đặt khi mở game. */
 export function loadState() {
   const p = readJson(PROGRESS_KEY);
+  // Bản lưu cũ (schema 1, chơi theo chuỗi): giữ tiến độ, bản đồ mới nên đặt lại vị trí.
+  if (p?.schema === 1) Object.assign(p, { schema: SCHEMA, pos: null, tracked: null });
   if (p === undefined || (p && p.schema !== SCHEMA)) {
     state.lostSave = true;
     state.progress = null;

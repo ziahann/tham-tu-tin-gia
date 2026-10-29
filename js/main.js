@@ -6,7 +6,8 @@ import { state, loadState, saveSettings, startNewProgress } from './state.js';
 import { initInput, on, releaseAll } from './input.js';
 import * as dlg from './dialogue.js';
 import * as backpack from './backpack.js';
-import { setOnChange, setOnEnding } from './story.js';
+import { setOnChange, setOnEnding, track } from './story.js';
+import { nextQuestIn } from './grading.js';
 import { updateScore } from './hud.js';
 import { WorldScene } from './world.js';
 import { applyUiText, toast, openModal, closeModal, confirmBox } from './ui.js';
@@ -162,7 +163,11 @@ function startGame(isNew) {
     // Chỉ dùng khi kiểm thử: ?debug cho phép công cụ test truy cập game.
     if (new URLSearchParams(location.search).has('debug')) window.__game = game;
   }
-  if (isNew) toast(t('title.firstHint'), 6000);
+  if (isNew) {
+    // Lượt mới: theo dõi sẵn hồ sơ đầu tiên để mũi tên chỉ đường ngay.
+    track(nextQuestIn(data.quests.rooms[0].id)?.id || null, true);
+    toast(t('title.firstHint'), 6000);
+  }
 }
 
 // ---------------------------------------------------------------- hộp thoại phụ
@@ -291,6 +296,10 @@ function bindEvents() {
     game?.scene.getScene('world')?.interact();
   });
   on('backpack', () => { if (!titleOpen() && !introOpen() && !modalOpen()) backpack.toggle(); });
+  const openCases = () => { if (!titleOpen() && !introOpen() && !modalOpen()) backpack.open('quests'); };
+  on('cases', openCases);
+  $('btn-cases').addEventListener('click', openCases);
+  $('hud-track').addEventListener('click', openCases);
   on('escape', () => {
     if (modalOpen()) return;
     if (introOpen() && $('intro-final').hidden) finishIntro();

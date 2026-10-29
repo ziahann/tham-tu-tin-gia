@@ -1,8 +1,8 @@
 // Balo: khung dọc bên phải với Sổ tay, Nhiệm vụ + bản đồ nhỏ, Bảng ghim, Lịch sử trò chuyện theo NPC.
-import { data, t, evidenceById, sourceById, shortCite, npcById } from './data.js';
-import { state, clearAllStorage } from './state.js';
-import { questStatus } from './grading.js';
-import { objective } from './story.js';
+import { data, t, evidenceById, sourceById, shortCite, npcById, questById } from './data.js';
+import { state, clearAllStorage, isQuestDone } from './state.js';
+import { questStatus, nextQuestIn, isUnlocked, bossStatus } from './grading.js';
+import { objective, track, giverOf } from './story.js';
 import { currentRunByNpc, exportLog } from './history.js';
 import { heroTitle } from './dialogue.js';
 import { confirmBox } from './ui.js';
@@ -81,28 +81,73 @@ function notebook() {
 
 const STATUS_LABEL = { done: 'statusDone', active: 'statusActive', locked: 'statusLocked', building: 'statusBuilding' };
 
-/** Nhiệm vụ: mục tiêu hiện tại, danh sách nhiệm vụ theo phòng, bản đồ nhỏ. */
+/** Hồ sơ vụ án: mục tiêu, các hồ sơ chọn làm theo thứ tự tùy ý (nút Theo dõi), Phòng họp, bản đồ nhỏ. */
 function quests() {
   const obj = el('div', 'objective');
   obj.append(el('h3', null, t('backpack.objective')), el('p', null, objective()));
-  els.body.append(obj, el('h3', null, t('backpack.map')));
+  els.body.append(obj, el('h3', null, t('backpack.cases')));
+  const tracked = state.progress?.tracked;
+  for (const room of data.quests.rooms) {
+    if (room.boss) { els.body.append(bossCase(tracked)); continue; }
+    const list = room.quests.map(questById).filter(Boolean);
+    if (list.some(q => q.unlockFlags) && !list.some(isUnlocked)) continue; // màn bonus chỉ hiện sau khi thắng boss
+    const done = list.filter(q => isQuestDone(q.id)).length;
+    const next = nextQuestIn(room.id);
+    const isTracked = !!tracked && list.some(q => q.id === tracked);
+    const box = el('section', `case${isTracked ? ' is-tracked' : ''}${next ? '' : ' is-done'}`);
+    const head = el('div', 'case-head');
+    head.append(el('h4', null, `${room.name}${room.optional ? ` (${t('backpack.optional')})` : ''}`));
+    if (!next) head.append(el('span', 'st', t('backpack.caseDone')));
+    else if (isTracked) head.append(el('span', 'st', t('backpack.tracking')));
+    else {
+      const b = el('button', 'btn-small', t('backpack.track'));
+      b.type = 'button';
+      b.addEventListener('click', () => track(next.id));
+      head.append(b);
+    }
+    const giver = giverOf((next || list[0]).id);
+    const bar = el('div', 'case-bar');
+    bar.append(Object.assign(el('span'), { style: `width:${Math.round((100 * done) / list.length)}%` }));
+    box.append(head,
+      el('p', 'case-meta', `${t('backpack.giver', { npc: npcById(giver)?.name || giver, place: room.place || '' })} · ${t('backpack.caseProgress', { done, total: list.length })}`),
+      bar);
+    for (const q of list) {
+      const st = questStatus(q);
+      const row = el('div', `quest-row ${st}`);
+      row.append(el('span', null, q.title), el('span', 'st', t(`backpack.${STATUS_LABEL[st]}`)));
+      box.append(row);
+    }
+    els.body.append(box);
+  }
+  els.body.append(el('h3', null, t('backpack.map')));
   const world = getWorld();
   if (world) {
     const mm = world.getMinimap();
     els.body.append(minimap(mm), el('p', 'muted', t('backpack.youAreHere', { place: mm.place })));
   }
-  els.body.append(el('h3', null, t('backpack.questList')));
-  for (const room of data.quests.rooms) {
-    els.body.append(el('p', 'muted', room.name));
-    for (const id of room.quests) {
-      const q = data.quests.quests.find(x => x.id === id);
-      if (!q) continue;
-      const st = questStatus(q);
-      const row = el('div', `quest-row ${st}`);
-      row.append(el('span', null, q.title), el('span', 'st', t(`backpack.${STATUS_LABEL[st]}`)));
-      els.body.append(row);
-    }
-  }
+}
+
+/** Thẻ Phòng họp: khóa tới khi xong mọi nhiệm vụ bắt buộc và đủ thẻ evidence. */
+function bossCase(tracked) {
+  const b = data.quests.boss;
+  const flags = state.progress?.flags || [];
+  const box = el('section', `case${tracked === 'boss' ? ' is-tracked' : ''}${flags.includes('boss_done') ? ' is-done' : ''}`);
+  const head = el('div', 'case-head');
+  head.append(el('h4', null, t('backpack.bossCase')));
+  const total = b.requires.requiredQuests.length;
+  const done = b.requires.requiredQuests.filter(isQuestDone).length;
+  const cards = (state.progress?.evidenceCards || []).filter(id => !b.guessCards.includes(id)).length;
+  const open = bossStatus(flags) === 'open';
+  if (flags.includes('boss_done')) head.append(el('span', 'st', t('backpack.caseDone')));
+  else if (open && tracked !== 'boss') {
+    const btn = el('button', 'btn-small', t('backpack.track'));
+    btn.type = 'button';
+    btn.addEventListener('click', () => track('boss'));
+    head.append(btn);
+  } else if (open) head.append(el('span', 'st', t('backpack.tracking')));
+  box.append(head, el('p', 'case-meta', open ? t('backpack.bossOpen')
+    : t('backpack.bossLocked', { done, total, cards, minCards: b.requires.minCards })));
+  return box;
 }
 
 /** Vẽ bản đồ nhỏ: tường, đồ đạc, cửa, NPC, vị trí người chơi. */

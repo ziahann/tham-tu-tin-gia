@@ -1,4 +1,4 @@
-// Bàn phím + phím ảo: hướng đi đang giữ và các sự kiện hành động (E/Space/Enter, B, Esc).
+// Bàn phím + phím ảo: hướng đi đang giữ và các sự kiện hành động (E/Space/Enter, B, J, Esc).
 
 const held = new Set();
 const touchHeld = new Set();
@@ -9,7 +9,7 @@ const KEY_DIR = {
   ArrowLeft: 'left', KeyA: 'left', ArrowRight: 'right', KeyD: 'right'
 };
 
-/** Đăng ký hàm nghe sự kiện: action | backpack | escape. */
+/** Đăng ký hàm nghe sự kiện: action | backpack | cases | escape. */
 export function on(name, fn) {
   (listeners[name] ||= []).push(fn);
 }
@@ -44,6 +44,7 @@ export function initInput() {
     if (e.repeat) return;
     if (e.code === 'KeyE' || e.code === 'Space' || e.code === 'Enter') { e.preventDefault(); emit('action'); }
     else if (e.code === 'KeyB') { emit('backpack'); }
+    else if (e.code === 'KeyJ') { emit('cases'); }
   });
   window.addEventListener('keyup', e => {
     const d = KEY_DIR[e.code];

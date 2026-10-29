@@ -315,7 +315,7 @@
         },
         {
           "id": "s3_done_l2",
-          "text": "Khải đang chờ bạn ở Phòng Phân tích ảnh, ngay cạnh phòng này."
+          "text": "Hồ sơ tiếp theo là do bạn chọn. Mở balo (tab Hồ sơ vụ án) để theo dõi một hồ sơ, mũi tên sẽ chỉ đường."
         }
       ],
       "choices": [],
@@ -341,7 +341,7 @@
       "lines": [
         {
           "id": "npc2_idle_l1",
-          "text": "Tôi là Khải, bên phân tích ảnh. Phòng của tôi chưa sẵn sàng."
+          "text": "Tôi là Khải, bên phân tích ảnh."
         },
         {
           "id": "npc2_idle_l2",
@@ -457,7 +457,7 @@
         },
         {
           "id": "s4_done_l2",
-          "text": "Giờ tới phần video cũ. Bác Tín Thư ở Tòa soạn Tin Vịnh, bên kia phố ven vịnh, giữ kho lưu trữ báo chí. Ra cửa chính sảnh rồi rẽ sang phải."
+          "text": "Nếu bạn chưa xem phần video cũ: bác Tín Thư ở Tòa soạn Tin Vịnh, bên kia phố ven vịnh, giữ kho lưu trữ báo chí."
         }
       ],
       "choices": [],
@@ -500,7 +500,7 @@
       "lines": [
         {
           "id": "s5_done_l1",
-          "text": "Tốt lắm. Giờ sang phòng bên cạnh, ta xếp lại dòng thời gian cho rõ."
+          "text": "Tốt lắm. Phòng bên cạnh có bảng dòng thời gian, khi nào cháu muốn thì sang."
         }
       ],
       "choices": [],
@@ -539,7 +539,7 @@
       "lines": [
         {
           "id": "s6_done_l1",
-          "text": "Dòng thời gian đã rõ. Cháu về Ban Hải Đăng đi, chị Tuệ Lâm đang chờ ở Phòng Tác động và chủ đích."
+          "text": "Dòng thời gian đã rõ. Hồ sơ nào còn dở thì cháu xem lại trong balo nhé."
         }
       ],
       "choices": [],
@@ -552,7 +552,7 @@
       "lines": [
         {
           "id": "s7_intro_l1",
-          "text": "Bạn về rồi. Đây là Phòng Tác động và chủ đích. Ở đây ta phải rất cẩn thận với lời nói của mình."
+          "text": "Đây là Phòng Tác động và chủ đích. Ở đây ta phải rất cẩn thận với lời nói của mình."
         }
       ],
       "choices": [],
@@ -591,7 +591,7 @@
       "lines": [
         {
           "id": "s7_done_l1",
-          "text": "Rõ ràng và đúng mức. Sang Phòng Phân loại và xử lý nhé, ngay cạnh đây."
+          "text": "Rõ ràng và đúng mức. Hồ sơ nào còn dở, bạn cứ chọn trong balo."
         }
       ],
       "choices": [],
@@ -604,7 +604,7 @@
       "lines": [
         {
           "id": "s8_intro_l1",
-          "text": "Phòng cuối cùng trước khi khép hồ sơ. Ta phân loại và quyết định cách ứng xử."
+          "text": "Đây là Phòng Phân loại và xử lý. Ta phân loại từng nhóm nội dung và quyết định cách ứng xử."
         }
       ],
       "choices": [],
@@ -656,11 +656,7 @@
       "lines": [
         {
           "id": "s8_done_l1",
-          "text": "Hồ sơ đã đủ. Nhưng có một thứ vẫn lẩn khuất sau tất cả những câu chuyện kia…"
-        },
-        {
-          "id": "s8_done_l2",
-          "text": "Cửa Phòng họp cuối sảnh vừa mở. Mang theo các thẻ evidence của bạn. (Phòng Boss là GIẢ LẬP.)"
+          "text": "Phân loại xong. Giờ bạn biết nên ứng xử thế nào khi gặp một bài đăng giả."
         }
       ],
       "choices": [],
@@ -860,6 +856,21 @@
       ],
       "choices": [],
       "next": "end"
+    },
+    {
+      "id": "boss_appears",
+      "screen": "S9",
+      "npc": "npc1",
+      "lines": [
+        {
+          "id": "boss_appears_l1",
+          "text": "Mọi hồ sơ bắt buộc đã đủ. Nhưng có một thứ vẫn lẩn khuất sau tất cả những câu chuyện kia…"
+        },
+        {
+          "id": "boss_appears_l2",
+          "text": "Cửa Phòng họp cuối sảnh vừa mở. Mang theo các thẻ evidence của bạn. (Phòng Boss là GIẢ LẬP.)"
+        }
+      ]
     }
   ],
   "freeChat": {
@@ -981,7 +992,7 @@
     }
   },
   "interactions": {
-    "note": "Khi người chơi nói chuyện với NPC, game lấy mục đầu tiên khớp điều kiện. quest: nhiệm vụ đã mở và chưa xong. idle: lời nói chuyện thường (không hiện dấu !). lead: NPC đi trước dẫn đường theo path trên bản đồ, rồi đứng ở station.",
+    "note": "Khi người chơi nói chuyện với NPC: các cảnh chưa xem (không idle) chạy trước, rồi người chơi chọn một hồ sơ trong các nhiệm vụ đang mở của NPC đó; không có thì nói câu idle. quest: nhiệm vụ đã mở và chưa xong. idle: lời nói chuyện thường (không hiện dấu !).",
     "list": [
       {
         "npc": "npc1",
@@ -991,8 +1002,7 @@
         "scene": "s1_intro",
         "setFlags": [
           "s1_done"
-        ],
-        "lead": "lead_hoso"
+        ]
       },
       {
         "npc": "npc1",
@@ -1024,14 +1034,6 @@
           "done_S4"
         ],
         "scene": "npc2_after_s4",
-        "idle": true
-      },
-      {
-        "npc": "npc2",
-        "requires": [
-          "done_S3"
-        ],
-        "scene": "npc2_idle_after",
         "idle": true
       },
       {
@@ -1089,15 +1091,7 @@
       },
       {
         "npc": "npc3",
-        "requires": [
-          "done_S4"
-        ],
         "scene": "npc3_idle",
-        "idle": true
-      },
-      {
-        "npc": "npc3",
-        "scene": "npc3_wait",
         "idle": true
       },
       {
@@ -1122,6 +1116,7 @@
     ]
   },
   "stations": {
+    "note": "Trạm đứng của NPC. Lấy mục đầu tiên khớp: requires (cờ) và room (phòng người chơi đang đứng hoặc phòng của hồ sơ đang theo dõi). Không khớp mục nào thì đứng ở vị trí gốc trên bản đồ.",
     "npc1": [
       {
         "requires": [
@@ -1131,41 +1126,29 @@
         "patrol": "patrol_npc1_lobby"
       },
       {
-        "requires": [
-          "done_S7"
-        ],
-        "station": "npc1_s8",
-        "patrol": "patrol_npc1_s8"
-      },
-      {
-        "requires": [
-          "done_S6"
-        ],
+        "room": "S7",
         "station": "npc1_s7",
         "patrol": "patrol_npc1_s7"
       },
       {
-        "requires": [
-          "s1_done"
-        ],
+        "room": "S8",
+        "station": "npc1_s8",
+        "patrol": "patrol_npc1_s8"
+      },
+      {
         "station": "npc1_hoso",
         "patrol": "patrol_npc1_hoso"
       }
     ],
     "npc2": [
       {
-        "requires": [
-          "done_S3"
-        ],
         "station": "npc2_s4",
         "patrol": "patrol_npc2_s4"
       }
     ],
     "npc3": [
       {
-        "requires": [
-          "done_S5"
-        ],
+        "room": "S6",
         "station": "npc3_s6",
         "patrol": "patrol_npc3_s6"
       }
