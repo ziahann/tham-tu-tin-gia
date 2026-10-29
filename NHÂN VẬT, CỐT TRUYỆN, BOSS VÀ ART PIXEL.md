@@ -36,13 +36,13 @@
 
 | Mục                                               | Nội dung                                                                                    |
 | ------------------------------------------------- | ------------------------------------------------------------------------------------------- |
-| Tên                                               | Thám tử lừng danh Cô Nan                                                                    |
+| Tên                                               | Người chơi tự đặt; mặc định "Tầm" (`quests.json → hero.displayName`)                         |
 | Chức danh                                         | Chuyên viên thẩm định / thám tử kiểm chứng                                                  |
 | Tuổi, ngoại hình                                  | 19                                                                                          |
 | Điểm nhận diện riêng _(gợi ý, bám bối cảnh vịnh)_ | Mũ cói nhỏ, khăn quàng màu xanh ngọc, huy hiệu hình kính lúp                                |
 | Màu chủ đạo                                       | [ĐIỀN, gợi ý: xanh ngọc + vàng đất, tránh trùng bộ màu của nhân vật có sẵn]                 |
 | Tính cách                                         | [ĐIỀN, gợi ý: tò mò, thận trọng, tôn trọng nạn nhân, không kết luận khi chưa đủ bằng chứng] |
-| Câu cửa miệng                                     | [ĐIỀN, gợi ý: "Sự thật chỉ có một."]                                                        |
+| Câu cửa miệng                                     | "Chưa có bằng chứng thì chưa kết luận."                                                      |
 | Vật dụng                                          | Sổ tay evidence, kính lúp, bản đồ văn phòng                                                 |
 | Hoạt ảnh pixel cần có                             | Đứng yên, đi 4 hướng, suy nghĩ, phát hiện manh mối, thắng, "chùn bước" khi suy luận sai     |
 

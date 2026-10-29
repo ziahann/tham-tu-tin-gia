@@ -3,6 +3,14 @@
   "note": "URL lấy từ danh mục tham khảo của báo cáo giữa kỳ (PDF), ghép lại từ các dòng bị ngắt. Chưa kiểm tra link còn sống. urlStatus: from_report_unverified | tool | missing.",
   "sources": [
     {
+      "id": "baocao",
+      "apa": "[ĐIỀN tên nhóm]. (2025). Báo cáo giữa kỳ: Thẩm định ảnh AI giả về vụ lật tàu Vịnh Xanh 58 [Bài tập mục 08, môn Thẩm định tin tức]. Trường Đại học Văn Lang.",
+      "outlet": "Báo cáo của nhóm",
+      "url": null,
+      "urlStatus": "missing",
+      "note": "Nhóm điền tên tác giả và năm chính xác."
+    },
+    {
       "id": "thuthao2025",
       "apa": "Thu Thảo. (2025, ngày 22 tháng 7). Lợi dụng bi kịch lật tàu du lịch ở vịnh Hạ Long để \"câu view\" bằng AI. Thời báo VTV.",
       "outlet": "Thời báo VTV",

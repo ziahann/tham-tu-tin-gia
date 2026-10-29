@@ -8,7 +8,9 @@ Game pixel-art HTML/CSS/JS (không backend) cho bài tập mục 08, môn Thẩm
 - `THIẾT KẾ NỘI DUNG, NPC VÀ LƯU TRỮ CHAT.md` — NPC, hội thoại, sự thật F1–F16, lưu chat
 - `NHÂN VẬT, CỐT TRUYỆN, BOSS VÀ ART PIXEL.md` — nhân vật, boss, art
 - `KIỂU CHƠI, NHIỆM VỤ VÀ CÔNG CỤ.md` — vòng chơi, G1–G11, Q1–Q13, boss, điểm
-- Dữ liệu máy đọc: `game/data/quests.json`, `npc_dialogues.json`, `sources.json` (nguồn sự thật chính cho code; sửa nội dung ở đây)
+- `QUYẾT ĐỊNH ĐÃ CHỐT.md` — các quyết định đã chốt (mới hơn các tài liệu trên khi mâu thuẫn)
+- Dữ liệu máy đọc: `game/data/quests.json`, `npc_dialogues.json`, `sources.json`, `ui.json` (chữ giao diện) — nguồn sự thật chính cho code; sửa nội dung ở đây
+- Chạy thử: `cd game && python -m http.server 8000` (xem `game/README.md`)
 
 ## Quy tắc không được vi phạm
 1. Chỉ dùng sự thật F1–F16 trong tài liệu 02; không bịa số liệu. Số 49 người/10 được cứu có cờ `verifyBeforeRelease`: đối chiếu nguồn chính thức trước khi phát hành.
