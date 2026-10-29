@@ -78,8 +78,10 @@ export function buildWalls(scene, map, walls) {
       const back = floor(t.x, t.y + 1) || floor(t.x + 1, t.y);
       const front = floor(t.x, t.y - 1) || floor(t.x - 1, t.y);
       if (!back && !front) return;
-      const img = scene.add.image(p.x - 32, p.y - WALL_H, 'isowalls', back ? 0 : 1).setOrigin(0).setDepth(depth);
-      img.tile = t; img.tall = back;
+      // tường nam cạnh lối ra (sàn ở đông và bắc) là tường trước → thấp; vách ngăn trong phòng vẫn cao
+      const tall = floor(t.x, t.y + 1) || (floor(t.x + 1, t.y) && !floor(t.x, t.y - 1));
+      const img = scene.add.image(p.x - 32, p.y - WALL_H, 'isowalls', tall ? 0 : 1).setOrigin(0).setDepth(depth);
+      img.tile = t; img.tall = tall;
       out.push(img);
     } else if (name === 'railing') {
       out.push(scene.add.image(p.x - 32, p.y - WALL_H, 'isowalls', 2).setOrigin(0).setDepth(depth));
