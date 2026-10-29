@@ -144,3 +144,11 @@
 | Góc nhìn | Chuyển sang **isometric vẽ bằng code** (thay giả 3D). Logic giữ lưới vuông; chỉ đổi lớp hiển thị. Đồ vật, tòa nhà, xe, tàu, chữ trên tường / biển hiệu đều theo đúng góc nghiêng của lưới isometric |
 | Huy hiệu | Mỗi huy hiệu có hình riêng (khiên + ruy băng + biểu tượng): Dừng lại trước khi chia sẻ (biển dừng), Soi ảnh (kính lúp), Truy gốc clip cũ (phim + đồng hồ), Dựng dòng thời gian (trục mốc), Cân tác động và chủ đích (cái cân), Phân loại và ứng xử (thẻ nhãn), Phỏng vấn kiểm chứng (bóng thoại), Gỡ mặt nạ Kẻ Dệt Chuyện (mặt nạ nứt), Nhận diện mạo danh (thẻ tên gạch chéo) |
 | Còn lại | Nhân vật vẫn dùng sprite 4 hướng theo màn hình; cây, đèn, người là ảnh đứng (đúng với isometric) |
+
+## Chốt ngày 29/10/2026 (đợt 8)
+
+| Mục | Quyết định |
+|---|---|
+| Sửa hình | Thảm nằm phẳng trên sàn; bảng, áp phích, chữ dán sát tường; mỗi chiều xe một làn rộng 2 ô; đá vôi, ghế, bồn hoa dựng lại bằng khối voxel có đậm nhạt tạo khối |
+| Công viên | Đài phun nước ở giữa, luống hoa, hàng rào cây xén, thêm ghế và đèn |
+| Tòa nhà vào được | Thêm Cao ốc văn phòng, Trung tâm y tế, Cà phê Sương Sớm: hư cấu, gắn GIẢ LẬP trên biển hiệu và tên khu vực; bên trong có NPC trang trí (bác sĩ, điều dưỡng, người chờ khám, nhân viên văn phòng, pha chế, khách quen) nói câu về thói quen kiểm chứng, không thêm số liệu ngoài F1–F16, không có nhiệm vụ |

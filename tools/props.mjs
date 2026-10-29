@@ -535,7 +535,9 @@ const STYLE = {
   stone: { wall: '#3c424e', wall2: '#343a45', trim: '#525a68', win: '#121a26', lit: '#7fe3ff', frame: '#262b33' },
   shop: { wall: '#454c58', wall2: '#3c434e', trim: '#5b6372', win: '#1a2433', lit: '#f2c46b', frame: '#2b303b' },
   warehouse: { wall: '#3e4652', wall2: '#363d48', trim: '#55606e', win: '#141c28', lit: '#c9a24a', frame: '#2b303b' },
-  hotel: { wall: '#4a5260', wall2: '#414856', trim: '#636c7c', win: '#1a2433', lit: '#e8c46a', frame: '#353b47' }
+  hotel: { wall: '#4a5260', wall2: '#414856', trim: '#636c7c', win: '#1a2433', lit: '#e8c46a', frame: '#353b47' },
+  clinic: { wall: '#9aa4b2', wall2: '#8a94a3', trim: '#3aa7a3', win: '#1e3044', lit: '#d8eef6', frame: '#5b6370' },
+  office: { wall: '#2c3644', wall2: '#26303c', trim: '#4a5a70', win: '#344a66', lit: '#c9e0f4', frame: '#3a4558' }
 };
 
 /**
@@ -653,7 +655,8 @@ function buildingFront(o) {
 const ROOF = {
   concrete: { roof: '#3a3f4a', edge: '#5b6372' }, glass: { roof: '#26303f', edge: '#3a4b63' }, brick: { roof: '#37302e', edge: '#5e4440' },
   stone: { roof: '#2f343d', edge: '#525a68' }, shop: { roof: '#353b46', edge: '#5b6372' }, warehouse: { roof: '#3c434e', edge: '#55606e' },
-  hotel: { roof: '#3b424f', edge: '#636c7c' }
+  hotel: { roof: '#3b424f', edge: '#636c7c' },
+  clinic: { roof: '#4a5260', edge: '#8a94a3' }, office: { roof: '#2f3846', edge: '#4a5a70' }
 };
 
 /**
@@ -1027,6 +1030,9 @@ export function allProps() {
     bld_books: { deep: 5, cols: 5, floors: 2, style: 'brick', door: 1, shop: 'glass', sign: false, signGlow: '#f2c46b', roof: ['solar'] },
     bld_closed: { deep: 5, cols: 6, floors: 2, style: 'concrete', door: null, shop: 'shutter', sign: false, signGlow: '#5b6170', roof: ['vent', 'ac'] },
     bld_warehouse: { deep: 6, cols: 12, floors: 1, style: 'warehouse', door: 4, shop: 'shutter', sign: false, signGlow: '#c9a24a', roof: ['vent', 'vent', 'skylight'] },
+    bld_office: { deep: 5, cols: 7, floors: 6, style: 'glass', door: 2, sign: true, signGlow: '#9fb3c8', roof: ['antenna', 'ac', 'vent'] },
+    bld_clinic: { deep: 5, cols: 6, floors: 2, style: 'clinic', door: 2, shop: 'glass', sign: true, signGlow: '#4aa35b', roof: ['ac', 'skylight'] },
+    bld_cafe2: { deep: 5, cols: 6, floors: 2, style: 'shop', door: 2, shop: 'glass', awning: '#2f5446', sign: true, signGlow: '#f2c46b', roof: ['garden'] },
     bld_tenement: { deep: 5, cols: 6, floors: 4, style: 'brick', door: 1, fireEscape: true, sign: false, roof: ['tank', 'ac', 'antenna'] }
   };
   // bản isometric của đồ phẳng (thảm)

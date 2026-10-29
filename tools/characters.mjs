@@ -28,6 +28,13 @@ export const CHARACTERS = {
   amb_fisher: { skin: '#c99572', hair: '#2a2a2a', hairStyle: 'short', top: '#5a6b7a', bottom: '#2c3e50', shoes: '#c9a03a', hat: '#d8c08a' },
   amb_student: { skin: '#f1c7a0', hair: '#1b1418', hairStyle: 'spiky', top: '#f4f6f8', bottom: '#2d3a5a', shoes: '#2b2b2b', backpack: '#c8323c', badge: true },
   amb_elder: { skin: '#e6bb98', hair: '#e0e0e0', hairStyle: 'grey', top: '#6b5a8a', inner: '#e8dcc0', bottom: '#4b4b4b', shoes: '#2b2b2b', glasses: true },
-  amb_jogger: { skin: '#e9bd98', hair: '#2b1d1a', hairStyle: 'bob', top: '#2a9d8f', bottom: '#1f1f1f', shoes: '#f4f4f4' }
+  amb_jogger: { skin: '#e9bd98', hair: '#2b1d1a', hairStyle: 'bob', top: '#2a9d8f', bottom: '#1f1f1f', shoes: '#f4f4f4' },
+  amb_doctor: { skin: '#f0c8a8', hair: '#2b1d1a', hairStyle: 'short', top: '#e8ecf2', inner: '#6a8ab8', bottom: '#3a3f4d', shoes: '#22252e', glasses: true, lanyard: true },
+  amb_nurse: { skin: '#e9bd98', hair: '#3a2318', hairStyle: 'bob', top: '#3aa7a3', inner: '#e8ecf2', bottom: '#3aa7a3', shoes: '#e8ecf2' },
+  amb_patient: { skin: '#e6bb98', hair: '#d8d8d8', hairStyle: 'grey', top: '#8a7a6a', bottom: '#4b4b4b', shoes: '#2b2b2b' },
+  amb_clerk: { skin: '#f1c7a0', hair: '#1b1418', hairStyle: 'short', top: '#2c3a55', inner: '#e8ecf2', bottom: '#2c3a55', shoes: '#14161c', lanyard: true },
+  amb_clerk2: { skin: '#f3cdb0', hair: '#3a2318', hairStyle: 'long', top: '#6b5a8a', bottom: '#3a3f4d', skirt: true, shoes: '#22252e', glasses: true },
+  amb_barista2: { skin: '#d9a67e', hair: '#2a2a2a', hairStyle: 'spiky', top: '#2f5446', inner: '#c8a26b', bottom: '#2f2f38', shoes: '#1d1d24' },
+  amb_patron: { skin: '#f1c7a0', hair: '#5a3a1a', hairStyle: 'bob', top: '#9b5a3a', bottom: '#2d3a5a', shoes: '#f4f4f4' }
 };
 
