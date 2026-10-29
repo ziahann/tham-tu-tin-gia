@@ -233,6 +233,19 @@ function openSettings() {
   mbox.disabled = !musicSupported;
   mbox.addEventListener('change', () => { state.settings.music = mbox.checked; saveSettings(); refreshMusic(); });
   music.append(mbox, el('span', musicSupported ? null : 'muted', musicSupported ? t('settingsPanel.music') : `${t('settingsPanel.music')} — ${t('hud.musicUnsupported')}`));
+  // Thử thách: Đầy đủ / Nhẹ (js/obstacles.js)
+  const ch = el('fieldset', 'setting-group');
+  ch.append(el('legend', null, t('obstacles.challenge')));
+  for (const v of ['full', 'light']) {
+    const row = el('label', 'setting');
+    const r = el('input');
+    r.type = 'radio'; r.name = 'challenge'; r.value = v;
+    r.checked = (state.settings.challenge || 'full') === v;
+    r.addEventListener('change', () => { state.settings.challenge = v; saveSettings(); updateScore(); });
+    row.append(r, el('span', null, t(v === 'full' ? 'obstacles.challengeFull' : 'obstacles.challengeLight')));
+    ch.append(row);
+  }
+  wrap.append(ch);
   const actions = el('div', 'actions');
   const home = el('button', 'btn', t('settingsPanel.home'));
   home.type = 'button';
