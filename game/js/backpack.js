@@ -38,14 +38,18 @@ export const isOpen = () => !els.root.hidden;
 export function open(which) {
   if (which) tab = which;
   els.root.hidden = false;
+  document.body.classList.add('backpack-open');
   els.btn.setAttribute('aria-expanded', 'true');
   render();
+  // Đang hội thoại thì giữ focus ở câu trả lời (không cướp focus sang balo).
+  if (!document.getElementById('dialog').hidden) return;
   els.root.querySelector(`[data-tab="${tab}"]`)?.focus();
 }
 
 /** Đóng balo. */
 export function close() {
   els.root.hidden = true;
+  document.body.classList.remove('backpack-open');
   els.btn.setAttribute('aria-expanded', 'false');
 }
 

@@ -74,16 +74,19 @@ export class GuideArrow {
     const g = this.g;
     g.clear();
     if (!target) return;
-    const px = player.x, py = player.y - 22;
+    const px = player.x, py = player.y - 24; // tâm thân người
     const dx = target.x - px, dy = target.y - py;
     const dist = Math.hypot(dx, dy);
     if (dist < (target.here ? 56 : 24)) return;
     const a = Math.atan2(dy, dx);
     const bob = this.scene.reduceMotion ? 0 : Math.sin(time / 180) * 3;
-    const r = 30 + bob;
-    const cx = px + Math.cos(a) * r, cy = py + Math.sin(a) * r;
+    // quỹ đạo elip: hai bên cách thân 26px, phía trên vượt qua đỉnh đầu (đầu ở khoảng -24 so với tâm)
+    const rx = 26 + bob, ry = (Math.sin(a) < 0 ? 40 : 30) + bob;
+    const cx = px + Math.cos(a) * rx, cy = py + Math.sin(a) * ry;
     const pt = (len, ang) => ({ x: cx + Math.cos(a + ang) * len, y: cy + Math.sin(a + ang) * len });
     const tip = pt(9, 0), l = pt(8, 2.4), rr = pt(8, -2.4);
+    g.fillStyle(0xffc857, 0.18);
+    g.fillCircle(cx, cy, 11);
     g.fillStyle(0x0b1020, 0.9);
     g.fillTriangle(tip.x + 1, tip.y + 2, l.x + 1, l.y + 2, rr.x + 1, rr.y + 2);
     g.fillStyle(0xffc857, 1);
