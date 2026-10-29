@@ -73,6 +73,9 @@
     <button type="button" id="touch-a" class="touch-a" aria-label="Hành động">A</button>
   </div>
 
+  <!-- Nền chuyển động vịnh Hạ Long (màn hình chính + intro) -->
+  <canvas id="bay" class="bay" hidden role="img"></canvas>
+
   <!-- Màn hình chính + cảnh báo nội dung -->
   <section id="title" class="title-screen" hidden>
     <div class="title-card">
@@ -83,12 +86,6 @@
         <p data-ui="title.warning"></p>
         <p class="muted" data-ui="title.simulatedNote"></p>
       </div>
-      <form id="title-name" class="panel" hidden>
-        <label for="title-name-input" data-ui="title.nameLabel"></label>
-        <input id="title-name-input" maxlength="20" autocomplete="off">
-        <p class="muted" data-ui="title.nameHint"></p>
-        <button type="submit" class="btn-primary" data-ui="title.nameConfirm"></button>
-      </form>
       <div id="title-actions" class="actions">
         <button type="button" id="title-start" class="btn-primary" data-ui="title.start"></button>
         <button type="button" id="title-continue" class="btn-primary" data-ui="title.continue"></button>
@@ -99,6 +96,33 @@
         <p data-ui="title.controls"></p>
       </div>
       <p class="muted small" data-ui="scoreDisclaimer"></p>
+    </div>
+  </section>
+
+  <!-- Intro: bối cảnh vụ án trên nền vịnh chuyển động -->
+  <section id="intro" class="intro" hidden aria-label="Bối cảnh vụ án">
+    <div id="intro-phone" class="phone" hidden></div>
+    <div class="intro-box">
+      <p id="intro-step" class="intro-step"></p>
+      <h2 id="intro-title"></h2>
+      <p id="intro-text" class="intro-text" aria-live="polite"></p>
+      <p id="intro-cite" class="cite-line"></p>
+      <div id="intro-final" hidden>
+        <h3 id="intro-questions-title"></h3>
+        <ol id="intro-questions"></ol>
+        <form id="intro-name">
+          <label for="intro-name-input" data-ui="title.nameLabel"></label>
+          <div class="answer-row">
+            <input id="intro-name-input" maxlength="20" autocomplete="off">
+            <button type="submit" class="btn-primary" id="intro-start"></button>
+          </div>
+          <p class="muted small" data-ui="title.nameHint"></p>
+        </form>
+      </div>
+      <div id="intro-actions" class="actions">
+        <button type="button" id="intro-next" class="btn-primary"></button>
+        <button type="button" id="intro-skip" class="btn"></button>
+      </div>
     </div>
   </section>
 

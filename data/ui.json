@@ -31,7 +31,8 @@
     "nameConfirm": "Vào văn phòng",
     "controlsTitle": "Cách chơi",
     "controls": "Đi lại: WASD hoặc phím mũi tên (điện thoại: phím ảo). Nói chuyện / xem đồ vật / tiếp lời thoại: E, Space hoặc Enter (điện thoại: nút A). Mở balo: B. Đóng: Esc.",
-    "firstHint": "Gặp chị Tuệ Lâm ở quầy lễ tân để nhận vụ án."
+    "firstHint": "Gặp chị Tuệ Lâm ở quầy lễ tân để nhận vụ án.",
+    "bayAlt": "Hình nền chuyển động: vịnh Hạ Long với các đảo đá vôi, mặt nước gợn sóng, mây và chim bay. Hình minh họa."
   },
   "hud": {
     "musicSoon": "Nhạc nền sẽ có ở bản sau."
@@ -41,9 +42,9 @@
     "submit": "Trả lời",
     "help": "Cần trợ giúp",
     "retry": "Thử lại",
-    "hint": "Xin gợi ý ({n}/3, −2 điểm)",
-    "noMoreHints": "Tôi đã đưa hết gợi ý rồi. Bạn có thể chọn \"Tôi không tìm được\" để xem hướng dẫn từng bước.",
-    "hintLine": "Gợi ý {n}/3: {text}",
+    "hint": "Xin gợi ý ({n}/{max}, −2 điểm)",
+    "noMoreHints": "Tôi đã đưa hết gợi ý cho câu này rồi. Bạn có thể chọn \"Tôi không tìm được\" để xem hướng dẫn từng bước.",
+    "hintLine": "Gợi ý {n}/{max}: {text}",
     "cantFind": "Tôi không tìm được",
     "walkthrough": "Làm theo từng bước nhé: {text}",
     "later": "Để sau",
@@ -66,7 +67,8 @@
     "doorLocked": "Cửa đang khóa. Hãy làm xong các nhiệm vụ trước.",
     "doorBuilding": "{room} chưa mở trong bản dựng thử này.",
     "exitBuilding": "Khu phố ven vịnh chưa mở trong bản dựng thử này.",
-    "inspectSpeaker": "Bạn quan sát"
+    "inspectSpeaker": "Bạn quan sát",
+    "reopenSources": "Mở lại nguồn"
   },
   "backpack": {
     "title": "Balo",
@@ -114,5 +116,17 @@
     "partial": "◐ Một phần.",
     "wrong": "✗ Chưa đạt.",
     "insufficient": "? Chưa đủ căn cứ."
+  },
+  "intro": {
+    "sources": "Nguồn: {list}",
+    "step": "Hồ sơ {n}/{total}",
+    "feed": "Bảng tin · mô phỏng",
+    "page": "Trang ẩn danh",
+    "post1": "Câu chuyện xúc động về \"nạn nhân\"... Xem tiếp ở bình luận!",
+    "post2": "\"Cận cảnh vụ lật tàu 19/7\"",
+    "share": "Chia sẻ ngay!!!",
+    "fake": "ẢNH GIẢ",
+    "old": "VIDEO CŨ",
+    "phoneAlt": "Mô phỏng điện thoại với các bài đăng lan truyền; ảnh giả hiển thị dạng khối trừu tượng có nhãn ẢNH GIẢ."
   }
 }
