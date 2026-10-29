@@ -155,7 +155,7 @@ function evidenceWall() {
   if (!cards.length) cork.append(el('p', 'muted', t('backpack.noCards')));
   cards.forEach(ev => {
     const n = el('div', 'note');
-    n.append(el('strong', null, `${ev.fact} · ${ev.title}`), el('p', null, ev.text));
+    n.append(el('strong', null, ev.title), el('p', null, ev.text));
     cork.append(n);
   });
   return cork;

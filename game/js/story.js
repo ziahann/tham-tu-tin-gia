@@ -904,9 +904,11 @@ export async function onZoneEnter() {}
 
 /** Lời giới thiệu phòng đang đứng (một lần), khi người chơi nói chuyện với người phụ trách phòng. */
 async function roomIntro(npcId) {
-  const roomId = world?.zoneRoom?.();
-  const zs = roomId && data.npcs.zoneScenes?.[roomId];
-  if (!zs || zs.thenTalk !== npcId || hasFlag(`zone_${roomId}`)) return;
+  // phòng mà NPC này phụ trách (ưu tiên phòng người chơi đang đứng), chưa giới thiệu
+  const here = world?.zoneRoom?.();
+  const rooms = Object.entries(data.npcs.zoneScenes || {}).filter(([id, z]) => z.thenTalk === npcId && !hasFlag(`zone_${id}`));
+  const [roomId, zs] = rooms.find(([id]) => id === here) || rooms[0] || [];
+  if (!zs) return;
   setFlag(`zone_${roomId}`);
   saveProgress();
   await playScene(zs.scene);
@@ -982,7 +984,7 @@ export async function runBoss() {
       bossBar(b.phases.length - i, b.phases.length);
       await dlg.say('system', t('boss.phase', { n: i + 1, name: ph.name }));
       for (;;) {
-        const cards = p.evidenceCards.map(evidenceById).filter(Boolean).map(ev => ({ id: ev.id, text: `${ev.fact} · ${ev.title}` }));
+        const cards = p.evidenceCards.map(evidenceById).filter(Boolean).map(ev => ({ id: ev.id, text: ev.title }));
         const r = await dlg.multi(cards, { speaker: 'boss', text: ph.claim, submitLabel: t('boss.submit') });
         if (r.help) { await dlg.say('npc1', ph.explain); continue; }
         const res = judgePhase(ph, r.ids);

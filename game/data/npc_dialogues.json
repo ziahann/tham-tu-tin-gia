@@ -10,7 +10,7 @@
       "id": "npc1",
       "name": "Chị Tuệ Lâm",
       "role": "Biên tập viên phụ trách kiểm chứng",
-      "room": "Trụ sở Báo Thanh Niên: tầng Hồ sơ, Tác động, Phân loại",
+      "room": "Trụ sở Báo Thanh Niên: tầng 2 (Phòng Hồ sơ)",
       "age": 38,
       "job": "Biên tập viên phụ trách nhóm kiểm chứng tại Trụ sở Báo Thanh Niên",
       "personality": "Điềm tĩnh, chu đáo, làm việc theo quy trình",
@@ -42,7 +42,7 @@
       "id": "npc3",
       "name": "Bác Tín Thư",
       "role": "Thủ thư lưu trữ báo chí",
-      "room": "S5, S6 (Tòa soạn Tin Vịnh)",
+      "room": "Phòng Lưu trữ báo chí (Tòa soạn Tin Vịnh)",
       "age": 64,
       "job": "Thủ thư lưu trữ báo chí",
       "personality": "Chậm rãi, hiền hậu, nhớ ngày tháng rất giỏi",
@@ -101,6 +101,51 @@
       "sprite": "npc6",
       "isFictional": true,
       "sheetStatus": "đã duyệt 29/10/2026"
+    },
+    {
+      "id": "npc7",
+      "name": "Anh Lịch",
+      "role": "Biên tập viên phụ trách dòng thời gian",
+      "room": "Phòng Dòng thời gian (Tòa soạn Tin Vịnh)",
+      "age": 33,
+      "job": "Biên tập viên phụ trách dựng dòng thời gian sự kiện",
+      "personality": "Tỉ mỉ, thích ghi chú, hay đếm ngày",
+      "voice": "Nhanh, rõ ràng",
+      "catchphrase": "Bản sớm nhất nói lên nhiều điều.",
+      "goal": "Hướng dẫn xếp mốc thời gian",
+      "mustNot": "Không bịa ngày tháng",
+      "sprite": "npc7",
+      "isFictional": true
+    },
+    {
+      "id": "npc8",
+      "name": "Chị Cẩn",
+      "role": "Biên tập viên phụ trách tác động thông tin",
+      "room": "Trụ sở Báo Thanh Niên: tầng 4",
+      "age": 41,
+      "job": "Phụ trách đánh giá tác động và chủ đích của tin sai",
+      "personality": "Thận trọng, chừng mực",
+      "voice": "Chậm, cân nhắc từng chữ",
+      "catchphrase": "Nói đúng mức, không hơn.",
+      "goal": "Hướng dẫn tách điều đã ghi nhận khỏi điều mới là lo ngại; không kết luận động cơ khi thiếu dữ liệu",
+      "mustNot": "Không đoán động cơ, danh tính",
+      "sprite": "npc8",
+      "isFictional": true
+    },
+    {
+      "id": "npc9",
+      "name": "Anh Phân",
+      "role": "Biên tập viên phụ trách phân loại và xử lý tin sai",
+      "room": "Trụ sở Báo Thanh Niên: tầng 5",
+      "age": 36,
+      "job": "Phân loại nội dung sai lệch và đề xuất cách ứng xử",
+      "personality": "Rành mạch, thực tế",
+      "voice": "Dứt khoát, thân thiện",
+      "catchphrase": "Từng nhóm một, đừng gộp.",
+      "goal": "Hướng dẫn phân loại Mis/Dis/Mal theo từng nhóm và cách ứng xử",
+      "mustNot": "Không tư vấn pháp lý",
+      "sprite": "npc9",
+      "isFictional": true
     },
     {
       "id": "boss",
@@ -306,7 +351,7 @@
       {
         "npc": "boss",
         "text": "Ha! Ngươi buộc tội ta kiếm tiền, lộ mặt ta? Bằng chứng đâu?",
-        "feedback": "Không có dữ liệu doanh thu/danh tính (F13). Kết luận vượt bằng chứng."
+        "feedback": "Không có dữ liệu doanh thu/danh tính. Kết luận vượt bằng chứng."
       }
     ],
     "boss_endings": {
@@ -342,7 +387,7 @@
       "lines": [
         {
           "id": "s1_intro_l1",
-          "text": "Chào bạn! Bạn là {hero}, bạn sinh viên Văn Lang gọi tới tòa soạn hôm qua phải không?",
+          "text": "Chào em! Em là {hero}, sinh viên Văn Lang đã gọi tới tòa soạn hôm qua phải không?",
           "mood": "happy"
         },
         {
@@ -367,7 +412,7 @@
       "choices": [
         {
           "id": "s1_c1",
-          "text": "Tôi sẽ dừng lại và kiểm tra trước.",
+          "text": "Em sẽ dừng lại và kiểm tra trước.",
           "next": "s1_reply_stop",
           "setFlags": [
             "chose_stop"
@@ -400,7 +445,7 @@
       "choices": [
         {
           "id": "s1_c3",
-          "text": "Vậy tôi dừng lại và kiểm tra.",
+          "text": "Vậy em dừng lại và kiểm tra.",
           "next": "s1_reply_stop",
           "setFlags": [
             "chose_stop"
@@ -419,7 +464,7 @@
         },
         {
           "id": "s1_reply_stop_l2",
-          "text": "Vụ án có ba câu hỏi xác minh, tôi đã ghi vào sổ tay trong balo của bạn. Đi theo tôi tới Phòng Hồ sơ nhé."
+          "text": "Vụ án có ba câu hỏi xác minh, chị đã ghi vào sổ tay trong balo của em. Đi theo chị tới Phòng Hồ sơ nhé."
         }
       ],
       "choices": [],
@@ -488,7 +533,7 @@
         },
         {
           "id": "s3_done_l2",
-          "text": "Hồ sơ tiếp theo là do bạn chọn. Mở balo (tab Hồ sơ vụ án) để theo dõi một hồ sơ, mũi tên sẽ chỉ đường."
+          "text": "Hồ sơ tiếp theo là do em chọn. Mở balo (tab Hồ sơ vụ án) để theo dõi một hồ sơ, mũi tên sẽ chỉ đường."
         }
       ],
       "choices": [],
@@ -501,7 +546,7 @@
       "lines": [
         {
           "id": "npc1_lobby_wait_l1",
-          "text": "Chào bạn. Tôi là Tuệ Lâm. Khi nào sẵn sàng nhận vụ án thì nói với tôi nhé."
+          "text": "Chào em. Chị là Tuệ Lâm. Khi nào sẵn sàng nhận vụ án thì nói với chị nhé."
         }
       ],
       "choices": [],
@@ -514,7 +559,7 @@
       "lines": [
         {
           "id": "npc2_idle_l1",
-          "text": "Tôi là Khải, bên phân tích ảnh."
+          "text": "Anh là Khải, bên phân tích ảnh."
         },
         {
           "id": "npc2_idle_l2",
@@ -531,7 +576,7 @@
       "lines": [
         {
           "id": "npc2_idle_after_l1",
-          "text": "Bạn đã xác lập xong sự kiện thật rồi à? Vào Phòng Phân tích ảnh đi, tôi đợi trong đó."
+          "text": "Em đã xác lập xong sự kiện thật rồi à? Vào Phòng Phân tích ảnh đi, anh đợi trong đó."
         }
       ],
       "choices": [],
@@ -544,7 +589,7 @@
       "lines": [
         {
           "id": "s4_intro_l1",
-          "text": "Chào mừng tới Phòng Phân tích ảnh. Tôi là Khải."
+          "text": "Chào mừng tới Phòng Phân tích ảnh. Anh là Khải."
         },
         {
           "id": "s4_intro_l2",
@@ -574,7 +619,7 @@
       "lines": [
         {
           "id": "s4_q4_intro_l1",
-          "text": "Giờ tới phần tôi thích nhất: phóng to thêm chút nữa. Ảnh AI hay để lại lỗi nhỏ."
+          "text": "Giờ tới phần anh thích nhất: phóng to thêm chút nữa. Ảnh AI hay để lại lỗi nhỏ."
         }
       ],
       "choices": [],
@@ -630,7 +675,7 @@
         },
         {
           "id": "s4_done_l2",
-          "text": "Nếu bạn chưa xem phần video cũ: bác Tín Thư ở Tòa soạn Tin Vịnh, bên kia phố ven vịnh, giữ kho lưu trữ báo chí."
+          "text": "Nếu em chưa xem phần video cũ: bác Tín Thư ở Tòa soạn Tin Vịnh, bên kia phố ven vịnh, giữ kho lưu trữ báo chí."
         }
       ],
       "choices": [],
@@ -643,7 +688,7 @@
       "lines": [
         {
           "id": "s5_intro_l1",
-          "text": "À, cháu là sinh viên Văn Lang bên Báo Thanh Niên nhờ tới phải không? Bác là Tín Thư, coi kho lưu trữ này."
+          "text": "À, em là sinh viên Văn Lang bên Báo Thanh Niên nhờ tới phải không? Bác là Tín Thư, coi kho lưu trữ này."
         },
         {
           "id": "s5_intro_l2",
@@ -660,7 +705,7 @@
       "lines": [
         {
           "id": "s5_q7_intro_l1",
-          "text": "Có mấy đoạn video người ta bảo là \"cận cảnh vụ 19/7\". Bác ngờ lắm. Cháu đọc báo xem chúng thật ra từ đâu."
+          "text": "Có mấy đoạn video người ta bảo là \"cận cảnh vụ 19/7\". Bác ngờ lắm. Em đọc báo xem chúng thật ra từ đâu."
         }
       ],
       "choices": [],
@@ -673,7 +718,7 @@
       "lines": [
         {
           "id": "s5_done_l1",
-          "text": "Tốt lắm. Phòng bên cạnh có bảng dòng thời gian, khi nào cháu muốn thì sang."
+          "text": "Tốt lắm. Phòng bên cạnh có bảng dòng thời gian, khi nào em muốn thì sang."
         }
       ],
       "choices": [],
@@ -682,7 +727,7 @@
     {
       "id": "s6_intro",
       "screen": "",
-      "npc": "npc3",
+      "npc": "npc7",
       "lines": [
         {
           "id": "s6_intro_l1",
@@ -695,7 +740,7 @@
     {
       "id": "s6_q8_intro",
       "screen": "",
-      "npc": "npc3",
+      "npc": "npc7",
       "lines": [
         {
           "id": "s6_q8_intro_l1",
@@ -708,7 +753,7 @@
     {
       "id": "s6_done",
       "screen": "",
-      "npc": "npc3",
+      "npc": "npc7",
       "lines": [
         {
           "id": "s6_done_l1",
@@ -721,7 +766,7 @@
     {
       "id": "s7_intro",
       "screen": "",
-      "npc": "npc1",
+      "npc": "npc8",
       "lines": [
         {
           "id": "s7_intro_l1",
@@ -734,7 +779,7 @@
     {
       "id": "s7_q9_intro",
       "screen": "",
-      "npc": "npc1",
+      "npc": "npc8",
       "lines": [
         {
           "id": "s7_q9_intro_l1",
@@ -747,11 +792,11 @@
     {
       "id": "s7_q10_intro",
       "screen": "",
-      "npc": "npc1",
+      "npc": "npc8",
       "lines": [
         {
           "id": "s7_q10_intro_l1",
-          "text": "Câu hỏi khó nhất: người đăng có cố ý không? Nếu muốn luyện thêm, chú Sáu quản trị một nhóm mạng hay ngồi ở quán cà phê Gió Biển ngoài phố — bạn có thể hỏi chuyện chú ấy."
+          "text": "Câu hỏi khó nhất: người đăng có cố ý không? Nếu muốn luyện thêm, chú Sáu quản trị một nhóm mạng hay ngồi ở quán cà phê Gió Biển ngoài phố — em có thể hỏi chuyện chú ấy."
         }
       ],
       "choices": [],
@@ -760,11 +805,11 @@
     {
       "id": "s7_done",
       "screen": "",
-      "npc": "npc1",
+      "npc": "npc8",
       "lines": [
         {
           "id": "s7_done_l1",
-          "text": "Rõ ràng và đúng mức. Hồ sơ nào còn dở, bạn cứ chọn trong balo."
+          "text": "Rõ ràng và đúng mức. Hồ sơ nào còn dở, em cứ chọn trong balo."
         }
       ],
       "choices": [],
@@ -773,7 +818,7 @@
     {
       "id": "s8_intro",
       "screen": "",
-      "npc": "npc1",
+      "npc": "npc9",
       "lines": [
         {
           "id": "s8_intro_l1",
@@ -786,7 +831,7 @@
     {
       "id": "s8_q11_intro",
       "screen": "",
-      "npc": "npc1",
+      "npc": "npc9",
       "lines": [
         {
           "id": "s8_q11_intro_l1",
@@ -799,11 +844,11 @@
     {
       "id": "s8_q12_intro",
       "screen": "",
-      "npc": "npc1",
+      "npc": "npc9",
       "lines": [
         {
           "id": "s8_q12_intro_l1",
-          "text": "Giờ, nếu bạn thấy một bài đăng giả đang lan, bạn làm gì?"
+          "text": "Giờ, nếu em thấy một bài đăng giả đang lan, em làm gì?"
         }
       ],
       "choices": [],
@@ -812,7 +857,7 @@
     {
       "id": "s8_q13_intro",
       "screen": "",
-      "npc": "npc1",
+      "npc": "npc9",
       "lines": [
         {
           "id": "s8_q13_intro_l1",
@@ -825,11 +870,11 @@
     {
       "id": "s8_done",
       "screen": "",
-      "npc": "npc1",
+      "npc": "npc9",
       "lines": [
         {
           "id": "s8_done_l1",
-          "text": "Phân loại xong. Giờ bạn biết nên ứng xử thế nào khi gặp một bài đăng giả."
+          "text": "Phân loại xong. Giờ em biết nên ứng xử thế nào khi gặp một bài đăng giả."
         }
       ],
       "choices": [],
@@ -842,7 +887,7 @@
       "lines": [
         {
           "id": "npc1_after_boss_l1",
-          "text": "Cảm ơn bạn. Nếu muốn, còn một hồ sơ nhỏ: có một trang mạo danh quỹ thiện nguyện đang kêu gọi quyên góp."
+          "text": "Cảm ơn em. Nếu muốn, còn một hồ sơ nhỏ: có một trang mạo danh quỹ thiện nguyện đang kêu gọi quyên góp."
         }
       ],
       "choices": [],
@@ -881,7 +926,7 @@
       "lines": [
         {
           "id": "npc3_wait_l1",
-          "text": "Bác ở kho lưu trữ đây. Cháu cần gì ở kho lưu trữ thì ghé nhé."
+          "text": "Bác ở kho lưu trữ đây. Em cần gì ở kho lưu trữ thì ghé nhé."
         }
       ],
       "choices": [],
@@ -918,7 +963,7 @@
       "lines": [
         {
           "id": "npc4_reply_l1",
-          "text": "…Ừ thì, lượt xem cũng quan trọng mà. Nhưng thôi, để tôi đợi bên kiểm chứng xác nhận đã."
+          "text": "…Ừ thì, lượt xem cũng quan trọng mà. Nhưng thôi, để anh đợi bên kiểm chứng xác nhận đã."
         }
       ],
       "choices": [],
@@ -931,7 +976,7 @@
       "lines": [
         {
           "id": "npc5_idle_l1",
-          "text": "Mình đã chia sẻ bức ảnh vì thương nạn nhân quá. Vậy là đúng mà, phải không?"
+          "text": "Chị đã chia sẻ bức ảnh vì thương nạn nhân quá. Vậy là đúng mà, phải không?"
         }
       ],
       "choices": [
@@ -955,7 +1000,7 @@
       "lines": [
         {
           "id": "npc5_reply_l1",
-          "text": "Mình không biết… Mình có nhiều người theo dõi, chắc nhiều người đã tin theo. Mình sẽ gỡ bài và đăng lời đính chính."
+          "text": "Chị không biết… Chị có nhiều người theo dõi, chắc nhiều người đã tin theo. Chị sẽ gỡ bài và đăng lời đính chính."
         }
       ],
       "choices": [],
@@ -968,7 +1013,7 @@
       "lines": [
         {
           "id": "npc6_idle_l1",
-          "text": "Người ta chia sẻ thì tui chia sẻ thôi mà."
+          "text": "Người ta chia sẻ thì chú chia sẻ thôi mà."
         }
       ],
       "choices": [],
@@ -981,7 +1026,7 @@
       "lines": [
         {
           "id": "cafe_q10b_intro_l1",
-          "text": "Cô cậu hỏi gì thì hỏi lẹ, tui còn uống cà phê."
+          "text": "Em hỏi gì thì hỏi lẹ, chú còn uống cà phê."
         }
       ],
       "choices": [],
@@ -994,7 +1039,7 @@
       "lines": [
         {
           "id": "bonus_intro_l1",
-          "text": "Có người báo một trang lạ mạo danh \"Quỹ Thiện nguyện Hải Đăng\" để kêu gọi quyên góp. Bạn xem giúp tôi."
+          "text": "Có người báo một trang lạ mạo danh \"Quỹ Thiện nguyện Hải Đăng\" để kêu gọi quyên góp. Em xem giúp chị."
         }
       ],
       "choices": [],
@@ -1041,7 +1086,7 @@
         },
         {
           "id": "boss_appears_l2",
-          "text": "Cửa Phòng họp cuối sảnh vừa mở. Mang theo các thẻ evidence của bạn."
+          "text": "Cửa Phòng họp cuối sảnh vừa mở. Mang theo các thẻ evidence của em."
         }
       ]
     }
@@ -1058,7 +1103,7 @@
             "hello",
             "hi"
           ],
-          "text": "Chào {hero}. Bạn có thể hỏi tôi về quy trình kiểm tra, nguồn tin hoặc nhiệm vụ hiện tại."
+          "text": "Chào {hero}. Em có thể hỏi chị về quy trình kiểm tra, nguồn tin hoặc nhiệm vụ hiện tại."
         },
         {
           "id": "fc1_start",
@@ -1103,7 +1148,7 @@
             "noi luon",
             "cho xin"
           ],
-          "text": "Tôi không đưa đáp án. Bạn có thể dùng gợi ý; mỗi cấp trừ một ít điểm."
+          "text": "Chị không đưa đáp án. Em cứ xin gợi ý khi cần, không bị trừ gì cả."
         },
         {
           "id": "fc1_images",
@@ -1141,7 +1186,7 @@
             "ke dung sau",
             "chu trang"
           ],
-          "text": "Chưa có dữ liệu xác định cá nhân đứng sau các fanpage (F13). Ta chỉ kết luận trong giới hạn bằng chứng, và không công khai thông tin cá nhân của ai."
+          "text": "Chưa có dữ liệu xác định cá nhân đứng sau các fanpage. Ta chỉ kết luận trong giới hạn bằng chứng, và không công khai thông tin cá nhân của ai."
         },
         {
           "id": "fc1_score",
@@ -1215,23 +1260,23 @@
         "idle": true
       },
       {
-        "npc": "npc1",
+        "npc": "npc8",
         "quest": "q9_impact"
       },
       {
-        "npc": "npc1",
+        "npc": "npc8",
         "quest": "q10_intent"
       },
       {
-        "npc": "npc1",
+        "npc": "npc9",
         "quest": "q11_classify"
       },
       {
-        "npc": "npc1",
+        "npc": "npc9",
         "quest": "q12_response"
       },
       {
-        "npc": "npc1",
+        "npc": "npc9",
         "quest": "q13_platform"
       },
       {
@@ -1259,7 +1304,7 @@
         "quest": "q7_oldclips"
       },
       {
-        "npc": "npc3",
+        "npc": "npc7",
         "quest": "q8_timeline"
       },
       {
@@ -1285,6 +1330,21 @@
         "npc": "npc6",
         "scene": "npc6_idle",
         "idle": true
+      },
+      {
+        "npc": "npc7",
+        "scene": "s6_done",
+        "idle": true
+      },
+      {
+        "npc": "npc8",
+        "scene": "s7_done",
+        "idle": true
+      },
+      {
+        "npc": "npc9",
+        "scene": "s8_done",
+        "idle": true
       }
     ]
   },
@@ -1298,18 +1358,6 @@
         "map": "tn_lobby",
         "station": "npc1_lobby_end",
         "patrol": "patrol_npc1_lobby"
-      },
-      {
-        "map": "tn_f4",
-        "station": "npc_station",
-        "patrol": "npc_patrol",
-        "room": "S7"
-      },
-      {
-        "map": "tn_f5",
-        "station": "npc_station",
-        "patrol": "npc_patrol",
-        "room": "S8"
       },
       {
         "map": "tn_f2",
@@ -1330,11 +1378,25 @@
         "patrol": "npc_patrol"
       }
     ],
-    "npc3": [
+    "npc7": [
       {
-        "room": "S6",
+        "map": "newsroom",
         "station": "npc3_s6",
         "patrol": "patrol_npc3_s6"
+      }
+    ],
+    "npc8": [
+      {
+        "map": "tn_f4",
+        "station": "npc_station",
+        "patrol": "npc_patrol"
+      }
+    ],
+    "npc9": [
+      {
+        "map": "tn_f5",
+        "station": "npc_station",
+        "patrol": "npc_patrol"
       }
     ]
   },
@@ -1353,15 +1415,15 @@
     },
     "S6": {
       "scene": "s6_intro",
-      "thenTalk": "npc3"
+      "thenTalk": "npc7"
     },
     "S7": {
       "scene": "s7_intro",
-      "thenTalk": "npc1"
+      "thenTalk": "npc8"
     },
     "S8": {
       "scene": "s8_intro",
-      "thenTalk": "npc1"
+      "thenTalk": "npc9"
     }
   },
   "inspect": {
@@ -1498,10 +1560,10 @@
     "note": "Người qua đường: nói lần lượt từng câu, không giao nhiệm vụ, không đưa dữ kiện mới ngoài F1–F16. Nhân vật GIẢ LẬP.",
     "amb_guard": [
       "Ai vào đây cũng phải trình thẻ. Tin trên mạng cũng nên vậy: hỏi xem nó từ đâu tới.",
-      "Trời mưa thì đi chậm thôi cháu, sàn sảnh trơn lắm."
+      "Trời mưa thì đi chậm thôi em, sàn sảnh trơn lắm."
     ],
     "amb_worker": [
-      "Máy in lại kẹt giấy rồi… Còn bạn thì sao, hồ sơ nào đang dở?",
+      "Máy in lại kẹt giấy rồi… Còn em thì sao, hồ sơ nào đang dở?",
       "Chị biên tập dặn: tiêu đề càng giật gân thì càng phải đọc kỹ ngày đăng."
     ],
     "amb_barista": [
@@ -1533,26 +1595,26 @@
       "Sáng nào chị cũng chạy dọc vịnh. Gặp tin lạ trên mạng, chị dừng lại thở đều rồi mới đọc kỹ."
     ],
     "amb_doctor": [
-      "Tôi hay gặp người mang theo \"bài thuốc\" đọc trên mạng. Tôi luôn hỏi: nguồn nào, ai viết, có chuyên gia nào xác nhận không?",
+      "Anh hay gặp người mang theo \"bài thuốc\" đọc trên mạng. Anh luôn hỏi: nguồn nào, ai viết, có chuyên gia nào xác nhận không?",
       "Thông tin sức khỏe sai có thể gây hại thật. Kiểm tra trước khi làm theo."
     ],
     "amb_nurse": [
-      "Mời bạn ngồi chờ một lát. Đọc được tin gì về sức khỏe thì hỏi nhân viên y tế trước nhé.",
+      "Mời em ngồi chờ một lát. Đọc được tin gì về sức khỏe thì hỏi nhân viên y tế trước nhé.",
       "Ảnh \"bệnh nhân\" lan trên mạng nhiều khi không phải người thật đâu."
     ],
     "amb_patient": [
       "Con cháu gửi ông đủ thứ tin trên điện thoại, ông mang lên hỏi bác sĩ cho chắc."
     ],
     "amb_clerk": [
-      "Công ty tôi có quy định: tin chưa xác minh thì không đăng lên trang chính thức.",
+      "Công ty anh có quy định: tin chưa xác minh thì không đăng lên trang chính thức.",
       "Lại phải đính chính một bài đăng vội tuần trước. Đăng chậm mà đúng vẫn hơn."
     ],
     "amb_clerk2": [
-      "Mình làm truyền thông nội bộ. Ảnh nào đưa lên bản tin cũng phải ghi nguồn và ngày chụp.",
+      "Chị làm truyền thông nội bộ. Ảnh nào đưa lên bản tin cũng phải ghi nguồn và ngày chụp.",
       "Sinh viên Quan hệ công chúng hả? Nhớ nhé: uy tín mất rất nhanh, gây dựng lại rất lâu."
     ],
     "amb_barista2": [
-      "Quán mở từ sáng sớm. Khách hay hỏi \"tin này thật không\", mình chỉ họ cách tìm ngược ảnh."
+      "Quán mở từ sáng sớm. Khách hay hỏi \"tin này thật không\", anh chỉ họ cách tìm ngược ảnh."
     ],
     "amb_patron": [
       "Mình đang đọc lại bài báo gốc thay vì chỉ đọc tiêu đề. Khác nhau nhiều đấy.",
@@ -1716,63 +1778,63 @@
   "greetings": {
     "npc4": [
       {
-        "text": "Ồ, có khách à? Tôi là Phát, biên tập ở Tin Vịnh. Ở đây tin nào nóng là lên trang trước, tính sau!",
+        "text": "Ồ, có khách à? Anh là Phát, biên tập ở Tin Vịnh. Ở đây tin nào nóng là lên trang trước, tính sau!",
         "mood": "happy"
       },
       {
         "npc": "hero",
-        "text": "Chào anh, em là {hero}, sinh viên Văn Lang."
+        "text": "Dạ, em chào anh. Em là {hero}, sinh viên Văn Lang."
       }
     ],
     "npc5": [
       {
-        "text": "Chào bạn! Mình là Bông Mây, hay hát ở mấy quán ven vịnh. Dạo này ai cũng hỏi mình về mấy bài đăng trên mạng.",
+        "text": "Chào em! Chị là Bông Mây, hay hát ở mấy quán ven vịnh. Dạo này ai cũng hỏi chị về mấy bài đăng trên mạng.",
         "mood": "happy"
       },
       {
         "npc": "hero",
-        "text": "Chào bạn, mình là {hero}."
+        "text": "Dạ, em chào chị. Em là {hero}."
       }
     ],
     "npc6": [
       {
-        "text": "Chào cô cậu. Tui là Sáu, quản trị một nhóm trên mạng. Chiều nào tui cũng ngồi đây uống cà phê."
+        "text": "Chào em. Chú là Sáu, quản trị một nhóm trên mạng. Chiều nào chú cũng ngồi đây uống cà phê."
       },
       {
         "npc": "hero",
-        "text": "Chào chú, cháu là {hero}, sinh viên Văn Lang."
+        "text": "Dạ, em chào chú. Em là {hero}, sinh viên Văn Lang."
       }
     ],
     "amb_guard": [
       {
-        "text": "Chào cháu. Chú là Tấn, bảo vệ tòa nhà. Có hẹn với ai trên tầng thì báo chú một tiếng nhé."
+        "text": "Chào em. Chú là Tấn, bảo vệ tòa nhà. Có hẹn với ai trên tầng thì báo chú một tiếng nhé."
       }
     ],
     "amb_worker": [
       {
-        "text": "Chào bạn, mình làm ở tòa soạn này. Bạn tới gặp chị Tuệ Lâm hả? Chị ấy hay đi lại giữa các tầng lắm."
+        "text": "Chào em, anh làm ở tòa soạn này. Em tới gặp chị Tuệ Lâm hả? Chị ấy hay đi lại giữa các tầng lắm."
       }
     ],
     "amb_barista": [
       {
-        "text": "Chào bạn, quán Gió Biển đây! Uống gì cứ gọi nhé.",
+        "text": "Chào em, quán Gió Biển đây! Uống gì cứ gọi nhé.",
         "mood": "happy"
       }
     ],
     "amb_vendor": [
       {
-        "text": "Chào cháu! Cô bán báo ở đầu phố này cũng chục năm rồi."
+        "text": "Chào em! Cô bán báo ở đầu phố này cũng chục năm rồi."
       }
     ],
     "amb_tourist": [
       {
-        "text": "Chào bạn! Mình đi du lịch vịnh mấy hôm. Bạn là người ở đây à?",
+        "text": "Chào em! Mình đi du lịch vịnh mấy hôm. Em là người ở đây à?",
         "mood": "happy"
       }
     ],
     "amb_fisher": [
       {
-        "text": "Chào cháu. Chú câu cá ở bến này mỗi sáng sớm."
+        "text": "Chào em. Chú câu cá ở bến này mỗi sáng sớm."
       }
     ],
     "amb_student": [
@@ -1783,38 +1845,38 @@
     ],
     "amb_elder": [
       {
-        "text": "Chào cháu. Chiều nào ông cũng ra ghế đá này hóng gió."
+        "text": "Chào em. Chiều nào ông cũng ra ghế đá này hóng gió."
       }
     ],
     "amb_jogger": [
       {
-        "text": "Chào bạn! Chạy dọc vịnh buổi chiều là dễ chịu nhất.",
+        "text": "Chào em! Chạy dọc vịnh buổi chiều là dễ chịu nhất.",
         "mood": "happy"
       }
     ],
     "amb_doctor": [
       {
-        "text": "Chào bạn, tôi là bác sĩ trực hôm nay. Bạn cần khám gì không?"
+        "text": "Chào em, anh là bác sĩ trực hôm nay. Em cần khám gì không?"
       }
     ],
     "amb_nurse": [
       {
-        "text": "Chào bạn, mời bạn lấy số thứ tự rồi ngồi chờ một chút nhé."
+        "text": "Chào em, mời em lấy số thứ tự rồi ngồi chờ một chút nhé."
       }
     ],
     "amb_patient": [
       {
-        "text": "Chào cháu. Ông đang chờ tới lượt khám."
+        "text": "Chào em. Ông đang chờ tới lượt khám."
       }
     ],
     "amb_clerk": [
       {
-        "text": "Chào bạn, bạn tìm ai ở công ty mình?"
+        "text": "Chào em, em tìm ai ở công ty anh?"
       }
     ],
     "amb_clerk2": [
       {
-        "text": "Chào bạn! Mình làm truyền thông nội bộ ở đây.",
+        "text": "Chào em! Chị làm truyền thông nội bộ ở đây.",
         "mood": "happy"
       }
     ],
@@ -1826,7 +1888,36 @@
     ],
     "amb_patron": [
       {
-        "text": "Chào bạn, ngồi đây đọc báo cùng mình không?"
+        "text": "Chào em, ngồi đây đọc báo cùng mình không?"
+      }
+    ],
+    "npc7": [
+      {
+        "text": "Chào em! Anh là Lịch, phụ trách dựng dòng thời gian ở đây. Bác Tín Thư có dặn là em sẽ ghé.",
+        "mood": "happy"
+      },
+      {
+        "npc": "hero",
+        "text": "Dạ, em chào anh. Em là {hero}, sinh viên Văn Lang."
+      }
+    ],
+    "npc8": [
+      {
+        "text": "Chào em, chị là Cẩn, phụ trách mảng tác động và chủ đích. Chị Tuệ Lâm có kể về em rồi."
+      },
+      {
+        "npc": "hero",
+        "text": "Dạ, em chào chị. Em là {hero}."
+      }
+    ],
+    "npc9": [
+      {
+        "text": "Chào em! Anh là Phân, lo phần phân loại và cách xử lý tin sai. Lên tới đây là gần cuối quy trình rồi đấy.",
+        "mood": "happy"
+      },
+      {
+        "npc": "hero",
+        "text": "Dạ, em chào anh. Em là {hero}."
       }
     ]
   }

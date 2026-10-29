@@ -42,6 +42,11 @@ Game pixel-art HTML/CSS/JS (không backend) cho bài tập mục 08, môn Thẩm
 - Test: `cd game && python -m http.server 8000`; thêm `?debug` vào URL để lộ `window.__game` cho công cụ test.
 - Hosting: GitHub Pages https://ziahann.github.io/tham-tu-tin-gia/ (repo `ziahann/tham-tu-tin-gia`), phục vụ từ nhánh `gh-pages` = nội dung `game/`. Cập nhật bản online sau khi đẩy `master`: `git subtree split --prefix game -b gh-pages && git push origin gh-pages` (token hiện chưa có quyền `workflow` nên không dùng GitHub Actions).
 
+## Lời thoại
+- Xưng hô: mọi NPC gọi người chơi là "em" và tự xưng theo vai (chị Tuệ Lâm, anh Khải, bác Tín Thư, anh Lịch, chị Cẩn, anh Phân, chú Sáu...); người chơi xưng "em". Riêng Kẻ Dệt Chuyện (boss) xưng "ta", gọi "ngươi".
+- Mỗi hồ sơ một người phụ trách: S3 Tuệ Lâm (npc1), S4 Khải (npc2), S5 bác Tín Thư (npc3), S6 anh Lịch (npc7), S7 chị Cẩn (npc8), S8 anh Phân (npc9), CAFE chú Sáu (npc6); màn bonus Tuệ Lâm.
+- Không hiện mã dữ kiện (F1…F16) và không nói tới điểm trong chữ người chơi thấy; mã F chỉ giữ trong các trường dữ liệu (`facts`, `fact`, ghi chú).
+
 ## Cách làm việc
 - Việc lớn: dùng plan mode trước, làm từng bước nhỏ, commit thường xuyên.
 - Kiểm tra JSON hợp lệ sau mỗi lần sửa; test trên điện thoại và máy tính.

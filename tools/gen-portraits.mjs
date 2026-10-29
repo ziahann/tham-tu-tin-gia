@@ -19,6 +19,7 @@ const EXTRA = {
   hero_f: { iris: '#5a3020', lashes: true, earrings: '#f2d36b', blush: true },
   npc1: { iris: '#2b1d1a', lashes: true, earrings: '#e8c66a' },
   npc2: { iris: '#3a2a20' },
+  npc7: { iris: '#2b1d1a' }, npc8: { iris: '#3a2418', lashes: true, earrings: '#c9d1dc' }, npc9: { iris: '#2b1d1a', stubble: true },
   npc3: { iris: '#4b3a2a', mustache: '#d8d8d8', wrinkles: true },
   npc4: { iris: '#3a2a20' },
   npc5: { iris: '#6a3a5a', lashes: true, clip: '#f2d36b' },
