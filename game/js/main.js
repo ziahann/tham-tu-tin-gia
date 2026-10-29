@@ -259,7 +259,7 @@ function showResults() {
   });
   // Bộ huy hiệu kỹ năng (thay cho điểm và danh hiệu)
   const shelf = el('div', 'badge-shelf');
-  earnedBadges(p.flags).forEach(b => { const d = el('div', 'badge'); d.append(el('strong', null, `🏅 ${b.badge.name}`), el('span', null, b.badge.learned)); shelf.append(d); });
+  earnedBadges(p.flags).forEach(room => shelf.append(backpack.badgeCard(room, true)));
   stats.append(el('h2', null, r.badges), shelf);
   $('results-verified-title').textContent = `✓ ${r.verifiedTitle}`;
   $('results-unsure-title').textContent = `? ${r.unsureTitle}`;
