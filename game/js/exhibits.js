@@ -138,7 +138,7 @@ export function toolPanel(key) {
     ex.rows.forEach(r => { const tr = el('tr'); r.forEach((c, i) => tr.append(el(i ? 'td' : 'th', null, c))); table.append(tr); });
   }
   const cite = citeLine(ex.sources);
-  wrap.append(table, el('p', null, ex.footer), el('p', 'cite', cite ? `${ex.fact} · Nguồn: ${cite}` : ex.fact));
+  wrap.append(table, el('p', null, ex.footer), el('p', 'cite', cite ? `Nguồn: ${cite}` : ''));
   return wrap;
 }
 

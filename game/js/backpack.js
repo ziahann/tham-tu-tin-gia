@@ -80,7 +80,7 @@ export function badgeCard(room, got) {
 export function evidenceCard(ev) {
   const card = el('div', 'ev-card');
   const h = el('h3');
-  h.append(el('span', 'fact', ev.fact), document.createTextNode(ev.title));
+  h.append(document.createTextNode(ev.title));
   const cite = citeLine(ev.sources);
   card.append(h, el('p', null, ev.text));
   if (cite) card.append(el('p', 'cite', `Nguồn: ${cite}`));
@@ -250,7 +250,7 @@ function pinboard() {
   const cork = el('div', 'cork');
   (state.progress?.evidenceCards || []).map(evidenceById).filter(Boolean).forEach(ev => {
     const n = el('div', 'note');
-    n.append(el('strong', null, `${ev.fact} · ${ev.title}`), el('p', null, ev.text));
+    n.append(el('strong', null, ev.title), el('p', null, ev.text));
     cork.append(n);
   });
   els.body.append(cork);

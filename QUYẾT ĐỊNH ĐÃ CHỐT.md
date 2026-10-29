@@ -184,3 +184,12 @@
 | Thời tiết | Ngẫu nhiên mỗi 5 phút, chỉ ngoài trời; mưa đi chậm, sương tầm nhìn hẹp, đêm kẻ tung tin đuổi xa hơn và hạn chót nhanh hơn. Bỏ nút đổi thời tiết |
 | Người chơi | Tên để trống, bắt buộc nhập. Mẫu nữ: tóc dài nâu ánh sáng, nơ đỏ, áo khoác hồng, váy xanh than |
 | Tác giả | Trần Huỳnh Gia Hân và Đào Thị Mai Chi (màn hình chính, danh mục nguồn) |
+
+## Chốt ngày 30/10/2026 (đợt 12)
+
+| Mục | Quyết định |
+|---|---|
+| Người giao việc | Mỗi hồ sơ một người phụ trách khác nhau; thêm anh Lịch (Dòng thời gian, Tin Vịnh), chị Cẩn (Tác động và chủ đích, tầng 4), anh Phân (Phân loại và xử lý, tầng 5). Tuệ Lâm giữ Phòng Hồ sơ và màn bonus |
+| Xưng hô | NPC gọi người chơi là "em", người chơi xưng "em"; boss giữ "ta – ngươi" |
+| Điểm | Bỏ mọi chữ "−… điểm" ở gợi ý và câu trả lời |
+| Mã dữ kiện | Không hiện mã F… trong lời thoại, phản hồi, thẻ evidence, tư liệu |

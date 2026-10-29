@@ -184,7 +184,7 @@
           "id": "c4",
           "text": "Kết luận: vụ lật tàu Vịnh Xanh 58 không có thật",
           "correct": false,
-          "feedback": "Sai và nghiêm trọng: tai nạn là có thật (F1). Thứ cần thẩm định là các nội dung lan truyền đi kèm.",
+          "feedback": "Sai và nghiêm trọng: tai nạn là có thật. Thứ cần thẩm định là các nội dung lan truyền đi kèm.",
           "npcReact": "s3_q1_accident_denied"
         },
         {
@@ -207,7 +207,7 @@
       ],
       "walkthrough": "Chọn 3 thẻ mô tả nội dung đang lan truyền: ảnh/câu chuyện AI trên fanpage (VTV), clip bão Yagi và Congo (VnExpress), ảnh nhóm trẻ em năm 2024 (VietnamPlus). Bỏ 3 thẻ bắt đầu bằng \"Kết luận:\".",
       "feedback": {
-        "correct": "Đúng. Ba nhóm nội dung khác nhau cần thẩm định riêng (F4, F10).",
+        "correct": "Đúng. Ba nhóm nội dung khác nhau cần thẩm định riêng.",
         "partial": "Gần đúng. Kiểm tra lại: còn thiếu nhóm nội dung hoặc đang chọn nhầm một kết luận vội.",
         "wrong": "Chưa đạt. Hãy tách nội dung đang lan truyền khỏi các kết luận vội."
       },
@@ -234,7 +234,7 @@
       "required": true,
       "title": "Xác lập sự kiện thật",
       "npcIntro": "s3_q2_intro",
-      "question": "Mở nguồn báo chí và điền các dữ kiện có thể kiểm chứng về vụ tai nạn. Mỗi câu tôi hỏi đều có trong các bài dưới đây.",
+      "question": "Mở nguồn báo chí và điền các dữ kiện có thể kiểm chứng về vụ tai nạn. Mỗi câu chị hỏi đều có trong các bài dưới đây.",
       "resources": [
         "thuthao2025",
         "minhkhang2025"
@@ -317,7 +317,7 @@
         }
       ],
       "feedback": {
-        "correct": "Đúng. Ghi sự kiện thật trước để có mốc so với nội dung lan truyền (F1, F2).",
+        "correct": "Đúng. Ghi sự kiện thật trước để có mốc so với nội dung lan truyền.",
         "partial": "Một phần. Các ô đánh dấu ✗ cần đọc lại nguồn.",
         "wrong": "Chưa đạt. Hãy mở nguồn và đọc đoạn mở đầu."
       },
@@ -344,11 +344,11 @@
       "mode": "G1",
       "title": "Dấu vết đầu tiên: tìm ngược ảnh",
       "npcIntro": "s4_q3_intro",
-      "question": "Nhóm đã tìm ngược các khung ảnh bằng Google Lens. Đọc bản ghi kết quả và trả lời tôi.",
+      "question": "Nhóm đã tìm ngược các khung ảnh bằng Google Lens. Đọc bản ghi kết quả và trả lời anh.",
       "resources": [
         "google_lens"
       ],
-      "safetyNote": "Đừng tải lại hay đăng lại ảnh giả. Link Google Lens chỉ để bạn thử cách dùng với một ảnh khác.",
+      "safetyNote": "Đừng tải lại hay đăng lại ảnh giả. Link Google Lens chỉ để em thử cách dùng với một ảnh khác.",
       "steps": [
         {
           "id": "s1",
@@ -366,7 +366,7 @@
               "id": "b",
               "text": "Không",
               "correct": true,
-              "feedback": "Đúng. Không có bản gốc nào từ hiện trường (F5)."
+              "feedback": "Đúng. Không có bản gốc nào từ hiện trường."
             }
           ],
           "hints": [
@@ -392,7 +392,7 @@
               "id": "b",
               "text": "Bài cảnh báo / đính chính ảnh giả",
               "correct": true,
-              "feedback": "Đúng. Các trang trùng khớp đều là bài cảnh báo ảnh giả: VTV, Dân trí, Báo Thanh tra, Home.vn và các bài đăng Facebook (F5)."
+              "feedback": "Đúng. Các trang trùng khớp đều là bài cảnh báo ảnh giả: VTV, Dân trí, Báo Thanh tra, Home.vn và các bài đăng Facebook."
             },
             {
               "id": "c",
@@ -446,7 +446,7 @@
         }
       ],
       "feedback": {
-        "correct": "Tốt. Không có nguồn hiện trường; kết quả trùng khớp chủ yếu là bài cảnh báo ảnh giả (F5)."
+        "correct": "Tốt. Không có nguồn hiện trường; kết quả trùng khớp chủ yếu là bài cảnh báo ảnh giả."
       },
       "conclusion": "Không có nguồn hiện trường cho các ảnh này; kết quả trùng khớp chủ yếu là bài cảnh báo ảnh giả. Chưa đủ để kết luận ảnh do AI tạo.",
       "evidenceCards": [
@@ -485,8 +485,8 @@
                 12
               ],
               "min": 2,
-              "found": "Hình dạng tàu khác nhau giữa các khung 2, 5, 7, 12 và không khớp tàu thật (F6).",
-              "missing": "Bạn chưa so hình dạng tàu giữa các khung."
+              "found": "Hình dạng tàu khác nhau giữa các khung 2, 5, 7, 12 và không khớp tàu thật.",
+              "missing": "Em chưa so hình dạng tàu giữa các khung."
             },
             {
               "id": "text",
@@ -494,7 +494,7 @@
                 9
               ],
               "min": 1,
-              "found": "Chữ trên áo ở khung 9 méo, không đọc được — lỗi thường gặp của ảnh AI (F6).",
+              "found": "Chữ trên áo ở khung 9 méo, không đọc được — lỗi thường gặp của ảnh AI.",
               "missing": "Còn một khung có chữ bất thường."
             }
           ],
@@ -503,14 +503,14 @@
               5,
               12
             ],
-            "text": "Chi tiết thay đổi giữa khung 5 và khung 12 (phao đổi màu) (F6)."
+            "text": "Chi tiết thay đổi giữa khung 5 và khung 12 (phao đổi màu)."
           },
           "traps": {
             "frames": [
               6,
               10
             ],
-            "text": "Khung 6 và 10 bị mờ nên hồ sơ kiểm chứng KHÔNG đánh giá. Ảnh mờ không chứng minh gì (F13)."
+            "text": "Khung 6 và 10 bị mờ nên hồ sơ kiểm chứng KHÔNG đánh giá. Ảnh mờ không chứng minh gì."
           },
           "neutral": "Khung {n} không có dấu hiệu quan sát được rõ ràng.",
           "hints": [
@@ -537,7 +537,7 @@
               "id": "b",
               "text": "Không đánh giá, ghi vào phần giới hạn",
               "correct": true,
-              "feedback": "Đúng. Hồ sơ kiểm chứng cũng không đánh giá khung 6 và 10 (F13)."
+              "feedback": "Đúng. Hồ sơ kiểm chứng cũng không đánh giá khung 6 và 10."
             },
             {
               "id": "c",
@@ -554,7 +554,7 @@
         }
       ],
       "feedback": {
-        "correct": "Chuẩn. Dấu hiệu thị giác chỉ là chỉ báo; cần kết hợp với bằng chứng khác. Hồ sơ kiểm chứng còn ghi một dấu hiệu nữa: góc chụp cận cảnh giữa biển lúc tàu chìm, khó có người chụp hợp lý (F6)."
+        "correct": "Chuẩn. Dấu hiệu thị giác chỉ là chỉ báo; cần kết hợp với bằng chứng khác. Hồ sơ kiểm chứng còn ghi một dấu hiệu nữa: góc chụp cận cảnh giữa biển lúc tàu chìm, khó có người chụp hợp lý."
       },
       "conclusion": "Có dấu hiệu AI quan sát được: tàu khác hình dạng giữa các khung, chữ trên áo méo, chi tiết đổi giữa khung 5 và 12. Khung mờ không đánh giá.",
       "evidenceCards": [
@@ -575,7 +575,7 @@
       "mode": "G6",
       "title": "Một ảnh, hai trang",
       "npcIntro": "s4_q5_intro",
-      "question": "Ảnh người cha cài áo phao cho con (khung 11 của M.P.V.) hình như tôi đã thấy ở đâu đó.",
+      "question": "Ảnh người cha cài áo phao cho con (khung 11 của M.P.V.) hình như anh đã thấy ở đâu đó.",
       "resources": [
         "thuthao2025"
       ],
@@ -609,13 +609,13 @@
               "id": "a",
               "text": "Hai trang cùng chụp tại hiện trường",
               "correct": false,
-              "feedback": "Không có bằng chứng ai chụp tại hiện trường (F5)."
+              "feedback": "Không có bằng chứng ai chụp tại hiện trường."
             },
             {
               "id": "b",
               "text": "Cùng một ảnh AI được nhiều trang dùng lại — thêm một dấu hiệu",
               "correct": true,
-              "feedback": "Đúng (F8). Đây là dấu hiệu bổ sung, kết hợp với các dấu hiệu khác."
+              "feedback": "Đúng. Đây là dấu hiệu bổ sung, kết hợp với các dấu hiệu khác."
             },
             {
               "id": "c",
@@ -647,7 +647,7 @@
               "id": "b",
               "text": "Đều do AI dựng nên, không trích nguồn chính thống",
               "correct": true,
-              "feedback": "Đúng. VTV viết: \"Tất cả hình ảnh và câu chuyện đều do AI dựng nên\" (F9)."
+              "feedback": "Đúng. VTV viết: \"Tất cả hình ảnh và câu chuyện đều do AI dựng nên\"."
             },
             {
               "id": "c",
@@ -664,7 +664,7 @@
         }
       ],
       "feedback": {
-        "correct": "Rõ rồi. Ảnh được dùng lại ở hai trang, và VTV xác nhận hình ảnh, câu chuyện do AI dựng (F8, F9)."
+        "correct": "Rõ rồi. Ảnh được dùng lại ở hai trang, và VTV xác nhận hình ảnh, câu chuyện do AI dựng."
       },
       "conclusion": "Cùng một ảnh AI xuất hiện ở cả hai bộ ảnh; VTV xác nhận hình ảnh và câu chuyện do AI dựng nên, không trích nguồn chính thống.",
       "evidenceCards": [
@@ -691,7 +691,7 @@
       "resources": [
         "hive"
       ],
-      "safetyNote": "Link Hive chỉ để bạn thử với ảnh của chính mình. Không tải ảnh giả lên lại.",
+      "safetyNote": "Link Hive chỉ để em thử với ảnh của chính mình. Không tải ảnh giả lên lại.",
       "steps": [
         {
           "id": "s1",
@@ -738,13 +738,13 @@
               "id": "a",
               "text": "Kết luận chắc chắn ảnh giả vì 99,9%",
               "correct": false,
-              "feedback": "Công cụ phát hiện có thể sai; chỉ là bằng chứng bổ trợ (F7)."
+              "feedback": "Công cụ phát hiện có thể sai; chỉ là bằng chứng bổ trợ."
             },
             {
               "id": "b",
               "text": "Dùng làm bằng chứng bổ trợ, kết hợp lỗi thị giác, thiếu nguồn gốc và xác nhận của VTV",
               "correct": true,
-              "feedback": "Đúng (F7). Nhiều bằng chứng độc lập mạnh hơn một con số."
+              "feedback": "Đúng. Nhiều bằng chứng độc lập mạnh hơn một con số."
             },
             {
               "id": "c",
@@ -755,14 +755,14 @@
           ],
           "hints": [
             "Dòng chú thích dưới bản ghi nói gì?",
-            "Bạn đã có những bằng chứng nào khác?"
+            "Em đã có những bằng chứng nào khác?"
           ],
           "walkthrough": "Chọn \"Dùng làm bằng chứng bổ trợ, kết hợp các bằng chứng khác\".",
           "tool": "detector"
         }
       ],
       "feedback": {
-        "correct": "Chuẩn. Detector chỉ là một mảnh ghép; chưa có Content Credentials cũng không nói lên ảnh thật hay giả (F7)."
+        "correct": "Chuẩn. Detector chỉ là một mảnh ghép; chưa có Content Credentials cũng không nói lên ảnh thật hay giả."
       },
       "conclusion": "Hive cho khung 3 và 11: 99,9% khả năng ảnh AI, nguồn tạo dự đoán Imagen 4 — dùng làm bằng chứng bổ trợ, kết hợp các bằng chứng khác.",
       "evidenceCards": [
@@ -863,7 +863,7 @@
               "id": "b",
               "text": "Nội dung có thật nhưng sai bối cảnh / thời gian",
               "correct": true,
-              "feedback": "Đúng (F10). Kiểm tra ngày quay và nơi quay quan trọng không kém kiểm tra ảnh AI."
+              "feedback": "Đúng. Kiểm tra ngày quay và nơi quay quan trọng không kém kiểm tra ảnh AI."
             },
             {
               "id": "c",
@@ -879,7 +879,7 @@
         }
       ],
       "feedback": {
-        "correct": "Chính xác. Nhóm không tự tìm ngược các video này mà dựa vào đối chiếu báo chí — cũng là một cách kiểm chứng (F10)."
+        "correct": "Chính xác. Nhóm không tự tìm ngược các video này mà dựa vào đối chiếu báo chí — cũng là một cách kiểm chứng."
       },
       "conclusion": "Video bão Yagi, tàu chìm ở Congo (10/2024) và ảnh nhóm trẻ em năm 2024 là nội dung thật nhưng bị gắn sai bối cảnh vụ 19/7.",
       "evidenceCards": [
@@ -969,7 +969,7 @@
               "id": "b",
               "text": "Chưa xác định được — đây là giới hạn của hồ sơ kiểm chứng",
               "correct": true,
-              "feedback": "Đúng (F13). Hồ sơ kiểm chứng chỉ tiếp cận bài đăng qua ảnh chụp màn hình báo chí đăng lại."
+              "feedback": "Đúng. Hồ sơ kiểm chứng chỉ tiếp cận bài đăng qua ảnh chụp màn hình báo chí đăng lại."
             },
             {
               "id": "c",
@@ -985,7 +985,7 @@
         }
       ],
       "feedback": {
-        "correct": "Dòng thời gian đã rõ: tin sai xuất hiện ngay trong ngày xảy ra tai nạn và lan mạnh trong ba ngày sau (F3, F14)."
+        "correct": "Dòng thời gian đã rõ: tin sai xuất hiện ngay trong ngày xảy ra tai nạn và lan mạnh trong ba ngày sau."
       },
       "conclusion": "Tin sai xuất hiện từ chiều–tối 19/7, lan mạnh 20–22/7; Công an tỉnh đã xử lý người đăng tin sai; chưa xác định được thời điểm đăng đầu tiên.",
       "evidenceCards": [
@@ -1075,7 +1075,7 @@
               "accept": [
                 "risk"
               ],
-              "feedback": "Chưa có số liệu; VnExpress chỉ có dự báo bán tour sẽ khó hơn (F15)."
+              "feedback": "Chưa có số liệu; VnExpress chỉ có dự báo bán tour sẽ khó hơn."
             },
             {
               "id": "i6",
@@ -1083,7 +1083,7 @@
               "accept": [
                 "risk"
               ],
-              "feedback": "Nguy cơ rất đáng lo, nhưng chưa có phát ngôn trực tiếp được ghi nhận (F15)."
+              "feedback": "Nguy cơ rất đáng lo, nhưng chưa có phát ngôn trực tiếp được ghi nhận."
             }
           ],
           "hints": [
@@ -1146,7 +1146,7 @@
         }
       ],
       "feedback": {
-        "correct": "Tốt. Nói đúng mức tác động cũng là một phần của kiểm chứng (F11, F15)."
+        "correct": "Tốt. Nói đúng mức tác động cũng là một phần của kiểm chứng."
       },
       "conclusion": "Đã ghi nhận: số liệu tương tác của một bài, quy mô tài khoản, số bài của fanpage, phát ngôn của ngành du lịch. Mới là nguy cơ: thiệt hại doanh thu, tổn thương của gia đình nạn nhân.",
       "evidenceCards": [
@@ -1249,7 +1249,7 @@
             }
           ],
           "hints": [
-            "Đọc lại giới hạn của hồ sơ kiểm chứng (F13)."
+            "Đọc lại giới hạn của hồ sơ kiểm chứng."
           ],
           "walkthrough": "Chọn danh tính người đứng sau, doanh thu, thời điểm đăng đầu tiên."
         },
@@ -1262,19 +1262,19 @@
               "id": "a",
               "text": "Chủ trang chắc chắn kiếm tiền từ vụ việc",
               "correct": false,
-              "feedback": "Không có dữ liệu doanh thu (F13)."
+              "feedback": "Không có dữ liệu doanh thu."
             },
             {
               "id": "b",
               "text": "Có thủ đoạn thu hút tương tác, cho thấy chủ đích; nhưng chưa xác định ai đứng sau và động cơ tài chính",
               "correct": true,
-              "feedback": "Đúng (F12, F16, F13). Chỉ kết luận trong giới hạn bằng chứng."
+              "feedback": "Đúng. Chỉ kết luận trong giới hạn bằng chứng."
             },
             {
               "id": "c",
               "text": "Đã biết danh tính người đứng sau",
               "correct": false,
-              "feedback": "Chưa xác định được cá nhân nào (F13). Không suy đoán, không công khai thông tin cá nhân."
+              "feedback": "Chưa xác định được cá nhân nào. Không suy đoán, không công khai thông tin cá nhân."
             }
           ],
           "hints": [
@@ -1366,7 +1366,7 @@
               "accept": [
                 "dis"
               ],
-              "feedback": "Nội dung bịa, kèm thủ đoạn thu hút tương tác và chú thích hư cấu khó thấy → Disinformation (F12, F16)."
+              "feedback": "Nội dung bịa, kèm thủ đoạn thu hút tương tác và chú thích hư cấu khó thấy → Disinformation."
             },
             {
               "id": "old_clips",
@@ -1375,7 +1375,7 @@
                 "mis",
                 "unsure"
               ],
-              "feedback": "Chưa có bằng chứng về chủ đích của từng người đăng → Misinformation hoặc \"chưa đủ căn cứ về chủ đích\" đều chấp nhận (F13)."
+              "feedback": "Chưa có bằng chứng về chủ đích của từng người đăng → Misinformation hoặc \"chưa đủ căn cứ về chủ đích\" đều chấp nhận."
             },
             {
               "id": "sharers",
@@ -1424,7 +1424,7 @@
       "mode": "G9",
       "title": "Ứng xử có trách nhiệm",
       "npcIntro": "s8_q12_intro",
-      "question": "Bạn thấy một bài đăng giả đang lan. Bạn sẽ làm gì?",
+      "question": "Em thấy một bài đăng giả đang lan. Em sẽ làm gì?",
       "steps": [
         {
           "id": "s1",
@@ -1455,13 +1455,13 @@
               "id": "w1",
               "text": "Công khai tên và nơi ở của người đăng",
               "correct": false,
-              "feedback": "Không doxxing. Việc xử lý thuộc cơ quan chức năng — Công an tỉnh đã xử lý người đăng tin sai (F14)."
+              "feedback": "Không doxxing. Việc xử lý thuộc cơ quan chức năng — Công an tỉnh đã xử lý người đăng tin sai."
             },
             {
               "id": "w2",
               "text": "Bấm link \"đọc tiếp\" để xem hết câu chuyện",
               "correct": false,
-              "feedback": "Dân trí cảnh báo các link này có thể tiềm ẩn nhiều nguy cơ (F12)."
+              "feedback": "Dân trí cảnh báo các link này có thể tiềm ẩn nhiều nguy cơ."
             },
             {
               "id": "w3",
@@ -1505,7 +1505,7 @@
         {
           "id": "s1",
           "type": "open",
-          "ask": "Theo bạn, nền tảng mạng xã hội nên làm gì với những nội dung như vụ này?",
+          "ask": "Theo em, nền tảng mạng xã hội nên làm gì với những nội dung như vụ này?",
           "placeholder": "Viết ý kiến của bạn",
           "ideas": [
             {
@@ -1577,7 +1577,7 @@
         {
           "id": "s1",
           "type": "interview",
-          "ask": "Bạn muốn hỏi gì?",
+          "ask": "Em muốn hỏi gì?",
           "questions": [
             {
               "id": "n1",
@@ -1607,7 +1607,7 @@
           "options": [
             {
               "id": "a",
-              "text": "\"Tôi thấy người ta chia sẻ, tôi đăng lại thôi.\"",
+              "text": "\"Em thấy người ta chia sẻ, em đăng lại thôi.\"",
               "correct": false,
               "feedback": "Câu này thiếu nguồn, nhưng không tự mâu thuẫn."
             },
@@ -1615,7 +1615,7 @@
               "id": "b",
               "text": "\"Có ghi chứ, nhỏ xíu thôi, nhưng ai cũng thấy mà.\"",
               "correct": true,
-              "feedback": "Đúng: \"nhỏ xíu\" mà \"ai cũng thấy\" là tự mâu thuẫn — giống cách báo chí mô tả chú thích hư cấu khó nhìn (F16)."
+              "feedback": "Đúng: \"nhỏ xíu\" mà \"ai cũng thấy\" là tự mâu thuẫn — giống cách báo chí mô tả chú thích hư cấu khó nhìn."
             },
             {
               "id": "c",
@@ -1793,7 +1793,7 @@
         "ev_identity"
       ],
       "text": "Buộc tội động cơ tiền bạc / danh tính khi chưa có dữ liệu",
-      "feedback": "Không có dữ liệu doanh thu hay danh tính (F13). Kết luận vượt bằng chứng có thể gây hại cho người vô can."
+      "feedback": "Không có dữ liệu doanh thu hay danh tính. Kết luận vượt bằng chứng có thể gây hại cho người vô can."
     },
     "endings": {
       "A": {
@@ -2318,12 +2318,12 @@
     "title": "Hồ sơ vụ án đã khép lại",
     "verifiedTitle": "Đã xác minh (có căn cứ)",
     "verified": [
-      "Tai nạn tàu Vịnh Xanh 58 chiều 19/7/2025 là có thật (F1).",
-      "Hai bộ ảnh và câu chuyện \"nạn nhân\" do AI dựng: không có nguồn gốc, có lỗi thị giác, ảnh dùng lại, VTV xác nhận (F5, F6, F8, F9; F7 bổ trợ).",
-      "Video và ảnh cũ bị gắn sai bối cảnh vụ 19/7 (F10).",
-      "Có thủ đoạn thu hút tương tác: link \"đọc tiếp\", chú thích hư cấu khó thấy (F12, F16)."
+      "Tai nạn tàu Vịnh Xanh 58 chiều 19/7/2025 là có thật.",
+      "Hai bộ ảnh và câu chuyện \"nạn nhân\" do AI dựng: không có nguồn gốc, có lỗi thị giác, ảnh dùng lại, VTV xác nhận.",
+      "Video và ảnh cũ bị gắn sai bối cảnh vụ 19/7.",
+      "Có thủ đoạn thu hút tương tác: link \"đọc tiếp\", chú thích hư cấu khó thấy."
     ],
-    "unsureTitle": "Chưa đủ căn cứ (F13)",
+    "unsureTitle": "Chưa đủ căn cứ",
     "unsure": [
       "Ai đứng sau các fanpage.",
       "Người đăng có thu lợi tài chính hay không.",
