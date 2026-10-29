@@ -5,6 +5,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Img, rgba, seeded } from './png.mjs';
 import { CHARACTERS, shade } from './characters.mjs';
+import { allProps, vehicles } from './props.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', 'game');
 const T = 32; // cỡ ô
@@ -24,13 +25,14 @@ const TILES = [
   // phòng xác minh: thiết bị (mỗi thiết bị là một object 'device' trên bản đồ)
   'floor_dark', 'dev_pc', 'dev_lighttable', 'dev_detector', 'dev_reader', 'dev_monitors', 'dev_timeline', 'dev_evidence',
   // nội thất chi tiết
+  'wall_upper', 'wall_lower',
   'blinds', 'clock', 'poster', 'whiteboard', 'tv_wall', 'paper_desk', 'printer', 'water_cooler', 'filing_boxes', 'floor_lamp',
   'coffee_table', 'trash', 'counter', 'cafe_table', 'floor_check',
   // mặt tiền và phố
   'glass', 'brick', 'brick_window', 'stone', 'stone_window', 'roof_edge', 'ac_unit', 'balcony', 'cafe_window', 'neon',
   'curb', 'curb_low', 'crosswalk', 'kiosk', 'bus_stop', 'bin', 'bollard', 'stall', 'boat_l', 'boat_r', 'gravel', 'hydrant', 'post'
 ];
-const COLLIDES = new Set(['wall_top', 'wall_face', 'door_closed', 'window', 'pinboard', 'desk', 'cabinet', 'bookshelf', 'plant', 'sofa', 'reception',
+const COLLIDES = new Set(['wall_top', 'wall_face', 'wall_upper', 'wall_lower', 'door_closed', 'window', 'pinboard', 'desk', 'cabinet', 'bookshelf', 'plant', 'sofa', 'reception',
   'water', 'karst', 'railing', 'roof', 'facade', 'facade_window', 'awning', 'signboard', 'tree', 'bench', 'lamp', 'flowerbed', 'frame_wall', 'frame',
   'dev_pc', 'dev_lighttable', 'dev_detector', 'dev_reader', 'dev_monitors', 'dev_timeline', 'dev_evidence',
   'blinds', 'clock', 'poster', 'whiteboard', 'tv_wall', 'paper_desk', 'printer', 'water_cooler', 'filing_boxes', 'floor_lamp',
@@ -45,12 +47,13 @@ function drawTile(img, name, ox, oy, rnd) {
   const noise = (base, amt, n = 40) => {
     for (let i = 0; i < n; i++) R(Math.floor(rnd() * T), Math.floor(rnd() * T), 1, 1, shade(base, (rnd() - 0.5) * amt));
   };
+  // tường lạnh: vữa xám xanh, ốp chân tường gỗ sẫm
   const wallFace = () => {
-    R(0, 0, T, T, '#e9dcc0');
-    for (let x = 0; x < T; x += 8) R(x, 2, 1, 18, '#e0d1b2');
-    R(0, 0, T, 2, '#f3e9d4');
-    R(0, 20, T, 12, '#8a5c3d'); R(0, 20, T, 2, '#a77b52'); R(0, 30, T, 2, '#6b4630');
-    for (let x = 4; x < T; x += 8) R(x, 23, 1, 6, '#7a5035');
+    R(0, 0, T, T, '#a9b0bb');
+    for (let x = 0; x < T; x += 8) R(x, 2, 1, 18, '#a0a7b2');
+    R(0, 0, T, 2, '#bcc3cd');
+    R(0, 20, T, 12, '#3e3a3a'); R(0, 20, T, 2, '#5a5452'); R(0, 30, T, 2, '#2a2626');
+    for (let x = 4; x < T; x += 8) R(x, 23, 1, 6, '#34302f');
   };
   // bóng đổ mềm dưới đồ đạc (nền trong suốt để thấy sàn bên dưới)
   const shadow = (w = 12, y = 29) => img.ellipse(ox + 16, oy + y, w, 3, '#00000038');
@@ -78,6 +81,17 @@ function drawTile(img, name, ox, oy, rnd) {
       break;
     case 'wall_face':
       wallFace();
+      break;
+    case 'wall_upper':
+      // nửa trên của tường cao 2 ô (≈ 2,5 m so với người 1,7 m)
+      R(0, 0, T, T, '#a9b0bb'); R(0, 0, T, 4, '#7e8692'); R(0, 4, T, 2, '#c3c9d2');
+      for (let x = 0; x < T; x += 8) R(x, 6, 1, 26, '#a0a7b2');
+      noise('#a9b0bb', 0.05, 20);
+      break;
+    case 'wall_lower':
+      R(0, 0, T, T, '#a9b0bb'); for (let x = 0; x < T; x += 8) R(x, 0, 1, 12, '#a0a7b2');
+      R(0, 12, T, 20, '#3e3a3a'); R(0, 12, T, 2, '#5a5452'); R(0, 29, T, 3, '#2a2626');
+      for (let x = 4; x < T; x += 8) R(x, 16, 1, 11, '#34302f');
       break;
     case 'door_closed':
       wallFace();
@@ -798,11 +812,6 @@ const INDOOR = {
   m: 'floor_lamp', a: 'coffee_table', t: 'trash', C: 'counter'
 };
 
-// ---------------- Văn phòng Ban Hải Đăng (gọn lại, nhiều chi tiết)
-// # tường trên, W mặt tường, L cửa sổ rèm lá sách, p bảng ghim, k đồng hồ, o áp phích, x bảng trắng, V TV tin tức,
-// D lối cửa phòng, E cửa ra phố, Q cửa Phòng họp (boss), . sàn gỗ, ~ thảm hành lang, , sàn sảnh,
-// n bàn làm việc, d bàn, h ghế, c tủ hồ sơ, b kệ sách, f thùng hồ sơ, r máy in, q bình nước, m đèn cây, t thùng rác,
-// P cây, s sofa, a bàn nước, R quầy lễ tân.
 /** Lưới ký tự rỗng W x H; put(x, y, chuỗi) ghi đè từ (x, y). */
 function grid(W, H, fill) {
   const g = Array.from({ length: H }, () => Array(W).fill(fill));
@@ -810,94 +819,128 @@ function grid(W, H, fill) {
   return { g, put, rows: () => g.map(r => r.join('')) };
 }
 
-const OFFICE = (() => {
-  const W = 33, H = 20;
-  const { g, put, rows } = grid(W, H, ',');
-  put(0, 0, '#'.repeat(W));
-  for (let y = 0; y < H; y++) { g[y][0] = '#'; g[y][W - 1] = '#'; }
-  // bốn phòng phía trên (S3, S4, S7, S8), mỗi phòng 7 ô
-  const ROOM = [
-    ['WWppLWk', 'cc..f.P', '..nnn..', '...h...', '.......', 'm....tP'],   // S3 Hồ sơ
-    ['WxxWLLW', 'bb...rP', '.nn.nn.', '.h..h..', '.......', 'P.....m'],   // S4 Phân tích ảnh
-    ['WoWLLWk', 'P.bb..c', '..nnn..', '...h...', '.......', 'm....tP'],   // S7 Tác động
-    ['WLLWxxW', 'c..f..P', '..nnn..', '...h...', '.......', 'P....tm']    // S8 Phân loại
-  ];
-  ROOM.forEach((lines, i) => lines.forEach((ln, j) => put(1 + i * 8, 1 + j, ln)));
-  for (const x of [8, 16, 24]) for (let y = 0; y <= 7; y++) g[y][x] = '#';
-  put(0, 7, '#'.repeat(W));
-  put(1, 8, 'W'.repeat(W - 2));
-  for (const x of [4, 12, 20, 28]) { g[7][x] = g[7][x + 1] = 'D'; g[8][x] = g[8][x + 1] = 'D'; }
-  // hành lang
-  put(1, 9, 'q' + '~'.repeat(29) + 'P');
-  put(1, 10, '~'.repeat(31));
-  // sảnh
-  put(0, 11, '#'.repeat(13) + ','.repeat(6) + '#'.repeat(14));
-  put(1, 12, 'WLLWpWVVWWLW'); put(19, 12, 'WWkWLLWWQQWLW');
-  put(1, 13, 'bb'); g[13][12] = 'P'; g[13][19] = 'P'; put(29, 13, 'rqf');
-  put(2, 14, 'sss'); put(27, 14, 'sss');
-  g[15][3] = 'a'; put(13, 15, 'RRRRRR'); g[15][28] = 'a';
-  put(2, 16, 'sss'); put(27, 16, 'sss');
-  g[17][1] = 'm'; g[17][8] = 'P'; g[17][23] = 'P'; g[17][31] = 'm';
-  g[18][1] = 'P'; g[18][10] = 't'; g[18][31] = 'P';
-  put(0, 19, '#'.repeat(W)); g[19][16] = g[19][17] = 'E';
-  // sàn: gỗ trong phòng, thảm hành lang
-  for (let y = 1; y <= 6; y++) for (let x = 1; x < W - 1; x++) if (g[y][x] === ',') g[y][x] = '.';
-  return rows();
-})();
-const OFFICE_RUGS = [[12, 16, 8, 3], [2, 14, 3, 3], [27, 14, 3, 3]];
+// ---------------- Trụ sở Báo Thanh Niên (tên thật theo yêu cầu của nhóm; nhân vật và sự việc bên trong là GIẢ LẬP)
+// Sảnh tầng trệt + 4 tầng, mỗi tầng một phòng của hồ sơ; đi lại bằng thang máy (object 'elevator', group 'tn').
+// Tường phía bắc cao 2 ô (^ nửa trên, _ nửa dưới); đồ đạc là props đúng tỉ lệ.
+/** Đạo cụ đặt tại (tx, ty) = tâm đáy tính theo ô. */
+const pp = (key, tx, ty, props = {}) => obj('prop', key, tx * T, ty * T, 0, 0, props, { point: true });
+/** Chữ ghi trên tường / sàn (biển tầng, biển phòng). */
+const label = (name, tx, ty, text, props = {}) => obj('label', name, tx * T, ty * T, 0, 0, { text, ...props }, { point: true });
 
-const office = buildMap('office', {
-  rows: OFFICE, legend: INDOOR, label: 'Văn phòng Ban Điều phối Thông tin Du lịch Hải Đăng', music: 'office',
-  ground: (ch, x, y) => {
-    if (ch === 'D') return 'doorway';
-    if (ch === 'E') return 'exit_mat';
-    if (ch === '~' || (y >= 9 && y <= 10)) return 'carpet';
-    if (OFFICE_RUGS.some(([rx, ry, rw, rh]) => x >= rx && x < rx + rw && y >= ry && y < ry + rh)) return 'rug';
-    if (y >= 11) return 'floor_lobby';
-    return 'floor_wood';
-  },
-  doors: [...roomDoor(4, 7), ...roomDoor(12, 7), ...roomDoor(20, 7), ...roomDoor(28, 7)],
+/** Khung một tầng: tường ngoài, tường bắc cao 2 ô, sàn; extra(put) để vẽ thêm. */
+function floorRows(W, H, extra) {
+  const { g, put, rows } = grid(W, H, '.');
+  put(0, 0, '#'.repeat(W)); put(0, H - 1, '#'.repeat(W));
+  for (let y = 0; y < H; y++) { g[y][0] = '#'; g[y][W - 1] = '#'; }
+  put(1, 1, '^'.repeat(W - 2)); put(1, 2, '_'.repeat(W - 2));
+  extra?.(g, put);
+  return rows();
+}
+const TN_LEGEND = { '#': 'wall_top', '^': 'wall_upper', _: 'wall_lower' };
+
+/** Một tầng của Thanh Niên: thang máy góc trái, căn phòng của hồ sơ chiếm cả tầng. */
+function tnFloor(key, { floor, room, roomName, ground, props, inspects = [], extra = [] }) {
+  const W = 26, H = 14;
+  return buildMap(key, {
+    rows: floorRows(W, H), legend: TN_LEGEND, label: `Báo Thanh Niên · ${floor} · ${roomName} (GIẢ LẬP)`, music: 'office',
+    ground: () => ground,
+    objects: () => [
+      point('spawn', 'spawn_elevator', 3.5, 4.3),
+      rectT('zone', `zone_${room}`, 1, 3, W - 2, H - 4, { room }),
+      rectT('elevator', 'elevator', 2.5, 2, 2, 1, { group: 'tn' }),
+      pp('elevator', 3.5, 3),
+      label('floor_label', 8.2, 1.5, `${floor.toUpperCase()}
+${roomName.toUpperCase()}`, { size: 16, color: '#e8ecf2', plate: true }),
+      pp('plant_big', 1.6, 4.4), pp('wall_clock', 11.6, 1.3),
+      point('station', 'npc_station', 15.5, 8.6),
+      path_('npc_patrol', [[12.5, 8.6], [19.5, 8.6]]),
+      ...props, ...inspects, ...extra
+    ]
+  });
+}
+
+const tnLobby = buildMap('tn_lobby', {
+  rows: floorRows(32, 20, (g, put) => { put(0, 19, '#'.repeat(32)); g[19][15] = g[19][16] = 'E'; }),
+  legend: TN_LEGEND, label: 'Trụ sở Báo Thanh Niên — sảnh (nhân vật, sự việc GIẢ LẬP)', music: 'office',
+  ground: (ch, x, y) => (ch === 'E' ? 'exit_mat' : 'floor_lobby'),
   objects: () => [
-    point('spawn', 'spawn_start', 16.5, 17.6),
-    point('spawn', 'spawn_from_street', 16.5, 17.6),
-    point('spawn', 'spawn_from_boss', 27.5, 13.7),
-    rectT('zone', 'zone_S3', 1, 1, 7, 6, { room: 'S3' }),
-    rectT('zone', 'zone_S4', 9, 1, 7, 6, { room: 'S4' }),
-    rectT('zone', 'zone_S7', 17, 1, 7, 6, { room: 'S7' }),
-    rectT('zone', 'zone_S8', 25, 1, 7, 6, { room: 'S8' }),
-    rectT('zone', 'zone_corridor', 1, 8, 31, 3, { area: 'corridor' }),
-    rectT('zone', 'zone_lobby', 1, 11, 31, 8, { area: 'lobby' }),
-    ...[['S3', 4], ['S4', 12], ['S7', 20], ['S8', 28]].map(([room, cx]) => rectT('door', `door_${room}`, cx, 7, 2, 2, { room })),
-    rectT('exit', 'exit_street', 16, 18.6, 2, 1.4, { target: 'street', spawn: 'spawn_from_office' }),
-    rectT('portal', 'portal_boss', 27, 12, 2, 1, { target: 'boss', spawn: 'spawn_from_office', room: 'S9' }),
-    point('npc', 'npc1', 16, 16.6, { patrol: 'patrol_npc1_lobby' }),
-    point('npc', 'npc2', 8, 9.7, { patrol: 'patrol_npc2' }),
-    point('npc', 'amb_guard', 19.5, 18.4, { patrol: 'patrol_guard' }),
-    point('npc', 'amb_worker', 22, 10.5, { patrol: 'patrol_worker' }),
-    path_('patrol_npc1_lobby', [[13.5, 16.6], [18.5, 16.6]]),
-    path_('patrol_npc2', [[3, 9.7], [29, 9.7]]),
-    path_('patrol_guard', [[18.5, 18.4], [21.5, 18.4]]),
-    path_('patrol_worker', [[14, 10.5], [30, 10.5]]),
-    path_('patrol_npc1_hoso', [[2.5, 5.6], [6.5, 5.6]]),
-    point('station', 'npc1_hoso', 4.5, 5.6),
-    path_('patrol_npc2_s4', [[10.5, 5.6], [14.5, 5.6]]),
-    point('station', 'npc2_s4', 12.5, 5.6),
-    path_('patrol_npc1_s7', [[18.5, 5.6], [22.5, 5.6]]),
-    point('station', 'npc1_s7', 20.5, 5.6),
-    path_('patrol_npc1_s8', [[26.5, 5.6], [30.5, 5.6]]),
-    point('station', 'npc1_s8', 28.5, 5.6),
-    point('station', 'npc1_lobby_end', 22, 17.6),
-    rectT('inspect', 'inspect_notice', 5, 12, 1, 1, { text: 'inspect_notice' }),
-    rectT('inspect', 'inspect_window_lobby', 2, 12, 2, 1, { text: 'inspect_window' }),
-    rectT('inspect', 'inspect_tv', 7, 12, 2, 1, { text: 'inspect_tv' }),
-    rectT('inspect', 'inspect_reception', 13, 15, 6, 1, { text: 'inspect_reception' }),
-    rectT('inspect', 'inspect_pinboard_S3', 3, 1, 2, 1, { text: 'inspect_pinboard' }),
-    rectT('inspect', 'inspect_cabinet_S3', 1, 2, 2, 1, { text: 'inspect_cabinet' }),
-    rectT('inspect', 'inspect_bookshelf_lobby', 1, 13, 2, 1, { text: 'inspect_bookshelf' }),
-    rectT('inspect', 'inspect_lab_S4', 10, 3, 5, 1, { text: 'inspect_lab' }),
-    rectT('inspect', 'inspect_whiteboard_S8', 29, 1, 2, 1, { text: 'inspect_whiteboard' }),
-    rectT('inspect', 'inspect_cooler', 1, 9, 1, 1, { text: 'inspect_cooler' })
+    point('spawn', 'spawn_start', 16, 17.4),
+    point('spawn', 'spawn_from_street', 16, 17.4),
+    point('spawn', 'spawn_elevator', 16, 4.3),
+    rectT('zone', 'zone_lobby', 1, 3, 30, 16, { area: 'lobby' }),
+    rectT('exit', 'exit_street', 15, 18.6, 2, 1.4, { target: 'street', spawn: 'spawn_from_office' }),
+    rectT('elevator', 'elevator', 15, 2, 2, 1, { group: 'tn' }),
+    pp('elevator', 16, 3),
+    label('lobby_name', 16, 0.75, 'BÁO THANH NIÊN — TRỤ SỞ', { size: 20, color: '#e8ecf2' }),
+    label('lobby_note', 16, 1.4, 'Nhân vật và sự việc trong tòa nhà là GIẢ LẬP, không đại diện cho Báo Thanh Niên.', { size: 12, color: '#c9d1dc' }),
+    pp('rug_lobby', 16, 13.5),
+    pp('reception', 16, 10.2),
+    pp('blinds_window', 4, 2.9), pp('blinds_window', 8, 2.9), pp('blinds_window', 24, 2.9), pp('blinds_window', 28, 2.9),
+    pp('tv_wall', 11.5, 2.6), pp('cork_board', 21, 3.3), pp('wall_clock', 13, 1.6),
+    pp('sofa', 4.5, 8.2), pp('coffee_table', 4.5, 9.6), pp('sofa', 4.5, 12.2),
+    pp('sofa', 27.5, 8.2), pp('coffee_table', 27.5, 9.6), pp('sofa', 27.5, 12.2),
+    pp('plant_big', 1.6, 4.4), pp('plant_big', 30.4, 4.4), pp('plant_big', 1.6, 18.4), pp('plant_big', 30.4, 18.4),
+    pp('water_cooler', 9.5, 4.2), pp('floor_lamp', 7.6, 13.6), pp('floor_lamp', 24.4, 13.6),
+    pp('desk_papers', 21.5, 17.8), pp('chair', 21.5, 16.4), pp('trash', 23.8, 18.2), pp('bookshelf', 9.5, 18.6),
+    point('npc', 'amb_guard', 18.6, 17.4, { patrol: 'patrol_guard' }),
+    path_('patrol_guard', [[18.6, 17.4], [20.5, 15.6]]),
+    point('npc', 'amb_worker', 10, 7, { patrol: 'patrol_worker' }),
+    path_('patrol_worker', [[8.5, 7], [23.5, 7]]),
+    point('station', 'npc1_lobby_end', 13, 12.4),
+    path_('patrol_npc1_lobby', [[12, 12.4], [20, 12.4]]),
+    rectT('inspect', 'inspect_notice', 20, 2, 2, 1.4, { text: 'inspect_notice' }),
+    rectT('inspect', 'inspect_tv', 10.5, 1.5, 2, 1.2, { text: 'inspect_tv' }),
+    rectT('inspect', 'inspect_window_lobby', 3, 2, 2, 1, { text: 'inspect_window' }),
+    rectT('inspect', 'inspect_reception', 13.5, 9.4, 5, 1, { text: 'inspect_reception' }),
+    rectT('inspect', 'inspect_bookshelf_lobby', 8.5, 17.6, 2, 1, { text: 'inspect_bookshelf' }),
+    rectT('inspect', 'inspect_cooler', 9, 3.6, 1, 0.8, { text: 'inspect_cooler' })
   ]
+});
+
+const tnF2 = tnFloor('tn_f2', {
+  floor: 'Tầng 2', room: 'S3', roomName: 'Phòng Hồ sơ', ground: 'floor_wood',
+  props: [
+    pp('blinds_window', 17, 2.9), pp('blinds_window', 21, 2.9), pp('whiteboard', 24.6, 2.75),
+    pp('cabinet', 14.2, 4.2), pp('cabinet', 15.3, 4.2), pp('cabinet', 23.8, 4.2), pp('archive_shelf', 20, 4.8),
+    pp('rug_room', 14, 9.8),
+    pp('desk_papers', 9.5, 7), pp('chair', 9.5, 8.3), pp('desk_papers', 14, 7), pp('chair', 14, 8.3),
+    pp('desk_pc', 18.5, 7), pp('chair', 18.5, 8.3),
+    pp('cork_board', 22.8, 11.4), pp('filing_boxes', 5, 12.6), pp('filing_boxes', 8, 12.6), pp('plant_small', 24.4, 12.8),
+    pp('floor_lamp', 1.6, 12.6), pp('trash', 11.6, 7.6)
+  ],
+  inspects: [
+    rectT('inspect', 'inspect_pinboard_S3', 21.8, 10.4, 2, 1, { text: 'inspect_pinboard' }),
+    rectT('inspect', 'inspect_cabinet_S3', 13.6, 3.3, 2.4, 1, { text: 'inspect_cabinet' })
+  ]
+});
+const tnF3 = tnFloor('tn_f3', {
+  floor: 'Tầng 3', room: 'S4', roomName: 'Phòng Phân tích ảnh', ground: 'floor_dark',
+  props: [
+    pp('blinds_window', 17, 2.9), pp('tv_wall', 21.5, 2.6), pp('poster_a', 14.5, 2.4),
+    pp('desk_lab', 9.5, 6.6), pp('chair', 9.5, 7.9), pp('desk_lab', 14, 6.6), pp('chair', 14, 7.9),
+    pp('desk_lab', 18.5, 6.6), pp('chair', 18.5, 7.9),
+    pp('dev_magnifier', 11, 11.6), pp('printer', 22.6, 6.6), pp('cabinet', 24.4, 4.2),
+    pp('dev_monitor', 18.5, 12.6), pp('plant_small', 24.4, 12.8), pp('trash', 15.8, 12.6)
+  ],
+  inspects: [rectT('inspect', 'inspect_lab_S4', 8.4, 5.6, 11.4, 1, { text: 'inspect_lab' })]
+});
+const tnF4 = tnFloor('tn_f4', {
+  floor: 'Tầng 4', room: 'S7', roomName: 'Phòng Tác động và chủ đích', ground: 'carpet',
+  props: [
+    pp('blinds_window', 17, 2.9), pp('blinds_window', 21, 2.9), pp('whiteboard', 14.2, 2.75), pp('tv_wall', 24, 2.6),
+    pp('meeting_table', 15, 9.6), pp('cork_board', 7, 12.4), pp('plant_big', 24.4, 12.6),
+    pp('floor_lamp', 22.4, 5), pp('coffee_table', 22.5, 12.6), pp('water_cooler', 10.5, 4.2)
+  ]
+});
+const tnF5 = tnFloor('tn_f5', {
+  floor: 'Tầng 5', room: 'S8', roomName: 'Phòng Phân loại và xử lý', ground: 'floor_lobby',
+  props: [
+    pp('blinds_window', 17, 2.9), pp('whiteboard', 14, 2.75), pp('whiteboard', 21.5, 2.75),
+    pp('cork_board', 14.5, 4.2), pp('cork_board', 24, 7),
+    pp('desk_pc', 9.5, 7.4), pp('chair', 9.5, 8.7), pp('desk_papers', 18.5, 7.4), pp('chair', 18.5, 8.7),
+    pp('sofa', 8.5, 12.6), pp('coffee_table', 14, 12.4), pp('plant_small', 24.4, 12.8), pp('filing_boxes', 20, 12.6)
+  ],
+  inspects: [rectT('inspect', 'inspect_whiteboard_S8', 20.3, 1.8, 2.4, 1.2, { text: 'inspect_whiteboard' })]
 });
 
 // ---------------- Phố ven vịnh (thành phố mở rộng)
@@ -979,7 +1022,7 @@ const street = buildMap('street', {
     rectT('zone', 'zone_street', 0, 7, CW, 9, { area: 'street' }),
     rectT('zone', 'zone_park', 0, 16, CW, 9, { area: 'park' }),
     rectT('zone', 'zone_pier', 36, 25, 3, 7, { area: 'pier' }),
-    rectT('exit', 'door_office', 8, 6, 2, 1, { target: 'office', spawn: 'spawn_from_street' }),
+    rectT('exit', 'door_office', 8, 6, 2, 1, { target: 'tn_lobby', spawn: 'spawn_from_street' }),
     rectT('exit', 'door_news', 24, 6, 2, 1, { target: 'newsroom', spawn: 'spawn_from_street' }),
     rectT('exit', 'door_agency', 38, 6, 2, 1, { target: 'agency', spawn: 'spawn_from_street' }),
     rectT('exit', 'door_cafe', 52, 6, 2, 1, { target: 'cafe', spawn: 'spawn_from_street' }),
@@ -1147,65 +1190,48 @@ const boss = buildMap('boss', {
   objects: () => [
     point('spawn', 'spawn_from_office', 10, 12.4),
     rectT('zone', 'zone_boss', 1, 1, 18, 12, { room: 'S9' }),
-    rectT('exit', 'exit_office', 9, 12.7, 2, 1.3, { target: 'office', spawn: 'spawn_from_boss' }),
+    rectT('exit', 'exit_office', 9, 12.7, 2, 1.3, { target: 'tn_lobby', spawn: 'spawn_elevator' }),
     point('npc', 'boss', 10, 5)
   ]
 });
 
-/** Xe cộ (nhìn ngang, hướng sang phải; game lật ngang khi chạy sang trái). */
+/** Xe cộ đúng tỉ lệ (tools/props.mjs → vehicles), nhìn ngang hướng sang phải; game lật khi chạy sang trái. */
 function buildVehicles() {
-  const save = (img, id) => img.save(path.join(ROOT, `assets/sprites/${id}.png`));
-  const outline = (f, w, h) => {
-    const out = new Img(w, h);
-    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
-      if (f.get(x, y)[3] > 200) continue;
-      if ([[1, 0], [-1, 0], [0, 1], [0, -1]].some(([dx, dy]) => { const nx = x + dx, ny = y + dy; return nx >= 0 && ny >= 0 && nx < w && ny < h && f.get(nx, ny)[3] > 200; })) out.set(x, y, '#0b0f18');
-    }
-    out.blit(f, 0, 0, w, h, 0, 0);
-    return out;
-  };
-  // ô tô con, ba màu
-  [['car1', '#c8323c'], ['car2', '#3d6ea6'], ['car3', '#e6e6e6']].forEach(([id, col]) => {
-    const f = new Img(64, 32);
-    const R = (x, y, w, h, c) => f.rect(x, y, w, h, c);
-    R(3, 15, 58, 10, col); R(3, 15, 58, 2, shade(col, 0.25)); R(3, 23, 58, 2, shade(col, -0.3));
-    R(15, 6, 32, 10, col); R(17, 7, 13, 8, '#9fd0e6'); R(32, 7, 13, 8, '#9fd0e6'); R(18, 8, 4, 2, '#e6f4fb'); R(30, 7, 2, 8, shade(col, -0.2));
-    R(57, 17, 4, 3, '#ffe9a0'); R(3, 17, 3, 3, '#ff6a6a'); R(30, 18, 4, 1, shade(col, -0.35));
-    for (const cx of [15, 49]) { f.ellipse(cx, 25, 5, 5, '#1b1d24'); f.ellipse(cx, 25, 2, 2, '#9aa1b3'); }
-    const out = outline(f, 64, 32);
-    const sh = new Img(64, 32); sh.ellipse(32, 30, 29, 2, '#00000055'); sh.blit(out, 0, 0, 64, 32, 0, 0);
-    save(sh, id);
-  });
-  // xe buýt
-  {
-    const f = new Img(96, 40);
-    const R = (x, y, w, h, c) => f.rect(x, y, w, h, c);
-    R(2, 5, 92, 26, '#2a9d8f'); R(2, 5, 92, 3, '#5fc2b6'); R(2, 27, 92, 4, '#1e6f66');
-    for (let x = 8; x < 82; x += 13) R(x, 9, 10, 9, '#9fd0e6');
-    R(84, 9, 8, 14, '#9fd0e6'); R(70, 19, 9, 12, '#1e6f66'); R(71, 20, 3, 10, '#9fd0e6'); R(75, 20, 3, 10, '#9fd0e6');
-    R(4, 21, 50, 3, '#f4eedc'); R(90, 25, 3, 3, '#ffe9a0');
-    for (const cx of [20, 76]) { f.ellipse(cx, 32, 6, 6, '#1b1d24'); f.ellipse(cx, 32, 2, 2, '#9aa1b3'); }
-    const out = outline(f, 96, 40);
-    const sh = new Img(96, 40); sh.ellipse(48, 38, 44, 2, '#00000055'); sh.blit(out, 0, 0, 96, 40, 0, 0);
-    save(sh, 'bus');
+  for (const [id, img] of Object.entries(vehicles())) img.save(path.join(ROOT, `assets/sprites/${id}.png`));
+}
+
+/**
+ * Ghép props vào atlas (xếp theo kệ, rộng 2048): assets/props/props.png + props.json (định dạng JSON Hash của Phaser)
+ * + props_meta.json (chân đế, đèn, biển hiệu, phẳng / dán tường).
+ */
+function buildProps() {
+  const props = allProps();
+  const list = Object.entries(props).sort((a, b) => b[1].img.h - a[1].img.h);
+  const MAXW = 2048, PAD = 2;
+  let x = 0, y = 0, rowH = 0;
+  const pos = {};
+  for (const [k, { img }] of list) {
+    if (x + img.w > MAXW) { x = 0; y += rowH + PAD; rowH = 0; }
+    pos[k] = [x, y];
+    x += img.w + PAD; rowH = Math.max(rowH, img.h);
   }
-  // xe máy có người lái (đội mũ bảo hiểm)
-  [['bike1', '#c8323c', '#3d5a98', '#f2d36b'], ['bike2', '#2b2f3a', '#e07a5f', '#f4f4f4']].forEach(([id, body, shirt, helmet]) => {
-    const f = new Img(32, 32);
-    const R = (x, y, w, h, c) => f.rect(x, y, w, h, c);
-    R(6, 20, 20, 5, body); R(20, 15, 5, 6, body); R(24, 13, 4, 2, '#3a3f4d'); R(8, 18, 10, 3, '#2b2f3a');
-    R(11, 9, 7, 10, shirt); R(17, 12, 7, 3, shirt); R(12, 18, 6, 4, '#2d3a5a'); R(15, 21, 3, 4, '#2d3a5a');
-    R(11, 2, 8, 7, helmet); R(16, 4, 4, 3, '#9fd0e6'); R(11, 7, 3, 2, '#f1c7a0');
-    for (const cx of [8, 24]) { f.ellipse(cx, 26, 4, 4, '#1b1d24'); f.ellipse(cx, 26, 1, 1, '#9aa1b3'); }
-    R(27, 17, 2, 2, '#ffe9a0');
-    const out = outline(f, 32, 32);
-    const sh = new Img(32, 32); sh.ellipse(16, 30, 13, 2, '#00000055'); sh.blit(out, 0, 0, 32, 32, 0, 0);
-    save(sh, id);
-  });
+  const atlas = new Img(MAXW, y + rowH);
+  const frames = {}, meta = {};
+  for (const [k, { img, meta: m }] of list) {
+    const [px, py] = pos[k];
+    atlas.blit(img, 0, 0, img.w, img.h, px, py);
+    frames[k] = { frame: { x: px, y: py, w: img.w, h: img.h }, rotated: false, trimmed: false, spriteSourceSize: { x: 0, y: 0, w: img.w, h: img.h }, sourceSize: { w: img.w, h: img.h } };
+    meta[k] = { w: img.w, h: img.h, ...m };
+  }
+  atlas.save(path.join(ROOT, 'assets/props/props.png'));
+  fs.writeFileSync(path.join(ROOT, 'assets/props/props.json'), JSON.stringify({ frames, meta: { image: 'props.png', size: { w: MAXW, h: y + rowH }, scale: 1 } }));
+  fs.writeFileSync(path.join(ROOT, 'assets/props/props_meta.json'), JSON.stringify(meta));
+  return `props ${list.length} (atlas ${MAXW}x${y + rowH})`;
 }
 
 buildTileset();
+const propsInfo = buildProps();
 buildVehicles();
 for (const [id, spec] of Object.entries(CHARACTERS)) buildCharacter(id, spec);
 buildBoss();
-console.log(['ok:', `tileset ${TILES.length} ô`, office, street, newsroom, cafe, agency, boss].join('\n  '));
+console.log(['ok:', `tileset ${TILES.length} ô`, tnLobby, tnF2, tnF3, tnF4, tnF5, street, newsroom, cafe, agency, boss, propsInfo].join('\n  '));

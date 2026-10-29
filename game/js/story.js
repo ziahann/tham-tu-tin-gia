@@ -8,6 +8,7 @@ import { normalize, containsPhrase } from './text.js';
 import { sfx } from './audio.js';
 import { toast } from './ui.js';
 import { toolWindow, browseContent, deviceSpeaker } from './tools.js';
+import { targetMap } from './guide.js';
 
 let world = null;
 let busy = false;
@@ -393,6 +394,30 @@ export async function useDevice(device) {
     });
   });
   world?.refresh();
+}
+
+/**
+ * Thang máy của Trụ sở Báo Thanh Niên: chọn tầng. Tầng đang đứng, tầng có hồ sơ đang theo dõi (đặt sẵn con trỏ)
+ * và tầng thượng (Phòng họp, mở khi đủ điều kiện boss) được ghi rõ.
+ */
+export async function useElevator() {
+  const floors = data.quests.building?.floors || [];
+  const here = world?.mapKey;
+  const goal = world ? targetMap(world) : null;
+  const bossOpen = ['open', 'done'].includes(bossStatus(state.progress.flags));
+  let pick = null;
+  await conversation('system', async () => {
+    const options = floors.map(f => {
+      const tags = [f.map === here ? t('elevator.here') : '', f.map === goal ? t('elevator.tracked') : '', f.room === 'S9' && !bossOpen ? t('elevator.locked') : ''].filter(Boolean);
+      return { id: f.map, text: `${f.label} · ${f.name}${tags.length ? `  (${tags.join(' · ')})` : ''}`, f };
+    });
+    options.push({ id: '_stay', text: t('elevator.cancel') });
+    const c = await dlg.choose(options, { speaker: 'system', text: t('elevator.ask'), focus: options.findIndex(o => o.id === goal && goal !== here) });
+    if (c.id === '_stay' || c.id === here) return;
+    if (c.f.room === 'S9' && !bossOpen) { await dlg.say('system', t('elevator.lockedLine')); return; }
+    pick = c.f;
+  });
+  if (pick) { sfx('ding'); world?.travel(pick.map, pick.spawn || 'spawn_elevator', 'down'); }
 }
 
 /** Mục tiêu dẫn đường của hồ sơ đang theo dõi: { kind: 'npc' | 'device', id } hoặc null. */

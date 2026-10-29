@@ -1,0 +1,712 @@
+// Đạo cụ (props): đồ vật và tòa nhà kích thước tự do, vẽ bằng code theo thước tỉ lệ người 32x48 ≈ 1,7 m
+// (1 ô 32 px ≈ 1,1 m). Mỗi prop: kích thước ảnh, chân đế va chạm (tính từ đáy), đèn ban đêm, chỗ gắn biển chữ.
+// gen-assets ghép tất cả vào atlas assets/props/props.png (+ props.json cho Phaser, props_meta.json cho game).
+import { Img } from './png.mjs';
+import { shade } from './characters.mjs';
+
+const OUT = '#0b0f18';
+
+/** Bộ cọ vẽ trên một ảnh: hình chữ nhật, elip, chuyển màu dọc, nhiễu, viền ngoài. */
+function brush(img) {
+  const R = (x, y, w, h, c) => img.rect(Math.round(x), Math.round(y), Math.round(w), Math.round(h), c);
+  const E = (cx, cy, rx, ry, c) => img.ellipse(Math.round(cx), Math.round(cy), Math.round(rx), Math.round(ry), c);
+  const G = (x, y, w, h, c1, c2) => { for (let j = 0; j < h; j++) R(x, y + j, w, 1, mix(c1, c2, h > 1 ? j / (h - 1) : 0)); };
+  const F = (x, y, w, h, c) => img.frame(Math.round(x), Math.round(y), Math.round(w), Math.round(h), c);
+  return { R, E, G, F };
+}
+
+/** Trộn hai màu hex theo t (0..1). */
+function mix(a, b, t) {
+  const p = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+  const [x, y] = [p(a), p(b)];
+  return `#${x.map((v, i) => Math.round(v + (y[i] - v) * t).toString(16).padStart(2, '0')).join('')}`;
+}
+
+/** Thêm viền tối 1px quanh phần đặc (đồ vật trong nhà, xe, cây). */
+function outline(img) {
+  const out = new Img(img.w, img.h);
+  for (let y = 0; y < img.h; y++) for (let x = 0; x < img.w; x++) {
+    if (img.get(x, y)[3] > 200) continue;
+    if ([[1, 0], [-1, 0], [0, 1], [0, -1]].some(([dx, dy]) => { const nx = x + dx, ny = y + dy; return nx >= 0 && ny >= 0 && nx < img.w && ny < img.h && img.get(nx, ny)[3] > 200; })) out.set(x, y, OUT);
+  }
+  out.blit(img, 0, 0, img.w, img.h, 0, 0);
+  return out;
+}
+
+/** Bóng đổ mềm dưới chân đồ vật. */
+const shadow = (img, cx, cy, rx, ry = 3) => img.ellipse(cx, cy, rx, ry, '#00000048');
+
+let seed = 1;
+const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+
+// ---------------------------------------------------------------- nội thất
+
+/** Bàn làm việc 2 ô: màn hình, bàn phím, chồng giấy, đèn bàn, cốc. variant: 'pc' | 'papers' | 'lab'. */
+function desk(variant) {
+  const w = 72, h = 56, img = new Img(w, h), { R, E, G } = brush(img);
+  shadow(img, 36, 53, 34);
+  G(2, 22, 68, 8, '#5d6878', '#4a5363');      // mặt bàn (gỗ xám lạnh)
+  R(2, 22, 68, 1, '#7a8698');
+  R(2, 30, 68, 16, '#2e3440'); R(4, 32, 30, 12, '#363d4b'); R(17, 37, 4, 1, '#8e97a8');
+  R(4, 46, 3, 8, '#1c2028'); R(65, 46, 3, 8, '#1c2028'); R(38, 46, 3, 8, '#1c2028');
+  if (variant !== 'papers') {
+    const n = variant === 'lab' ? 2 : 1;
+    for (let i = 0; i < n; i++) {
+      const x = 8 + i * 24;
+      R(x, 2, 22, 16, '#14171d'); G(x + 1, 3, 20, 13, '#3b6f9e', '#24476b');
+      R(x + 2, 4, 9, 6, variant === 'lab' ? '#9fb3c8' : '#c9d9e8'); R(x + 12, 5, 7, 1, '#e6ebf2'); R(x + 12, 8, 5, 1, '#9fb3c8');
+      R(x + 9, 18, 4, 4, '#14171d'); R(x + 6, 21, 10, 2, '#22262e');
+    }
+    R(10, 25, 18, 4, '#c9d1dc'); for (let k = 11; k < 27; k += 2) R(k, 26, 1, 2, '#8e97a8');
+    R(31, 26, 4, 3, '#c9d1dc');
+  }
+  if (variant !== 'lab') {
+    // chồng hồ sơ, đèn bàn, cốc
+    R(40, 12, 14, 11, '#e9e4d6'); R(41, 10, 14, 11, '#f4f1e8'); R(42, 8, 13, 11, '#e0dccd'); R(44, 11, 8, 1, '#7a8698'); R(44, 13, 6, 1, '#7a8698'); R(43, 8, 3, 3, '#c8323c');
+    R(62, 4, 2, 18, '#22262e'); R(56, 2, 10, 4, '#22262e'); R(57, 5, 8, 1, '#ffd28a');
+    R(58, 24, 6, 5, '#e6ebf2'); R(59, 25, 4, 1, '#5a3e2c'); R(64, 25, 2, 2, '#e6ebf2');
+  } else {
+    R(54, 8, 12, 14, '#1c2028'); R(56, 10, 8, 4, '#2a3a4a'); R(57, 16, 2, 2, '#4aa35b'); R(61, 16, 2, 2, '#c8323c'); // máy quét
+  }
+  return outline(img);
+}
+
+/** Ghế văn phòng (nhìn từ phía trước bàn). */
+function officeChair() {
+  const img = new Img(28, 36), { R, E } = brush(img);
+  shadow(img, 14, 33, 11);
+  R(5, 2, 18, 16, '#2b303b'); R(7, 4, 14, 12, '#3a4150'); R(6, 18, 16, 6, '#2b303b');
+  R(13, 24, 2, 6, '#1c2028'); R(5, 29, 18, 2, '#1c2028'); E(6, 32, 2, 1, '#1c2028'); E(22, 32, 2, 1, '#1c2028');
+  return outline(img);
+}
+
+/** Tủ hồ sơ kim loại cao (1 ô x 2 ô). */
+function cabinet() {
+  const img = new Img(34, 68), { R, G } = brush(img);
+  shadow(img, 17, 66, 15);
+  G(2, 2, 30, 62, '#8e97a8', '#6b7486'); R(2, 2, 30, 2, '#b4bccb');
+  for (let i = 0; i < 4; i++) { R(4, 6 + i * 15, 26, 13, '#7a8394'); R(4, 6 + i * 15, 26, 1, '#9aa3b4'); R(13, 11 + i * 15, 8, 2, '#2b2f3a'); R(6, 8 + i * 15, 7, 3, '#e9e4d6'); }
+  return outline(img);
+}
+
+/** Kệ sách lớn 2 ô x 2,5 ô. */
+function bookshelf() {
+  const img = new Img(68, 84), { R } = brush(img);
+  shadow(img, 34, 82, 32);
+  R(2, 2, 64, 78, '#2a2f3a'); R(4, 4, 60, 74, '#3a4150');
+  const cols = ['#7a2f38', '#2c4a6b', '#8a7a4a', '#3f5a4a', '#5b4a6b', '#9aa1b3', '#6b3a2a'];
+  for (let s = 0; s < 4; s++) {
+    const y = 6 + s * 18;
+    R(4, y + 15, 60, 3, '#2a2f3a');
+    for (let x = 6; x < 60;) { const bw = 3 + Math.floor(rnd() * 3), bh = 9 + Math.floor(rnd() * 5); R(x, y + 15 - bh, bw, bh, cols[Math.floor(rnd() * cols.length)]); R(x, y + 15 - bh, bw, 1, '#ffffff30'); x += bw + (rnd() < 0.15 ? 3 : 0); }
+  }
+  return outline(img);
+}
+
+/** Sofa 3 ô. */
+function sofa() {
+  const img = new Img(100, 52), { R, G } = brush(img);
+  shadow(img, 50, 49, 48);
+  G(2, 6, 96, 18, '#3b4a66', '#2c3850'); R(2, 6, 96, 2, '#5b6c8a');
+  R(2, 24, 96, 20, '#33415c'); for (const x of [6, 36, 66]) { R(x, 22, 28, 14, '#3e4e6c'); R(x, 22, 28, 2, '#56688a'); }
+  R(0, 10, 7, 36, '#2a354b'); R(93, 10, 7, 36, '#2a354b'); R(4, 44, 4, 6, '#1c2028'); R(92, 44, 4, 6, '#1c2028');
+  return outline(img);
+}
+
+/** Bàn nước thấp 2 ô, có báo và cốc. */
+function coffeeTable() {
+  const img = new Img(68, 36), { R } = brush(img);
+  shadow(img, 34, 33, 30);
+  R(2, 8, 64, 14, '#3e4654'); R(2, 8, 64, 2, '#5d6878'); R(4, 22, 3, 10, '#1c2028'); R(61, 22, 3, 10, '#1c2028');
+  R(10, 9, 18, 11, '#e9e4d6'); R(12, 11, 14, 1, '#2b2f3a'); R(12, 14, 10, 1, '#7a8698'); R(42, 11, 6, 6, '#e6ebf2'); R(43, 12, 4, 2, '#5a3e2c');
+  return outline(img);
+}
+
+/** Quầy lễ tân dài 5 ô, có biển nhỏ và màn hình. */
+function reception() {
+  const img = new Img(164, 60), { R, G } = brush(img);
+  shadow(img, 82, 57, 80);
+  G(2, 14, 160, 10, '#5d6878', '#4a5363'); R(2, 14, 160, 2, '#8e97a8');
+  G(2, 24, 160, 30, '#2e3440', '#252a34'); for (let x = 10; x < 160; x += 20) R(x, 28, 1, 22, '#3a4150');
+  R(60, 30, 44, 10, '#14171d'); R(62, 32, 40, 6, '#1d4a6b'); // dải đèn biển quầy
+  R(20, 2, 22, 14, '#14171d'); R(21, 3, 20, 11, '#2c5a80'); R(120, 4, 18, 11, '#e9e4d6'); R(122, 6, 14, 1, '#7a8698');
+  R(84, 8, 8, 6, '#e6ebf2');
+  return outline(img);
+}
+
+/** Cây trong chậu: 'big' cao 1,7 ô, 'small' 1,1 ô. */
+function plant(big) {
+  const w = big ? 36 : 28, h = big ? 60 : 40, img = new Img(w, h), { R, E } = brush(img);
+  shadow(img, w / 2, h - 3, w / 2 - 3);
+  R(w / 2 - 8, h - 18, 16, 15, '#3a3f4d'); R(w / 2 - 8, h - 18, 16, 2, '#5b6170');
+  const leaves = big ? 9 : 6;
+  for (let i = 0; i < leaves; i++) {
+    const a = (i / leaves) * Math.PI - Math.PI, r = big ? 13 : 9;
+    E(w / 2 + Math.cos(a) * r * 0.9, h - 22 + Math.sin(a) * r * (big ? 2.2 : 1.6), big ? 6 : 5, big ? 4 : 3, i % 2 ? '#2f5d47' : '#3c7458');
+  }
+  E(w / 2, h - (big ? 44 : 28), big ? 6 : 4, big ? 6 : 4, '#4a8a66');
+  return outline(img);
+}
+
+/** Bình nước, máy in, đèn cây, thùng rác. */
+function waterCooler() {
+  const img = new Img(26, 58), { R, G } = brush(img);
+  shadow(img, 13, 55, 10);
+  R(4, 24, 18, 30, '#c9d1dc'); R(5, 26, 16, 6, '#e6ebf2'); R(8, 34, 3, 3, '#3d7fd1'); R(15, 34, 3, 3, '#c8323c');
+  G(5, 4, 16, 20, '#9ccbe6', '#6aa0c4'); R(7, 6, 4, 16, '#c4e2f4'); R(9, 1, 8, 4, '#3d6ea6');
+  return outline(img);
+}
+function printer() {
+  const img = new Img(52, 52), { R } = brush(img);
+  shadow(img, 26, 49, 24);
+  R(4, 18, 44, 30, '#3a4150'); R(6, 20, 40, 12, '#c9d1dc'); R(10, 10, 32, 9, '#e9e4d6'); R(12, 6, 28, 5, '#f4f1e8');
+  R(10, 36, 32, 3, '#14171d'); R(38, 24, 5, 3, '#4aa35b'); R(6, 42, 40, 4, '#2b303b');
+  return outline(img);
+}
+function floorLamp() {
+  const img = new Img(24, 70), { R, E } = brush(img);
+  shadow(img, 12, 67, 8);
+  R(11, 18, 2, 48, '#22262e'); R(5, 64, 14, 3, '#22262e');
+  R(3, 2, 18, 16, '#d9c08a'); R(4, 3, 16, 14, '#f2dc9e'); R(5, 17, 14, 1, '#b08a3a');
+  return outline(img);
+}
+function trashBin() {
+  const img = new Img(20, 26), { R } = brush(img);
+  shadow(img, 10, 24, 7);
+  R(3, 6, 14, 17, '#4a5060'); R(2, 4, 16, 3, '#5b6170'); R(6, 8, 1, 13, '#3a3f4d'); R(13, 8, 1, 13, '#3a3f4d'); R(7, 1, 6, 4, '#e9e4d6');
+  return outline(img);
+}
+function filingBoxes() {
+  const img = new Img(50, 44), { R } = brush(img);
+  shadow(img, 25, 41, 23);
+  const box = (x, y, w, h) => { R(x, y, w, h, '#8a7458'); R(x, y, w, 3, '#a68d6c'); R(x + w / 2 - 5, y + 6, 10, 5, '#e9e4d6'); R(x + 2, y + h - 2, w - 4, 1, '#6b5a44'); };
+  box(2, 22, 22, 18); box(25, 24, 22, 16); box(10, 5, 24, 18);
+  return outline(img);
+}
+
+/** Bàn họp dài với ghế hai bên (4 ô x 2 ô). */
+function meetingTable() {
+  const img = new Img(136, 76), { R, E } = brush(img);
+  shadow(img, 68, 72, 64, 4);
+  for (const x of [18, 50, 82, 112]) { R(x - 7, 2, 14, 14, '#2b303b'); R(x - 5, 4, 10, 8, '#3a4150'); }
+  R(4, 16, 128, 34, '#3e4654'); R(4, 16, 128, 3, '#5d6878'); R(6, 50, 124, 6, '#2e3440');
+  for (const x of [16, 48, 80, 110]) { R(x, 22, 14, 10, '#e9e4d6'); R(x + 2, 24, 10, 1, '#7a8698'); }
+  E(68, 33, 6, 4, '#14171d');
+  for (const x of [18, 50, 82, 112]) { R(x - 7, 56, 14, 14, '#2b303b'); R(x - 5, 58, 10, 8, '#3a4150'); }
+  return outline(img);
+}
+
+/** Bảng ghim đứng (tường bằng chứng) 2 ô x 2,2 ô. */
+function corkBoard() {
+  const img = new Img(72, 76), { R } = brush(img);
+  shadow(img, 36, 73, 30);
+  R(8, 60, 3, 14, '#22262e'); R(61, 60, 3, 14, '#22262e');
+  R(2, 2, 68, 60, '#3a3026'); R(5, 5, 62, 54, '#8a6a48');
+  const notes = [[9, 9, '#e9e4d6'], [28, 8, '#9fb3c8'], [48, 11, '#e9e4d6'], [12, 32, '#f2d36b'], [34, 34, '#e9e4d6'], [52, 36, '#c9d1dc']];
+  notes.forEach(([x, y, c]) => { R(x, y, 13, 11, c); R(x + 2, y + 4, 9, 1, '#5b5d6e'); R(x + 2, y + 7, 6, 1, '#5b5d6e'); R(x + 6, y, 2, 2, '#c8323c'); });
+  for (let i = 0; i < 26; i++) { R(15 + i, 15 + Math.round(i * 0.75), 1, 1, '#c8323c'); R(36 + i * 0.6, 14 + i, 1, 1, '#c8323c'); }
+  return outline(img);
+}
+
+/** Kệ lưu trữ cao 3 ô x 2,6 ô với hộp hồ sơ, cuộn báo. */
+function archiveShelf() {
+  const img = new Img(100, 88), { R } = brush(img);
+  shadow(img, 50, 86, 48);
+  R(2, 2, 96, 82, '#2a2f3a'); R(4, 4, 92, 78, '#353b48');
+  for (let s = 0; s < 4; s++) {
+    const y = 6 + s * 19;
+    R(4, y + 16, 92, 3, '#22262e');
+    for (let x = 6; x < 92; x += 12) { if (rnd() < 0.15) continue; R(x, y + 3, 10, 13, rnd() < 0.5 ? '#8a7458' : '#6b6a5a'); R(x + 2, y + 6, 6, 3, '#e9e4d6'); }
+  }
+  return outline(img);
+}
+
+/** Màn hình TV lớn treo tường (prop phẳng trên tường). */
+function tvWall() {
+  const img = new Img(76, 46), { R, G } = brush(img);
+  R(2, 2, 72, 42, '#0e1015'); G(4, 4, 68, 34, '#2c3a55', '#1d2a40');
+  R(4, 30, 68, 8, '#9b2630'); R(8, 32, 30, 2, '#f4eedc'); R(8, 35, 20, 1, '#e6c0c0');
+  R(8, 8, 26, 18, '#7a8ea6'); R(38, 9, 28, 2, '#e6ebf2'); R(38, 14, 22, 1, '#9fb3c8'); R(38, 18, 25, 1, '#9fb3c8');
+  return img;
+}
+
+/** Cửa sổ có rèm lá sách, cao 1,7 ô (prop phẳng trên tường). lit: có ánh đèn đường hắt vào. */
+function blindsWindow() {
+  const img = new Img(52, 56), { R, G } = brush(img);
+  R(0, 0, 52, 56, '#8e97a8'); G(3, 3, 46, 50, '#16233a', '#0f1828');
+  for (let y = 5; y < 52; y += 4) R(3, y, 46, 2, '#aab3c2');
+  R(25, 3, 2, 50, '#8e97a8'); R(0, 52, 52, 4, '#b4bccb');
+  return img;
+}
+
+/** Bảng trắng treo tường. */
+function whiteboard() {
+  const img = new Img(76, 44), { R, F } = brush(img);
+  R(0, 0, 76, 40, '#8e97a8'); R(2, 2, 72, 36, '#eef1f5');
+  R(6, 7, 26, 2, '#3d5a98'); R(6, 13, 34, 2, '#3d5a98'); R(6, 19, 18, 2, '#4aa35b'); F(46, 8, 22, 16, '#c8323c'); R(50, 14, 14, 2, '#c8323c');
+  R(6, 26, 30, 1, '#5b5d6e'); R(6, 30, 22, 1, '#5b5d6e'); R(8, 40, 60, 3, '#5b6170');
+  return img;
+}
+
+/** Đồng hồ, áp phích treo tường. */
+function wallClock() {
+  const img = new Img(22, 22), { R, E } = brush(img);
+  E(11, 11, 10, 10, '#22262e'); E(11, 11, 8, 8, '#eef1f5'); R(11, 4, 1, 8, '#22262e'); R(11, 11, 5, 1, '#c8323c');
+  return img;
+}
+function poster(color) {
+  const img = new Img(30, 40), { R } = brush(img);
+  R(0, 0, 30, 40, '#22262e'); R(2, 2, 26, 36, '#e9e4d6'); R(4, 4, 22, 14, color); R(5, 22, 20, 2, '#2b2f3a'); R(5, 27, 16, 1, '#5b5d6e'); R(5, 30, 18, 1, '#5b5d6e'); R(5, 34, 10, 2, '#c8323c');
+  return img;
+}
+
+/** Cửa thang máy (2 cánh thép) cao 2,4 ô, có bảng số tầng phía trên. */
+function elevator() {
+  const img = new Img(76, 84), { R, G } = brush(img);
+  R(0, 0, 76, 84, '#5b6170'); R(2, 2, 72, 80, '#3a4150');
+  R(22, 4, 32, 10, '#0e1015'); R(25, 6, 8, 6, '#ff9a3a'); R(36, 7, 4, 4, '#ff9a3a'); R(44, 6, 7, 6, '#7a8698');
+  G(8, 16, 29, 66, '#b4bccb', '#7a8394'); G(39, 16, 29, 66, '#aab3c2', '#6f7889');
+  R(37, 16, 2, 66, '#22262e'); R(12, 20, 2, 58, '#d8dee8'); R(43, 20, 2, 58, '#d0d6e0');
+  R(66, 44, 6, 12, '#22262e'); R(68, 46, 2, 2, '#ffd28a'); R(68, 51, 2, 2, '#7a8698');
+  return img;
+}
+
+/** Thảm lớn (phẳng, dưới chân nhân vật). */
+function rug(w, h, c1, c2) {
+  const img = new Img(w, h), { R, F } = brush(img);
+  R(0, 0, w, h, c1); F(3, 3, w - 6, h - 6, c2); F(6, 6, w - 12, h - 12, shade(c1, 0.15));
+  for (let i = 0; i < w * h / 40; i++) img.set(Math.floor(rnd() * w), Math.floor(rnd() * h), shade(c1, (rnd() - 0.5) * 0.2));
+  return img;
+}
+
+/** Bàn tròn quán cà phê + 2 ghế. */
+function cafeTable() {
+  const img = new Img(60, 44), { R, E } = brush(img);
+  shadow(img, 30, 41, 26);
+  for (const x of [6, 48]) { R(x, 12, 8, 18, '#3a3026'); R(x - 1, 26, 10, 4, '#4a3c2e'); R(x + 1, 30, 2, 10, '#22262e'); R(x + 5, 30, 2, 10, '#22262e'); }
+  E(30, 18, 15, 8, '#4a3c2e'); E(30, 16, 14, 7, '#6b5642'); R(28, 24, 4, 14, '#22262e'); R(22, 37, 16, 2, '#22262e');
+  R(23, 12, 5, 4, '#e6ebf2'); R(24, 13, 3, 1, '#5a3e2c'); R(33, 14, 5, 4, '#e6ebf2');
+  return outline(img);
+}
+
+/** Quầy pha chế dài 4 ô: máy pha, cốc, tủ bánh có đèn. */
+function cafeCounter() {
+  const img = new Img(132, 64), { R, G } = brush(img);
+  shadow(img, 66, 61, 64);
+  R(2, 22, 128, 6, '#6b5642'); R(2, 22, 128, 1, '#8a7056'); G(2, 28, 128, 30, '#3a3026', '#2b241d');
+  for (let x = 8; x < 128; x += 16) R(x, 32, 10, 22, '#43372b');
+  R(10, 2, 26, 20, '#2b303b'); R(13, 5, 20, 7, '#c9d1dc'); R(16, 14, 3, 6, '#14171d'); R(26, 14, 3, 6, '#14171d');
+  R(48, 6, 40, 16, '#1c2028'); G(50, 8, 36, 12, '#f2c46b', '#d89a3a'); for (const x of [53, 63, 73]) { R(x, 13, 7, 5, '#8a5a3a'); R(x, 13, 7, 1, '#f4e0c0'); }
+  R(98, 14, 6, 8, '#e6ebf2'); R(106, 15, 6, 7, '#e6ebf2'); R(116, 10, 10, 12, '#4a5060');
+  return outline(img);
+}
+
+// ---------------------------------------------------------------- thiết bị Phòng xác minh (đúng tỉ lệ)
+
+function device(kind) {
+  const W = { computer: 72, magnifier: 72, detector: 40, archive: 56, monitor: 100, timeline: 136, evidence: 72 }[kind];
+  const H = { computer: 60, magnifier: 60, detector: 72, archive: 64, monitor: 70, timeline: 76, evidence: 76 }[kind];
+  if (kind === 'evidence') return corkBoard();
+  const img = new Img(W, H), { R, E, G } = brush(img);
+  shadow(img, W / 2, H - 3, W / 2 - 3);
+  if (kind === 'computer') {
+    return desk('lab');
+  } else if (kind === 'magnifier') {
+    R(2, 28, 68, 18, '#3a4150'); G(4, 30, 64, 12, '#fff6d6', '#e8d9a8'); R(8, 32, 22, 8, '#c9d9e8'); R(36, 31, 26, 9, '#c9d9e8');
+    R(6, 46, 4, 12, '#22262e'); R(62, 46, 4, 12, '#22262e');
+    R(54, 2, 3, 28, '#22262e'); R(40, 2, 16, 3, '#22262e'); E(38, 12, 10, 10, '#22262e'); E(38, 12, 8, 8, '#bfe6ff'); R(35, 8, 3, 2, '#ffffff');
+  } else if (kind === 'detector') {
+    G(2, 2, 36, 66, '#5b6170', '#3a4150'); R(4, 4, 32, 2, '#7a8698');
+    R(6, 8, 28, 20, '#0e1015'); E(20, 22, 11, 11, '#e6ebf2'); R(8, 22, 24, 7, '#0e1015');
+    for (let i = 0; i < 8; i++) R(20 + Math.round(i * 0.8), 21 - i, 1, 1, '#c8323c');
+    R(6, 32, 8, 5, '#4aa35b'); R(16, 32, 8, 5, '#f2d36b'); R(26, 32, 8, 5, '#c8323c');
+    R(6, 42, 28, 18, '#0e1015'); for (let x = 8; x < 32; x += 4) { const hh = 4 + Math.floor(rnd() * 12); R(x, 58 - hh, 2, hh, '#7fe3ff'); }
+  } else if (kind === 'archive') {
+    R(4, 30, 48, 30, '#4a3c2e'); R(6, 32, 44, 26, '#5b4a3a'); R(8, 38, 40, 3, '#3a3026'); R(8, 48, 40, 3, '#3a3026');
+    R(6, 2, 40, 28, '#22262e'); R(8, 4, 36, 22, '#e9e4d6'); for (let y = 7; y < 24; y += 3) R(11, y, 30, 1, '#8a7a62');
+    E(50, 14, 4, 9, '#0e1015'); R(48, 10, 3, 8, '#5b5d6e');
+  } else if (kind === 'monitor') {
+    R(2, 2, 96, 50, '#0e1015');
+    [[4, 4, '#2c4a6b'], [36, 4, '#24585a'], [68, 4, '#2c4a6b'], [4, 28, '#4a3f6b'], [36, 28, '#2c4a6b'], [68, 28, '#6b2a30']].forEach(([x, y, c]) => {
+      R(x, y, 28, 22, c); R(x + 2, y + 2, 24, 3, '#e6ebf2'); R(x + 2, y + 7, 18, 7, '#9fb3c8'); R(x + 2, y + 16, 12, 1, '#e6ebf2'); R(x + 20, y + 18, 5, 2, '#f2d36b');
+    });
+    R(44, 52, 12, 10, '#22262e'); R(30, 62, 40, 4, '#3a4150');
+  } else if (kind === 'timeline') {
+    R(8, 58, 3, 16, '#22262e'); R(125, 58, 3, 16, '#22262e');
+    R(2, 2, 132, 58, '#5b6170'); R(4, 4, 128, 54, '#eef1f5'); R(4, 30, 128, 2, '#22262e');
+    [[8, 8], [36, 36], [64, 8], [92, 36], [116, 8]].forEach(([x, y], i) => { R(x, y, 18, 18, ['#f2d36b', '#9fd8ff', '#f2d36b', '#f4b6c2', '#c9d1dc'][i]); R(x + 2, y + 5, 14, 1, '#5b5d6e'); R(x + 2, y + 9, 10, 1, '#5b5d6e'); R(x + 8, 30, 2, 2, '#c8323c'); });
+  }
+  return outline(img);
+}
+
+// ---------------------------------------------------------------- ngoài trời
+
+/** Cây xanh (tán tối, lạnh). big: 3 ô x 4 ô. */
+function tree(big) {
+  const w = big ? 96 : 64, h = big ? 128 : 92, img = new Img(w, h), { R, E } = brush(img);
+  shadow(img, w / 2, h - 4, w / 2 - 10, 5);
+  R(w / 2 - 4, h - (big ? 44 : 32), 8, big ? 40 : 28, '#3a3026'); R(w / 2 - 4, h - (big ? 44 : 32), 3, big ? 40 : 28, '#4a3c2e');
+  const cy = big ? 50 : 38, rx = big ? 44 : 26, ry = big ? 40 : 30;
+  for (let i = 0; i < (big ? 14 : 9); i++) {
+    const a = rnd() * Math.PI * 2, d = rnd() * 0.6;
+    E(w / 2 + Math.cos(a) * rx * d, cy + Math.sin(a) * ry * d, rx * 0.45, ry * 0.4, ['#1f3a33', '#26463c', '#2d5246'][i % 3]);
+  }
+  for (let i = 0; i < (big ? 8 : 5); i++) E(w / 2 - rx * 0.3 + rnd() * rx * 0.5, cy - ry * 0.4 + rnd() * ry * 0.4, 6, 4, '#3a6455');
+  return outline(img);
+}
+
+/** Đèn đường cao 3,5 ô. */
+function streetLamp() {
+  const img = new Img(40, 116), { R, E } = brush(img);
+  shadow(img, 12, 113, 8);
+  R(10, 14, 4, 98, '#2b303b'); R(11, 14, 1, 98, '#4a5060'); R(6, 108, 12, 6, '#22262e');
+  R(12, 12, 22, 3, '#2b303b'); R(26, 10, 12, 7, '#22262e'); R(27, 16, 10, 3, '#ffe2a0');
+  return outline(img);
+}
+
+/** Ghế đá công viên 2 ô. */
+function bench() {
+  const img = new Img(68, 40), { R } = brush(img);
+  shadow(img, 34, 37, 30);
+  R(4, 6, 60, 5, '#4a3c2e'); R(4, 12, 60, 5, '#5b4a3a'); R(4, 20, 60, 6, '#5b4a3a'); R(4, 20, 60, 1, '#6b5a48');
+  R(8, 6, 4, 28, '#22262e'); R(56, 6, 4, 28, '#22262e');
+  return outline(img);
+}
+
+/** Sạp báo 2 ô x 2,6 ô. */
+function kiosk() {
+  const img = new Img(72, 88), { R, G } = brush(img);
+  shadow(img, 36, 85, 34);
+  R(2, 4, 68, 12, '#24585a'); for (let x = 2; x < 70; x += 8) R(x, 16, 4, 3, '#24585a'); R(2, 4, 68, 2, '#3a7a7c');
+  R(6, 20, 60, 62, '#3a3026'); R(8, 22, 56, 26, '#22201c');
+  [[10, 24, '#e9e4d6'], [22, 24, '#d8d2c2'], [34, 24, '#9b2630'], [46, 24, '#c9a24a'], [10, 36, '#e9e4d6'], [24, 36, '#9fb3c8'], [40, 36, '#e9e4d6']].forEach(([x, y, c]) => { R(x, y, 10, 10, c); R(x + 1, y + 2, 8, 1, '#2b2f3a'); R(x + 1, y + 5, 6, 1, '#7a8698'); });
+  R(8, 50, 56, 4, '#5b4a3a'); for (let x = 10; x < 62; x += 9) { R(x, 55, 7, 22, '#e9e4d6'); R(x + 1, 58, 5, 1, '#2b2f3a'); }
+  return outline(img);
+}
+
+/** Trạm xe buýt 3 ô x 2,5 ô. */
+function busStop() {
+  const img = new Img(100, 80), { R } = brush(img);
+  shadow(img, 50, 77, 46);
+  R(2, 4, 96, 6, '#2b303b'); R(6, 10, 3, 66, '#2b303b'); R(91, 10, 3, 66, '#2b303b');
+  R(10, 10, 80, 40, '#9fb3c840'); R(12, 14, 26, 32, '#2c4a6b'); R(14, 16, 22, 4, '#e9e4d6'); R(14, 24, 18, 1, '#9fb3c8');
+  R(14, 58, 72, 5, '#5b4a3a'); R(16, 63, 3, 12, '#22262e'); R(81, 63, 3, 12, '#22262e');
+  R(88, 0, 10, 10, '#24585a'); R(90, 3, 6, 2, '#e9e4d6');
+  return outline(img);
+}
+
+/** Đồ nhỏ ngoài phố: thùng rác, trụ nước, cọc chắn, bồn hoa. */
+function streetBin() { const img = new Img(24, 36), { R } = brush(img); shadow(img, 12, 33, 9); R(4, 10, 16, 22, '#2a4a40'); R(3, 7, 18, 4, '#355a4e'); R(7, 14, 10, 2, '#4a7a6a'); R(9, 4, 6, 3, '#355a4e'); return outline(img); }
+function hydrant() { const img = new Img(22, 30), { R } = brush(img); shadow(img, 11, 27, 7); R(6, 8, 10, 18, '#8a2a30'); R(5, 6, 12, 3, '#6e2026'); R(2, 13, 4, 5, '#6e2026'); R(16, 13, 4, 5, '#6e2026'); R(8, 3, 6, 3, '#6e2026'); return outline(img); }
+function bollard() { const img = new Img(14, 28), { R } = brush(img); shadow(img, 7, 25, 5); R(3, 6, 8, 18, '#2b303b'); R(3, 9, 8, 2, '#c9a24a'); R(2, 3, 10, 4, '#3a4150'); return outline(img); }
+function planter() {
+  const img = new Img(68, 40), { R, E } = brush(img);
+  shadow(img, 34, 37, 30);
+  R(2, 16, 64, 20, '#4a5060'); R(2, 16, 64, 2, '#6b7686');
+  for (let i = 0; i < 9; i++) E(8 + i * 6.5, 14 - (i % 2) * 3, 6, 5, i % 2 ? '#26463c' : '#2d5246');
+  [[14, 9], [30, 7], [48, 10]].forEach(([x, y]) => R(x, y, 3, 3, '#9b5a7a'));
+  return outline(img);
+}
+
+/** Sạp chợ có dù 2,5 ô x 2,4 ô. */
+function marketStall() {
+  const img = new Img(84, 80), { R } = brush(img);
+  shadow(img, 42, 77, 38);
+  for (let x = 2; x < 82; x += 10) { R(x, 4, 5, 16, '#7a4a2a'); R(x + 5, 4, 5, 16, '#c9c2b4'); }
+  R(2, 20, 80, 3, '#5b3a22'); R(40, 23, 3, 26, '#22262e');
+  R(4, 48, 76, 8, '#4a3c2e'); R(6, 56, 3, 20, '#2b241d'); R(75, 56, 3, 20, '#2b241d');
+  [[8, 42, '#b08a2a'], [20, 41, '#8a2a30'], [32, 42, '#3f6a3a'], [48, 41, '#b06a2a'], [62, 42, '#b08a2a']].forEach(([x, y, c]) => { R(x, y, 10, 7, c); R(x + 1, y, 8, 1, shade(c, 0.3)); });
+  return outline(img);
+}
+
+/** Tàu tham quan neo ở bến (cảnh bình thường) 10 ô x 3,6 ô, mũi hướng phải. */
+function tourBoat() {
+  const img = new Img(320, 116), { R, E, G } = brush(img);
+  E(160, 104, 150, 8, '#0b1a2a80');
+  // thân tàu
+  for (let y = 70; y < 104; y++) {
+    const inset = Math.max(0, Math.round((y - 70) * 0.6));
+    R(10 + inset, y, 290 - inset * 2 + (y < 88 ? 14 : 0), 1, y < 78 ? '#e6ebf2' : y < 96 ? '#c9d1dc' : '#7a8394');
+  }
+  R(10, 78, 300, 3, '#3a5a80'); R(300, 70, 12, 14, '#e6ebf2');
+  // hai tầng cabin
+  G(40, 34, 230, 36, '#eef1f5', '#c9d1dc'); R(40, 34, 230, 3, '#ffffff');
+  for (let x = 50; x < 260; x += 22) { R(x, 42, 16, 14, '#1d2a40'); R(x + 2, 44, 5, 3, '#4a6080'); }
+  G(80, 10, 160, 24, '#e6ebf2', '#c9d1dc'); R(76, 8, 168, 4, '#9aa3b4');
+  for (let x = 90; x < 230; x += 20) R(x, 16, 14, 11, '#1d2a40');
+  R(160, 0, 3, 10, '#5b6170'); R(150, 62, 60, 4, '#9b2630');
+  // lan can, phao
+  for (let x = 44; x < 268; x += 6) R(x, 30, 1, 4, '#7a8394');
+  E(28, 84, 6, 6, '#c8323c'); E(28, 84, 3, 3, '#e6ebf2');
+  return outline(img);
+}
+
+/** Đảo đá vôi giữa vịnh: vách đá xám có vệt dọc, cây bụi chỉ mọc trên đỉnh và gờ đá. */
+function karstIsland(big) {
+  const w = big ? 180 : 110, h = big ? 200 : 130, img = new Img(w, h), { R, E } = brush(img);
+  E(w / 2, h - 8, w / 2 - 6, 8, '#0b1a2a90');
+  const half = y => { const t = (y - 8) / (h - 16); return Math.round((w / 2 - 8) * Math.min(1, 0.38 + t * 0.85) * (0.9 + Math.sin(y * 0.17) * 0.06)); };
+  for (let y = 8; y < h - 8; y++) {
+    const t = (y - 8) / (h - 16), hw = half(y);
+    R(w / 2 - hw, y, hw * 2, 1, mix('#6b7280', '#3a4048', t));
+    R(w / 2 - hw, y, Math.max(2, Math.round(hw / 3)), 1, mix('#848c98', '#4a515b', t)); // mặt sáng bên trái
+    R(w / 2 + hw - Math.max(2, Math.round(hw / 4)), y, Math.max(2, Math.round(hw / 4)), 1, mix('#4a515b', '#2b3038', t));
+  }
+  for (let i = 0; i < (big ? 16 : 9); i++) { const x = w / 2 - w / 3 + rnd() * w * 0.66, y = 20 + rnd() * h * 0.6; R(x, y, 1, 10 + rnd() * 24, '#2b303880'); }
+  // thảm cây trên đỉnh và vài gờ đá
+  for (let i = 0; i < (big ? 12 : 7); i++) E(w / 2 - half(14) * 0.8 + rnd() * half(14) * 1.6, 10 + rnd() * 10, 8, 5, i % 2 ? '#2f4a3a' : '#3a5a44');
+  for (let i = 0; i < (big ? 6 : 3); i++) { const y = 40 + rnd() * h * 0.4; E(w / 2 + (rnd() - 0.5) * half(y), y, 6, 3, '#2f4a3a'); }
+  R(w / 2 - half(h - 12), h - 12, half(h - 12) * 2, 3, '#2a4a5a'); // ngấn nước chân đảo
+  return img;
+}
+
+// ---------------------------------------------------------------- tòa nhà (u tối, lạnh)
+
+const STYLE = {
+  concrete: { wall: '#5a616e', wall2: '#4c535f', trim: '#6f7786', win: '#1a2433', lit: '#e8c46a', frame: '#3a404b' },
+  glass: { wall: '#1f2c3d', wall2: '#1a2534', trim: '#3a4b63', win: '#2a4466', lit: '#9ec8ff', frame: '#2a3546' },
+  brick: { wall: '#4e3330', wall2: '#432c2a', trim: '#5e4440', win: '#141c28', lit: '#e8b45a', frame: '#2e2220' },
+  stone: { wall: '#3c424e', wall2: '#343a45', trim: '#525a68', win: '#121a26', lit: '#7fe3ff', frame: '#262b33' },
+  shop: { wall: '#454c58', wall2: '#3c434e', trim: '#5b6372', win: '#1a2433', lit: '#f2c46b', frame: '#2b303b' },
+  warehouse: { wall: '#3e4652', wall2: '#363d48', trim: '#55606e', win: '#141c28', lit: '#c9a24a', frame: '#2b303b' },
+  hotel: { wall: '#4a5260', wall2: '#414856', trim: '#636c7c', win: '#1a2433', lit: '#e8c46a', frame: '#353b47' }
+};
+
+/**
+ * Tòa nhà nhiều tầng nhìn chính diện. o: { cols (số ô ngang), floors, style, door ('center' | số ô từ trái | null),
+ * shop (mặt tiền tầng trệt kính / cửa cuốn), awning (màu), fireEscape, balcony, roof: ['tank','antenna','ac','vent'], sign: true }.
+ * Tầng trệt cao 2,5 ô, mỗi tầng trên cao 2 ô, mái 0,8 ô. Trả về { img, meta }.
+ */
+function building(o) {
+  const s = STYLE[o.style];
+  const W = o.cols * 32, GF = 80, FL = 64, ROOF = 26;
+  const H = ROOF + o.floors * FL + GF;
+  const img = new Img(W, H), { R, E, G } = brush(img);
+  const lights = [];
+  // mái
+  R(0, 6, W, ROOF - 6, '#22262e'); R(0, ROOF - 4, W, 4, s.trim); R(0, 6, W, 2, '#3a4150');
+  for (const it of o.roof || []) {
+    const x = Math.floor(rnd() * (W - 40)) + 8;
+    if (it === 'tank') { R(x, -2 + 0, 22, 4, '#3a3026'); R(x + 2, 0, 18, 18, '#4a3c2e'); R(x + 2, 0, 18, 2, '#5b4a3a'); R(x + 4, 18, 2, 8, '#22262e'); R(x + 16, 18, 2, 8, '#22262e'); }
+    if (it === 'antenna') { R(x + 10, 0, 2, 22, '#2b303b'); R(x + 4, 4, 14, 1, '#2b303b'); R(x + 6, 9, 10, 1, '#2b303b'); E(x + 11, 1, 2, 2, '#c8323c'); lights.push([x + 11, 1, 0xff5a5a, 40, 0.8]); }
+    if (it === 'ac') { R(x, 10, 20, 12, '#8e97a8'); R(x + 2, 12, 16, 8, '#6b7486'); }
+    if (it === 'vent') { R(x, 12, 10, 10, '#4a5060'); R(x - 1, 10, 12, 3, '#5b6170'); }
+  }
+  // tường các tầng
+  const top = ROOF;
+  G(0, top, W, o.floors * FL + GF, s.wall, s.wall2);
+  if (o.style === 'brick') for (let y = top; y < H; y += 6) { R(0, y, W, 1, '#3a2624'); for (let x = (y / 6) % 2 ? 4 : 0; x < W; x += 10) R(x, y + 1, 1, 5, '#3a2624'); }
+  if (o.style === 'concrete' || o.style === 'hotel') for (let y = top + FL; y < H - GF + 1; y += FL) R(0, y - 3, W, 3, s.trim);
+  if (o.style === 'stone') for (let y = top; y < H; y += 12) { R(0, y, W, 1, '#2b3038'); for (let x = (y / 12) % 2 ? 12 : 0; x < W; x += 24) R(x, y, 1, 12, '#2b3038'); }
+  if (o.style === 'warehouse') for (let x = 0; x < W; x += 6) R(x, top, 2, H - top, '#353c47');
+  // vệt ẩm / ố mưa từ mái xuống
+  for (let i = 0; i < o.cols; i++) if (rnd() < 0.35) { const x = Math.floor(rnd() * W); R(x, top, 2, 20 + Math.floor(rnd() * 60), '#00000022'); }
+  // cửa sổ các tầng trên
+  for (let f = 0; f < o.floors; f++) {
+    const y0 = top + f * FL;
+    if (o.style === 'glass') {
+      for (let x = 0; x < W; x += 16) {
+        const lit = rnd() < 0.18;
+        G(x + 1, y0 + 4, 14, FL - 8, lit ? '#6a8ab8' : '#2a4466', lit ? '#3a5a88' : '#1a2a44'); R(x + 1, y0 + 4, 3, FL - 8, '#ffffff12');
+        if (lit) lights.push([x + 8, y0 + FL / 2, 0x9ec8ff, 50, 0.5]);
+      }
+      for (let x = 0; x <= W; x += 16) R(x, y0, 1, FL, s.frame);
+      R(0, y0 + FL - 2, W, 2, s.frame);
+      continue;
+    }
+    for (let c = 0; c < o.cols; c++) {
+      if (o.style === 'warehouse' && c % 3 !== 1) continue;
+      const x = c * 32 + 6, y = y0 + 12, ww = 20, wh = 36;
+      const lit = rnd() < 0.2;
+      R(x - 2, y - 2, ww + 4, wh + 4, s.frame);
+      G(x, y, ww, wh, lit ? s.lit : s.win, lit ? shade(s.lit, -0.35) : shade(s.win, -0.3));
+      R(x + ww / 2 - 1, y, 2, wh, s.frame); R(x, y + wh / 2 - 1, ww, 2, s.frame);
+      if (!lit) R(x + 2, y + 2, 4, 6, '#ffffff14');
+      if (lit) lights.push([x + ww / 2, y + wh / 2, parseInt(s.lit.slice(1), 16), 46, 0.6]);
+      R(x - 3, y + wh + 2, ww + 6, 3, s.trim); // bậu cửa
+      if (o.balcony && f > 0) { R(x - 4, y + wh - 6, ww + 8, 2, '#2b303b'); for (let k = x - 4; k < x + ww + 4; k += 3) R(k, y + wh - 4, 1, 8, '#2b303b'); R(x - 4, y + wh + 4, ww + 8, 2, '#2b303b'); }
+      if (rnd() < 0.15 && o.style !== 'stone') { R(x + ww + 2, y + wh - 12, 10, 8, '#8e97a8'); R(x + ww + 3, y + wh - 11, 8, 6, '#6b7486'); }
+    }
+  }
+  // thang thoát hiểm (gạch)
+  if (o.fireEscape) {
+    const fx = W - 58;
+    for (let f = 0; f < o.floors; f++) {
+      const y = top + f * FL + FL - 10;
+      R(fx, y, 50, 3, '#22262e'); for (let k = fx; k < fx + 50; k += 4) R(k, y - 10, 1, 10, '#22262e'); R(fx, y - 10, 50, 1, '#22262e');
+      for (let k = 0; k < 14; k++) R(fx + 8 + k * 2.4, y + 3 + k * 3.5, 4, 1, '#22262e');
+    }
+  }
+  // tầng trệt
+  const gy = H - GF;
+  R(0, gy, W, 4, s.trim);
+  const doorCol = o.door === 'center' ? Math.floor(o.cols / 2) - 1 : o.door;
+  const doorX = doorCol != null ? doorCol * 32 + 16 : null; // cửa rộng 2 ô? không: 1,5 ô ở giữa 2 ô
+  if (o.shop) {
+    for (let x = 6; x < W - 6; x += 40) {
+      if (doorX != null && x + 34 > doorX - 4 && x < doorX + 36) continue;
+      if (o.shop === 'shutter' && rnd() < 0.5) { R(x, gy + 22, 34, 54, '#4a5060'); for (let y = gy + 24; y < gy + 76; y += 3) R(x, y, 34, 1, '#3a4150'); continue; }
+      R(x - 1, gy + 21, 36, 56, s.frame); G(x, gy + 22, 34, 54, s.lit, shade(s.lit, -0.45));
+      R(x + 4, gy + 50, 10, 10, '#3a3026'); R(x + 18, gy + 46, 12, 14, '#3a3026');
+      lights.push([x + 17, gy + 50, parseInt(s.lit.slice(1), 16), 60, 0.7]);
+    }
+  } else {
+    for (let c = 0; c < o.cols; c++) {
+      const x = c * 32 + 6;
+      if (doorX != null && x + 24 > doorX - 4 && x < doorX + 68) continue;
+      R(x - 2, gy + 16, 24, 40, s.frame); G(x, gy + 18, 20, 36, s.win, shade(s.win, -0.3)); R(x + 9, gy + 18, 2, 36, s.frame);
+    }
+  }
+  if (o.awning) {
+    for (let x = 0; x < W; x += 12) { R(x, gy + 6, 6, 14, o.awning); R(x + 6, gy + 6, 6, 14, shade(o.awning, -0.3)); }
+    for (let x = 0; x < W; x += 12) R(x, gy + 20, 6, 3, shade(o.awning, -0.45));
+  }
+  // cửa ra vào (rộng 2 ô, cao 2 ô)
+  if (doorX != null) {
+    R(doorX - 4, gy + 10, 72, 70, s.frame);
+    G(doorX, gy + 14, 64, 66, o.style === 'glass' ? '#4a6a90' : '#2a3546', '#141c28');
+    R(doorX + 31, gy + 14, 2, 66, s.frame); R(doorX + 26, gy + 46, 2, 8, '#c9d1dc'); R(doorX + 36, gy + 46, 2, 8, '#c9d1dc');
+    R(doorX - 8, gy + 78, 80, 2, '#2b303b');
+    lights.push([doorX + 32, gy + 30, 0xffd28a, 80, 0.9]);
+  }
+  // bảng hiệu (chữ do game vẽ bằng Phaser): dải tối có viền đèn
+  let sign = null;
+  if (o.sign) {
+    const sw = Math.min(W - 16, Math.max(120, o.cols * 22)), sx = Math.round((W - sw) / 2), sy = gy - 30;
+    R(sx - 2, sy - 2, sw + 4, 26, o.signGlow || '#7fe3ff'); R(sx, sy, sw, 22, '#0e1015');
+    sign = { x: sx, y: sy, w: sw, h: 22 };
+    lights.push([sx + sw / 2, sy + 11, parseInt((o.signGlow || '#7fe3ff').slice(1), 16), 90, 0.9]);
+  }
+  // bậc thềm
+  R(0, H - 2, W, 2, '#2b303b');
+  return { img, meta: { base: [W, 40], lights, sign, door: doorX != null ? doorX + 32 : null } };
+}
+
+// ---------------------------------------------------------------- danh mục
+
+/** Tất cả props: khóa → { img, meta }. meta.base: [rộng, sâu] chân đế va chạm (0 = không va chạm); flat: nằm dưới chân; wall: dán tường. */
+export function allProps() {
+  seed = 7;
+  const P = {};
+  const add = (key, img, meta = {}) => { P[key] = { img, meta: { base: [img.w - 8, Math.min(20, img.h / 3)], ...meta } }; };
+  add('desk_pc', desk('pc'), { base: [68, 26] });
+  add('desk_papers', desk('papers'), { base: [68, 26] });
+  add('desk_lab', desk('lab'), { base: [68, 26], lights: [[20, 10, 0x7fb0ff, 50, 0.7]] });
+  add('chair', officeChair(), { base: [0, 0] });
+  add('cabinet', cabinet(), { base: [30, 16] });
+  add('bookshelf', bookshelf(), { base: [64, 18] });
+  add('sofa', sofa(), { base: [96, 22] });
+  add('coffee_table', coffeeTable(), { base: [64, 14] });
+  add('reception', reception(), { base: [160, 30] });
+  add('plant_big', plant(true), { base: [20, 10] });
+  add('plant_small', plant(false), { base: [16, 8] });
+  add('water_cooler', waterCooler(), { base: [20, 10] });
+  add('printer', printer(), { base: [46, 16] });
+  add('floor_lamp', floorLamp(), { base: [10, 6], lights: [[12, 10, 0xffd28a, 90, 1.0]] });
+  add('trash', trashBin(), { base: [14, 8] });
+  add('filing_boxes', filingBoxes(), { base: [46, 16] });
+  add('meeting_table', meetingTable(), { base: [128, 48] });
+  add('cork_board', corkBoard(), { base: [64, 10] });
+  add('archive_shelf', archiveShelf(), { base: [96, 18] });
+  add('tv_wall', tvWall(), { base: [0, 0], wall: true, lights: [[38, 20, 0x7fa8ff, 70, 0.9]] });
+  add('blinds_window', blindsWindow(), { base: [0, 0], wall: true, lights: [[26, 28, 0x9ec8ff, 60, 0.6]] });
+  add('whiteboard', whiteboard(), { base: [0, 0], wall: true });
+  add('wall_clock', wallClock(), { base: [0, 0], wall: true });
+  add('poster_a', poster('#2c4a6b'), { base: [0, 0], wall: true });
+  add('poster_b', poster('#6b2a30'), { base: [0, 0], wall: true });
+  add('elevator', elevator(), { base: [0, 0], wall: true, lights: [[30, 9, 0xff9a3a, 40, 0.8]] });
+  add('rug_lobby', rug(192, 96, '#2c3546', '#4a5a74'), { base: [0, 0], flat: true });
+  add('rug_room', rug(128, 80, '#3a2f3a', '#5a4a5a'), { base: [0, 0], flat: true });
+  add('cafe_table', cafeTable(), { base: [50, 14] });
+  add('cafe_counter', cafeCounter(), { base: [128, 30], lights: [[68, 14, 0xffc27a, 90, 1.0]] });
+  for (const k of ['computer', 'magnifier', 'detector', 'archive', 'monitor', 'timeline', 'evidence']) {
+    const img = device(k);
+    add(`dev_${k}`, img, { base: [img.w - 8, 18], lights: k === 'magnifier' ? [[36, 34, 0xfff2c0, 70, 0.9]] : [[img.w / 2, 16, 0x7fe3ff, 70, 1.0]] });
+  }
+  add('tree_big', tree(true), { base: [16, 10] });
+  add('tree', tree(false), { base: [12, 8] });
+  add('street_lamp', streetLamp(), { base: [8, 6], lights: [[32, 18, 0xffd28a, 190, 1.7]] });
+  add('bench', bench(), { base: [60, 10] });
+  add('kiosk', kiosk(), { base: [68, 26], lights: [[36, 34, 0xffe2a0, 70, 0.8]] });
+  add('bus_stop', busStop(), { base: [92, 12] });
+  add('street_bin', streetBin(), { base: [16, 8] });
+  add('hydrant', hydrant(), { base: [14, 8] });
+  add('bollard', bollard(), { base: [8, 6] });
+  add('planter', planter(), { base: [64, 16] });
+  add('market_stall', marketStall(), { base: [76, 20] });
+  add('tour_boat', tourBoat(), { base: [290, 34], lights: [[160, 48, 0xffe2a0, 120, 0.8]] });
+  add('karst_big', karstIsland(true), { base: [150, 30] });
+  add('karst', karstIsland(false), { base: [90, 20] });
+  // tòa nhà: tương tác (có biển, cửa) và trang trí
+  const B = {
+    bld_thanhnien: { cols: 12, floors: 5, style: 'glass', door: 'center', sign: true, signGlow: '#c8323c', roof: ['antenna', 'ac', 'ac'] },
+    bld_tinvinh: { cols: 9, floors: 3, style: 'brick', door: 2, sign: true, signGlow: '#ff9a3a', fireEscape: true, roof: ['tank', 'vent'] },
+    bld_xacminh: { cols: 8, floors: 2, style: 'stone', door: 'center', sign: true, signGlow: '#7fe3ff', roof: ['antenna'] },
+    bld_cafe: { cols: 8, floors: 1, style: 'shop', door: 'center', shop: 'glass', awning: '#5a3a3a', sign: true, signGlow: '#f2c46b', roof: ['vent'] },
+    bld_apartment: { cols: 9, floors: 5, style: 'concrete', door: 3, balcony: true, sign: true, signGlow: '#9fb3c8', roof: ['tank', 'ac', 'antenna'] },
+    bld_apartment2: { cols: 7, floors: 4, style: 'concrete', door: 2, sign: false, roof: ['tank', 'ac'] },
+    bld_hotel: { cols: 10, floors: 6, style: 'hotel', door: 'center', balcony: true, sign: true, signGlow: '#ff9fd0', roof: ['antenna', 'tank'] },
+    bld_pharmacy: { cols: 5, floors: 2, style: 'shop', door: 1, shop: 'glass', sign: true, signGlow: '#4aa35b', roof: ['ac'] },
+    bld_store: { cols: 6, floors: 2, style: 'shop', door: 2, shop: 'glass', awning: '#2c4a6b', sign: true, signGlow: '#9fd8ff', roof: ['vent'] },
+    bld_books: { cols: 5, floors: 2, style: 'brick', door: 1, shop: 'glass', sign: true, signGlow: '#f2c46b', roof: ['tank'] },
+    bld_closed: { cols: 6, floors: 2, style: 'concrete', door: null, shop: 'shutter', sign: true, signGlow: '#5b6170', roof: [] },
+    bld_warehouse: { cols: 12, floors: 1, style: 'warehouse', door: 4, shop: 'shutter', sign: true, signGlow: '#c9a24a', roof: ['vent', 'vent'] },
+    bld_tenement: { cols: 6, floors: 4, style: 'brick', door: 1, fireEscape: true, sign: false, roof: ['tank'] }
+  };
+  for (const [k, o] of Object.entries(B)) { const { img, meta } = building(o); P[k] = { img, meta: { ...meta, building: true } }; }
+  return P;
+}
+
+// ---------------------------------------------------------------- xe cộ (đúng tỉ lệ người 32x48)
+
+/** Ô tô con 3 ô x 1,5 ô (nhìn ngang, mũi xe bên phải). */
+function car(body) {
+  const img = new Img(96, 50), { R, E, G } = brush(img);
+  E(48, 46, 44, 3, '#00000055');
+  const dark = shade(body, -0.35), light = shade(body, 0.25);
+  // thân dưới
+  G(4, 22, 88, 16, body, shade(body, -0.2)); R(4, 22, 88, 2, light); R(4, 36, 88, 3, dark);
+  R(88, 24, 6, 10, body); R(2, 25, 4, 10, body);
+  // cabin kính
+  for (let y = 6; y < 22; y++) { const k = (22 - y) * 0.9; R(24 + k * 0.5, y, 48 - k * 1.2, 1, body); }
+  G(28, 9, 18, 12, '#9cc4dc', '#5a88a8'); G(49, 9, 18, 12, '#9cc4dc', '#5a88a8'); R(46, 8, 3, 14, dark); R(30, 10, 5, 3, '#e6f4fb');
+  // tay nắm, gương, đèn
+  R(40, 26, 6, 1, dark); R(62, 26, 6, 1, dark); R(68, 14, 4, 3, dark);
+  R(89, 26, 5, 4, '#ffe9a0'); R(2, 26, 3, 4, '#ff5a5a'); R(4, 34, 88, 1, '#ffffff22');
+  // bánh xe
+  for (const cx of [22, 74]) { E(cx, 39, 9, 9, '#14161c'); E(cx, 39, 5, 5, '#5b6170'); E(cx, 39, 2, 2, '#9aa1b3'); }
+  return outline(img);
+}
+
+/** Xe buýt 7,5 ô x 2,5 ô. */
+function bus() {
+  const img = new Img(240, 84), { R, E, G } = brush(img);
+  E(120, 80, 114, 4, '#00000055');
+  G(4, 8, 232, 60, '#2e6e6c', '#24585a'); R(4, 8, 232, 4, '#4a9a96'); R(4, 62, 232, 6, '#1c4442');
+  for (let x = 14; x < 200; x += 30) { G(x, 16, 26, 22, '#9cc4dc', '#5a88a8'); R(x + 2, 18, 6, 3, '#e6f4fb'); }
+  G(208, 14, 24, 30, '#9cc4dc', '#5a88a8'); R(176, 40, 22, 28, '#1c4442'); R(178, 42, 8, 24, '#7aa8c4'); R(188, 42, 8, 24, '#7aa8c4');
+  R(10, 46, 150, 6, '#e9e4d6'); R(10, 48, 150, 1, '#c9c2b4'); R(228, 52, 6, 6, '#ffe9a0'); R(4, 52, 4, 6, '#ff5a5a');
+  R(212, 4, 20, 6, '#14161c'); R(214, 5, 16, 4, '#ff9a3a');
+  for (const cx of [44, 192]) { E(cx, 68, 12, 12, '#14161c'); E(cx, 68, 7, 7, '#5b6170'); E(cx, 68, 3, 3, '#9aa1b3'); }
+  return outline(img);
+}
+
+/** Xe máy có người lái đội mũ bảo hiểm, 1,5 ô x 1,5 ô. */
+function scooter(body, shirt, helmet) {
+  const img = new Img(50, 50), { R, E } = brush(img);
+  E(25, 46, 20, 3, '#00000055');
+  R(8, 30, 30, 7, body); R(30, 22, 8, 10, body); R(36, 18, 6, 3, '#3a4150'); R(12, 26, 16, 5, '#22262e'); R(40, 26, 4, 3, '#ffe9a0');
+  R(18, 12, 11, 15, shirt); R(26, 16, 12, 4, shirt); R(20, 26, 9, 6, '#2d3a5a'); R(24, 31, 4, 7, '#2d3a5a'); R(23, 37, 6, 2, '#14161c');
+  E(23, 7, 7, 6, helmet); R(25, 5, 6, 4, '#9cc4dc'); R(18, 11, 4, 2, '#e8c0a0');
+  for (const cx of [12, 38]) { E(cx, 40, 6, 6, '#14161c'); E(cx, 40, 2, 2, '#9aa1b3'); }
+  return outline(img);
+}
+
+/** Ảnh các xe (khóa → Img), lưu thành sprite riêng cho traffic.js. */
+export function vehicles() {
+  return {
+    car1: car('#8a2a30'), car2: car('#2c4a6b'), car3: car('#c9ced6'), car4: car('#3a3f4d'),
+    bus: bus(),
+    bike1: scooter('#8a2a30', '#2c4a6b', '#c9a24a'), bike2: scooter('#2b303b', '#9b5a3a', '#e6ebf2')
+  };
+}
