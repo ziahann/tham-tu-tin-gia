@@ -1,5 +1,6 @@
-// Nhạc nền CC0 (Juhani Junkala, JRPG Music Pack) đổi theo mốc: màn chính, văn phòng, phố, tòa soạn,
-// quán cà phê, boss, kết thúc. Phát bằng thẻ <audio> (tải dần), chuyển bài bằng giảm/tăng âm lượng.
+// Nhạc nền noir / bí ẩn của Kevin MacLeod (incompetech.com, CC BY 4.0, ghi công ở sources.json → music) đổi theo mốc:
+// màn chính, Báo Thanh Niên, phố, tòa soạn Tin Vịnh, quán cà phê, Phòng xác minh, boss, kết thúc.
+// Phát bằng thẻ <audio> (tải dần), chuyển bài bằng giảm/tăng âm lượng.
 import { state } from './state.js';
 
 const VOLUME = 0.35;
@@ -9,9 +10,9 @@ let current = null;      // { key, audio }
 let wanted = null;       // bài cần phát khi được phép
 let unlocked = false;    // trình duyệt chỉ cho phát sau thao tác đầu tiên của người chơi
 
-/** Trình duyệt có phát được OGG Vorbis không. */
+/** Trình duyệt có phát được MP3 không. */
 export const musicSupported = (() => {
-  try { return new Audio().canPlayType('audio/ogg; codecs="vorbis"') !== ''; } catch { return false; }
+  try { return new Audio().canPlayType('audio/mpeg') !== ''; } catch { return false; }
 })();
 
 const enabled = () => musicSupported && state.settings.music !== false;
@@ -36,13 +37,13 @@ function stopCurrent() {
   fade(audio, 0, () => { audio.pause(); audio.src = ''; });
 }
 
-/** Phát bài theo khóa (title | office | street | archive | cafe | boss | ending). */
+/** Phát bài theo khóa (title | office | street | archive | cafe | agency | boss | ending). */
 export function playMusic(key) {
   wanted = key;
   if (!unlocked || !enabled() || !key) return;
   if (current?.key === key) return;
   stopCurrent();
-  const audio = new Audio(`assets/audio/${key}.ogg`);
+  const audio = new Audio(`assets/audio/${key}.mp3`);
   audio.loop = true;
   audio.preload = 'auto';
   audio.volume = 0;

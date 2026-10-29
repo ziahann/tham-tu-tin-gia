@@ -201,6 +201,16 @@ function openSources() {
     box.append(row);
     wrap.append(box);
   }
+  // Ghi công nhạc nền (CC BY 4.0)
+  wrap.append(el('h3', null, t('sourcesPanel.music')));
+  for (const m of data.sources.music || []) {
+    const box = el('div', 'resource');
+    box.append(el('span', null, `"${m.title}" ${m.author} (${m.site}). ${m.license}.`));
+    const a = el('a', 'muted small', m.licenseUrl);
+    a.href = m.licenseUrl; a.target = '_blank'; a.rel = 'noopener noreferrer';
+    box.append(a);
+    wrap.append(box);
+  }
   openModal(t('sourcesPanel.title'), wrap);
 }
 
