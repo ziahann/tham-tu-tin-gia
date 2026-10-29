@@ -169,7 +169,7 @@ input:not([type]), input[type="text"] {
 
 /* ---------- Balo ---------- */
 .backpack {
-  position: fixed; z-index: 25;
+  position: fixed; z-index: 31; /* trên khung thoại: tra cứu sổ tay khi đang trả lời */
   top: var(--hud-h); right: 0; bottom: 0;
   width: min(420px, 100vw);
   background: var(--panel);
@@ -276,6 +276,14 @@ input:not([type]), input[type="text"] {
 .toast {
   position: fixed; left: 50%; top: 64px; transform: translateX(-50%); z-index: 50;
   background: var(--straw); color: var(--ink); border: var(--px) solid var(--ink); padding: 6px 16px; max-width: calc(100vw - 32px);
+}
+
+/* Balo mở cùng lúc với hội thoại: khung thoại co sang trái, chừa chỗ cho balo */
+body.backpack-open .dialog { left: 12px; transform: none; width: min(980px, calc(100vw - min(420px, 100vw) - 24px)); --pw: 160px; --ph: 196px; }
+@media (max-width: 760px) {
+  body.backpack-open .backpack { bottom: auto; height: calc(50dvh - var(--hud-h)); width: 100vw; border-left: 0; border-bottom: var(--px) solid var(--ink); }
+  body.backpack-open .dialog { left: 6px; width: calc(100vw - 12px); --dlg-max: 48dvh; }
+  body.backpack-open .dialog-stage { display: none; }
 }
 
 /* ---------- Ảnh nhạy cảm, giảm chuyển động ---------- */
