@@ -275,5 +275,14 @@
     "rain": "☂ Mưa",
     "fog": "≋ Sương mù",
     "night": "☾ Ban đêm"
+  },
+  "elevator": {
+    "name": "Thang máy",
+    "ask": "Thang máy · Trụ sở Báo Thanh Niên. Bạn muốn lên tầng nào?",
+    "here": "bạn đang ở đây",
+    "tracked": "➤ hồ sơ đang theo dõi",
+    "locked": "🔒 chưa mở",
+    "lockedLine": "Tầng thượng (Phòng họp) chỉ mở khi đã xong mọi hồ sơ bắt buộc.",
+    "cancel": "Ở lại tầng này"
   }
 }

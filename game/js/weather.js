@@ -62,8 +62,9 @@ function makeTextures(scene) {
 }
 
 export class Weather {
-  /** targets: lớp bản đồ và sprite nhận ánh sáng ban đêm. */
-  constructor(scene, targets) {
+  /** targets: lớp bản đồ và sprite nhận ánh sáng ban đêm; extraLights: đèn của props [x, y, màu, bán kính, cường độ]. */
+  constructor(scene, targets, extraLights = () => []) {
+    this.extraLights = extraLights;
     this.scene = scene;
     this.targets = targets;
     this.outdoor = OUTDOOR.has(scene.mapKey);
@@ -160,6 +161,8 @@ export class Weather {
       const [color, radius, intensity] = spec;
       this.lights.push(sc.lights.addLight(tile.pixelX + 16, tile.pixelY + 16, radius, color, intensity));
     });
+    // đèn của props (đèn đường, cửa sổ sáng, biển hiệu, màn hình)
+    for (const [x, y, color, radius, intensity] of this.extraLights()) this.lights.push(sc.lights.addLight(x, y, radius, color, intensity));
     this.playerLight = sc.lights.addLight(0, 0, this.outdoor ? 120 : 150, 0xfff0d0, this.outdoor ? 0.9 : 0.6);
     this.lights.push(this.playerLight);
   }

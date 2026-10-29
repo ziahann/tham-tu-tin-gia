@@ -2,9 +2,9 @@
 // Xe dừng trước vạch qua đường khi có người đang băng qua, dừng khi gặp người chơi hoặc xe phía trước; không gây hại.
 const propOf = (o, name) => (o.properties || []).find(p => p.name === name)?.value;
 
-export const VEHICLE_SPRITES = ['car1', 'car2', 'car3', 'bus', 'bike1', 'bike2'];
+export const VEHICLE_SPRITES = ['car1', 'car2', 'car3', 'car4', 'bus', 'bike1', 'bike2'];
 const KINDS = {
-  car: [['car1', 105], ['car2', 95], ['car3', 115], ['bus', 70]],
+  car: [['car1', 110], ['car2', 100], ['car3', 120], ['car4', 105], ['bus', 75]],
   bike: [['bike1', 85], ['bike2', 78]]
 };
 const GAP = 26;         // khoảng cách tối thiểu tới xe phía trước
@@ -34,7 +34,7 @@ export class Traffic {
     const [key, speed] = Phaser.Utils.Array.GetRandom(KINDS[lane.kind]);
     const W = this.scene.map.widthInPixels;
     const sx = x ?? (lane.dir > 0 ? -60 : W + 60);
-    const s = this.group.create(sx, lane.y + 14, key).setOrigin(0.5, 1).setFlipX(lane.dir < 0);
+    const s = this.group.create(sx, lane.y + 18, key).setOrigin(0.5, 1).setFlipX(lane.dir < 0);
     const w = s.width, h = Math.min(18, s.height * 0.5);
     s.body.setSize(w - 8, h).setOffset(4, s.height - h - 2);
     s.body.pushable = false;

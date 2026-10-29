@@ -19,6 +19,12 @@ export function buildGraph(scene, maps) {
       .filter(o => (o.type === 'exit' || o.type === 'portal') && maps.includes(propOf(o, 'target')))
       .map(o => ({ to: propOf(o, 'target'), x: o.x + o.width / 2, y: o.y + o.height / 2 }));
     objs.filter(o => o.type === 'npc').forEach(o => { graph.where[`npc:${o.name}`] = { map: key }; });
+    // Thang máy: nối tới mọi tầng khác của tòa nhà (quests.json → building.floors)
+    for (const o of objs.filter(o => o.type === 'elevator')) {
+      for (const f of data.quests.building?.floors || []) {
+        if (f.map !== key && maps.includes(f.map)) graph.edges[key].push({ to: f.map, x: o.x + o.width / 2, y: o.y + o.height / 2, elevator: true });
+      }
+    }
     objs.filter(o => o.type === 'device').forEach(o => {
       graph.where[`device:${propOf(o, 'device')}`] = { map: key, x: o.x + o.width / 2, y: o.y + o.height + 8 };
     });
@@ -42,7 +48,10 @@ function firstHop(from, to) {
 /** Điểm mũi tên cần chỉ tới trên bản đồ hiện tại, hoặc null nếu không theo dõi gì. */
 export function guideTarget(scene) {
   const tg = trackTarget();
-  const at = tg && graph?.where[`${tg.kind}:${tg.id}`];
+  let at = tg && graph?.where[`${tg.kind}:${tg.id}`];
+  // NPC đứng theo tầng (trạm có map): lấy tầng NPC sẽ đứng khi người chơi tới
+  const floorMap = tg?.kind === 'npc' ? scene.npcMapOf?.(tg.id, true) : null;
+  if (floorMap) at = { map: floorMap };
   if (!at) return null;
   if (at.map === scene.mapKey) {
     if (tg.kind === 'device') return { x: at.x, y: at.y, here: true };
@@ -51,6 +60,14 @@ export function guideTarget(scene) {
   }
   const hop = firstHop(scene.mapKey, at.map);
   return hop ? { x: hop.x, y: hop.y, here: false } : null;
+}
+
+/** Bản đồ (tầng) của mục tiêu đang theo dõi, hoặc null (dùng để đánh dấu tầng trong thang máy). */
+export function targetMap(scene) {
+  const tg = trackTarget();
+  if (!tg || !graph) return null;
+  if (tg.kind === 'npc') return scene.npcMapOf?.(tg.id, true) || graph.where[`npc:${tg.id}`]?.map || null;
+  return graph.where[`${tg.kind}:${tg.id}`]?.map || null;
 }
 
 /** Cập nhật dòng "đang theo dõi" trên thanh trên. */
