@@ -6,12 +6,13 @@ import { direction } from './input.js';
 import { makeAnims, feetBody, dirFrom, idleFrame, Npc, showEmote } from './actors.js';
 import { roomStatus } from './grading.js';
 import * as story from './story.js';
+import * as dlg from './dialogue.js';
 import { setPlace, updateMeters } from './hud.js';
 import { tickPressure, isLight, caseOpen } from './obstacles.js';
 import { buildGrid, findPath } from './pathfind.js';
 import { playMusic } from './music.js';
 import { buildGraph, guideTarget, updateTrackLine, GuideArrow } from './guide.js';
-import { Weather } from './weather.js';
+import { Weather, WEATHER_FX } from './weather.js';
 import { Traffic, VEHICLE_SPRITES } from './traffic.js';
 import { sfx, footstep, setAmbience } from './audio.js';
 import { iso, setupIso, buildGround, buildWalls, ViewLayer, fadeOccluders, shearedText, WALL_H } from './iso.js';
@@ -513,7 +514,7 @@ export class WorldScene extends Phaser.Scene {
 
   /** Người chơi nháy chuột / chạm vào bản đồ. */
   onClick(p) {
-    if (state.settings.clickMove === false || this.leaving || this.cutscene || story.isBusy() || window.uiBlocked?.()) return;
+    if (state.settings.clickMove === false || this.leaving || this.cutscene || (story.isBusy() && !dlg.isMinimized()) || window.uiBlocked?.()) return;
     const { x: lx, y: ly } = this.toLogical(p.worldX, p.worldY);
     const goal = this.clickTarget(p.worldX, p.worldY, lx, ly);
     // đi tới trước mặt đồ vật (phía nam vùng tương tác), tới cạnh NPC
@@ -578,6 +579,9 @@ export class WorldScene extends Phaser.Scene {
 
   /** Kẻ tung tin được đuổi theo không (chế độ Nhẹ: không). */
   canChase() { return !isLight(); }
+
+  /** Hiệu ứng thời tiết đang có ở bản đồ này (trong nhà: không có). */
+  fx() { return WEATHER_FX[this.weather?.kind] || WEATHER_FX.clear; }
 
   /** Xong lượt gặp kẻ tung tin: một lúc sau mới đuổi tiếp. */
   rumorDone(id) {
@@ -791,7 +795,9 @@ export class WorldScene extends Phaser.Scene {
 
   /** Vòng lặp mỗi khung hình. */
   update(time, delta) {
-    const frozen = this.leaving || this.cutscene || story.isBusy() || window.uiBlocked?.() || time < (this.stunUntil || 0);
+    // đang trò chuyện mà thu nhỏ khung thoại: vẫn đi lại được
+    const talking = story.isBusy() && !dlg.isMinimized();
+    const frozen = this.leaving || this.cutscene || talking || window.uiBlocked?.() || time < (this.stunUntil || 0);
     let { x, y } = frozen ? { x: 0, y: 0 } : direction();
     if (x && y) { x *= Math.SQRT1_2; y *= Math.SQRT1_2; }
     // đi theo đường nháy chuột (bấm phím thì hủy)
@@ -800,7 +806,7 @@ export class WorldScene extends Phaser.Scene {
     // phím theo hướng màn hình → vận tốc logic (lên màn hình = lùi chéo về tây bắc trên lưới)
     const lv = iso.toLogicalDir(x, y);
     const ll = Math.hypot(lv.x, lv.y) || 1;
-    const sp = Math.hypot(x, y) * SPEED;
+    const sp = Math.hypot(x, y) * SPEED * this.fx().speed;
     this.player.setVelocity((lv.x / ll) * sp, (lv.y / ll) * sp);
     if (x || y) {
       this.facing = dirFrom(x, y);
@@ -811,7 +817,7 @@ export class WorldScene extends Phaser.Scene {
         footstep(this.ground.getTileAtWorldXY(this.player.x, this.player.y - 2)?.properties?.name, this.weather?.kind === 'rain');
       }
       const room = story.trackedRoom();
-      if (tickPressure(delta, room)) story.deadlineCall(room);
+      if (tickPressure(delta * this.fx().pressure, room)) story.deadlineCall(room);
       if (time - this.lastSave > 1000) {
         this.lastSave = time;
         this.savePos();
@@ -821,6 +827,8 @@ export class WorldScene extends Phaser.Scene {
       this.player.setFrame(idleFrame(this.facing));
     }
     this.npcs.forEach(n => n.update(delta, frozen, this.player));
+    const far = this.fx().hideFar;
+    this.npcs.forEach(n => { if (n.chaser && n.sprite.view) n.sprite.view.setAlpha(far && Phaser.Math.Distance.Between(n.sprite.x, n.sprite.y, this.player.x, this.player.y) > far ? 0.25 : 1); });
     this.traffic?.update(delta, frozen);
     this.views.sync();
     fadeOccluders(this.occluders, this.player.view);
