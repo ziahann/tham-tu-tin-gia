@@ -6,11 +6,16 @@ import { releaseAll } from './input.js';
 import { sfx } from './audio.js';
 import { toast } from './ui.js';
 
-const SPRITES = new Set(['npc1', 'npc2', 'npc3', 'npc4', 'npc5', 'npc6', 'boss']);
-/** File sprite của thám tử theo mẫu nam / nữ. */
+// Chân dung 72x88, 5 cột biểu cảm (tools/gen-portraits.mjs). Boss có bộ cột riêng.
+const PORTRAITS = new Set(['npc1', 'npc2', 'npc3', 'npc4', 'npc5', 'npc6', 'boss']);
+const MOODS = ['neutral', 'happy', 'thinking', 'surprised', 'serious'];
+const BOSS_COL = { neutral: 0, thinking: 0, happy: 1, smug: 1, surprised: 2, cracked: 2, blank: 3, serious: 4, angry: 4 };
+/** File sprite / chân dung của thám tử theo mẫu nam / nữ. */
 const heroFile = () => `hero_${state.progress?.heroLook === 'f' ? 'f' : 'm'}`;
 const els = {};
 let partner = null;
+let rightId = null;          // nhân vật đang hiện ở chân dung bên phải
+const pinned = {};           // biểu cảm cố định (ví dụ boss đã gỡ mặt nạ)
 let open = false;
 let advanceFn = null;
 let typingTimer = null;
@@ -18,7 +23,7 @@ let finishTyping = null;
 
 /** Gắn phần tử DOM của khung thoại. */
 export function initDialog() {
-  for (const id of ['root:dialog', 'portrait:dialog-portrait', 'name:dialog-name', 'tag:dialog-tag', 'text:dialog-text', 'extra:dialog-extra', 'next:dialog-next', 'live:dialog-live']) {
+  for (const id of ['root:dialog', 'stage:dialog-stage', 'left:portrait-left', 'right:portrait-right', 'name:dialog-name', 'tag:dialog-tag', 'text:dialog-text', 'extra:dialog-extra', 'next:dialog-next', 'live:dialog-live']) {
     const [k, v] = id.split(':');
     els[k] = document.getElementById(v);
   }
@@ -34,7 +39,11 @@ export const isOpen = () => open;
 /** Mở khung thoại; partnerId là NPC đang trò chuyện (dùng để chia lịch sử theo NPC). */
 export function begin(partnerId) {
   partner = partnerId;
+  rightId = PORTRAITS.has(partnerId) ? partnerId : null;
   open = true;
+  setPortrait(els.left, heroFile(), 'neutral');
+  setPortrait(els.right, rightId, 'neutral');
+  focus(null);
   els.root.hidden = false;
   document.getElementById('touch').classList.add('is-dialog');
   releaseAll();
@@ -43,6 +52,7 @@ export function begin(partnerId) {
 /** Đóng khung thoại. */
 export function end() {
   open = false;
+  Object.keys(pinned).forEach(k => delete pinned[k]);
   advanceFn = null;
   els.root.hidden = true;
   els.extra.innerHTML = '';
@@ -58,17 +68,54 @@ export function heroTitle() {
 /** Biến thay thế trong lời thoại. */
 const vars = () => ({ hero: heroTitle(), org: data.quests.organization.name });
 
+/** Giữ một biểu cảm cho nhân vật tới hết cuộc trò chuyện (ví dụ boss sau khi gỡ mặt nạ: 'blank'). */
+export function pinMood(id, mood) { pinned[id] = mood; if (id === rightId) setPortrait(els.right, id, mood); }
+
+/** Đặt chân dung theo nhân vật và biểu cảm; id rỗng thì ẩn. */
+function setPortrait(node, id, mood) {
+  node.hidden = !id;
+  if (!id) return;
+  mood = pinned[id] || mood;
+  const col = id === 'boss' ? (BOSS_COL[mood] ?? 0) : Math.max(0, MOODS.indexOf(mood));
+  node.style.backgroundImage = `url(assets/portraits/${id}.png)`;
+  node.style.backgroundPosition = `${col * 25}% 0`;
+}
+
+/** Làm sáng chân dung một bên ('left' | 'right'), bên kia mờ đi; null = cả hai mờ (hệ thống nói). */
+function focus(side) {
+  els.left.classList.toggle('is-on', side === 'left');
+  els.right.classList.toggle('is-on', side === 'right');
+}
+
+/** Biểu cảm đoán từ đầu câu: ✓ vui, ✗ nghiêm, ? suy nghĩ. */
+function moodOf(text) {
+  if (/^✓/.test(text)) return 'happy';
+  if (/^✗/.test(text)) return 'serious';
+  if (/^\?/.test(text)) return 'thinking';
+  return 'neutral';
+}
+
 /** Đặt tên, nhãn GIẢ LẬP và chân dung cho người nói. */
-function setSpeaker(id) {
-  let name, sprite = null, fictional = true;
-  if (id === 'hero') { name = heroTitle(); sprite = heroFile(); }
-  else if (id === 'inspect') { name = t('dialog.inspectSpeaker'); sprite = heroFile(); }
-  else if (id === 'system') { name = t('system'); fictional = false; }
-  else { const npc = npcById(id); name = npc ? npc.name : id; sprite = SPRITES.has(id) ? id : null; }
+function setSpeaker(id, text = '', mood = null) {
+  let name, fictional = true;
+  const m = mood || moodOf(text);
+  if (id === 'hero' || id === 'inspect') {
+    name = id === 'hero' ? heroTitle() : t('dialog.inspectSpeaker');
+    setPortrait(els.left, heroFile(), mood || (id === 'inspect' ? 'thinking' : m));
+    focus('left');
+  } else if (id === 'system') {
+    name = t('system'); fictional = false;
+    focus(null);
+  } else {
+    const npc = npcById(id);
+    name = npc ? npc.name : id;
+    if (PORTRAITS.has(id)) { rightId = id; setPortrait(els.right, id, m); }
+    // thám tử phản ứng theo lời NPC: đúng thì vui, sai thì giật mình
+    setPortrait(els.left, heroFile(), m === 'happy' ? 'happy' : m === 'serious' ? 'surprised' : 'neutral');
+    focus(rightId === id ? 'right' : null);
+  }
   els.name.textContent = name;
   els.tag.hidden = !fictional;
-  els.portrait.classList.toggle('is-empty', !sprite);
-  els.portrait.style.backgroundImage = sprite ? `url(assets/sprites/${sprite}.png)` : '';
   return name;
 }
 
@@ -78,9 +125,11 @@ function typeText(text, done) {
   els.text.textContent = '';
   if (state.settings.reduceMotion) { els.text.textContent = text; finishTyping = null; done(); return; }
   let i = 0;
+  els.stage.classList.add('is-talking');
   finishTyping = () => {
     clearInterval(typingTimer);
     els.text.textContent = text;
+    els.stage.classList.remove('is-talking');
     finishTyping = null;
     done();
   };
@@ -95,7 +144,9 @@ function typeText(text, done) {
 /** Hiện một câu (ghi lịch sử, đọc cho trình đọc màn hình). */
 function show(speakerId, text, meta = {}) {
   const full = fill(text, vars());
-  const name = setSpeaker(speakerId);
+  const { mood, ...logMeta } = meta;
+  meta = logMeta;
+  const name = setSpeaker(speakerId, full, mood);
   els.extra.innerHTML = '';
   els.root.classList.remove('has-exhibit');
   els.next.textContent = '';
@@ -131,6 +182,9 @@ function prompt(opts) {
   advanceFn = null;
   els.next.textContent = '';
   els.extra.innerHTML = '';
+  // Tới lượt người chơi trả lời: chân dung thám tử sáng lên, đang suy nghĩ.
+  setPortrait(els.left, heroFile(), 'thinking');
+  focus('left');
   els.root.classList.toggle('has-exhibit', !!(opts?.exhibit || opts?.wide));
   if (opts?.exhibit) els.extra.append(opts.exhibit);
 }

@@ -108,7 +108,7 @@ async function conversation(partner, body) {
 async function playScene(sceneId) {
   let scene = sceneById(sceneId);
   while (scene) {
-    for (const line of scene.lines) await dlg.say(scene.npc, line.text, { dialogueId: scene.id, lineId: line.id });
+    for (const line of scene.lines) await dlg.say(line.npc || scene.npc, line.text, { dialogueId: scene.id, lineId: line.id, mood: line.mood });
     if (!scene.choices?.length) return;
     const choice = await dlg.choose(scene.choices.map(c => ({ ...c })));
     (choice.setFlags || []).forEach(setFlag);
@@ -694,7 +694,7 @@ export async function runBoss() {
           p.boss.endingB++;
           saveProgress();
           sfx('wrong');
-          await dlg.say('boss', data.npcs.dialogues.boss_trap_b?.[0]?.text || b.trapB.feedback);
+          await dlg.say('boss', data.npcs.dialogues.boss_trap_b?.[0]?.text || b.trapB.feedback, { mood: 'smug' });
           await dlg.say('system', `${b.endings.B.title}: ${b.endings.B.text}`);
           await dlg.say('npc1', b.trapB.feedback);
           continue;
@@ -703,7 +703,7 @@ export async function runBoss() {
           p.boss.fails++;
           saveProgress();
           sfx('wrong');
-          await dlg.say('boss', res.msg);
+          await dlg.say('boss', res.msg, { mood: 'smug' });
           continue;
         }
         sfx('correct');
@@ -714,7 +714,7 @@ export async function runBoss() {
         saveProgress();
         onChange();
         bossBar(b.phases.length - i - 1, b.phases.length);
-        await dlg.say('boss', ph.defeat);
+        await dlg.say('boss', ph.defeat, { mood: 'cracked' });
         await dlg.say('system', `${ph.explain} ${t('dialog.points', { n: pts })}`);
         break;
       }
@@ -722,6 +722,7 @@ export async function runBoss() {
     // Kết thúc A: gỡ mặt nạ — gương mặt trống
     await dlg.say('system', t('boss.unmask'));
     world?.bossUnmask();
+    dlg.pinMood('boss', 'blank');
     sfx('unlock');
     await dlg.say('system', t('boss.blank'));
     for (const line of data.npcs.dialogues.boss_endings?.A || []) await dlg.say(line.npc, line.text);
