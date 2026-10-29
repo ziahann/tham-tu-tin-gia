@@ -12,9 +12,9 @@ import { Weather } from './weather.js';
 import { Traffic, VEHICLE_SPRITES } from './traffic.js';
 import { sfx, footstep, setAmbience } from './audio.js';
 
-const MAPS = ['office', 'street', 'newsroom', 'cafe', 'agency', 'boss'];
+const MAPS = ['tn_lobby', 'tn_f2', 'tn_f3', 'tn_f4', 'tn_f5', 'street', 'newsroom', 'cafe', 'agency', 'boss'];
 const SPEED = 120;
-const MAP_VERSION = 2; // tăng khi sửa bố cục bản đồ: vị trí đã lưu theo bản cũ bị bỏ qua
+const MAP_VERSION = 3; // tăng khi sửa bố cục bản đồ: vị trí đã lưu theo bản cũ bị bỏ qua
 const BOSS_SCALE = 1.5;
 
 /** Sprite của mọi nhân vật trong npc_dialogues.json (NPC chính, người qua đường, boss) + boss đã gỡ mặt nạ. */
@@ -35,6 +35,8 @@ export class WorldScene extends Phaser.Scene {
   /** Tải bản đồ, tileset, sprite. */
   preload() {
     MAPS.forEach(key => this.load.tilemapTiledJSON(key, `maps/${key}.json`));
+    this.load.atlas('props', 'assets/props/props.png', 'assets/props/props.json');
+    this.load.json('propsMeta', 'assets/props/props_meta.json');
     this.load.image('tiles', 'assets/tiles/tiles.png');
     this.load.spritesheet('hero', `assets/sprites/${heroSprite()}.png`, { frameWidth: 32, frameHeight: 48 });
     spriteIds().forEach(id => this.load.spritesheet(id, `assets/sprites/${id}.png`, { frameWidth: 32, frameHeight: 48 }));
@@ -49,7 +51,7 @@ export class WorldScene extends Phaser.Scene {
   /** Dựng bản đồ, người chơi, NPC, camera. */
   create() {
     const saved = state.progress.pos?.v === MAP_VERSION || state.progress.pos?.spawnName ? state.progress.pos : null;
-    this.mapKey = this.args.map || (MAPS.includes(saved?.map) ? saved.map : 'office');
+    this.mapKey = this.args.map || (MAPS.includes(saved?.map) ? saved.map : 'tn_lobby');
     const map = this.map = this.make.tilemap({ key: this.mapKey });
     const tiles = map.addTilesetImage('tiles', 'tiles');
     this.ground = map.createLayer('ground', tiles);
@@ -70,6 +72,15 @@ export class WorldScene extends Phaser.Scene {
     this.exits = objs.filter(o => o.type === 'exit');
     this.portals = objs.filter(o => o.type === 'portal');
     this.inspects = objs.filter(o => o.type === 'inspect');
+    this.elevators = objs.filter(o => o.type === 'elevator');
+    // Chữ trên tường / sàn (biển tầng, tên tòa nhà)
+    for (const o of objs.filter(o => o.type === 'label')) {
+      this.add.text(o.x, o.y, propOf(o, 'text'), {
+        fontFamily: 'VT323', fontSize: `${propOf(o, 'size') || 16}px`, color: propOf(o, 'color') || '#e8ecf2', align: 'center',
+        // bảng tên tầng: nền tối có viền như biển gắn tường
+        ...(propOf(o, 'plate') ? { backgroundColor: '#0e1015', padding: { x: 8, y: 2 } } : {})
+      }).setOrigin(0.5).setDepth(2).setResolution(2);
+    }
     // Thiết bị ở Phòng xác minh: có dấu "!" khi hồ sơ đang chờ thiết bị đó.
     this.devices = objs.filter(o => o.type === 'device').map(o => ({
       obj: o,
@@ -96,21 +107,17 @@ export class WorldScene extends Phaser.Scene {
     this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
     this.physics.add.collider(this.player, this.walls);
     this.physics.add.collider(this.player, this.doors);
+    this.buildProps(objs);
 
-    // NPC
+    // NPC: theo object trên bản đồ, hoặc theo trạm có `map` (Tuệ Lâm, Khải đứng ở tầng của hồ sơ)
     this.npcs = new Map();
+    this.spawnZoneRoom = propOf(this.zones.find(z => inRect(z, start.x, start.y - 4)) || {}, 'room') || null;
     for (const o of objs.filter(o => o.type === 'npc')) {
-      const npc = new Npc(this, o.name, o.x, o.y);
-      npc.ambient = !!data.npcs.ambientLines?.[o.name];
-      npc.homePatrol = propOf(o, 'patrol');
-      if (o.name === 'boss') {
-        npc.sprite.setScale(BOSS_SCALE);
-        npc.marker.setVisible(false);
-        if (hasFlag('boss_done')) npc.sprite.setTexture('boss_blank', 0);
-      }
-      this.npcs.set(o.name, npc);
-      this.physics.add.collider(this.player, npc.sprite);
-      this.placeNpc(o.name);
+      const at = this.npcMapOf(o.name);
+      if (!at || at === this.mapKey) this.spawnNpc(o.name, o.x, o.y, propOf(o, 'patrol'));
+    }
+    for (const id of Object.keys(data.npcs.stations || {})) {
+      if (this.npcMapOf(id) === this.mapKey && !this.npcs.has(id)) this.spawnNpc(id, 0, 0, null);
     }
 
     // Gợi ý tương tác (phím E / nút A)
@@ -144,8 +151,8 @@ export class WorldScene extends Phaser.Scene {
     buildGraph(this, MAPS);
     this.guide = new GuideArrow(this);
     this.traffic = objs.some(o => o.type === 'lane') ? new Traffic(this, objs, this.player) : null;
-    this.weather = new Weather(this, () => [this.ground, this.walls, this.doors, this.player,
-      ...[...this.npcs.values()].map(n => n.sprite), ...(this.traffic?.sprites() || [])]);
+    this.weather = new Weather(this, () => [this.ground, this.walls, this.doors, this.player, ...this.props.map(p => p.img),
+      ...[...this.npcs.values()].map(n => n.sprite), ...(this.traffic?.sprites() || [])], () => this.propLights);
     this.reduceMotion = state.settings.reduceMotion;
     story.setWorld(this);
     this.refresh();
@@ -158,14 +165,14 @@ export class WorldScene extends Phaser.Scene {
   }
 
   /** Chuyển sang bản đồ khác, xuất hiện ở điểm spawn. */
-  travel(target, spawn) {
+  travel(target, spawn, dir) {
     if (this.leaving) return;
     this.leaving = true;
     this.player.setVelocity(0, 0);
     sfx('door');
     state.progress.pos = { map: target, spawnName: spawn };
     saveProgress();
-    const go = () => this.scene.restart({ map: target, spawn, dir: target === 'street' ? 'down' : 'up' });
+    const go = () => this.scene.restart({ map: target, spawn, dir: dir || (target === 'street' ? 'down' : 'up') });
     if (state.settings.reduceMotion) { go(); return; }
     this.cameras.main.fadeOut(250, 15, 14, 23);
     this.cameras.main.once('camerafadeoutcomplete', go);
@@ -218,20 +225,61 @@ export class WorldScene extends Phaser.Scene {
     return list;
   }
 
-  /** Phòng (hồ sơ) của khu vực người chơi đang đứng, hoặc null. */
+  /** Phòng (hồ sơ) của khu vực người chơi đang đứng (lúc mới vào bản đồ: khu vực ở điểm xuất hiện), hoặc null. */
   zoneRoom() {
+    if (this.zoneKey == null) return this.spawnZoneRoom || null;
     return propOf(this.zones?.find(z => z.name === this.zoneKey) || {}, 'room') || null;
+  }
+
+  /** Tạo NPC trên bản đồ hiện tại (vị trí theo trạm nếu có). */
+  spawnNpc(id, x, y, homePatrol) {
+    const npc = new Npc(this, id, x, y);
+    npc.ambient = !!data.npcs.ambientLines?.[id];
+    npc.homePatrol = homePatrol;
+    if (id === 'boss') {
+      npc.sprite.setScale(BOSS_SCALE);
+      npc.marker.setVisible(false);
+      if (hasFlag('boss_done')) npc.sprite.setTexture('boss_blank', 0);
+    }
+    if (this.weather?.kind === 'night' && this.renderer.type === Phaser.WEBGL) npc.sprite.setPipeline('Light2D');
+    this.npcs.set(id, npc);
+    npc.collider = this.physics.add.collider(this.player, npc.sprite);
+    this.placeNpc(id);
+    return npc;
+  }
+
+  /** Bỏ NPC khỏi bản đồ hiện tại (khi họ chuyển sang tầng khác). */
+  removeNpc(id) {
+    const npc = this.npcs.get(id);
+    if (!npc) return;
+    npc.collider?.destroy();
+    npc.sprite.destroy();
+    npc.marker.destroy();
+    this.npcs.delete(id);
+  }
+
+  /**
+   * Bản đồ (tầng) NPC đang đứng theo trạm có `map`, hoặc null nếu NPC chỉ theo object của bản đồ.
+   * preferTracked: ưu tiên phòng của hồ sơ đang theo dõi (để dẫn đường tới nơi NPC sẽ đứng).
+   */
+  npcMapOf(id, preferTracked = false) {
+    const list = data.npcs.stations?.[id];
+    if (!Array.isArray(list) || !list.some(s => s.map)) return null;
+    return this.stationFor(id, preferTracked)?.map || null;
   }
 
   /**
    * Trạm của NPC (data.npcs.stations): mục có cờ bắt buộc và không gắn phòng thắng trước;
    * rồi tới mục gắn phòng người chơi đang đứng, phòng của hồ sơ đang theo dõi; cuối cùng mục mặc định.
    */
-  stationFor(id) {
-    const list = (data.npcs.stations?.[id] || []).filter(s => (s.requires || []).every(hasFlag));
+  stationFor(id, preferTracked = false) {
+    const all = data.npcs.stations?.[id];
+    if (!Array.isArray(all)) return null;
+    const list = all.filter(s => (s.requires || []).every(hasFlag));
     const forced = list.find(s => s.requires?.length && !s.room);
     if (forced) return forced;
-    for (const room of [this.zoneRoom(), story.trackedRoom()]) {
+    const rooms = preferTracked ? [story.trackedRoom(), this.zoneRoom()] : [this.zoneRoom(), story.trackedRoom()];
+    for (const room of rooms) {
       const s = room && list.find(x => x.room === room);
       if (s) return s;
     }
@@ -253,6 +301,13 @@ export class WorldScene extends Phaser.Scene {
 
   /** NPC chuyển sang trạm mới khi tiến độ đổi (trừ khi đang dẫn đường hoặc đang nói chuyện). */
   updateStations() {
+    // NPC đổi tầng: xuất hiện / rời khỏi bản đồ hiện tại
+    for (const id of Object.keys(data.npcs.stations || {})) {
+      const at = this.npcMapOf(id);
+      if (!at) continue;
+      if (at === this.mapKey && !this.npcs.has(id)) this.spawnNpc(id, 0, 0, null);
+      else if (at !== this.mapKey && this.npcs.has(id) && !this.npcs.get(id).talking) this.removeNpc(id);
+    }
     this.npcs.forEach((npc, id) => {
       if (npc.mode === 'lead' || npc.talking) return;
       if ((this.stationFor(id)?.station || 'home') !== npc.stationKey) this.placeNpc(id);
@@ -321,6 +376,8 @@ export class WorldScene extends Phaser.Scene {
       if (d < (big ? 64 : 34) && d < bestD) { best = { kind: 'npc', id, x: npc.sprite.x, y: npc.sprite.y - (big ? 80 : 54) }; bestD = d; }
     });
     if (best) return best;
+    const lift = this.elevators.find(o => inRect(o, fx, fy, 6));
+    if (lift) return { kind: 'elevator', x: lift.x + lift.width / 2, y: lift.y - 8 };
     const dev = this.devices.find(d => inRect(d.obj, fx, fy, 4));
     if (dev) return { kind: 'device', id: dev.id, x: dev.obj.x + dev.obj.width / 2, y: dev.obj.y - 4 };
     const ins = this.inspects.find(o => inRect(o, fx, fy, 4));
@@ -346,6 +403,7 @@ export class WorldScene extends Phaser.Scene {
     }
     else if (tg.kind === 'inspect') story.inspect(tg.key);
     else if (tg.kind === 'device') story.useDevice(tg.id);
+    else if (tg.kind === 'elevator') story.useElevator();
     else if (tg.kind === 'door') {
       const room = data.quests.rooms.find(r => r.id === tg.door.room);
       story.notice(tg.door.status === 'locked' ? t('dialog.doorLocked') : t('dialog.doorBuilding', { room: room?.name || '' }));
@@ -368,6 +426,42 @@ export class WorldScene extends Phaser.Scene {
     if (room) story.onZoneEnter(room);
   }
 
+  /**
+   * Đạo cụ (object 'prop', tên = khóa trong atlas props): ảnh gốc ở chân, depth theo đáy để người đi trước / sau,
+   * va chạm chỉ ở chân đế (props_meta.json → base). Prop phẳng (thảm) nằm dưới chân; prop dán tường không va chạm.
+   * Thuộc tính sign / sub: chữ trên bảng hiệu tòa nhà.
+   */
+  buildProps(objs) {
+    const meta = this.cache.json.get('propsMeta') || {};
+    this.props = [];
+    this.propLights = [];
+    this.propBodies = this.physics.add.staticGroup();
+    for (const o of objs.filter(o => o.type === 'prop')) {
+      const m = meta[o.name];
+      if (!m) continue;
+      const img = this.add.image(o.x, o.y, 'props', o.name).setOrigin(0.5, 1);
+      if (propOf(o, 'flip')) img.setFlipX(true);
+      img.setDepth(m.flat ? 0.5 : m.wall ? o.y - 40 : o.y);
+      const left = o.x - m.w / 2, top = o.y - m.h;
+      const [bw, bh] = m.base || [0, 0];
+      if (bw && bh && !m.flat && !m.wall) {
+        const z = this.add.zone(o.x, o.y - bh / 2, bw, bh);
+        this.propBodies.add(z);
+      }
+      (m.lights || []).forEach(([lx, ly, c, r, i]) => this.propLights.push([left + (propOf(o, 'flip') ? m.w - lx : lx), top + ly, c, r, i]));
+      const text = propOf(o, 'sign');
+      if (text && m.sign) {
+        const sx = left + m.sign.x + m.sign.w / 2, sy = top + m.sign.y + m.sign.h / 2;
+        const sub = propOf(o, 'sub');
+        this.add.text(sx, sy - (sub ? 4 : 0), text, { fontFamily: 'VT323', fontSize: '20px', color: propOf(o, 'signColor') || '#e8ecf2' })
+          .setOrigin(0.5).setDepth(img.depth + 1).setResolution(2);
+        if (sub) this.add.text(sx, sy + 8, sub, { fontFamily: 'VT323', fontSize: '11px', color: '#a3adbf' }).setOrigin(0.5).setDepth(img.depth + 1).setResolution(2);
+      }
+      this.props.push({ img, obj: o, meta: m });
+    }
+    this.physics.add.collider(this.player, this.propBodies);
+  }
+
   /** Dữ liệu cho bản đồ nhỏ trong balo. */
   getMinimap() {
     const { width: W, height: H } = this.map;
@@ -378,8 +472,19 @@ export class WorldScene extends Phaser.Scene {
       if (w) return w.properties.name?.startsWith('wall') || w.properties.name === 'window' || w.properties.name === 'pinboard' ? 'wall' : 'furniture';
       return 'floor';
     };
+    // chân đế props: tòa nhà / đồ đạc
+    const solid = new Set();
+    for (const p of this.props) {
+      const [bw, bh] = p.meta.base || [0, 0];
+      if (!bw || p.meta.flat || p.meta.wall) continue;
+      for (let ty = Math.floor((p.obj.y - bh) / 32); ty <= Math.floor((p.obj.y - 1) / 32); ty++) {
+        for (let tx = Math.floor((p.obj.x - bw / 2) / 32); tx <= Math.floor((p.obj.x + bw / 2 - 1) / 32); tx++) solid.add(`${tx},${ty}`);
+      }
+    }
+    const tileKind = kind;
+    const kind2 = (x, y) => { const k = tileKind(x, y); return k === 'floor' && solid.has(`${x},${y}`) ? 'furniture' : k; };
     return {
-      W, H, kind,
+      W, H, kind: kind2,
       player: { x: this.player.x / 32, y: this.player.y / 32 },
       npcs: [...this.npcs.values()].map(n => ({ x: n.sprite.x / 32, y: n.sprite.y / 32 })),
       place: this.placeLabel || ''

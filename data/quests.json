@@ -115,7 +115,7 @@
     {
       "id": "S9",
       "name": "Phòng họp (Phòng Boss)",
-      "place": "Trụ sở Báo Thanh Niên",
+      "place": "Trụ sở Báo Thanh Niên (tầng thượng)",
       "npc": "boss",
       "quests": [],
       "boss": true
@@ -2311,5 +2311,47 @@
     "cards": "Thẻ evidence",
     "score": "Điểm",
     "rank": "Danh hiệu"
+  },
+  "building": {
+    "note": "Trụ sở Báo Thanh Niên (tên thật theo yêu cầu của nhóm). Nhân vật và sự việc trong tòa nhà là GIẢ LẬP. Mỗi tầng là một bản đồ; đi bằng thang máy.",
+    "name": "Trụ sở Báo Thanh Niên",
+    "floors": [
+      {
+        "map": "tn_lobby",
+        "label": "Tầng trệt",
+        "name": "Sảnh, lễ tân"
+      },
+      {
+        "map": "tn_f2",
+        "label": "Tầng 2",
+        "name": "Phòng Hồ sơ",
+        "room": "S3"
+      },
+      {
+        "map": "tn_f3",
+        "label": "Tầng 3",
+        "name": "Phòng Phân tích ảnh",
+        "room": "S4"
+      },
+      {
+        "map": "tn_f4",
+        "label": "Tầng 4",
+        "name": "Phòng Tác động và chủ đích",
+        "room": "S7"
+      },
+      {
+        "map": "tn_f5",
+        "label": "Tầng 5",
+        "name": "Phòng Phân loại và xử lý",
+        "room": "S8"
+      },
+      {
+        "map": "boss",
+        "label": "Tầng thượng",
+        "name": "Phòng họp",
+        "room": "S9",
+        "spawn": "spawn_from_office"
+      }
+    ]
   }
 }
