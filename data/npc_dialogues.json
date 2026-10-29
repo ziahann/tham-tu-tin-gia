@@ -1197,34 +1197,45 @@
     ]
   },
   "stations": {
-    "note": "Trạm đứng của NPC. Lấy mục đầu tiên khớp: requires (cờ) và room (phòng người chơi đang đứng hoặc phòng của hồ sơ đang theo dõi). Không khớp mục nào thì đứng ở vị trí gốc trên bản đồ.",
+    "note": "Trạm đứng của NPC. Mục có requires mà không có room được ưu tiên; rồi tới mục có room trùng phòng người chơi đang đứng (hoặc phòng của hồ sơ đang theo dõi); cuối cùng mục mặc định. map: NPC xuất hiện ở bản đồ (tầng) đó.",
     "npc1": [
       {
         "requires": [
           "boss_done"
         ],
+        "map": "tn_lobby",
         "station": "npc1_lobby_end",
         "patrol": "patrol_npc1_lobby"
       },
       {
-        "room": "S7",
-        "station": "npc1_s7",
-        "patrol": "patrol_npc1_s7"
+        "map": "tn_f4",
+        "station": "npc_station",
+        "patrol": "npc_patrol",
+        "room": "S7"
       },
       {
-        "room": "S8",
-        "station": "npc1_s8",
-        "patrol": "patrol_npc1_s8"
+        "map": "tn_f5",
+        "station": "npc_station",
+        "patrol": "npc_patrol",
+        "room": "S8"
       },
       {
-        "station": "npc1_hoso",
-        "patrol": "patrol_npc1_hoso"
+        "map": "tn_f2",
+        "station": "npc_station",
+        "patrol": "npc_patrol",
+        "room": "S3"
+      },
+      {
+        "map": "tn_f2",
+        "station": "npc_station",
+        "patrol": "npc_patrol"
       }
     ],
     "npc2": [
       {
-        "station": "npc2_s4",
-        "patrol": "patrol_npc2_s4"
+        "map": "tn_f3",
+        "station": "npc_station",
+        "patrol": "npc_patrol"
       }
     ],
     "npc3": [

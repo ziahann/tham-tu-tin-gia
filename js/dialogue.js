@@ -255,7 +255,8 @@ export function choose(options, opts) {
       }
     });
     els.extra.append(list);
-    list.querySelector('button')?.focus();
+    const btns = list.querySelectorAll('button');
+    (btns[opts?.focus >= 0 ? opts.focus : 0] || btns[0])?.focus();
   });
 }
 
