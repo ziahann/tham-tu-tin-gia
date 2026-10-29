@@ -871,16 +871,16 @@ const tnLobby = buildMap('tn_lobby', {
     rectT('exit', 'exit_street', 15, 18.6, 2, 1.4, { target: 'street', spawn: 'spawn_from_office' }),
     rectT('elevator', 'elevator', 15, 2, 2, 1, { group: 'tn' }),
     pp('elevator', 16, 3),
-    label('lobby_name', 16, 0.75, 'BÁO THANH NIÊN — TRỤ SỞ', { size: 20, color: '#e8ecf2' }),
-    label('lobby_note', 16, 1.4, 'Nhân vật và sự việc trong tòa nhà là GIẢ LẬP, không đại diện cho Báo Thanh Niên.', { size: 12, color: '#c9d1dc' }),
+    label('lobby_name', 8, 1.25, 'BÁO THANH NIÊN — TRỤ SỞ', { size: 20, color: '#e8ecf2', plate: true }),
+    label('lobby_note', 8, 2.2, 'Nhân vật và sự việc trong tòa nhà là GIẢ LẬP,\nkhông đại diện cho Báo Thanh Niên.', { size: 12, color: '#c9d1dc', plate: true }),
     pp('rug_lobby', 16, 13.5),
     pp('reception', 16, 10.2),
-    pp('blinds_window', 4, 2.9), pp('blinds_window', 8, 2.9), pp('blinds_window', 24, 2.9), pp('blinds_window', 28, 2.9),
-    pp('tv_wall', 11.5, 2.6), pp('cork_board', 21, 3.3), pp('wall_clock', 13, 1.6),
+    pp('blinds_window', 2, 2.9), pp('blinds_window', 30, 2.9),
+    pp('tv_wall', 22.5, 2.6), pp('cork_board', 27, 2.9), pp('wall_clock', 19.5, 1.6),
     pp('sofa', 4.5, 8.2), pp('coffee_table', 4.5, 9.6), pp('sofa', 4.5, 12.2),
     pp('sofa', 27.5, 8.2), pp('coffee_table', 27.5, 9.6), pp('sofa', 27.5, 12.2),
     pp('plant_big', 1.6, 4.4), pp('plant_big', 30.4, 4.4), pp('plant_big', 1.6, 18.4), pp('plant_big', 30.4, 18.4),
-    pp('water_cooler', 9.5, 4.2), pp('floor_lamp', 7.6, 13.6), pp('floor_lamp', 24.4, 13.6),
+    pp('water_cooler', 13, 4.2), pp('floor_lamp', 7.6, 13.6), pp('floor_lamp', 24.4, 13.6),
     pp('desk_papers', 21.5, 17.8), pp('chair', 21.5, 16.4), pp('trash', 23.8, 18.2), pp('bookshelf', 9.5, 18.6),
     point('npc', 'amb_guard', 18.6, 17.4, { patrol: 'patrol_guard' }),
     path_('patrol_guard', [[18.6, 17.4], [20.5, 15.6]]),
@@ -888,12 +888,12 @@ const tnLobby = buildMap('tn_lobby', {
     path_('patrol_worker', [[8.5, 7], [23.5, 7]]),
     point('station', 'npc1_lobby_end', 13, 12.4),
     path_('patrol_npc1_lobby', [[12, 12.4], [20, 12.4]]),
-    rectT('inspect', 'inspect_notice', 20, 2, 2, 1.4, { text: 'inspect_notice' }),
-    rectT('inspect', 'inspect_tv', 10.5, 1.5, 2, 1.2, { text: 'inspect_tv' }),
-    rectT('inspect', 'inspect_window_lobby', 3, 2, 2, 1, { text: 'inspect_window' }),
+    rectT('inspect', 'inspect_notice', 26, 2, 2, 1, { text: 'inspect_notice' }),
+    rectT('inspect', 'inspect_tv', 21.5, 2, 2, 1, { text: 'inspect_tv' }),
+    rectT('inspect', 'inspect_window_lobby', 1.2, 2, 1.6, 1, { text: 'inspect_window' }),
     rectT('inspect', 'inspect_reception', 13.5, 9.4, 5, 1, { text: 'inspect_reception' }),
     rectT('inspect', 'inspect_bookshelf_lobby', 8.5, 17.6, 2, 1, { text: 'inspect_bookshelf' }),
-    rectT('inspect', 'inspect_cooler', 9, 3.6, 1, 0.8, { text: 'inspect_cooler' })
+    rectT('inspect', 'inspect_cooler', 12.5, 3.6, 1, 0.8, { text: 'inspect_cooler' })
   ]
 });
 
@@ -905,11 +905,11 @@ const tnF2 = tnFloor('tn_f2', {
     pp('rug_room', 14, 9.8),
     pp('desk_papers', 9.5, 7), pp('chair', 9.5, 8.3), pp('desk_papers', 14, 7), pp('chair', 14, 8.3),
     pp('desk_pc', 18.5, 7), pp('chair', 18.5, 8.3),
-    pp('cork_board', 22.8, 11.4), pp('filing_boxes', 5, 12.6), pp('filing_boxes', 8, 12.6), pp('plant_small', 24.4, 12.8),
+    pp('cork_board', 12, 2.9), pp('filing_boxes', 5, 12.6), pp('filing_boxes', 8, 12.6), pp('plant_small', 24.4, 12.8),
     pp('floor_lamp', 1.6, 12.6), pp('trash', 11.6, 7.6)
   ],
   inspects: [
-    rectT('inspect', 'inspect_pinboard_S3', 21.8, 10.4, 2, 1, { text: 'inspect_pinboard' }),
+    rectT('inspect', 'inspect_pinboard_S3', 11, 2, 2, 1, { text: 'inspect_pinboard' }),
     rectT('inspect', 'inspect_cabinet_S3', 13.6, 3.3, 2.4, 1, { text: 'inspect_cabinet' })
   ]
 });
@@ -928,15 +928,15 @@ const tnF4 = tnFloor('tn_f4', {
   floor: 'Tầng 4', room: 'S7', roomName: 'Phòng Tác động và chủ đích', ground: 'carpet',
   props: [
     pp('blinds_window', 17, 2.9), pp('blinds_window', 21, 2.9), pp('whiteboard', 14.2, 2.75), pp('tv_wall', 24, 2.6),
-    pp('meeting_table', 15, 9.6), pp('cork_board', 7, 12.4), pp('plant_big', 24.4, 12.6),
+    pp('meeting_table', 15, 9.6), pp('cork_board', 19.5, 2.9), pp('plant_big', 24.4, 12.6),
     pp('floor_lamp', 22.4, 5), pp('coffee_table', 22.5, 12.6), pp('water_cooler', 10.5, 4.2)
   ]
 });
 const tnF5 = tnFloor('tn_f5', {
   floor: 'Tầng 5', room: 'S8', roomName: 'Phòng Phân loại và xử lý', ground: 'floor_lobby',
   props: [
-    pp('blinds_window', 17, 2.9), pp('whiteboard', 14, 2.75), pp('whiteboard', 21.5, 2.75),
-    pp('cork_board', 14.5, 4.2), pp('cork_board', 24, 7),
+    pp('blinds_window', 24.5, 2.9), pp('whiteboard', 14, 2.75), pp('whiteboard', 21.5, 2.75),
+    pp('cork_board', 17.8, 2.9),
     pp('desk_pc', 9.5, 7.4), pp('chair', 9.5, 8.7), pp('desk_papers', 18.5, 7.4), pp('chair', 18.5, 8.7),
     pp('sofa', 8.5, 12.6), pp('coffee_table', 14, 12.4), pp('plant_small', 24.4, 12.8), pp('filing_boxes', 20, 12.6)
   ],
@@ -1001,28 +1001,28 @@ const street = buildMap('street', {
   },
   objects: () => [
     // --- lớp nhà phía sau (trang trí, nhô lên sau mái)
-    bld('bld_apartment', 9, 9, 11, 'CHUNG CƯ HẢI ÂU'),
+    bld('bld_apartment', 9, 9, 11),
     bld('bld_tenement', 25, 6, 11),
-    bld('bld_hotel', 49, 10, 10, 'KHÁCH SẠN VỊNH ĐÊM'),
-    bld('bld_apartment', 76, 9, 11, 'CHUNG CƯ BẾN ĐÁ'),
+    bld('bld_hotel', 49, 10, 10),
+    bld('bld_apartment', 76, 9, 11),
     // --- dãy nhà phía bắc, quay mặt ra phố chính
     bld('bld_apartment2', 2, 7, N_BOTTOM),
     bld('bld_thanhnien', 11, 12, N_BOTTOM, 'BÁO THANH NIÊN', 'Trụ sở · nội dung trong game là GIẢ LẬP'),
     bld('bld_tinvinh', 25, 9, N_BOTTOM, 'TIN VỊNH', 'trang tin (hư cấu)'),
-    bld('bld_pharmacy', 36, 5, N_BOTTOM, 'NHÀ THUỐC'),
+    bld('bld_pharmacy', 36, 5, N_BOTTOM),
     bld('bld_xacminh', 41, 8, N_BOTTOM, 'PHÒNG XÁC MINH', 'thiết bị thẩm định (GIẢ LẬP)'),
-    bld('bld_hotel', 51, 10, N_BOTTOM, 'NHÀ NGHỈ SƯƠNG MÙ', null, { flip: true }),
+    bld('bld_hotel', 51, 10, N_BOTTOM, null, null, { flip: true }),
     bld('bld_cafe', 63, 8, N_BOTTOM, 'CÀ PHÊ GIÓ BIỂN', 'mở cửa đến khuya'),
-    bld('bld_books', 71, 5, N_BOTTOM, 'HIỆU SÁCH CŨ'),
+    bld('bld_books', 71, 5, N_BOTTOM),
     bld('bld_tenement', 78, 6, N_BOTTOM),
-    bld('bld_store', 84, 6, N_BOTTOM, 'TẠP HÓA 24H'),
+    bld('bld_store', 84, 6, N_BOTTOM),
     // --- dãy nhà thấp giữa hai con đường, quay mặt ra đường ven vịnh
-    bld('bld_closed', 50, 6, C_BOTTOM, 'CHO THUÊ'),
-    bld('bld_warehouse', 57, 12, C_BOTTOM, 'KHO HÀNG BẾN CẢNG'),
-    bld('bld_store', 70, 6, C_BOTTOM, 'GIẶT ỦI', null, { flip: true }),
-    bld('bld_books', 77, 5, C_BOTTOM, 'TIỆM ẢNH'),
-    bld('bld_pharmacy', 83, 5, C_BOTTOM, 'PHÒNG KHÁM', null, { flip: true }),
-    bld('bld_closed', 89, 6, C_BOTTOM, 'ĐÓNG CỬA', null, { flip: true }),
+    bld('bld_closed', 50, 6, C_BOTTOM),
+    bld('bld_warehouse', 57, 12, C_BOTTOM),
+    bld('bld_store', 70, 6, C_BOTTOM, null, null, { flip: true }),
+    bld('bld_books', 77, 5, C_BOTTOM),
+    bld('bld_pharmacy', 83, 5, C_BOTTOM, null, null, { flip: true }),
+    bld('bld_closed', 89, 6, C_BOTTOM, null, null, { flip: true }),
     // --- lối vào các tòa nhà tương tác
     doorExit('door_office', 16.5, N_BOTTOM, 'tn_lobby'),
     doorExit('door_news', 27.5, N_BOTTOM, 'newsroom'),
@@ -1114,12 +1114,12 @@ const newsroom = buildMap('newsroom', {
     rectT('exit', 'exit_street', 14, 18.6, 2, 1.4, { target: 'street', spawn: 'spawn_from_news' }),
     label('news_name', 15, 10.55, 'TIN VỊNH — trang tin (hư cấu)', { size: 16, plate: true }),
     label('s5_name', 4, 1.5, 'LƯU TRỮ BÁO CHÍ', { size: 14, plate: true }),
-    label('s6_name', 25.5, 1.5, 'DÒNG THỜI GIAN', { size: 14, plate: true }),
+    label('s6_name', 17.3, 1.3, 'DÒNG THỜI GIAN', { size: 14, plate: true }),
     // S5 lưu trữ
     pp('archive_shelf', 4.2, 4.6), pp('archive_shelf', 10, 4.6), pp('cabinet', 12.8, 4.2),
     pp('desk_papers', 4, 7.8), pp('chair', 4, 6.6), pp('filing_boxes', 11.2, 8.6), pp('floor_lamp', 1.6, 8.6),
     // S6 dòng thời gian
-    pp('dev_timeline', 21.5, 5.2), pp('cork_board', 27, 5), pp('desk_pc', 17.6, 8.4), pp('chair', 17.6, 7.2), pp('plant_small', 27.6, 8.8),
+    pp('dev_timeline', 21.5, 2.95), pp('cork_board', 26.6, 2.9), pp('desk_pc', 17.6, 8.4), pp('chair', 17.6, 7.2), pp('plant_small', 27.6, 8.8),
     // phòng biên tập
     pp('tv_wall', 8, 11.9), pp('blinds_window', 3, 12.1), pp('blinds_window', 27, 12.1), pp('poster_b', 23, 11.6),
     pp('desk_pc', 5, 14.4), pp('chair', 5, 15.6), pp('desk_pc', 10, 14.4), pp('chair', 10, 15.6),
@@ -1132,7 +1132,7 @@ const newsroom = buildMap('newsroom', {
     point('npc', 'npc4', 15, 13, { patrol: 'patrol_npc4' }),
     path_('patrol_npc4', [[12.5, 13], [23.5, 13]]),
     rectT('inspect', 'inspect_archive', 2.6, 3.6, 3.2, 1, { text: 'inspect_archive' }),
-    rectT('inspect', 'inspect_timeline', 19.4, 4.2, 4.2, 1, { text: 'inspect_timeline' }),
+    rectT('inspect', 'inspect_timeline', 19.4, 2, 4.2, 1, { text: 'inspect_timeline' }),
     rectT('inspect', 'inspect_newsdesk', 19, 13.4, 2, 1, { text: 'inspect_newsdesk' }),
     rectT('inspect', 'inspect_news_tv', 7, 10.6, 2, 1.2, { text: 'inspect_news_tv' })
   ]
@@ -1168,8 +1168,8 @@ const agency = buildMap('agency', {
     point('spawn', 'spawn_from_street', 11, 11.6),
     rectT('zone', 'zone_agency', 1, 3, 20, 10, { area: 'agency' }),
     rectT('exit', 'exit_street', 10, 12.6, 2, 1.4, { target: 'street', spawn: 'spawn_from_agency' }),
-    label('agency_name', 11, 1.5, 'PHÒNG XÁC MINH — thiết bị mô phỏng', { size: 16, plate: true }),
-    ...devAt('evidence', 3.4, 4.6), ...devAt('monitor', 9, 4.6, 3), ...devAt('timeline', 16.4, 4.8, 4),
+    label('agency_name', 9.6, 1.0, 'PHÒNG XÁC MINH — thiết bị mô phỏng', { size: 14, plate: true }),
+    ...devAt('evidence', 3.4, 2.95), ...devAt('monitor', 9.6, 4.6, 3), ...devAt('timeline', 16.6, 2.95, 4),
     ...devAt('computer', 3.6, 8.6), ...devAt('magnifier', 8.2, 8.6), ...devAt('detector', 12.4, 8.6, 1.4), ...devAt('archive', 16.4, 8.6),
     pp('chair', 3.6, 9.8), pp('chair', 16.4, 9.8),
     pp('sofa', 5, 12.8), pp('coffee_table', 15.5, 12.4), pp('plant_big', 20.4, 12.6), pp('floor_lamp', 1.6, 12.6), pp('filing_boxes', 20, 8.8)

@@ -127,5 +127,5 @@
 | Đồ họa | Kiến trúc lạnh, u tối; đồ vật đúng tỉ lệ với người (props nhiều ô); thành phố rộng hơn, có tòa nhà trang trí và biển ghi chức năng |
 | Trải nghiệm | Bấm icon bằng chuột xong vẫn đi lại ngay; balo mở được cạnh khung thoại khi đang trả lời |
 
-**Kết quả đợt 5:** đã làm đủ 7 bước (commit 3918e6d → bước cuối). Tên các tòa nhà trang trí (Chung cư Hải Âu, Khách sạn Vịnh Đêm, Nhà nghỉ Sương Mù, Kho hàng Bến Cảng…) đều hư cấu — nhóm xem lại. Nhạc ~53 MB (8 file mp3).
+**Kết quả đợt 5:** đã làm đủ 7 bước (commit 3918e6d → bước cuối). Chỉ 4 tòa vào được (Báo Thanh Niên, Tin Vịnh, Phòng xác minh, Cà phê Gió Biển) có biển hiệu; tòa trang trí không có biển. Nhạc ~53 MB (8 file mp3).
 

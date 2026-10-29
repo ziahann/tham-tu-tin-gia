@@ -196,11 +196,10 @@ function meetingTable() {
   return outline(img);
 }
 
-/** Bảng ghim đứng (tường bằng chứng) 2 ô x 2,2 ô. */
-function corkBoard() {
-  const img = new Img(72, 76), { R } = brush(img);
-  shadow(img, 36, 73, 30);
-  R(8, 60, 3, 14, '#22262e'); R(61, 60, 3, 14, '#22262e');
+/** Bảng ghim (tường bằng chứng) 2 ô: standing = có chân đứng; mặc định treo tường (không lấn ra lối đi). */
+function corkBoard(standing = false) {
+  const img = new Img(72, standing ? 76 : 62), { R } = brush(img);
+  if (standing) { shadow(img, 36, 73, 30); R(8, 60, 3, 14, '#22262e'); R(61, 60, 3, 14, '#22262e'); }
   R(2, 2, 68, 60, '#3a3026'); R(5, 5, 62, 54, '#8a6a48');
   const notes = [[9, 9, '#e9e4d6'], [28, 8, '#9fb3c8'], [48, 11, '#e9e4d6'], [12, 32, '#f2d36b'], [34, 34, '#e9e4d6'], [52, 36, '#c9d1dc']];
   notes.forEach(([x, y, c]) => { R(x, y, 13, 11, c); R(x + 2, y + 4, 9, 1, '#5b5d6e'); R(x + 2, y + 7, 6, 1, '#5b5d6e'); R(x + 6, y, 2, 2, '#c8323c'); });
@@ -305,10 +304,10 @@ function cafeCounter() {
 
 function device(kind) {
   const W = { computer: 72, magnifier: 72, detector: 40, archive: 56, monitor: 100, timeline: 136, evidence: 72 }[kind];
-  const H = { computer: 60, magnifier: 60, detector: 72, archive: 64, monitor: 70, timeline: 76, evidence: 76 }[kind];
+  const H = { computer: 60, magnifier: 60, detector: 72, archive: 64, monitor: 70, timeline: 62, evidence: 62 }[kind];
   if (kind === 'evidence') return corkBoard();
   const img = new Img(W, H), { R, E, G } = brush(img);
-  shadow(img, W / 2, H - 3, W / 2 - 3);
+  if (kind !== 'timeline') shadow(img, W / 2, H - 3, W / 2 - 3);
   if (kind === 'computer') {
     return desk('lab');
   } else if (kind === 'magnifier') {
@@ -332,7 +331,6 @@ function device(kind) {
     });
     R(44, 52, 12, 10, '#22262e'); R(30, 62, 40, 4, '#3a4150');
   } else if (kind === 'timeline') {
-    R(8, 58, 3, 16, '#22262e'); R(125, 58, 3, 16, '#22262e');
     R(2, 2, 132, 58, '#5b6170'); R(4, 4, 128, 54, '#eef1f5'); R(4, 30, 128, 2, '#22262e');
     [[8, 8], [36, 36], [64, 8], [92, 36], [116, 8]].forEach(([x, y], i) => { R(x, y, 18, 18, ['#f2d36b', '#9fd8ff', '#f2d36b', '#f4b6c2', '#c9d1dc'][i]); R(x + 2, y + 5, 14, 1, '#5b5d6e'); R(x + 2, y + 9, 10, 1, '#5b5d6e'); R(x + 8, 30, 2, 2, '#c8323c'); });
   }
@@ -341,17 +339,23 @@ function device(kind) {
 
 // ---------------------------------------------------------------- ngoài trời
 
-/** Cây xanh (tán tối, lạnh). big: 3 ô x 4 ô. */
+/** Cây xanh (tán tối, lạnh). big: 3 ô x 4 ô. Thân mọc liền lên tán, có nhánh và gốc loe. */
 function tree(big) {
   const w = big ? 96 : 64, h = big ? 128 : 92, img = new Img(w, h), { R, E } = brush(img);
   shadow(img, w / 2, h - 4, w / 2 - 10, 5);
-  R(w / 2 - 4, h - (big ? 44 : 32), 8, big ? 40 : 28, '#3a3026'); R(w / 2 - 4, h - (big ? 44 : 32), 3, big ? 40 : 28, '#4a3c2e');
-  const cy = big ? 50 : 38, rx = big ? 44 : 26, ry = big ? 40 : 30;
-  for (let i = 0; i < (big ? 14 : 9); i++) {
-    const a = rnd() * Math.PI * 2, d = rnd() * 0.6;
-    E(w / 2 + Math.cos(a) * rx * d, cy + Math.sin(a) * ry * d, rx * 0.45, ry * 0.4, ['#1f3a33', '#26463c', '#2d5246'][i % 3]);
-  }
-  for (let i = 0; i < (big ? 8 : 5); i++) E(w / 2 - rx * 0.3 + rnd() * rx * 0.5, cy - ry * 0.4 + rnd() * ry * 0.4, 6, 4, '#3a6455');
+  const cx = w / 2, cy = big ? 46 : 34, rx = big ? 40 : 26, ry = big ? 36 : 27, tw = big ? 10 : 7;
+  // thân: từ giữa tán xuống đất, gốc loe, vài nhánh chĩa vào tán
+  R(cx - tw / 2, cy, tw, h - 6 - cy, '#3a3026'); R(cx - tw / 2, cy, 3, h - 6 - cy, '#4a3c2e'); R(cx + tw / 2 - 2, cy, 2, h - 6 - cy, '#2b241d');
+  R(cx - tw / 2 - 3, h - 10, tw + 6, 4, '#3a3026'); R(cx - tw / 2 - 5, h - 7, tw + 10, 2, '#2b241d');
+  for (let i = 0; i < (big ? 14 : 9); i++) { R(cx - 2 - i, cy + 6 - i, 3, 2, '#3a3026'); R(cx + i, cy + 2 - i, 3, 2, '#3a3026'); }
+  // tán: các khối tròn chồng lên nhau, sáng ở trên trái
+  const blobs = big
+    ? [[0, 6, 30, 22], [-22, 0, 22, 18], [22, 2, 22, 18], [-12, -16, 22, 17], [14, -14, 22, 17], [0, -24, 18, 13], [-28, 12, 14, 11], [28, 12, 14, 11]]
+    : [[0, 4, 20, 15], [-14, 0, 14, 12], [14, 1, 14, 12], [-6, -12, 15, 12], [8, -11, 14, 11]];
+  for (const [dx, dy, bx, by] of blobs) E(cx + dx, cy + dy, bx, by, '#1f3a33');
+  for (const [dx, dy, bx, by] of blobs) E(cx + dx - 2, cy + dy - 3, bx - 4, by - 4, '#26463c');
+  for (const [dx, dy, bx, by] of blobs.slice(3)) E(cx + dx - 4, cy + dy - 5, bx * 0.5, by * 0.45, '#2f5446');
+  for (let i = 0; i < (big ? 10 : 6); i++) E(cx - rx * 0.5 + rnd() * rx * 0.7, cy - ry * 0.6 + rnd() * ry * 0.5, 4, 3, '#3a6455');
   return outline(img);
 }
 
@@ -607,7 +611,7 @@ export function allProps() {
   add('trash', trashBin(), { base: [14, 8] });
   add('filing_boxes', filingBoxes(), { base: [46, 16] });
   add('meeting_table', meetingTable(), { base: [128, 48] });
-  add('cork_board', corkBoard(), { base: [64, 10] });
+  add('cork_board', corkBoard(), { base: [0, 0], wall: true });
   add('archive_shelf', archiveShelf(), { base: [96, 18] });
   add('tv_wall', tvWall(), { base: [0, 0], wall: true, lights: [[38, 20, 0x7fa8ff, 70, 0.9]] });
   add('blinds_window', blindsWindow(), { base: [0, 0], wall: true, lights: [[26, 28, 0x9ec8ff, 60, 0.6]] });
@@ -622,7 +626,8 @@ export function allProps() {
   add('cafe_counter', cafeCounter(), { base: [128, 30], lights: [[68, 14, 0xffc27a, 90, 1.0]] });
   for (const k of ['computer', 'magnifier', 'detector', 'archive', 'monitor', 'timeline', 'evidence']) {
     const img = device(k);
-    add(`dev_${k}`, img, { base: [img.w - 8, 18], lights: k === 'magnifier' ? [[36, 34, 0xfff2c0, 70, 0.9]] : [[img.w / 2, 16, 0x7fe3ff, 70, 1.0]] });
+    const onWall = k === 'evidence' || k === 'timeline';
+    add(`dev_${k}`, img, { base: onWall ? [0, 0] : [img.w - 8, 18], wall: onWall, lights: k === 'magnifier' ? [[36, 34, 0xfff2c0, 70, 0.9]] : [[img.w / 2, 16, 0x7fe3ff, 70, 1.0]] });
   }
   add('tree_big', tree(true), { base: [16, 10] });
   add('tree', tree(false), { base: [12, 8] });
@@ -644,14 +649,14 @@ export function allProps() {
     bld_tinvinh: { cols: 9, floors: 3, style: 'brick', door: 2, sign: true, signGlow: '#ff9a3a', fireEscape: true, roof: ['tank', 'vent'] },
     bld_xacminh: { cols: 8, floors: 2, style: 'stone', door: 'center', sign: true, signGlow: '#7fe3ff', roof: ['antenna'] },
     bld_cafe: { cols: 8, floors: 1, style: 'shop', door: 'center', shop: 'glass', awning: '#5a3a3a', sign: true, signGlow: '#f2c46b', roof: ['vent'] },
-    bld_apartment: { cols: 9, floors: 5, style: 'concrete', door: 3, balcony: true, sign: true, signGlow: '#9fb3c8', roof: ['tank', 'ac', 'antenna'] },
+    bld_apartment: { cols: 9, floors: 5, style: 'concrete', door: 3, balcony: true, sign: false, signGlow: '#9fb3c8', roof: ['tank', 'ac', 'antenna'] },
     bld_apartment2: { cols: 7, floors: 4, style: 'concrete', door: 2, sign: false, roof: ['tank', 'ac'] },
-    bld_hotel: { cols: 10, floors: 6, style: 'hotel', door: 'center', balcony: true, sign: true, signGlow: '#ff9fd0', roof: ['antenna', 'tank'] },
-    bld_pharmacy: { cols: 5, floors: 2, style: 'shop', door: 1, shop: 'glass', sign: true, signGlow: '#4aa35b', roof: ['ac'] },
-    bld_store: { cols: 6, floors: 2, style: 'shop', door: 2, shop: 'glass', awning: '#2c4a6b', sign: true, signGlow: '#9fd8ff', roof: ['vent'] },
-    bld_books: { cols: 5, floors: 2, style: 'brick', door: 1, shop: 'glass', sign: true, signGlow: '#f2c46b', roof: ['tank'] },
-    bld_closed: { cols: 6, floors: 2, style: 'concrete', door: null, shop: 'shutter', sign: true, signGlow: '#5b6170', roof: [] },
-    bld_warehouse: { cols: 12, floors: 1, style: 'warehouse', door: 4, shop: 'shutter', sign: true, signGlow: '#c9a24a', roof: ['vent', 'vent'] },
+    bld_hotel: { cols: 10, floors: 6, style: 'hotel', door: 'center', balcony: true, sign: false, signGlow: '#ff9fd0', roof: ['antenna', 'tank'] },
+    bld_pharmacy: { cols: 5, floors: 2, style: 'shop', door: 1, shop: 'glass', sign: false, signGlow: '#4aa35b', roof: ['ac'] },
+    bld_store: { cols: 6, floors: 2, style: 'shop', door: 2, shop: 'glass', awning: '#2c4a6b', sign: false, signGlow: '#9fd8ff', roof: ['vent'] },
+    bld_books: { cols: 5, floors: 2, style: 'brick', door: 1, shop: 'glass', sign: false, signGlow: '#f2c46b', roof: ['tank'] },
+    bld_closed: { cols: 6, floors: 2, style: 'concrete', door: null, shop: 'shutter', sign: false, signGlow: '#5b6170', roof: [] },
+    bld_warehouse: { cols: 12, floors: 1, style: 'warehouse', door: 4, shop: 'shutter', sign: false, signGlow: '#c9a24a', roof: ['vent', 'vent'] },
     bld_tenement: { cols: 6, floors: 4, style: 'brick', door: 1, fireEscape: true, sign: false, roof: ['tank'] }
   };
   for (const [k, o] of Object.entries(B)) { const { img, meta } = building(o); P[k] = { img, meta: { ...meta, building: true } }; }
