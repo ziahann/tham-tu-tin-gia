@@ -49,6 +49,7 @@ function freshProgress(heroName) {
     questProgress: {},
     evidenceCards: [],
     sourcesOpened: [],
+    pos: null,
     score: 0
   };
 }
