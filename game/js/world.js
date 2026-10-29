@@ -8,6 +8,7 @@ import * as story from './story.js';
 import { setPlace } from './hud.js';
 import { playMusic } from './music.js';
 import { buildGraph, guideTarget, updateTrackLine, GuideArrow } from './guide.js';
+import { Weather } from './weather.js';
 
 const SPRITE_IDS = ['npc1', 'npc2', 'npc3', 'npc4', 'npc5', 'npc6', 'boss', 'boss_blank'];
 const MAPS = ['office', 'street', 'newsroom', 'cafe', 'agency', 'boss'];
@@ -45,7 +46,7 @@ export class WorldScene extends Phaser.Scene {
     this.mapKey = this.args.map || (MAPS.includes(saved?.map) ? saved.map : 'office');
     const map = this.map = this.make.tilemap({ key: this.mapKey });
     const tiles = map.addTilesetImage('tiles', 'tiles');
-    map.createLayer('ground', tiles);
+    this.ground = map.createLayer('ground', tiles);
     this.walls = map.createLayer('walls', tiles);
     this.doors = map.createLayer('doors', tiles);
     this.walls.setCollisionByProperty({ collides: true });
@@ -126,6 +127,7 @@ export class WorldScene extends Phaser.Scene {
     this.target = null;
     buildGraph(this, MAPS);
     this.guide = new GuideArrow(this);
+    this.weather = new Weather(this, () => [this.ground, this.walls, this.doors, this.player, ...[...this.npcs.values()].map(n => n.sprite)]);
     this.reduceMotion = state.settings.reduceMotion;
     story.setWorld(this);
     this.refresh();
@@ -366,6 +368,7 @@ export class WorldScene extends Phaser.Scene {
     this.npcs.forEach(n => n.update(delta, frozen, this.player));
     if (!this.reduceMotion) this.devices.forEach((d, i) => d.marker.setY(d.obj.y - 2 + Math.round(Math.sin(time / 250 + i) * 2)));
 
+    this.weather.update(delta, this.player);
     this.guide.draw(this.player, frozen ? null : guideTarget(this), time);
     if (frozen) { this.prompt.setVisible(false); return; }
     this.checkZone();
