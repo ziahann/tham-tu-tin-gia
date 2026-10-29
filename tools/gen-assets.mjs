@@ -1010,7 +1010,9 @@ const CITY = (() => {
   fill(0, 47, CW, 3, ',');            // lối dạo
   put(0, 50, '|'.repeat(CW));
   fill(0, 51, CW, CH - 51, '~');
-  for (let y = 50; y <= 58; y++) g[y][44] = g[y][45] = g[y][46] = 'X';
+  // bến tàu: bãi gỗ 3 hàng dọc bờ (thay lan can) + hai cầu lên tàu
+  for (let y = 50; y <= 52; y++) for (let x = 34; x <= 57; x++) g[y][x] = 'X';
+  for (const x of [41, 42, 52, 53]) g[53][x] = 'X';
   g[49][48] = 'p';
   return rows();
 })();
@@ -1098,14 +1100,20 @@ const street = buildMap('street', {
     ...[6, 26, 62, 86].map(x => pp('street_lamp', x, 49.2)),
     pp('bench', 14, 49.4), pp('bench', 34, 49.4), pp('bench', 70, 49.4), pp('planter', 52, 49.6), pp('planter', 90, 49.6),
     // --- vịnh: tàu neo, đảo đá
-    pp('tour_boat', 37.5, 57.6), pp('tour_boat', 56, 59.6, { flip: true }),
+    // bến tàu du lịch (hư cấu): hai tàu neo sát bến, cầu lên tàu, quầy vé, cọc neo, phao cứu sinh, đèn, thùng hàng
+    pp('tour_boat', 42, 57.25), pp('tour_boat', 52.5, 57.25, { flip: true }),
+    pp('kiosk', 36.6, 52.4), pp('market_stall', 56, 51.4),
+    ...[35, 39, 44.5, 47.5, 50, 55.6].map(x => pp('bollard', x, 52.85)),
+    pp('life_ring', 46, 52.7), pp('life_ring', 38, 50.6),
+    pp('street_lamp', 40, 50.4), pp('street_lamp', 50.6, 50.4), pp('street_lamp', 57.4, 52.6),
+    pp('filing_boxes', 54.6, 50.8), pp('filing_boxes', 55.4, 51.9), pp('street_bin', 48.4, 50.6),
     pp('karst_big', 10, 62), pp('karst', 26, 60), pp('karst_big', 76, 63), pp('karst', 90, 58),
     // --- vùng, làn xe, vạch qua đường
     rectT('zone', 'zone_street', 0, 19, CW, 11, { area: 'street' }),
     rectT('zone', 'zone_park', 0, 30, 44, 8, { area: 'park' }),
     rectT('zone', 'zone_market', 44, 28, 5, 11, { area: 'market' }),
     rectT('zone', 'zone_coast', 0, 38, CW, 12, { area: 'coast' }),
-    rectT('zone', 'zone_pier', 44, 50, 3, 9, { area: 'pier' }),
+    rectT('zone', 'zone_pier', 34, 50, 24, 4, { area: 'pier' }),
     // mỗi chiều một làn rộng 2 ô (ô tô, xe buýt, xe máy chạy chung, nối đuôi nhau)
     rectT('lane', 'lane_w', 0, 22, CW, 2, { dir: -1, kind: 'mixed' }),
     rectT('lane', 'lane_e', 0, 25, CW, 2, { dir: 1, kind: 'mixed' }),
@@ -1118,7 +1126,7 @@ const street = buildMap('street', {
     point('npc', 'amb_vendor', 14.2, 37.7),
     point('npc', 'amb_tourist', 50, 48.6, { patrol: 'patrol_tourist' }),
     path_('patrol_tourist', [[50, 48.6], [66, 48.6]]),
-    point('npc', 'amb_fisher', 45.5, 57.4),
+    point('npc', 'amb_fisher', 46.6, 51.8),
     point('npc', 'amb_student', 6, 20.5, { patrol: 'patrol_student' }),
     path_('patrol_student', [[2, 20.5], [38, 20.5]]),
     point('npc', 'amb_elder', 26, 32.6),
@@ -1143,9 +1151,11 @@ const street = buildMap('street', {
     rectT('inspect', 'inspect_busstop', 8.5, 29, 3, 0.8, { text: 'inspect_busstop' }),
     rectT('inspect', 'inspect_stall', 44.2, 30.6, 2.6, 0.8, { text: 'inspect_stall' }),
     rectT('inspect', 'inspect_pier_sign', 48, 49, 1, 1, { text: 'inspect_pier_sign' }),
-    rectT('inspect', 'inspect_boat', 43, 55, 1, 3, { text: 'inspect_boat' }),
-    rectT('inspect', 'inspect_sea', 0, 50, 44, 1, { text: 'inspect_sea' }),
-    rectT('inspect', 'inspect_sea_e', 47, 50, 49, 1, { text: 'inspect_sea' })
+    rectT('inspect', 'inspect_boat', 40.6, 53, 2.8, 1, { text: 'inspect_boat' }),
+    rectT('inspect', 'inspect_boat_e', 51.6, 53, 2.8, 1, { text: 'inspect_boat' }),
+    rectT('inspect', 'inspect_ticket', 35.4, 51.2, 2.4, 1.4, { text: 'inspect_ticket' }),
+    rectT('inspect', 'inspect_sea', 0, 50, 34, 1, { text: 'inspect_sea' }),
+    rectT('inspect', 'inspect_sea_e', 58, 50, 38, 1, { text: 'inspect_sea' })
   ]
 });
 
