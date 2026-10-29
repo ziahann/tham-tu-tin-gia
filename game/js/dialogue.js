@@ -4,7 +4,8 @@ import { reader } from './tools.js';
 import { state } from './state.js';
 import { appendMessage } from './history.js';
 import { releaseAll } from './input.js';
-import { sfx } from './audio.js';
+import { sfx, voice } from './audio.js';
+import { duckMusic } from './music.js';
 import { toast } from './ui.js';
 
 // Chân dung 72x88, 5 cột biểu cảm (tools/gen-portraits.mjs). Boss có bộ cột riêng.
@@ -18,6 +19,7 @@ const heroFile = () => `hero_${state.progress?.heroLook === 'f' ? 'f' : 'm'}`;
 const els = {};
 let partner = null;
 let rightId = null;          // nhân vật đang hiện ở chân dung bên phải
+let speaking = null;         // người đang nói (giọng bíp khi chữ chạy)
 const pinned = {};           // biểu cảm cố định (ví dụ boss đã gỡ mặt nạ)
 let open = false;
 let advanceFn = null;
@@ -44,6 +46,7 @@ export function begin(partnerId, portrait = null) {
   partner = partnerId;
   rightId = portrait || (hasPortrait(partnerId) ? partnerId : null);
   open = true;
+  duckMusic(true);
   setPortrait(els.left, heroFile(), 'neutral');
   setPortrait(els.right, rightId, 'neutral');
   focus(null);
@@ -55,6 +58,7 @@ export function begin(partnerId, portrait = null) {
 /** Đóng khung thoại. */
 export function end() {
   open = false;
+  duckMusic(false);
   Object.keys(pinned).forEach(k => delete pinned[k]);
   advanceFn = null;
   els.root.hidden = true;
@@ -101,6 +105,7 @@ function moodOf(text) {
 /** Đặt tên, nhãn GIẢ LẬP và chân dung cho người nói. */
 function setSpeaker(id, text = '', mood = null) {
   let name, fictional = true;
+  speaking = id;
   const m = mood || moodOf(text);
   if (id === 'hero' || id === 'inspect') {
     name = id === 'hero' ? heroTitle() : t('dialog.inspectSpeaker');
@@ -140,7 +145,7 @@ function typeText(text, done) {
   typingTimer = setInterval(() => {
     i += 1;
     els.text.textContent = text.slice(0, i);
-    if (i % 4 === 0) sfx('blip');
+    if (i % 3 === 0 && text[i - 1] !== ' ') voice(speaking);
     if (i >= text.length) finishTyping();
   }, 22);
 }
