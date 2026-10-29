@@ -943,226 +943,236 @@ const tnF5 = tnFloor('tn_f5', {
   inspects: [rectT('inspect', 'inspect_whiteboard_S8', 20.3, 1.8, 2.4, 1.2, { text: 'inspect_whiteboard' })]
 });
 
-// ---------------- Phố ven vịnh (thành phố mở rộng)
-// Tòa nhà (hàng 0–6): # mái, G máng xối, H kính, S biển hiệu, K gạch, k cửa sổ gạch, Z đá, z cửa sổ đá, N biển neon,
-// A máy lạnh, Y ban công, W tường, w cửa sổ, a mái hiên, U cửa kính quán; o/n/t/c cửa (văn phòng / tòa soạn / phòng xác minh / quán).
-// Phố: _ vỉa hè, ^ mép vỉa trên, v mép vỉa dưới, = đường, - vạch giữa, % vạch qua đường, y hẻm sỏi, : lối sỏi, g cỏ,
-// , lối dạo, L đèn, T cây, B ghế, F bồn hoa, Q sạp báo, J trạm xe buýt, b thùng rác, l cọc chắn, M sạp chợ, h trụ nước,
-// p bảng bến tàu, | lan can, ~ nước, X cầu tàu, I đảo đá, O/R tàu neo (hai ô).
-const CW = 64, CH = 36;
+// ---------------- Khu phố ven vịnh (mở rộng, u tối, nhiều lớp tòa nhà)
+// Bắc → nam: hai lớp tòa nhà (lớp sau cao hơn, nhô lên sau mái lớp trước), vỉa hè, phố chính (2 chiều), vỉa hè,
+// công viên + phố đi bộ + dãy nhà thấp quay mặt ra đường ven vịnh, đường ven vịnh (2 chiều), lối dạo, lan can, bến tàu, vịnh.
+// Ký hiệu nền: _ vỉa hè, ^ mép vỉa trên, v mép vỉa dưới, = đường, - vạch giữa, % vạch qua đường, g cỏ, : sỏi, y hẻm,
+// , lát đá (lối dạo, phố đi bộ), X cầu tàu; tường / nước: | lan can, ~ nước, p bảng bến tàu.
+const CW = 96, CH = 64;
+const N_BOTTOM = 19;   // đáy dãy nhà phía bắc
+const C_BOTTOM = 38;   // đáy dãy nhà giữa (quay mặt ra đường ven vịnh)
 const CITY = (() => {
-  const { g, put, rows } = grid(CW, CH, '_');
-  const BUILDINGS = [
-    [2, ['##############', '##############', 'GGGGGGGGGGGGGG', 'HHHHHSHHHHHHHH', 'HHHHHHHHHHHHHH', 'HHHHHHHHHHHHHH', 'HHHHHHooHHHHHH']],
-    [19, ['############', '############', 'GGGGGGGGGGGG', 'KkKkKSKkKkKk', 'KkKkKkKkKkKk', 'KAKkKkKkKAKk', 'KKKKKnnKKKKK']],
-    [34, ['##########', '##########', 'GGGGGGGGGG', 'ZzZZNNZZzZ', 'ZzZzZZzZzZ', 'ZzZzZZzZzZ', 'ZZZZttZZZZ']],
-    [47, ['############', '############', 'GGGGGGGGGGGG', 'WwYwWSWwYwWw', 'WwWwWwWwWwWw', 'aaaaaaaaaaaa', 'UUUUUccUUUUU']]
-  ];
-  for (let y = 0; y <= 6; y++) for (let x = 0; x < CW; x++) g[y][x] = 'y';
-  BUILDINGS.forEach(([x0, lines]) => lines.forEach((ln, y) => put(x0, y, ln)));
-  [[0, 5, 'T'], [17, 4, 'T'], [17, 6, 'b'], [32, 5, 'T'], [45, 6, 'b'], [45, 4, 'T'], [61, 5, 'T'], [62, 2, 'T']].forEach(([x, y, c]) => { g[y][x] = c; });
-  // vỉa hè trên
-  [[5, 'L'], [17, 'h'], [21, 'L'], [32, 'Q'], [36, 'L'], [44, 'b'], [50, 'L'], [61, 'L'], [14, 'T'], [57, 'T']].forEach(([x, c]) => { g[7][x] = c; });
-  put(0, 8, '^'.repeat(CW));
-  // đường hai chiều
-  for (const y of [9, 10, 12, 13]) put(0, y, '='.repeat(CW));
-  put(0, 11, '-'.repeat(CW));
-  for (const cx of [17, 45]) for (let y = 9; y <= 13; y++) { g[y][cx] = g[y][cx + 1] = '%'; }
-  put(0, 14, 'v'.repeat(CW));
-  // vỉa hè dưới: trạm xe buýt, sạp báo, chợ nhỏ
-  [[10, 'J'], [15, 'l'], [20, 'l'], [43, 'l'], [48, 'l'], [5, 'B'], [34, 'L'], [60, 'B']].forEach(([x, c]) => { g[15][x] = c; });
-  put(26, 16, 'MMMM'); g[16][12] = 'Q'; g[16][3] = 'T'; g[16][55] = 'T';
-  // công viên
-  for (let y = 17; y <= 22; y++) for (let x = 0; x < CW; x++) g[y][x] = 'g';
-  for (let y = 17; y <= 22; y++) { g[y][17] = g[y][18] = ':'; g[y][45] = g[y][46] = ':'; }
-  put(0, 20, ':'.repeat(CW));
-  [[3, 18, 'T'], [8, 17, 'F'], [9, 17, 'F'], [12, 18, 'T'], [22, 18, 'B'], [23, 18, 'B'], [26, 17, 'T'], [30, 18, 'F'], [31, 18, 'F'],
-    [35, 17, 'T'], [40, 18, 'T'], [50, 18, 'B'], [51, 18, 'B'], [55, 17, 'T'], [60, 18, 'F'], [61, 18, 'F'],
-    [5, 22, 'T'], [14, 22, 'L'], [24, 22, 'T'], [30, 22, 'B'], [31, 22, 'B'], [42, 22, 'L'], [52, 22, 'T'], [58, 22, 'F']].forEach(([x, y, c]) => { g[y][x] = c; });
-  // lối dạo ven vịnh, lan can, cầu tàu
-  put(0, 23, ','.repeat(CW)); put(0, 24, ','.repeat(CW));
-  g[24][40] = 'p';
-  put(0, 25, '|'.repeat(CW)); g[25][36] = g[25][37] = g[25][38] = 'X';
-  for (let y = 26; y < CH; y++) put(0, y, '~'.repeat(CW));
-  for (let y = 26; y <= 31; y++) g[y][36] = g[y][37] = g[y][38] = 'X';
-  put(33, 28, 'OR'); put(39, 30, 'OR');
-  [[6, 29], [7, 29], [6, 30], [7, 30], [8, 30], [14, 33], [14, 34], [24, 28], [25, 28], [25, 29], [26, 29], [50, 30], [51, 30], [51, 31], [58, 34], [3, 34], [44, 33]]
-    .forEach(([x, y]) => { g[y][x] = 'I'; });
+  const { g, put, rows } = grid(CW, CH, 'y');
+  const fill = (x0, y0, w, h, ch) => { for (let y = y0; y < y0 + h; y++) for (let x = x0; x < x0 + w; x++) g[y][x] = ch; };
+  const road = (y0, crosses) => {
+    put(0, y0 - 1, '^'.repeat(CW));
+    for (const y of [y0, y0 + 1, y0 + 3, y0 + 4]) put(0, y, '='.repeat(CW));
+    put(0, y0 + 2, '-'.repeat(CW));
+    put(0, y0 + 5, 'v'.repeat(CW));
+    for (const cx of crosses) for (let y = y0; y <= y0 + 4; y++) g[y][cx] = g[y][cx + 1] = '%';
+  };
+  fill(0, 19, CW, 2, '_');            // vỉa hè bắc
+  road(22, [20, 60]);                 // phố chính: hàng 21–27
+  fill(0, 28, CW, 2, '_');            // vỉa hè nam
+  fill(0, 30, 44, 8, 'g');            // công viên
+  for (let y = 30; y < 38; y++) g[y][20] = g[y][21] = ':';
+  put(0, 34, ':'.repeat(44));
+  fill(44, 28, 5, 11, ',');           // phố đi bộ (chợ)
+  fill(0, 38, CW, 2, '_');            // vỉa hè ven vịnh
+  road(41, [20, 46, 74]);             // đường ven vịnh: hàng 40–46
+  fill(0, 47, CW, 3, ',');            // lối dạo
+  put(0, 50, '|'.repeat(CW));
+  fill(0, 51, CW, CH - 51, '~');
+  for (let y = 50; y <= 58; y++) g[y][44] = g[y][45] = g[y][46] = 'X';
+  g[49][48] = 'p';
   return rows();
 })();
 
+/** Tòa nhà (prop) với đáy ở hàng `bottom`, mép trái ở cột x0; sign/sub: chữ trên bảng hiệu. */
+const bld = (key, x0, cols, bottom, sign, sub, extra = {}) => pp(key, x0 + cols / 2, bottom, { ...(sign ? { sign } : {}), ...(sub ? { sub } : {}), ...extra });
+/** Lối vào tòa nhà: ô cửa (2 ô) ở cột doorX..doorX+2, sát chân tường. */
+const doorExit = (name, doorX, bottom, target) => rectT('exit', name, doorX, bottom, 2, 0.7, { target, spawn: 'spawn_from_street' });
+
 const street = buildMap('street', {
-  rows: CITY, label: 'Phố ven vịnh Hạ Long', music: 'street',
-  legend: {
-    '#': 'roof', G: 'roof_edge', H: 'glass', S: 'signboard', K: 'brick', k: 'brick_window', Z: 'stone', z: 'stone_window', N: 'neon',
-    A: 'ac_unit', Y: 'balcony', W: 'facade', w: 'facade_window', a: 'awning', U: 'cafe_window',
-    L: 'lamp', T: 'tree', B: 'bench', F: 'flowerbed', Q: 'kiosk', J: 'bus_stop', b: 'bin', l: 'bollard', M: 'stall', h: 'hydrant', p: 'post',
-    '|': 'railing', '~': 'water', I: 'karst', O: 'boat_l', R: 'boat_r'
-  },
+  rows: CITY, label: 'Khu phố ven vịnh Hạ Long', music: 'street',
+  legend: { '|': 'railing', '~': 'water', p: 'post' },
   ground: (ch, x, y) => {
-    if ('onct'.includes(ch)) return 'shop_door';
     if (ch === '=') return 'road';
     if (ch === '-') return x % 3 === 0 ? 'road' : 'road_line';
     if (ch === '%') return 'crosswalk';
     if (ch === '^') return 'curb';
     if (ch === 'v') return 'curb_low';
     if (ch === 'X') return 'dock';
-    if (ch === 'y') return 'gravel';
-    if (ch === ':') return 'gravel';
-    if (ch === 'g' || (y >= 17 && y <= 22)) return 'grass';
-    if (y >= 26 || ch === '~' || ch === 'I' || ch === 'O' || ch === 'R') return 'water';
-    if (y >= 23) return 'promenade';
+    if (ch === 'g') return 'grass';
+    if (ch === ':' || ch === 'y') return 'gravel';
+    if (ch === ',') return 'promenade';
+    if (ch === '~' || ch === '|') return y >= 51 ? 'water' : 'promenade';
     return 'sidewalk';
   },
   objects: () => [
-    point('spawn', 'spawn_from_office', 9, 7.7),
-    point('spawn', 'spawn_from_news', 25, 7.7),
-    point('spawn', 'spawn_from_agency', 39, 7.7),
-    point('spawn', 'spawn_from_cafe', 53, 7.7),
-    rectT('zone', 'zone_street', 0, 7, CW, 9, { area: 'street' }),
-    rectT('zone', 'zone_park', 0, 16, CW, 9, { area: 'park' }),
-    rectT('zone', 'zone_pier', 36, 25, 3, 7, { area: 'pier' }),
-    rectT('exit', 'door_office', 8, 6, 2, 1, { target: 'tn_lobby', spawn: 'spawn_from_street' }),
-    rectT('exit', 'door_news', 24, 6, 2, 1, { target: 'newsroom', spawn: 'spawn_from_street' }),
-    rectT('exit', 'door_agency', 38, 6, 2, 1, { target: 'agency', spawn: 'spawn_from_street' }),
-    rectT('exit', 'door_cafe', 52, 6, 2, 1, { target: 'cafe', spawn: 'spawn_from_street' }),
-    // làn xe: dir -1 chạy sang trái, 1 sang phải; vạch qua đường (xe dừng khi có người)
-    rectT('lane', 'lane_w_car', 0, 9, CW, 1, { dir: -1, kind: 'car' }),
-    rectT('lane', 'lane_w_bike', 0, 10, CW, 1, { dir: -1, kind: 'bike' }),
-    rectT('lane', 'lane_e_bike', 0, 12, CW, 1, { dir: 1, kind: 'bike' }),
-    rectT('lane', 'lane_e_car', 0, 13, CW, 1, { dir: 1, kind: 'car' }),
-    rectT('crosswalk', 'cross_1', 17, 9, 2, 5),
-    rectT('crosswalk', 'cross_2', 45, 9, 2, 5),
-    point('npc', 'npc5', 14, 23.6, { patrol: 'patrol_npc5' }),
-    path_('patrol_npc5', [[6, 23.6], [30, 23.6]]),
-    point('npc', 'amb_vendor', 11.5, 16.6),
-    point('npc', 'amb_tourist', 40, 20.6, { patrol: 'patrol_tourist' }),
-    path_('patrol_tourist', [[36, 20.6], [56, 20.6]]),
-    point('npc', 'amb_fisher', 37.5, 30.6),
-    point('npc', 'amb_student', 4, 7.7, { patrol: 'patrol_student' }),
-    path_('patrol_student', [[2, 7.7], [30, 7.7]]),
-    point('npc', 'amb_elder', 22.5, 19.4),
-    point('npc', 'amb_jogger', 50, 24.4, { patrol: 'patrol_jogger' }),
-    path_('patrol_jogger', [[2, 24.4], [62, 24.4]]),
-    rectT('inspect', 'inspect_office_sign', 7, 3, 1, 1, { text: 'inspect_office_sign' }),
-    rectT('inspect', 'inspect_news_sign', 24, 3, 1, 1, { text: 'inspect_news_sign' }),
-    rectT('inspect', 'inspect_agency_sign', 38, 3, 2, 1, { text: 'inspect_agency_sign' }),
-    rectT('inspect', 'inspect_cafe_sign', 52, 3, 1, 1, { text: 'inspect_cafe_sign' }),
-    rectT('inspect', 'inspect_kiosk', 12, 16, 1, 1, { text: 'inspect_kiosk' }),
-    rectT('inspect', 'inspect_kiosk_north', 32, 7, 1, 1, { text: 'inspect_kiosk' }),
-    rectT('inspect', 'inspect_busstop', 10, 15, 1, 1, { text: 'inspect_busstop' }),
-    rectT('inspect', 'inspect_stall', 26, 16, 4, 1, { text: 'inspect_stall' }),
-    rectT('inspect', 'inspect_pier_sign', 40, 24, 1, 1, { text: 'inspect_pier_sign' }),
-    rectT('inspect', 'inspect_boat', 33, 28, 2, 1, { text: 'inspect_boat' }),
-    rectT('inspect', 'inspect_sea', 0, 25, 36, 1, { text: 'inspect_sea' })
+    // --- lớp nhà phía sau (trang trí, nhô lên sau mái)
+    bld('bld_apartment', 9, 9, 11, 'CHUNG CƯ HẢI ÂU'),
+    bld('bld_tenement', 25, 6, 11),
+    bld('bld_hotel', 49, 10, 10, 'KHÁCH SẠN VỊNH ĐÊM'),
+    bld('bld_apartment', 76, 9, 11, 'CHUNG CƯ BẾN ĐÁ'),
+    // --- dãy nhà phía bắc, quay mặt ra phố chính
+    bld('bld_apartment2', 2, 7, N_BOTTOM),
+    bld('bld_thanhnien', 11, 12, N_BOTTOM, 'BÁO THANH NIÊN', 'Trụ sở · nội dung trong game là GIẢ LẬP'),
+    bld('bld_tinvinh', 25, 9, N_BOTTOM, 'TIN VỊNH', 'trang tin (hư cấu)'),
+    bld('bld_pharmacy', 36, 5, N_BOTTOM, 'NHÀ THUỐC'),
+    bld('bld_xacminh', 41, 8, N_BOTTOM, 'PHÒNG XÁC MINH', 'thiết bị thẩm định (GIẢ LẬP)'),
+    bld('bld_hotel', 51, 10, N_BOTTOM, 'NHÀ NGHỈ SƯƠNG MÙ', null, { flip: true }),
+    bld('bld_cafe', 63, 8, N_BOTTOM, 'CÀ PHÊ GIÓ BIỂN', 'mở cửa đến khuya'),
+    bld('bld_books', 71, 5, N_BOTTOM, 'HIỆU SÁCH CŨ'),
+    bld('bld_tenement', 78, 6, N_BOTTOM),
+    bld('bld_store', 84, 6, N_BOTTOM, 'TẠP HÓA 24H'),
+    // --- dãy nhà thấp giữa hai con đường, quay mặt ra đường ven vịnh
+    bld('bld_closed', 50, 6, C_BOTTOM, 'CHO THUÊ'),
+    bld('bld_warehouse', 57, 12, C_BOTTOM, 'KHO HÀNG BẾN CẢNG'),
+    bld('bld_store', 70, 6, C_BOTTOM, 'GIẶT ỦI', null, { flip: true }),
+    bld('bld_books', 77, 5, C_BOTTOM, 'TIỆM ẢNH'),
+    bld('bld_pharmacy', 83, 5, C_BOTTOM, 'PHÒNG KHÁM', null, { flip: true }),
+    bld('bld_closed', 89, 6, C_BOTTOM, 'ĐÓNG CỬA', null, { flip: true }),
+    // --- lối vào các tòa nhà tương tác
+    doorExit('door_office', 16.5, N_BOTTOM, 'tn_lobby'),
+    doorExit('door_news', 27.5, N_BOTTOM, 'newsroom'),
+    doorExit('door_agency', 44.5, N_BOTTOM, 'agency'),
+    doorExit('door_cafe', 66.5, N_BOTTOM, 'cafe'),
+    point('spawn', 'spawn_from_office', 17.5, 20.4),
+    point('spawn', 'spawn_from_news', 28.5, 20.4),
+    point('spawn', 'spawn_from_agency', 45.5, 20.4),
+    point('spawn', 'spawn_from_cafe', 67.5, 20.4),
+    // --- vỉa hè phố chính
+    ...[4, 24, 40, 56, 72, 92].map((x, i) => pp('street_lamp', x, 20.2, i % 2 ? { flip: true } : {})),
+    pp('tree', 9.6, 20.6), pp('tree', 34.5, 20.6), pp('tree', 61.5, 20.6), pp('tree', 89, 20.6),
+    pp('hydrant', 23, 20.5), pp('street_bin', 49.8, 20.5), pp('street_bin', 75.6, 20.5), pp('kiosk', 31.5, 20.8),
+    pp('bus_stop', 10, 29.8), pp('bollard', 19.3, 28.8), pp('bollard', 22.7, 28.8), pp('bollard', 59.3, 28.8), pp('bollard', 62.7, 28.8),
+    ...[30, 52, 66, 86].map(x => pp('street_lamp', x, 29.6)),
+    pp('planter', 38, 29.6), pp('planter', 80, 29.6),
+    // --- công viên
+    pp('tree_big', 4, 33.6), pp('tree_big', 15, 33.4), pp('tree', 27, 32.4), pp('tree_big', 36, 33.8), pp('tree', 9, 37.4), pp('tree', 31, 37.6),
+    pp('bench', 11, 31.6), pp('bench', 26, 31.6), pp('bench', 26, 36.6), pp('bench', 39.5, 36.6),
+    pp('planter', 4.5, 36.8), pp('planter', 17, 36.8), pp('kiosk', 12.4, 37.6), pp('street_lamp', 20, 33.5), pp('street_lamp', 41, 33.5),
+    // --- phố đi bộ (chợ)
+    pp('market_stall', 45.5, 31.4), pp('market_stall', 45.5, 35.4), pp('street_bin', 48.6, 37.2),
+    // --- vỉa hè ven vịnh, lối dạo
+    ...[8, 30, 54, 82].map(x => pp('street_lamp', x, 39.6)),
+    pp('bus_stop', 40, 39.8), pp('tree', 16, 39.8), pp('tree', 68, 39.8),
+    ...[6, 26, 62, 86].map(x => pp('street_lamp', x, 49.2)),
+    pp('bench', 14, 49.4), pp('bench', 34, 49.4), pp('bench', 70, 49.4), pp('planter', 52, 49.6), pp('planter', 90, 49.6),
+    // --- vịnh: tàu neo, đảo đá
+    pp('tour_boat', 37.5, 57.6), pp('tour_boat', 56, 59.6, { flip: true }),
+    pp('karst_big', 10, 62), pp('karst', 26, 60), pp('karst_big', 76, 63), pp('karst', 90, 58),
+    // --- vùng, làn xe, vạch qua đường
+    rectT('zone', 'zone_street', 0, 19, CW, 11, { area: 'street' }),
+    rectT('zone', 'zone_park', 0, 30, 44, 8, { area: 'park' }),
+    rectT('zone', 'zone_market', 44, 28, 5, 11, { area: 'market' }),
+    rectT('zone', 'zone_coast', 0, 38, CW, 12, { area: 'coast' }),
+    rectT('zone', 'zone_pier', 44, 50, 3, 9, { area: 'pier' }),
+    rectT('lane', 'lane_w_car', 0, 22, CW, 1, { dir: -1, kind: 'car' }),
+    rectT('lane', 'lane_w_bike', 0, 23, CW, 1, { dir: -1, kind: 'bike' }),
+    rectT('lane', 'lane_e_bike', 0, 25, CW, 1, { dir: 1, kind: 'bike' }),
+    rectT('lane', 'lane_e_car', 0, 26, CW, 1, { dir: 1, kind: 'car' }),
+    rectT('lane', 'lane2_w_car', 0, 41, CW, 1, { dir: -1, kind: 'car' }),
+    rectT('lane', 'lane2_w_bike', 0, 42, CW, 1, { dir: -1, kind: 'bike' }),
+    rectT('lane', 'lane2_e_bike', 0, 44, CW, 1, { dir: 1, kind: 'bike' }),
+    rectT('lane', 'lane2_e_car', 0, 45, CW, 1, { dir: 1, kind: 'car' }),
+    ...[[20, 22], [60, 22], [20, 41], [46, 41], [74, 41]].map(([x, y], i) => rectT('crosswalk', `cross_${i}`, x, y, 2, 5)),
+    // --- người
+    point('npc', 'npc5', 14, 48.4, { patrol: 'patrol_npc5' }),
+    path_('patrol_npc5', [[4, 48.4], [40, 48.4]]),
+    point('npc', 'amb_vendor', 14.2, 37.7),
+    point('npc', 'amb_tourist', 50, 48.6, { patrol: 'patrol_tourist' }),
+    path_('patrol_tourist', [[50, 48.6], [66, 48.6]]),
+    point('npc', 'amb_fisher', 45.5, 57.4),
+    point('npc', 'amb_student', 6, 20.5, { patrol: 'patrol_student' }),
+    path_('patrol_student', [[2, 20.5], [38, 20.5]]),
+    point('npc', 'amb_elder', 26, 32.6),
+    point('npc', 'amb_jogger', 70, 47.6, { patrol: 'patrol_jogger' }),
+    path_('patrol_jogger', [[2, 47.6], [94, 47.6]]),
+    // --- đồ vật xem được
+    rectT('inspect', 'inspect_office_sign', 13, 18.3, 3, 0.7, { text: 'inspect_office_sign' }),
+    rectT('inspect', 'inspect_news_sign', 25.5, 18.3, 2, 0.7, { text: 'inspect_news_sign' }),
+    rectT('inspect', 'inspect_agency_sign', 41.5, 18.3, 3, 0.7, { text: 'inspect_agency_sign' }),
+    rectT('inspect', 'inspect_cafe_sign', 63.5, 18.3, 3, 0.7, { text: 'inspect_cafe_sign' }),
+    rectT('inspect', 'inspect_kiosk_north', 30.5, 19.6, 2, 0.8, { text: 'inspect_kiosk' }),
+    rectT('inspect', 'inspect_kiosk', 11.4, 36.8, 2, 0.8, { text: 'inspect_kiosk' }),
+    rectT('inspect', 'inspect_busstop', 8.5, 29, 3, 0.8, { text: 'inspect_busstop' }),
+    rectT('inspect', 'inspect_stall', 44.2, 30.6, 2.6, 0.8, { text: 'inspect_stall' }),
+    rectT('inspect', 'inspect_pier_sign', 48, 49, 1, 1, { text: 'inspect_pier_sign' }),
+    rectT('inspect', 'inspect_boat', 43, 55, 1, 3, { text: 'inspect_boat' }),
+    rectT('inspect', 'inspect_sea', 0, 50, 44, 1, { text: 'inspect_sea' }),
+    rectT('inspect', 'inspect_sea_e', 47, 50, 49, 1, { text: 'inspect_sea' })
   ]
 });
 
-// ---------------- Tòa soạn Tin Vịnh (S5 Lưu trữ, S6 Dòng thời gian)
-const NEWS = [
-  '##########################',
-  '#bbbbbkbbbbb#WppWpppWppkW#',
-  '#...........#............#',
-  '#...nn...f..#..........f.#',
-  '#...h.......#............#',
-  '#........m..#m...........#',
-  '#P.........P#P..........P#',
-  '#####DD############DD#####',
-  '#WLWWDDWWWLWVVWWLWWDDWWLW#',
-  '#P......................P#',
-  '#..nnn....nnn....nnn..r..#',
-  '#...h......h......h......#',
-  '#........................#',
-  '#f......................t#',
-  '#P.........m............P#',
-  '############EE############'
-];
+// ---------------- Tòa soạn Tin Vịnh (trang tin hư cấu): S5 Lưu trữ, S6 Dòng thời gian, phòng biên tập (Phát Vội)
+const NEWS = floorRows(30, 20, (g, put) => {
+  for (let y = 0; y <= 11; y++) g[y][14] = '#';
+  put(0, 9, '#'.repeat(30)); put(1, 10, '^'.repeat(28)); put(1, 11, '_'.repeat(28));
+  for (const x of [6, 7, 21, 22]) for (let y = 9; y <= 11; y++) g[y][x] = 'D';
+  g[19][14] = g[19][15] = 'E';
+});
 const newsroom = buildMap('newsroom', {
-  rows: NEWS, legend: INDOOR, label: 'Tòa soạn Tin Vịnh', music: 'archive',
-  ground: ch => (ch === 'D' ? 'doorway' : ch === 'E' ? 'exit_mat' : 'floor_wood'),
-  doors: [...roomDoor(5, 7), ...roomDoor(19, 7)],
+  rows: NEWS, legend: TN_LEGEND, label: 'Tòa soạn Tin Vịnh (trang tin hư cấu)', music: 'archive',
+  ground: (ch, x, y) => (ch === 'D' ? 'doorway' : ch === 'E' ? 'exit_mat' : y < 9 ? (x < 14 ? 'floor_wood' : 'floor_dark') : 'floor_wood'),
   objects: () => [
-    point('spawn', 'spawn_from_street', 13, 14),
-    rectT('zone', 'zone_S5', 1, 1, 11, 6, { room: 'S5' }),
-    rectT('zone', 'zone_S6', 13, 1, 12, 6, { room: 'S6' }),
-    rectT('zone', 'zone_newsroom', 1, 9, 24, 6, { area: 'newsroom' }),
-    rectT('door', 'door_S5', 5, 7, 2, 2, { room: 'S5' }),
-    rectT('door', 'door_S6', 19, 7, 2, 2, { room: 'S6' }),
-    rectT('exit', 'exit_street', 12, 14.6, 2, 1.4, { target: 'street', spawn: 'spawn_from_news' }),
-    point('npc', 'npc3', 6, 5.5, { patrol: 'patrol_npc3_home' }),
-    path_('patrol_npc3_home', [[2.5, 5.5], [10.5, 5.5]]),
-    point('station', 'npc3_s6', 18.5, 5.5),
-    path_('patrol_npc3_s6', [[14.5, 5.5], [23.5, 5.5]]),
-    point('npc', 'npc4', 16, 12.5, { patrol: 'patrol_npc4' }),
-    path_('patrol_npc4', [[13.5, 12.5], [22.5, 12.5]]),
-    rectT('inspect', 'inspect_archive', 1, 1, 5, 1, { text: 'inspect_archive' }),
-    rectT('inspect', 'inspect_timeline', 13, 1, 10, 1, { text: 'inspect_timeline' }),
-    rectT('inspect', 'inspect_newsdesk', 10, 10, 3, 1, { text: 'inspect_newsdesk' }),
-    rectT('inspect', 'inspect_news_tv', 12, 8, 2, 1, { text: 'inspect_news_tv' })
+    point('spawn', 'spawn_from_street', 15, 17.6),
+    rectT('zone', 'zone_S5', 1, 3, 13, 6, { room: 'S5' }),
+    rectT('zone', 'zone_S6', 15, 3, 14, 6, { room: 'S6' }),
+    rectT('zone', 'zone_newsroom', 1, 9, 28, 10, { area: 'newsroom' }),
+    rectT('exit', 'exit_street', 14, 18.6, 2, 1.4, { target: 'street', spawn: 'spawn_from_news' }),
+    label('news_name', 15, 10.55, 'TIN VỊNH — trang tin (hư cấu)', { size: 16, plate: true }),
+    label('s5_name', 4, 1.5, 'LƯU TRỮ BÁO CHÍ', { size: 14, plate: true }),
+    label('s6_name', 25.5, 1.5, 'DÒNG THỜI GIAN', { size: 14, plate: true }),
+    // S5 lưu trữ
+    pp('archive_shelf', 4.2, 4.6), pp('archive_shelf', 10, 4.6), pp('cabinet', 12.8, 4.2),
+    pp('desk_papers', 4, 7.8), pp('chair', 4, 6.6), pp('filing_boxes', 11.2, 8.6), pp('floor_lamp', 1.6, 8.6),
+    // S6 dòng thời gian
+    pp('dev_timeline', 21.5, 5.2), pp('cork_board', 27, 5), pp('desk_pc', 17.6, 8.4), pp('chair', 17.6, 7.2), pp('plant_small', 27.6, 8.8),
+    // phòng biên tập
+    pp('tv_wall', 8, 11.9), pp('blinds_window', 3, 12.1), pp('blinds_window', 27, 12.1), pp('poster_b', 23, 11.6),
+    pp('desk_pc', 5, 14.4), pp('chair', 5, 15.6), pp('desk_pc', 10, 14.4), pp('chair', 10, 15.6),
+    pp('desk_papers', 20, 14.4), pp('chair', 20, 15.6), pp('desk_pc', 25, 14.4), pp('chair', 25, 15.6),
+    pp('printer', 27.4, 18.4), pp('water_cooler', 1.6, 14.4), pp('plant_big', 1.6, 18.6), pp('trash', 22.6, 18.4), pp('sofa', 7, 18.8),
+    point('npc', 'npc3', 6.5, 6.4, { patrol: 'patrol_npc3_home' }),
+    path_('patrol_npc3_home', [[2.5, 6.4], [9.5, 6.4]]),
+    point('station', 'npc3_s6', 21, 6.6),
+    path_('patrol_npc3_s6', [[16.5, 6.6], [26.5, 6.6]]),
+    point('npc', 'npc4', 15, 13, { patrol: 'patrol_npc4' }),
+    path_('patrol_npc4', [[12.5, 13], [23.5, 13]]),
+    rectT('inspect', 'inspect_archive', 2.6, 3.6, 3.2, 1, { text: 'inspect_archive' }),
+    rectT('inspect', 'inspect_timeline', 19.4, 4.2, 4.2, 1, { text: 'inspect_timeline' }),
+    rectT('inspect', 'inspect_newsdesk', 19, 13.4, 2, 1, { text: 'inspect_newsdesk' }),
+    rectT('inspect', 'inspect_news_tv', 7, 10.6, 2, 1.2, { text: 'inspect_news_tv' })
   ]
 });
 
 // ---------------- Quán cà phê Gió Biển
-const CAFE = [
-  '##################',
-  '#WWLWWkWWVVWWLWWW#',
-  '#CCCC........P..m#',
-  '#................#',
-  '#..T....T....T...#',
-  '#.h.h..h.h..h.h..#',
-  '#................#',
-  '#..T....T....P...#',
-  '#.h.h..h.h.......#',
-  '#P..............P#',
-  '#m...............#',
-  '########EE########'
-];
 const cafe = buildMap('cafe', {
-  rows: CAFE, legend: { ...INDOOR, T: 'cafe_table' }, label: 'Quán cà phê Gió Biển', music: 'cafe',
+  rows: floorRows(20, 14, g => { g[13][9] = g[13][10] = 'E'; }), legend: TN_LEGEND, label: 'Quán cà phê Gió Biển', music: 'cafe',
   ground: ch => (ch === 'E' ? 'exit_mat' : 'floor_check'),
   objects: () => [
-    point('spawn', 'spawn_from_street', 9, 10.4),
-    rectT('zone', 'zone_cafe', 1, 1, 16, 10, { room: 'CAFE' }),
-    rectT('exit', 'exit_street', 8, 10.6, 2, 1.4, { target: 'street', spawn: 'spawn_from_cafe' }),
-    point('npc', 'npc6', 11, 6.6),
-    point('npc', 'amb_barista', 2.5, 3.4, { patrol: 'patrol_barista' }),
-    path_('patrol_barista', [[1.5, 3.4], [5.5, 3.4]]),
-    rectT('inspect', 'inspect_cafe_menu', 1, 2, 4, 1, { text: 'inspect_cafe_menu' }),
-    rectT('inspect', 'inspect_cafe_tv', 9, 1, 2, 1, { text: 'inspect_cafe_tv' })
+    point('spawn', 'spawn_from_street', 10, 11.6),
+    rectT('zone', 'zone_cafe', 1, 3, 18, 10, { room: 'CAFE' }),
+    rectT('exit', 'exit_street', 9, 12.6, 2, 1.4, { target: 'street', spawn: 'spawn_from_cafe' }),
+    label('cafe_name', 4.5, 1.5, 'CÀ PHÊ GIÓ BIỂN', { size: 16, plate: true }),
+    pp('cafe_counter', 4.6, 5.6), pp('tv_wall', 10.5, 2.6), pp('blinds_window', 15, 2.9), pp('blinds_window', 18, 2.9), pp('wall_clock', 8, 1.4),
+    pp('cafe_table', 9.5, 7.2), pp('cafe_table', 14.5, 7.2), pp('cafe_table', 4.5, 10.4), pp('cafe_table', 14.5, 10.6),
+    pp('plant_big', 18.4, 12.6), pp('plant_big', 1.6, 12.6), pp('floor_lamp', 18.4, 4.6), pp('sofa', 5, 12.9),
+    point('npc', 'npc6', 12, 8.8),
+    point('npc', 'amb_barista', 3, 3.9, { patrol: 'patrol_barista' }),
+    path_('patrol_barista', [[1.8, 3.9], [7, 3.9]]),
+    rectT('inspect', 'inspect_cafe_menu', 1.6, 4.2, 6, 1.2, { text: 'inspect_cafe_menu' }),
+    rectT('inspect', 'inspect_cafe_tv', 9.5, 1.6, 2, 1.4, { text: 'inspect_cafe_tv' })
   ]
 });
 
-// ---------------- Phòng xác minh (GIẢ LẬP): các thiết bị mở giao diện công cụ mô phỏng
-// e tường bằng chứng, V màn hình mạng xã hội, t bảng dòng thời gian, K máy tính tìm ngược ảnh,
-// M bàn soi kính lúp, A máy dò ảnh AI, Y đầu đọc kho báo.
-const AGENCY = [
-  '##################',
-  '#WWeeeWVVWwWtttWW#',
-  '#Pf............mP#',
-  '#..K..M....A..Y..#',
-  '#..h..h....h..h..#',
-  '#................#',
-  '#~~~~~~~~~~~~~~~~#',
-  '#~~ss~~~~~~~~dd~~#',
-  '#~~~~~~~~~~~~h~~~#',
-  '#P~~~~~~~~~~~~~~P#',
-  '#######EE#########'
-];
+// ---------------- Phòng xác minh (GIẢ LẬP): thiết bị là props đúng tỉ lệ, object 'device' để tương tác
+/** Thiết bị: prop + vùng tương tác ngay chân thiết bị. */
+const devAt = (id, tx, ty, w = 2) => [pp(`dev_${id}`, tx, ty), rectT('device', id, tx - w / 2, ty - 1, w, 1, { device: id })];
 const agency = buildMap('agency', {
-  rows: AGENCY, label: 'Phòng xác minh (GIẢ LẬP)', music: 'agency',
-  legend: { ...INDOOR, e: 'dev_evidence', V: 'dev_monitors', t: 'dev_timeline', K: 'dev_pc', M: 'dev_lighttable', A: 'dev_detector', Y: 'dev_reader' },
-  ground: (ch, x, y) => (ch === 'E' ? 'exit_mat' : ch === '~' || y >= 6 ? 'carpet' : 'floor_dark'),
+  rows: floorRows(22, 14, g => { g[13][10] = g[13][11] = 'E'; }), legend: TN_LEGEND, label: 'Phòng xác minh (GIẢ LẬP)', music: 'agency',
+  ground: (ch, x, y) => (ch === 'E' ? 'exit_mat' : y >= 10 ? 'carpet' : 'floor_dark'),
   objects: () => [
-    point('spawn', 'spawn_from_street', 7.5, 9.4),
-    rectT('zone', 'zone_agency', 1, 1, 16, 9, { area: 'agency' }),
-    rectT('exit', 'exit_street', 7, 9.6, 2, 1.4, { target: 'street', spawn: 'spawn_from_agency' }),
-    rectT('device', 'computer', 3, 3, 1, 1, { device: 'computer' }),
-    rectT('device', 'magnifier', 6, 3, 1, 1, { device: 'magnifier' }),
-    rectT('device', 'detector', 11, 3, 1, 1, { device: 'detector' }),
-    rectT('device', 'archive', 14, 3, 1, 1, { device: 'archive' }),
-    rectT('device', 'evidence', 3, 1, 3, 1, { device: 'evidence' }),
-    rectT('device', 'monitor', 7, 1, 2, 1, { device: 'monitor' }),
-    rectT('device', 'timeline', 12, 1, 3, 1, { device: 'timeline' })
+    point('spawn', 'spawn_from_street', 11, 11.6),
+    rectT('zone', 'zone_agency', 1, 3, 20, 10, { area: 'agency' }),
+    rectT('exit', 'exit_street', 10, 12.6, 2, 1.4, { target: 'street', spawn: 'spawn_from_agency' }),
+    label('agency_name', 11, 1.5, 'PHÒNG XÁC MINH — thiết bị mô phỏng', { size: 16, plate: true }),
+    ...devAt('evidence', 3.4, 4.6), ...devAt('monitor', 9, 4.6, 3), ...devAt('timeline', 16.4, 4.8, 4),
+    ...devAt('computer', 3.6, 8.6), ...devAt('magnifier', 8.2, 8.6), ...devAt('detector', 12.4, 8.6, 1.4), ...devAt('archive', 16.4, 8.6),
+    pp('chair', 3.6, 9.8), pp('chair', 16.4, 9.8),
+    pp('sofa', 5, 12.8), pp('coffee_table', 15.5, 12.4), pp('plant_big', 20.4, 12.6), pp('floor_lamp', 1.6, 12.6), pp('filing_boxes', 20, 8.8)
   ]
 });
 
