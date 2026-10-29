@@ -561,6 +561,21 @@ function buildTileset() {
 
 const OUTLINE = '#1a1420';
 
+/** Tạo cảm giác khối cho sprite: điểm đặc có trên trống thì sáng thêm, có bên phải trống thì tối đi (2 px). */
+function shade3d(f, w, h) {
+  const solid = (x, y) => x >= 0 && y >= 0 && x < w && y < h && f.get(x, y)[3] > 200;
+  const hex = c => `#${c.slice(0, 3).map(v => v.toString(16).padStart(2, '0')).join('')}`;
+  const marks = [];
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    if (!solid(x, y)) continue;
+    const c = hex(f.get(x, y));
+    if (!solid(x + 1, y)) marks.push([x, y, shade(c, -0.3)]);
+    else if (!solid(x + 2, y)) marks.push([x, y, shade(c, -0.14)]);
+    else if (!solid(x, y - 1)) marks.push([x, y, shade(c, 0.16)]);
+  }
+  for (const [x, y, c] of marks) f.set(x, y, c);
+}
+
 /** Vẽ một khung nhân vật 32x48. dir: down | up | right. frame: 0 đứng, 1/2 bước chân. */
 function drawCharFrame(spec, dir, frame) {
   const f = new Img(32, 48);
@@ -688,9 +703,11 @@ function drawCharFrame(spec, dir, frame) {
     if (dir === 'right') R(20, 7 + y0, 6, 2, shade(c, -0.3));
   }
 
+  // Khối giả 3D (nắng từ trên trái): mép trên sáng lên, mép phải tối đi; bóng đổ chéo sang phải
+  shade3d(f, 32, 48);
   // Viền ngoài tự động
   const out = new Img(32, 48);
-  out.ellipse(16, 45, 9, 2, '#00000050');
+  out.ellipse(18, 45, 10, 2, '#00000050'); out.ellipse(21, 45, 6, 1, '#00000030');
   for (let y = 0; y < 48; y++) for (let x = 0; x < 32; x++) {
     if (f.get(x, y)[3] > 200) continue;
     const near = [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([dx, dy]) => {
@@ -721,7 +738,8 @@ function drawBossFrame(blank) {
     R(13, 9, 2, 1, '#14101f'); R(17, 9, 2, 1, '#14101f');
   }
   const out = new Img(32, 48);
-  out.ellipse(16, 46, 12, 2, '#00000060');
+  shade3d(f, 32, 48);
+  out.ellipse(18, 46, 13, 2, '#00000060');
   for (let y = 0; y < 48; y++) for (let x = 0; x < 32; x++) {
     if (f.get(x, y)[3] > 200) continue;
     if ([[1, 0], [-1, 0], [0, 1], [0, -1]].some(([dx, dy]) => { const nx = x + dx, ny = y + dy; return nx >= 0 && ny >= 0 && nx < 32 && ny < 48 && f.get(nx, ny)[3] > 200; })) out.set(x, y, '#0b0912');
