@@ -92,10 +92,12 @@ input:not([type]), input[type="text"] {
 }
 .hud > * { pointer-events: auto; }
 .hud-left, .hud-right { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.hud-right { flex: none; }
 .hud-title { color: var(--straw); white-space: nowrap; }
 .hud-place { color: var(--paper); background: rgb(15 14 23 / 0.6); padding: 0 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .hud-score { background: rgb(15 14 23 / 0.6); padding: 0 8px; white-space: nowrap; }
 .icon-btn {
+  flex: none;
   width: 44px; height: 44px; padding: 6px;
   color: var(--paper); background: var(--plum);
   border: var(--px) solid var(--ink);
@@ -114,8 +116,11 @@ input:not([type]), input[type="text"] {
   border: var(--px) solid var(--ink);
   box-shadow: 0 0 0 var(--px) var(--grey), 0 8px 0 rgb(0 0 0 / 0.35);
   padding: 12px 14px;
-  max-height: 62vh; overflow-y: auto;
+  --dlg-max: 62vh;
+  max-height: var(--dlg-max); overflow: hidden;
 }
+/* Có tư liệu (bảng, lưới ảnh): khung thoại cao gần hết màn hình, câu hỏi đứng yên, chỉ phần dưới cuộn. */
+.dialog.has-exhibit { --dlg-max: calc(100dvh - var(--hud-h) - 20px); }
 .dialog-portrait {
   flex: none; width: 96px; height: 96px;
   background-color: var(--plum);
@@ -126,10 +131,10 @@ input:not([type]), input[type="text"] {
   border: var(--px) solid var(--ink);
 }
 .dialog-portrait.is-empty { display: none; }
-.dialog-main { flex: 1; min-width: 0; }
+.dialog-main { flex: 1; min-width: 0; display: flex; flex-direction: column; max-height: calc(var(--dlg-max) - 32px); min-height: 0; }
 .dialog-name { color: var(--straw); font-size: 1.05em; }
 .dialog-text { font-size: 1.1em; min-height: 2.6em; white-space: pre-wrap; }
-.dialog-extra { display: flex; flex-direction: column; gap: 6px; }
+.dialog-extra { display: flex; flex-direction: column; gap: 6px; flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 2px; }
 .dialog-extra .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .dialog-next { text-align: right; color: var(--muted); font-size: 0.85em; animation: blink 1s steps(2) infinite; }
 @keyframes blink { 50% { opacity: 0.3; } }
@@ -288,3 +293,30 @@ input:not([type]), input[type="text"] {
   .intro-text { font-size: 1.05em; }
 }
 @media (max-height: 640px) and (max-width: 760px) { .phone { display: none; } }
+
+/* ---------- Tư liệu trong khung thoại ---------- */
+.exhibits { display: flex; flex-direction: column; gap: 6px; }
+.exhibit { margin: 4px 0; }
+.exhibit figcaption { color: var(--straw); font-size: 0.85em; margin-bottom: 4px; }
+.frame-grid { display: grid; grid-template-columns: repeat(var(--cols, 4), minmax(0, 1fr)); gap: 6px; max-width: 540px; }
+.frame { position: relative; padding: 0; background: var(--ink); border: 3px solid var(--ink); color: var(--paper); font: inherit; }
+.frame canvas { display: block; width: 100%; aspect-ratio: 4 / 3; image-rendering: pixelated; }
+.frame canvas.is-blur { filter: blur(3px); }
+.frame-n { position: absolute; left: 2px; bottom: 2px; background: rgb(15 14 23 / 0.75); padding: 0 4px; font-size: 0.7em; }
+.frame-fake { position: absolute; right: 2px; top: 2px; font-size: 0.6em; }
+button.frame { cursor: pointer; min-height: 44px; }
+button.frame:hover { border-color: var(--grey); }
+.frame.is-marked { border-color: var(--straw); box-shadow: 0 0 0 3px var(--straw); }
+.frame.is-marked::after { content: "🔍"; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font-size: 1.4em; }
+.frame.is-highlight { border-color: var(--teal); }
+.exhibit-ref .frame { width: min(180px, 45%); }
+.tool-panel { background: var(--paper); color: var(--ink); padding: 8px 10px; border: var(--px) solid var(--ink); }
+.tool-panel figcaption { color: var(--plum); }
+.tool-panel table { border-collapse: collapse; width: 100%; font-size: 0.9em; }
+.tool-panel th, .tool-panel td { border-bottom: 2px solid var(--grey); padding: 2px 6px; text-align: left; }
+.tool-panel .muted { color: var(--grey-dark); }
+@media (max-width: 760px) {
+  .frame-grid { --cols: 3 !important; }
+  .frame-n { font-size: 0.55em; }
+  .frame-fake { font-size: 0.45em; padding: 0 2px; border-width: 1px; }
+}

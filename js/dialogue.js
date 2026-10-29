@@ -95,6 +95,7 @@ function show(speakerId, text, meta = {}) {
   const full = fill(text, vars());
   const name = setSpeaker(speakerId);
   els.extra.innerHTML = '';
+  els.root.classList.remove('has-exhibit');
   els.next.textContent = '';
   appendMessage({ npc: partner, from: speakerId, text: full, ...meta });
   els.live.textContent = `${name}: ${full}`;
@@ -128,6 +129,29 @@ function prompt(opts) {
   advanceFn = null;
   els.next.textContent = '';
   els.extra.innerHTML = '';
+  els.root.classList.toggle('has-exhibit', !!(opts?.exhibit || opts?.wide));
+  if (opts?.exhibit) els.extra.append(opts.exhibit);
+}
+
+/**
+ * Bước tương tác tùy chỉnh (ví dụ bấm vào khung ảnh). mount(container, done, help) dựng giao diện;
+ * done({ log, ...giá trị }) ghi lịch sử và trả kết quả; help() trả { help: true }.
+ */
+export function interactive(opts, mount) {
+  return new Promise(resolve => {
+    prompt(opts);
+    const finish = value => {
+      if (value.log) logPlayer(value.log);
+      els.extra.innerHTML = '';
+      resolve(value);
+    };
+    mount(els.extra, finish, () => { els.extra.innerHTML = ''; resolve({ help: true }); });
+  });
+}
+
+/** Nút dùng chung cho các bước tùy chỉnh. */
+export function makeButton(cls, text, onClick) {
+  return button(cls, text, onClick);
 }
 
 /** Tạo nút. */
