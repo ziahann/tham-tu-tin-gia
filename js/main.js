@@ -169,6 +169,9 @@ function startGame(isNew) {
     if (new URLSearchParams(location.search).has('debug')) window.__game = game;
   }
   if (isNew) {
+    // Lượt mới: bắt đầu bằng cảnh đi xe buýt tới trạm trước Trụ sở Báo Thanh Niên (js/world.js → busIntro)
+    state.progress.pos = { map: 'street', spawnName: 'spawn_bus' };
+    state.progress.introBus = true;
     // Lượt mới: theo dõi sẵn hồ sơ đầu tiên để mũi tên chỉ đường ngay.
     track(nextQuestIn(data.quests.rooms[0].id)?.id || null, true);
     toast(t('title.firstHint'), 6000);
