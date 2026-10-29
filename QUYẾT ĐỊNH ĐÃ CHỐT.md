@@ -74,3 +74,13 @@
 | F12 | Link "Xem tiếp", "Đoạn kết", "Trọn vẹn câu chuyện" | Dân trí: "nhấp vào các đường link trong phần bình luận để đọc tiếp", trang "Tin Hay" nhiều quảng cáo, "có thể tiềm ẩn nhiều nguy cơ". VietTimes không có các cụm trên | Câu chữ của Dân trí |
 | F14 | Công an thông báo xử lý (21/7) | Tuổi Trẻ đăng 21/7: Công an tỉnh làm việc ngày 20/7 với người bình luận sai về số người tử vong (23h30 ngày 19/7) | "Tuổi Trẻ đưa tin (21/7)" |
 | F10 | Bão Yagi (2024) | VnExpress không ghi năm cơn bão; Congo tháng 10/2024; VietnamPlus: ảnh chụp tháng 8/2024 | Hỏi tên bão, quốc gia, năm chụp ảnh |
+
+## Hoàn thiện (29/10/2026)
+
+| Mục | Kết quả |
+|---|---|
+| Nội dung | Đủ Q1–Q13, Q10b thẩm vấn (tùy chọn), boss 3 pha với kết thúc A/B, màn kết quả S10, màn bonus G11 |
+| Bản đồ | 5 bản đồ: văn phòng, phố ven vịnh (có bến tàu, không có tàu), tòa soạn, quán cà phê, phòng boss |
+| Nhạc | CC0 của Juhani Junkala (JRPG Music Pack #2, #3, #4), 7 bản theo mốc |
+| Đồ họa | Vẫn vẽ bằng code (`tools/gen-assets.mjs`), đã chỉnh tông ấm. Chưa ghép gói tile CC0: các gói CC0 phổ biến dùng ô 16px, phóng lên 32px sẽ lệch nét với nhân vật và vịnh đã vẽ. Nếu nhóm muốn, chọn một gói rồi Claude ghép lại |
+| Video demo | Kịch bản ở `KỊCH BẢN VIDEO DEMO.md` |

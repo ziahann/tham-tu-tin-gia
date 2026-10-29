@@ -141,7 +141,8 @@ export class WorldScene extends Phaser.Scene {
 
   /** Gỡ mặt nạ boss: thay sprite bằng khung trống. */
   bossUnmask() {
-    this.npcs.get('boss')?.sprite.setTexture('boss_blank', 0);
+    const boss = this.npcs?.get('boss');
+    if (boss?.sprite.active && this.textures.exists('boss_blank')) boss.sprite.setTexture('boss_blank', 0);
   }
 
   /** Zoom nguyên lần để pixel đều; thấy khoảng 20x11 ô trên màn hình lớn. */
