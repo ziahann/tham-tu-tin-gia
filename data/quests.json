@@ -2026,7 +2026,10 @@
     "agency": "Phòng xác minh (GIẢ LẬP)",
     "park": "Công viên ven vịnh",
     "market": "Phố đi bộ",
-    "coast": "Đường ven vịnh"
+    "coast": "Đường ven vịnh",
+    "office2": "Cao ốc văn phòng (GIẢ LẬP)",
+    "clinic": "Trung tâm y tế (GIẢ LẬP)",
+    "cafe2": "Cà phê Sương Sớm (GIẢ LẬP)"
   },
   "intro": {
     "skip": "Bỏ qua",
