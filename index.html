@@ -24,6 +24,9 @@
     </div>
     <div class="hud-right">
       <span id="hud-score" class="hud-score"></span>
+      <button type="button" id="btn-weather" class="icon-btn" data-ui-label="icons.weather">
+        <svg viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M3 1h1v2H3zM0 4h2v1H0zm6-2h1v1H6zM2 6h1v1H2zm1-2h3v1H3zm4 1h4v1h1v1h1v1h1v3h-1v1H3v-1H2V8h1V7h2V6h2zm-3 3v2h9V8h-1V7H8v1zM4 13h1v2H4zm3 0h1v2H7zm3 0h1v2h-1z"/></svg>
+      </button>
       <button type="button" id="btn-cases" class="icon-btn" data-ui-label="icons.cases">
         <svg viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M1 3h5l1 1h8v10H1zm1 2v8h12V5zm2 2h5v1H4zm0 2h7v1H4z"/></svg>
       </button>
@@ -95,23 +98,34 @@
   <!-- Màn hình chính + cảnh báo nội dung -->
   <section id="title" class="title-screen" hidden>
     <div class="title-card">
-      <p class="title-game" data-ui="gameTitle"></p>
-      <h1 id="title-case"></h1>
-      <div class="panel warning" role="note">
-        <h2 data-ui="title.warningTitle"></h2>
-        <p data-ui="title.warning"></p>
-        <p class="muted" data-ui="title.simulatedNote"></p>
+      <p class="title-course" data-ui="title.course"></p>
+      <h1 class="logo">
+        <svg class="logo-icon" viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M5 1h4v1h1v1h1v1h1v4h-1v1h-1v1h1v1h1v1h1v1h1v2h-2v-1h-1v-1h-1v-1h-1v-1H9v1H5v-1H4v-1H3V9H2V4h1V3h1V2h1zm0 2v1H4v4h1v1h4V8h1V4H9V3z"/><path fill="#fff" d="M5 4h1v1H5z"/></svg>
+        <span data-ui="gameTitle"></span>
+      </h1>
+      <div class="case-file">
+        <span class="case-label" data-ui="title.caseLabel"></span>
+        <p id="title-case" class="case-title"></p>
+        <p class="case-sub" data-ui="title.caseSub"></p>
+        <span class="stamp" data-ui="title.stamp"></span>
       </div>
-      <div id="title-actions" class="actions">
+      <div id="title-actions" class="actions title-actions">
         <button type="button" id="title-start" class="btn-primary" data-ui="title.start"></button>
         <button type="button" id="title-continue" class="btn-primary" data-ui="title.continue"></button>
         <button type="button" id="title-restart" class="btn" data-ui="title.restart"></button>
       </div>
-      <div class="panel">
-        <h2 data-ui="title.controlsTitle"></h2>
-        <p data-ui="title.controls"></p>
+      <div class="fine-print" role="note">
+        <p><span aria-hidden="true">⚠ </span><span data-ui="title.warningShort"></span></p>
+        <details>
+          <summary data-ui="title.warningMore"></summary>
+          <h2 data-ui="title.warningTitle"></h2>
+          <p data-ui="title.warning"></p>
+          <p data-ui="title.simulatedNote"></p>
+          <h2 data-ui="title.controlsTitle"></h2>
+          <p data-ui="title.controls"></p>
+        </details>
+        <p data-ui="scoreDisclaimer"></p>
       </div>
-      <p class="muted small" data-ui="scoreDisclaimer"></p>
     </div>
   </section>
 

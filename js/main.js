@@ -11,6 +11,7 @@ import { nextQuestIn } from './grading.js';
 import { updateScore } from './hud.js';
 import { WorldScene } from './world.js';
 import { reader } from './tools.js';
+import { nextWeather } from './weather.js';
 import { applyUiText, toast, openModal, closeModal, confirmBox } from './ui.js';
 
 const $ = id => document.getElementById(id);
@@ -155,6 +156,7 @@ function startGame(isNew) {
       parent: 'game',
       backgroundColor: '#0f0e17',
       pixelArt: true,
+      render: { maxLights: 48 }, // ánh sáng ban đêm: đèn đường, cửa sổ, thiết bị
       roundPixels: true,
       scale: { mode: Phaser.Scale.RESIZE, width: window.innerWidth, height: window.innerHeight },
       physics: { default: 'arcade', arcade: { debug: false } },
@@ -307,6 +309,17 @@ function bindEvents() {
   on('backpack', () => { if (!titleOpen() && !introOpen() && !modalOpen()) backpack.toggle(); });
   const openCases = () => { if (!titleOpen() && !introOpen() && !modalOpen()) backpack.open('quests'); };
   on('cases', openCases);
+  // Thời tiết: trời quang → mưa → sương mù → đêm (lưu trong cài đặt)
+  const cycleWeather = () => {
+    if (titleOpen() || introOpen() || modalOpen()) return;
+    const next = nextWeather(state.settings.weather || 'clear');
+    const world = game?.scene.getScene('world');
+    if (world?.weather) world.weather.set(next);
+    else { state.settings.weather = next; saveSettings(); }
+    toast(t(`weather.${next}`));
+  };
+  on('weather', cycleWeather);
+  $('btn-weather').addEventListener('click', cycleWeather);
   $('btn-cases').addEventListener('click', openCases);
   $('hud-track').addEventListener('click', openCases);
   on('escape', () => {
@@ -331,7 +344,7 @@ async function boot() {
   applySettings();
   applyUiText();
   document.title = `${t('gameTitle')} · ${data.quests.caseTitle}`;
-  $('title-case').textContent = data.quests.caseTitle;
+  $('title-case').textContent = data.quests.caseTitle.replace(/^Vụ án\s+/i, ''); // nhãn "HỒ SƠ VỤ ÁN" đã đứng trên
   bay = new Bay($('bay'));
   $('bay').setAttribute('aria-label', t('title.bayAlt'));
   initInput();
