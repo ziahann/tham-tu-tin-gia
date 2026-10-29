@@ -1105,14 +1105,15 @@ const NEWS = floorRows(30, 20, (g, put) => {
 });
 const newsroom = buildMap('newsroom', {
   rows: NEWS, legend: TN_LEGEND, label: 'Tòa soạn Tin Vịnh (trang tin hư cấu)', music: 'archive',
-  ground: (ch, x, y) => (ch === 'D' ? 'doorway' : ch === 'E' ? 'exit_mat' : y < 9 ? (x < 14 ? 'floor_wood' : 'floor_dark') : 'floor_wood'),
+  // lối vào hai phòng (D) lát cùng sàn để thấy rõ là cửa mở thông
+  ground: (ch, x, y) => (ch === 'E' ? 'exit_mat' : y < 9 || (ch === 'D' && y < 11) ? (x < 14 ? 'floor_wood' : 'floor_dark') : 'floor_wood'),
   objects: () => [
     point('spawn', 'spawn_from_street', 15, 17.6),
     rectT('zone', 'zone_S5', 1, 3, 13, 6, { room: 'S5' }),
     rectT('zone', 'zone_S6', 15, 3, 14, 6, { room: 'S6' }),
     rectT('zone', 'zone_newsroom', 1, 9, 28, 10, { area: 'newsroom' }),
     rectT('exit', 'exit_street', 14, 18.6, 2, 1.4, { target: 'street', spawn: 'spawn_from_news' }),
-    label('news_name', 15, 10.55, 'TIN VỊNH — trang tin (hư cấu)', { size: 16, plate: true }),
+    label('news_name', 15, 10.55, 'TIN VỊNH — trang tin (hư cấu)', { size: 14, plate: true }),
     label('s5_name', 4, 1.5, 'LƯU TRỮ BÁO CHÍ', { size: 14, plate: true }),
     label('s6_name', 17.3, 1.3, 'DÒNG THỜI GIAN', { size: 14, plate: true }),
     // S5 lưu trữ
@@ -1121,7 +1122,7 @@ const newsroom = buildMap('newsroom', {
     // S6 dòng thời gian
     pp('dev_timeline', 21.5, 2.95), pp('cork_board', 26.6, 2.9), pp('desk_pc', 17.6, 8.4), pp('chair', 17.6, 7.2), pp('plant_small', 27.6, 8.8),
     // phòng biên tập
-    pp('tv_wall', 8, 11.9), pp('blinds_window', 3, 12.1), pp('blinds_window', 27, 12.1), pp('poster_b', 23, 11.6),
+    pp('tv_wall', 9.6, 11.9), pp('blinds_window', 3, 12.1), pp('blinds_window', 26.5, 12.1), pp('poster_b', 20.2, 11.6),
     pp('desk_pc', 5, 14.4), pp('chair', 5, 15.6), pp('desk_pc', 10, 14.4), pp('chair', 10, 15.6),
     pp('desk_papers', 20, 14.4), pp('chair', 20, 15.6), pp('desk_pc', 25, 14.4), pp('chair', 25, 15.6),
     pp('printer', 27.4, 18.4), pp('water_cooler', 1.6, 14.4), pp('plant_big', 1.6, 18.6), pp('trash', 22.6, 18.4), pp('sofa', 7, 18.8),
@@ -1134,7 +1135,7 @@ const newsroom = buildMap('newsroom', {
     rectT('inspect', 'inspect_archive', 2.6, 3.6, 3.2, 1, { text: 'inspect_archive' }),
     rectT('inspect', 'inspect_timeline', 19.4, 2, 4.2, 1, { text: 'inspect_timeline' }),
     rectT('inspect', 'inspect_newsdesk', 19, 13.4, 2, 1, { text: 'inspect_newsdesk' }),
-    rectT('inspect', 'inspect_news_tv', 7, 10.6, 2, 1.2, { text: 'inspect_news_tv' })
+    rectT('inspect', 'inspect_news_tv', 8.6, 10.6, 2, 1.2, { text: 'inspect_news_tv' })
   ]
 });
 
