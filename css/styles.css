@@ -485,3 +485,21 @@ button.frame:hover { border-color: var(--grey); }
 }
 .badge-pop img { width: 96px; height: 112px; image-rendering: pixelated; }
 @keyframes badge-in { from { transform: translate(-50%, -50%) scale(0.4); opacity: 0; } }
+
+/* Thẻ sinh viên (mô phỏng) ở đầu Sổ tay: đỏ, sọc xanh ngọc bên phải */
+.student-card { position: relative; background: #d8283f; color: #fff; border-radius: 8px; padding: 10px 40px 8px 12px; margin: 4px 0 12px; box-shadow: 0 2px 0 #0f0e17; overflow: hidden; max-width: 380px; }
+.student-card::after { content: ""; position: absolute; top: 0; right: 0; bottom: 0; width: 28px; background: #1fa39a; }
+.sc-head { display: flex; align-items: center; gap: 6px; font-size: 18px; letter-spacing: 2px; }
+.sc-crest { width: 16px; height: 18px; background: #fff; clip-path: polygon(0 0, 100% 0, 100% 55%, 50% 100%, 0 55%); position: relative; }
+.sc-crest::after { content: ""; position: absolute; left: 4px; top: 4px; width: 8px; height: 8px; background: #d8283f; clip-path: polygon(0 0, 35% 0, 50% 55%, 65% 0, 100% 0, 50% 100%); }
+.sc-body { display: flex; gap: 10px; margin-top: 8px; }
+.sc-photo { flex: none; width: 72px; height: 88px; background: #1fa39a 0 0 / 360px 88px no-repeat; border-radius: 36px 36px 4px 4px; image-rendering: pixelated; }
+.sc-info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.sc-kind { font-size: 15px; opacity: 0.85; letter-spacing: 1px; }
+.sc-name { font-size: 24px; line-height: 1; }
+.sc-fac { font-size: 16px; }
+.sc-trust { display: flex; align-items: center; gap: 6px; font-size: 16px; margin-top: 2px; }
+.sc-meter { display: block; width: 70px; height: 9px; background: #7a1424; border: 1px solid #fff; }
+.sc-meter i { display: block; height: 100%; background: #fff; }
+.sc-stats { font-size: 15px; opacity: 0.9; }
+.sc-sim { font-size: 13px; opacity: 0.8; margin-top: 6px; }
