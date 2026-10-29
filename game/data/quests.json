@@ -357,7 +357,8 @@
             "Nhìn cột \"Loại kết quả\" trong bản ghi.",
             "Đọc dòng ghi chú cuối bản ghi."
           ],
-          "walkthrough": "Đọc dòng cuối bản ghi Lens: \"Không có kết quả nào từ hãng tin, phóng viên hay nhân chứng tại hiện trường.\""
+          "walkthrough": "Đọc dòng cuối bản ghi Lens: \"Không có kết quả nào từ hãng tin, phóng viên hay nhân chứng tại hiện trường.\"",
+          "tool": "computer"
         },
         {
           "id": "s2",
@@ -394,7 +395,8 @@
             "Cột bên phải của bản ghi ghi loại kết quả.",
             "Các trang trong bản ghi đều đăng cùng một kiểu bài."
           ],
-          "walkthrough": "Nhìn cột \"Loại kết quả\": cả 5 dòng đều là bài cảnh báo ảnh giả."
+          "walkthrough": "Nhìn cột \"Loại kết quả\": cả 5 dòng đều là bài cảnh báo ảnh giả.",
+          "tool": "computer"
         },
         {
           "id": "s3",
@@ -500,7 +502,8 @@
             "Nhìn kỹ khung có chiếc áo: chữ trên áo có đọc được không?",
             "Khung mờ thì không đánh giá; đừng đánh dấu chúng."
           ],
-          "walkthrough": "Đánh dấu các khung có tàu (2, 5, 7, 12) vì mỗi khung một hình dạng tàu, và khung 9 vì chữ trên áo bị méo. Không đánh dấu khung mờ 6 và 10."
+          "walkthrough": "Đánh dấu các khung có tàu (2, 5, 7, 12) vì mỗi khung một hình dạng tàu, và khung 9 vì chữ trên áo bị méo. Không đánh dấu khung mờ 6 và 10.",
+          "tool": "magnifier"
         },
         {
           "id": "s2",
@@ -530,7 +533,8 @@
           "hints": [
             "Không nhìn rõ thì có kết luận được không?"
           ],
-          "walkthrough": "Chọn \"Không đánh giá, ghi vào phần giới hạn\"."
+          "walkthrough": "Chọn \"Không đánh giá, ghi vào phần giới hạn\".",
+          "tool": "magnifier"
         }
       ],
       "feedback": {
@@ -577,7 +581,8 @@
             "Tìm ô có hai chiếc áo phao.",
             "Màu áo phao phải giống hệt khung 11."
           ],
-          "walkthrough": "So khung 11 (hai áo phao màu cam) với từng ô: ô số 4 giống hệt; ô 7 có áo phao màu đỏ."
+          "walkthrough": "So khung 11 (hai áo phao màu cam) với từng ô: ô số 4 giống hệt; ô 7 có áo phao màu đỏ.",
+          "tool": "monitor"
         },
         {
           "id": "s2",
@@ -688,7 +693,8 @@
             "Xem hàng đầu tiên của bản ghi Hive.",
             "Con số gần 100%."
           ],
-          "walkthrough": "Hàng \"Khả năng ảnh do AI tạo\", cột \"Khung 3\"."
+          "walkthrough": "Hàng \"Khả năng ảnh do AI tạo\", cột \"Khung 3\".",
+          "tool": "detector"
         },
         {
           "id": "s2",
@@ -703,7 +709,8 @@
           "hints": [
             "Xem hàng \"Nguồn tạo dự đoán #1\"."
           ],
-          "walkthrough": "Hàng \"Nguồn tạo dự đoán #1\": cả hai khung đều là Imagen 4."
+          "walkthrough": "Hàng \"Nguồn tạo dự đoán #1\": cả hai khung đều là Imagen 4.",
+          "tool": "detector"
         },
         {
           "id": "s3",
@@ -734,7 +741,8 @@
             "Dòng chú thích dưới bản ghi nói gì?",
             "Bạn đã có những bằng chứng nào khác?"
           ],
-          "walkthrough": "Chọn \"Dùng làm bằng chứng bổ trợ, kết hợp các bằng chứng khác\"."
+          "walkthrough": "Chọn \"Dùng làm bằng chứng bổ trợ, kết hợp các bằng chứng khác\".",
+          "tool": "detector"
         }
       ],
       "feedback": {
@@ -781,7 +789,8 @@
             "Đọc bài VnExpress (Hoài Anh, 2025), đoạn nói về nguồn gốc các video.",
             "Cơn bão lớn đổ bộ miền Bắc năm 2024, tên bốn chữ cái."
           ],
-          "walkthrough": "Mở bài VnExpress → tìm câu \"Một số video lấy từ đợt bão ...\" → chép tên bão."
+          "walkthrough": "Mở bài VnExpress → tìm câu \"Một số video lấy từ đợt bão ...\" → chép tên bão.",
+          "tool": "archive"
         },
         {
           "id": "s2",
@@ -799,7 +808,8 @@
             "Vẫn trong bài VnExpress, ngay sau đoạn về bão.",
             "Một quốc gia ở châu Phi; sự việc tháng 10/2024."
           ],
-          "walkthrough": "Bài VnExpress → câu \"Một số khác là cảnh tàu chìm ở ... tháng 10/2024\"."
+          "walkthrough": "Bài VnExpress → câu \"Một số khác là cảnh tàu chìm ở ... tháng 10/2024\".",
+          "tool": "archive"
         },
         {
           "id": "s3",
@@ -819,7 +829,8 @@
             "Đọc bài VietnamPlus (Minh Thu, 2025), đoạn chủ ảnh lên tiếng.",
             "Ảnh chụp trong chuyến du lịch của gia đình chủ ảnh, trước vụ tai nạn một năm."
           ],
-          "walkthrough": "Mở bài VietnamPlus → tìm câu \"chụp trong chuyến du lịch Hạ Long của gia đình vào tháng 8/...\"."
+          "walkthrough": "Mở bài VietnamPlus → tìm câu \"chụp trong chuyến du lịch Hạ Long của gia đình vào tháng 8/...\".",
+          "tool": "archive"
         },
         {
           "id": "s4",
@@ -924,7 +935,8 @@
             "Bắt đầu từ sự kiện thật, rồi tới lúc tin sai xuất hiện.",
             "Ba bài báo: xem ngày đăng ở đầu mỗi bài (20/7, 21/7, 22/7)."
           ],
-          "walkthrough": "Tai nạn (chiều 19/7) → video sai (tối 19/7) → VnExpress (20/7) → Tuổi Trẻ (21/7) → VTV (22/7)."
+          "walkthrough": "Tai nạn (chiều 19/7) → video sai (tối 19/7) → VnExpress (20/7) → Tuổi Trẻ (21/7) → VTV (22/7).",
+          "tool": "timeline"
         },
         {
           "id": "s2",
@@ -1662,7 +1674,8 @@
             "So tên trang với tên thật của Ban.",
             "Tổ chức thật có nhận quyên góp vào tài khoản cá nhân không?"
           ],
-          "walkthrough": "Chọn: sai chính tả, tích xanh giả, trang mới tạo, tài khoản cá nhân, link rút gọn."
+          "walkthrough": "Chọn: sai chính tả, tích xanh giả, trang mới tạo, tài khoản cá nhân, link rút gọn.",
+          "tool": "monitor"
         }
       ],
       "feedback": {
@@ -1993,7 +2006,8 @@
     "lobby": "Sảnh",
     "street": "Phố ven vịnh",
     "pier": "Bến tàu du lịch",
-    "newsroom": "Tòa soạn Tin Vịnh"
+    "newsroom": "Tòa soạn Tin Vịnh",
+    "agency": "Phòng thám tử (GIẢ LẬP)"
   },
   "intro": {
     "skip": "Bỏ qua",

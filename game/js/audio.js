@@ -9,7 +9,9 @@ const sounds = {
   correct: [[523, 0.09, 'triangle'], [784, 0.14, 'triangle']],
   partial: [[523, 0.1, 'triangle'], [587, 0.12, 'triangle']],
   wrong: [[220, 0.18, 'triangle']],
-  unlock: [[392, 0.08, 'triangle'], [523, 0.08, 'triangle'], [659, 0.16, 'triangle']]
+  unlock: [[392, 0.08, 'triangle'], [523, 0.08, 'triangle'], [659, 0.16, 'triangle']],
+  scan: [[300, 0.05, 'sawtooth'], [450, 0.05, 'sawtooth'], [600, 0.05, 'sawtooth'], [900, 0.08, 'square']],
+  paper: [[1200, 0.02, 'triangle'], [900, 0.03, 'triangle']]
 };
 
 /** Phát một hiệu ứng ngắn, nhỏ tiếng; bỏ qua nếu đang tắt tiếng. */

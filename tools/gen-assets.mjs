@@ -20,10 +20,13 @@ const TILES = [
   'dock', 'roof', 'facade', 'facade_window', 'shop_door', 'awning', 'signboard', 'tree',
   'bench', 'lamp', 'flowerbed',
   // phòng boss
-  'void', 'frame_wall', 'frame', 'shard'
+  'void', 'frame_wall', 'frame', 'shard',
+  // phòng thám tử: thiết bị (mỗi thiết bị là một object 'device' trên bản đồ)
+  'floor_dark', 'dev_pc', 'dev_lighttable', 'dev_detector', 'dev_reader', 'dev_monitors', 'dev_timeline', 'dev_evidence'
 ];
 const COLLIDES = new Set(['wall_top', 'wall_face', 'door_closed', 'window', 'pinboard', 'desk', 'cabinet', 'bookshelf', 'plant', 'sofa', 'reception',
-  'water', 'karst', 'railing', 'roof', 'facade', 'facade_window', 'awning', 'signboard', 'tree', 'bench', 'lamp', 'flowerbed', 'frame_wall', 'frame']);
+  'water', 'karst', 'railing', 'roof', 'facade', 'facade_window', 'awning', 'signboard', 'tree', 'bench', 'lamp', 'flowerbed', 'frame_wall', 'frame',
+  'dev_pc', 'dev_lighttable', 'dev_detector', 'dev_reader', 'dev_monitors', 'dev_timeline', 'dev_evidence']);
 const tid = name => TILES.indexOf(name);
 
 /** Vẽ một ô 32x32 theo tên tại (ox, oy). */
@@ -116,6 +119,64 @@ function drawTile(img, name, ox, oy, rnd) {
       img.ellipse(ox + 16, oy + 12, 10, 9, '#2f7d3b');
       img.ellipse(ox + 12, oy + 10, 5, 5, '#3f9a4b'); img.ellipse(ox + 20, oy + 14, 5, 4, '#3f9a4b');
       img.ellipse(ox + 16, oy + 6, 4, 3, '#57b864');
+      break;
+    case 'floor_dark':
+      R(0, 0, T, T, '#3a4152');
+      for (let y = 0; y < T; y += 16) for (let x = (y / 16) * 8; x < T; x += 16) R(x, y, 15, 15, '#353b4b');
+      noise('#3a4152', 0.12, 40);
+      break;
+    case 'dev_pc':
+      // bàn + màn hình tìm ngược ảnh (khung ảnh, kính lúp trên màn)
+      shadow(14, 29);
+      R(1, 14, 30, 10, '#4e3324'); R(1, 14, 30, 2, '#6b4630'); R(3, 24, 3, 7, '#2b1d16'); R(26, 24, 3, 7, '#2b1d16');
+      R(6, 1, 20, 14, '#1b1f2a'); R(7, 2, 18, 11, '#2c6a8f'); R(8, 3, 8, 6, '#a9c4dc'); R(9, 6, 6, 3, '#3f7899');
+      img.ellipse(ox + 20, oy + 7, 3, 3, '#f2d36b'); R(21, 9, 2, 2, '#f2d36b'); R(18, 11, 6, 1, '#7fd6ff');
+      R(14, 15, 4, 2, '#1b1f2a'); R(8, 18, 14, 3, '#c9d1dc'); R(24, 18, 4, 3, '#c9d1dc');
+      break;
+    case 'dev_lighttable':
+      // bàn soi đèn + kính lúp có tay đỡ
+      shadow(14, 29);
+      R(1, 10, 30, 14, '#5b6170'); R(2, 11, 28, 10, '#fff6d6'); R(4, 13, 10, 7, '#c9d9e8'); R(16, 12, 10, 8, '#c9d9e8');
+      R(3, 24, 3, 7, '#2b2f3a'); R(26, 24, 3, 7, '#2b2f3a');
+      R(22, 1, 2, 12, '#2b2f3a'); img.ellipse(ox + 18, oy + 6, 5, 5, '#2b2f3a'); img.ellipse(ox + 18, oy + 6, 3, 3, '#bfe6ff'); R(17, 5, 1, 1, '#ffffff');
+      break;
+    case 'dev_detector':
+      // máy dò ảnh AI: tủ máy, đồng hồ kim, đèn trạng thái
+      shadow(13, 30);
+      R(4, 0, 24, 31, '#2b2f3a'); R(5, 1, 22, 29, '#4a5363'); R(7, 3, 18, 10, '#14161c');
+      img.ellipse(ox + 16, oy + 12, 7, 7, '#e6ebf2'); R(9, 12, 15, 2, '#4a5363');
+      for (let i = 0; i < 6; i++) R(16 - Math.round(i * 0.9), 11 - i, 1, 1, '#c8323c');
+      R(8, 17, 4, 3, '#4aa35b'); R(14, 17, 4, 3, '#f2d36b'); R(20, 17, 4, 3, '#c8323c');
+      R(8, 23, 16, 5, '#14161c'); for (let x = 9; x < 23; x += 3) R(x, 24, 2, 3, '#7fe3ff');
+      break;
+    case 'dev_reader':
+      // đầu đọc kho báo (vi phim): màn hình nghiêng trên tủ, cuộn phim bên hông
+      shadow(14, 30);
+      R(3, 14, 26, 17, '#5b4a3a'); R(4, 15, 24, 15, '#7a634d'); R(6, 18, 20, 3, '#5b4a3a'); R(6, 24, 20, 3, '#5b4a3a');
+      R(5, 0, 22, 14, '#2b2f3a'); R(7, 2, 18, 10, '#e9dcc0'); for (let y = 4; y < 11; y += 2) R(9, y, 14, 1, '#8a7a62');
+      img.ellipse(ox + 28, oy + 8, 3, 5, '#14161c'); R(27, 6, 2, 4, '#5b5d6e');
+      break;
+    case 'dev_monitors':
+      // bức tường màn hình theo dõi mạng xã hội
+      wallFace();
+      R(1, 2, 30, 18, '#14161c');
+      [[2, 3, '#3d5a98'], [12, 3, '#2a9d8f'], [22, 3, '#3d5a98'], [2, 11, '#8c7bb8'], [12, 11, '#3d5a98'], [22, 11, '#c8323c']].forEach(([x, y, c]) => {
+        R(x, y, 8, 7, c); R(x + 1, y + 1, 6, 1, '#ffffff'); R(x + 1, y + 3, 4, 1, '#c9d1dc'); R(x + 5, y + 5, 2, 1, '#f2d36b');
+      });
+      break;
+    case 'dev_timeline':
+      // bảng dòng thời gian: dây ngang, các mốc giấy ghim
+      wallFace();
+      R(1, 3, 30, 18, '#f4f1e6'); R(1, 3, 30, 1, '#b4b8c5');
+      R(1, 12, 30, 1, '#2b2f3a');
+      [[3, 5], [10, 14], [17, 5], [24, 14]].forEach(([x, y]) => { R(x, y, 6, 5, '#f2d36b'); R(x + 1, y + 1, 4, 1, '#7a5a20'); R(x + 2, 12, 2, 1, '#c8323c'); });
+      break;
+    case 'dev_evidence':
+      // tường bằng chứng: bảng bần, ảnh, dây đỏ nối các thẻ
+      wallFace();
+      R(1, 2, 30, 19, '#5b3b28'); R(2, 3, 28, 17, '#b0844f');
+      [[4, 5, '#f4eedc'], [13, 4, '#9fb3c8'], [22, 6, '#f4eedc'], [7, 13, '#f2d36b'], [18, 13, '#f4eedc']].forEach(([x, y, c]) => { R(x, y, 6, 5, c); R(x + 2, y, 1, 1, '#c8323c'); });
+      for (let i = 0; i < 10; i++) { R(7 + i, 7 + Math.round(i * 0.6), 1, 1, '#c8323c'); R(16 + i, 8 + Math.round(i * 0.5), 1, 1, '#c8323c'); }
       break;
     case 'chair':
       shadow(8, 28);
@@ -594,25 +655,27 @@ const office = buildMap('office', {
 // ---------------- Phố ven vịnh
 // # mái, W tường mặt tiền, w cửa sổ, S biển hiệu, a mái hiên quán, o/n/c cửa tòa nhà (văn phòng / tòa soạn / quán),
 // g cỏ, _ vỉa hè, = đường, - vạch kẻ, , lối đi dạo, T cây, B ghế đá, L đèn, F bồn hoa, | lan can, ~ nước, K đảo đá, X cầu tàu.
-const sRow = (a, b, c) => 'gg' + a + 'gggg' + b + 'gggg' + c + 'gggg';
+// t: cửa Phòng thám tử (tòa nhà thứ tư, bên phải)
+const sRow = (a, b, c, d) => 'gg' + a + 'gggg' + b + 'gggg' + c + 'gggg' + d + 'gggg';
+const SW = 62;
 const STREET = [
-  sRow('############', '############', '##########'),
-  sRow('############', '############', '##########'),
-  sRow('WwWwWwWwWwWW', 'WwWwWwWwWwWW', 'aaaaaaaaaa'),
-  sRow('WwWWSWWWwWWW', 'WwWWSWWWwWWW', 'WwWWSWWwWW'),
-  sRow('WwWwWWWWwWwW', 'WwWwWWWWwWwW', 'WwWWWWWwWW'),
-  sRow('WWWWWooWWWWW', 'WWWWWnnWWWWW', 'WWWWccWWWW'),
-  '_'.repeat(48),
-  '_'.repeat(16) + 'L' + '_'.repeat(15) + 'L' + '_'.repeat(15),
-  '='.repeat(48),
-  '-'.repeat(48),
-  '='.repeat(48),
-  '_'.repeat(48),
-  ',,,T,,,,BB,,,T,,L,,,,BB,,,,,T,,BB,,L,,,,,,,,,,T,',
-  ','.repeat(48),
-  ',,FF,,,,,,,,,,,,,,,,,FF,,,,,,,,,,,,,,,,,,,,,,FF,',
-  '|'.repeat(37) + 'XXX' + '|'.repeat(8),
-  ...Array.from({ length: 10 }, (_, i) => '~'.repeat(37) + (i < 7 ? 'XXX' : '~~~') + '~'.repeat(8))
+  sRow('############', '############', '##########', '##########'),
+  sRow('############', '############', '##########', '##########'),
+  sRow('WwWwWwWwWwWW', 'WwWwWwWwWwWW', 'aaaaaaaaaa', 'WwWwWWwWwW'),
+  sRow('WwWWSWWWwWWW', 'WwWWSWWWwWWW', 'WwWWSWWwWW', 'WwWSWWWwWW'),
+  sRow('WwWwWWWWwWwW', 'WwWwWWWWwWwW', 'WwWWWWWwWW', 'WwWwWWwWwW'),
+  sRow('WWWWWooWWWWW', 'WWWWWnnWWWWW', 'WWWWccWWWW', 'WWWWttWWWW'),
+  '_'.repeat(SW),
+  '_'.repeat(16) + 'L' + '_'.repeat(15) + 'L' + '_'.repeat(15) + 'L' + '_'.repeat(13),
+  '='.repeat(SW),
+  '-'.repeat(SW),
+  '='.repeat(SW),
+  '_'.repeat(SW),
+  ',,,T,,,,BB,,,T,,L,,,,BB,,,,,T,,BB,,L,,,,,,,,,,T,,,,BB,,,,T,,,,',
+  ','.repeat(SW),
+  ',,FF,,,,,,,,,,,,,,,,,FF,,,,,,,,,,,,,,,,,,,,,,FF,,,,,,,,,,FF,,,',
+  '|'.repeat(37) + 'XXX' + '|'.repeat(SW - 40),
+  ...Array.from({ length: 10 }, (_, i) => '~'.repeat(37) + (i < 7 ? 'XXX' : '~~~') + '~'.repeat(SW - 40))
 ];
 // đảo đá trên mặt nước, bảng thông tin cuối cầu tàu
 const setCh = (x, y, ch) => { STREET[y] = STREET[y].slice(0, x) + ch + STREET[y].slice(x + 1); };
@@ -624,7 +687,7 @@ const street = buildMap('street', {
   rows: STREET, label: 'Phố ven vịnh Hạ Long', music: 'street',
   legend: { '#': 'roof', W: 'facade', w: 'facade_window', S: 'signboard', a: 'awning', T: 'tree', B: 'bench', L: 'lamp', F: 'flowerbed', '|': 'railing', '~': 'water', K: 'karst' },
   ground: (ch, x, y) => {
-    if ('onc'.includes(ch)) return 'shop_door';
+    if ('onct'.includes(ch)) return 'shop_door';
     if (ch === 'g') return 'grass';
     if (ch === '=') return 'road';
     if (ch === '-') return x % 3 === 0 ? 'road' : 'road_line';
@@ -637,11 +700,14 @@ const street = buildMap('street', {
     point('spawn', 'spawn_from_office', 8, 6.9),
     point('spawn', 'spawn_from_news', 24, 6.9),
     point('spawn', 'spawn_from_cafe', 39, 6.9),
-    rectT('zone', 'zone_street', 0, 6, 48, 9, { area: 'street' }),
+    point('spawn', 'spawn_from_agency', 53, 6.9),
+    rectT('zone', 'zone_street', 0, 6, SW, 9, { area: 'street' }),
     rectT('zone', 'zone_pier', 37, 15, 3, 8, { area: 'pier' }),
     rectT('exit', 'door_office', 7, 5, 2, 1, { target: 'office', spawn: 'spawn_from_street' }),
     rectT('exit', 'door_news', 23, 5, 2, 1, { target: 'newsroom', spawn: 'spawn_from_street' }),
     rectT('exit', 'door_cafe', 38, 5, 2, 1, { target: 'cafe', spawn: 'spawn_from_street' }),
+    rectT('exit', 'door_agency', 52, 5, 2, 1, { target: 'agency', spawn: 'spawn_from_street' }),
+    rectT('inspect', 'inspect_agency_sign', 51, 3, 1, 1, { text: 'inspect_agency_sign' }),
     point('npc', 'npc5', 12, 13.5, { patrol: 'patrol_npc5' }),
     path_('patrol_npc5', [[5, 13.5], [20, 13.5]]),
     rectT('inspect', 'inspect_office_sign', 6, 3, 1, 1, { text: 'inspect_office_sign' }),
@@ -724,6 +790,40 @@ const cafe = buildMap('cafe', {
   ]
 });
 
+// ---------------- Phòng thám tử (GIẢ LẬP): các thiết bị mở giao diện công cụ mô phỏng
+// e tường bằng chứng, V màn hình mạng xã hội, t bảng dòng thời gian, K máy tính tìm ngược ảnh,
+// M bàn soi kính lúp, A máy dò ảnh AI, Y đầu đọc kho báo.
+const AGENCY = [
+  '##################',
+  '#WWeeeWVVWwWtttWW#',
+  '#P..............P#',
+  '#..K..M....A..Y..#',
+  '#..h..h....h..h..#',
+  '#................#',
+  '#~~~~~~~~~~~~~~~~#',
+  '#~~ss~~~~~~~~dd~~#',
+  '#~~~~~~~~~~~~h~~~#',
+  '#P~~~~~~~~~~~~~~P#',
+  '#######EE#########'
+];
+const agency = buildMap('agency', {
+  rows: AGENCY, label: 'Phòng thám tử (GIẢ LẬP)', music: 'archive',
+  legend: { ...INDOOR, e: 'dev_evidence', V: 'dev_monitors', t: 'dev_timeline', K: 'dev_pc', M: 'dev_lighttable', A: 'dev_detector', Y: 'dev_reader' },
+  ground: (ch, x, y) => (ch === 'E' ? 'exit_mat' : ch === '~' || y >= 6 ? 'carpet' : 'floor_dark'),
+  objects: () => [
+    point('spawn', 'spawn_from_street', 7.5, 9.4),
+    rectT('zone', 'zone_agency', 1, 1, 16, 9, { area: 'agency' }),
+    rectT('exit', 'exit_street', 7, 9.6, 2, 1.4, { target: 'street', spawn: 'spawn_from_agency' }),
+    rectT('device', 'computer', 3, 3, 1, 1, { device: 'computer' }),
+    rectT('device', 'magnifier', 6, 3, 1, 1, { device: 'magnifier' }),
+    rectT('device', 'detector', 11, 3, 1, 1, { device: 'detector' }),
+    rectT('device', 'archive', 14, 3, 1, 1, { device: 'archive' }),
+    rectT('device', 'evidence', 3, 1, 3, 1, { device: 'evidence' }),
+    rectT('device', 'monitor', 7, 1, 2, 1, { device: 'monitor' }),
+    rectT('device', 'timeline', 12, 1, 3, 1, { device: 'timeline' })
+  ]
+});
+
 // ---------------- Phòng Boss (không gian trừu tượng)
 const BOSS = [
   '####################',
@@ -756,4 +856,4 @@ const boss = buildMap('boss', {
 buildTileset();
 for (const [id, spec] of Object.entries(CHARACTERS)) buildCharacter(id, spec);
 buildBoss();
-console.log(['ok:', `tileset ${TILES.length} ô`, office, street, newsroom, cafe, boss].join('\n  '));
+console.log(['ok:', `tileset ${TILES.length} ô`, office, street, newsroom, cafe, agency, boss].join('\n  '));

@@ -307,6 +307,74 @@ function drawBoss(mood) {
   return outlined(f);
 }
 
+/**
+ * Thiết bị / đồ vật (chân dung bên phải khi tương tác). Trạng thái theo cột biểu cảm:
+ * neutral = chờ, happy = xong (dấu ✓ xanh), thinking = đang quét, surprised = chú ý (!), serious = cảnh báo (đỏ).
+ */
+function drawDevice(kind, mood) {
+  const f = new Img(W, H);
+  const R = (x, y, w, h, c) => f.rect(x, y, w, h, c);
+  let scr = null; // vùng màn hình [x, y, w, h] để phủ trạng thái
+  const metal = '#4a5363', metalD = '#2b2f3a', metalL = '#6b7686';
+  if (kind === 'computer') {
+    R(6, 70, 60, 8, '#6b4630'); R(6, 70, 60, 2, '#8a5c3d');
+    R(30, 56, 12, 14, metalD); R(22, 66, 28, 4, metal);
+    R(4, 10, 64, 48, metalD); R(6, 12, 60, 42, '#2c6a8f'); scr = [6, 12, 60, 42];
+    R(10, 16, 22, 16, '#a9c4dc'); R(10, 26, 22, 6, '#3f7899'); R(14, 22, 10, 4, '#e6e6e6');
+    f.ellipse(46, 26, 8, 8, '#f2d36b'); f.ellipse(46, 26, 5, 5, '#2c6a8f'); for (let i = 0; i < 6; i++) R(51 + i, 31 + i, 3, 2, '#f2d36b');
+    for (let y = 38; y < 52; y += 4) { R(10, y, 30, 2, '#c9e3f5'); R(44, y, 16, 2, '#7fb0d0'); }
+    R(16, 80, 40, 5, '#c9d1dc'); R(18, 81, 36, 1, '#9aa1b3');
+  } else if (kind === 'magnifier') {
+    R(4, 52, 64, 22, '#5b6170'); R(6, 54, 60, 16, '#fff6d6'); R(10, 57, 22, 11, '#c9d9e8'); R(36, 56, 26, 12, '#c9d9e8');
+    R(8, 74, 6, 12, metalD); R(58, 74, 6, 12, metalD);
+    R(54, 8, 4, 44, metalD); R(36, 8, 22, 4, metalD);
+    f.ellipse(30, 26, 18, 18, metalD); f.ellipse(30, 26, 15, 15, '#bfe6ff'); f.ellipse(26, 22, 5, 4, '#ffffff'); scr = [16, 12, 29, 29];
+  } else if (kind === 'monitor') {
+    R(2, 8, 68, 64, '#14161c');
+    [[4, 10, '#3d5a98'], [26, 10, '#2a9d8f'], [48, 10, '#3d5a98'], [4, 42, '#8c7bb8'], [26, 42, '#3d5a98'], [48, 42, '#c8323c']].forEach(([x, y, c]) => {
+      R(x, y, 20, 28, c); R(x + 2, y + 2, 16, 3, '#ffffff'); R(x + 2, y + 8, 16, 10, '#c9d1dc'); R(x + 2, y + 20, 10, 2, '#ffffff'); R(x + 14, y + 23, 4, 2, '#f2d36b');
+    });
+    scr = [2, 8, 68, 64];
+    R(30, 72, 12, 10, metalD); R(20, 82, 32, 4, metal);
+  } else if (kind === 'detector') {
+    R(8, 4, 56, 82, metalD); R(10, 6, 52, 78, metal); R(10, 6, 52, 2, metalL);
+    R(14, 10, 44, 30, '#14161c'); scr = [14, 10, 44, 30];
+    f.ellipse(36, 34, 16, 16, '#e6ebf2'); R(18, 34, 36, 6, '#14161c'); R(16, 40, 40, 1, '#14161c');
+    for (let i = 0; i < 12; i++) R(36 + Math.round(i * 0.8), 33 - i, 2, 1, '#c8323c');
+    R(14, 46, 10, 6, '#4aa35b'); R(31, 46, 10, 6, '#f2d36b'); R(48, 46, 10, 6, '#c8323c');
+    R(14, 58, 44, 16, '#14161c'); for (let x = 16; x < 56; x += 5) R(x, 60 + ((x * 7) % 9), 3, 12 - ((x * 7) % 9), '#7fe3ff');
+  } else if (kind === 'archive') {
+    R(6, 44, 60, 42, '#5b4a3a'); R(8, 46, 56, 38, '#7a634d'); R(12, 52, 48, 6, '#5b4a3a'); R(12, 66, 48, 6, '#5b4a3a'); R(32, 54, 8, 2, '#e8c66a'); R(32, 68, 8, 2, '#e8c66a');
+    R(8, 6, 56, 38, metalD); R(11, 9, 50, 32, '#e9dcc0'); scr = [11, 9, 50, 32];
+    R(14, 12, 30, 4, '#3a3226'); for (let y = 19; y < 38; y += 3) R(14, y, (y * 13) % 2 ? 44 : 40, 1, '#8a7a62'); R(46, 12, 12, 8, '#b4a888');
+    f.ellipse(66, 22, 4, 10, '#14161c'); R(64, 18, 3, 8, '#5b5d6e');
+  } else if (kind === 'timeline') {
+    R(2, 14, 68, 56, '#5b3b28'); R(4, 16, 64, 52, '#f4f1e6'); scr = [4, 16, 64, 52];
+    R(4, 42, 64, 2, '#2b2f3a');
+    [[7, 20], [22, 48], [37, 20], [52, 48]].forEach(([x, y], i) => { R(x, y, 14, 16, ['#f2d36b', '#9fd8ff', '#f2d36b', '#f4b6c2'][i]); R(x + 2, y + 3, 10, 1, '#5b5d6e'); R(x + 2, y + 6, 8, 1, '#5b5d6e'); R(x + 6, 42, 2, 2, '#c8323c'); R(x + 6, y - 1, 2, 2, '#c8323c'); });
+  } else if (kind === 'evidence') {
+    R(2, 10, 68, 64, '#5b3b28'); R(4, 12, 64, 60, '#b0844f'); scr = [4, 12, 64, 60];
+    [[8, 16, '#f4eedc'], [30, 14, '#9fb3c8'], [52, 18, '#f4eedc'], [14, 46, '#f2d36b'], [40, 48, '#f4eedc']].forEach(([x, y, c]) => { R(x, y, 14, 12, c); R(x + 2, y + 4, 9, 1, '#8a8a8a'); R(x + 6, y, 2, 2, '#c8323c'); });
+    for (let i = 0; i < 30; i++) { R(15 + i, 23 + Math.round(i * 0.85), 1, 1, '#c8323c'); R(37 + i * 0.6, 21 + Math.round(i * 0.9), 1, 1, '#c8323c'); }
+  } else if (kind === 'paper') {
+    R(10, 6, 52, 76, '#e9e4d6'); R(10, 6, 52, 10, '#2b2f3a'); R(14, 9, 30, 4, '#f4eedc'); scr = [10, 6, 52, 76];
+    R(14, 20, 44, 4, '#3a3226'); R(14, 28, 20, 16, '#b4b8c5');
+    for (let y = 28; y < 78; y += 3) R(y < 46 ? 38 : 14, y, y < 46 ? 20 : 44, 1, '#8a7a62');
+  } else if (kind === 'sign') {
+    R(32, 50, 8, 36, metalD); R(4, 10, 64, 42, '#2b2f3a'); R(7, 13, 58, 36, '#3d5a98'); scr = [7, 13, 58, 36];
+    R(12, 20, 48, 4, '#f4eedc'); R(16, 30, 40, 3, '#c9d1dc'); R(20, 38, 32, 3, '#c9d1dc');
+  }
+  // lớp trạng thái
+  if (scr) {
+    const [x, y, w, h] = scr;
+    if (mood === 'thinking') { R(x, y + Math.floor(h / 2), w, 3, '#7fe3ffb0'); R(x, y + Math.floor(h / 2) - 4, w, 2, '#7fe3ff50'); }
+    if (mood === 'happy') { const cx = x + w - 12, cy = y + 10; f.ellipse(cx, cy, 8, 8, '#2f8a43'); for (let i = 0; i < 4; i++) R(cx - 4 + i, cy + i - 1, 2, 2, '#ffffff'); for (let i = 0; i < 6; i++) R(cx + i - 1, cy + 2 - i, 2, 2, '#ffffff'); }
+    if (mood === 'surprised') { const cx = x + w - 12, cy = y + 10; f.ellipse(cx, cy, 8, 8, '#e8b02f'); R(cx - 1, cy - 5, 3, 7, '#14161c'); R(cx - 1, cy + 3, 3, 2, '#14161c'); }
+    if (mood === 'serious') { R(x, y, w, h, '#c8323c40'); const cx = x + w - 12, cy = y + 10; f.ellipse(cx, cy, 8, 8, '#c8323c'); for (let i = -4; i <= 4; i++) { R(cx + i, cy + i, 2, 2, '#ffffff'); R(cx + i, cy - i, 2, 2, '#ffffff'); } }
+  }
+  return outlined(f);
+}
+
 /** Ghép 5 biểu cảm thành một dải ngang. */
 function sheetOf(draw, moods) {
   const sheet = new Img(W * moods.length, H);
@@ -319,4 +387,8 @@ for (const [id, spec] of Object.entries(CHARACTERS)) {
 }
 // Boss: cột theo thứ tự neutral, smug (≈ happy), cracked (≈ surprised), blank (gỡ mặt nạ), angry (≈ serious)
 sheetOf(drawBoss, ['neutral', 'smug', 'cracked', 'blank', 'angry']).save(path.join(ROOT, 'assets/portraits/boss.png'));
+for (const kind of ['computer', 'magnifier', 'monitor', 'detector', 'archive', 'timeline', 'evidence']) {
+  sheetOf(m => drawDevice(kind, m), EXPRESSIONS).save(path.join(ROOT, `assets/portraits/dev_${kind}.png`));
+}
+for (const kind of ['paper', 'sign']) sheetOf(m => drawDevice(kind, m), EXPRESSIONS).save(path.join(ROOT, `assets/portraits/obj_${kind}.png`));
 console.log('portraits ok');

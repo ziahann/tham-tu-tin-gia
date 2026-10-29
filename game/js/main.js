@@ -10,6 +10,7 @@ import { setOnChange, setOnEnding, track } from './story.js';
 import { nextQuestIn } from './grading.js';
 import { updateScore } from './hud.js';
 import { WorldScene } from './world.js';
+import { reader } from './tools.js';
 import { applyUiText, toast, openModal, closeModal, confirmBox } from './ui.js';
 
 const $ = id => document.getElementById(id);
@@ -172,20 +173,28 @@ function startGame(isNew) {
 
 // ---------------------------------------------------------------- hộp thoại phụ
 
-/** Danh mục nguồn APA. */
+/** Danh mục nguồn APA: đọc tóm tắt ngay trong game; link bài gốc chỉ là phụ. */
 function openSources() {
   const wrap = el('div');
   for (const src of data.sources.sources) {
     const box = el('div', 'resource');
     box.append(el('span', null, src.apa));
-    if (src.url) {
-      const a = el('a', null, src.url);
-      a.href = src.url; a.target = '_blank'; a.rel = 'noopener noreferrer';
-      box.append(a);
-      if (src.urlStatus === 'from_report_unverified') box.append(el('span', 'muted', `(${t('sourcesPanel.unverified')})`));
-    } else {
-      box.append(el('span', 'muted', t('sourcesPanel.missing')));
+    const row = el('div', 'row');
+    if (src.verifiedContent) {
+      const read = el('button', 'btn-small', t('reader.readInGame'));
+      read.type = 'button';
+      read.addEventListener('click', () => openModal(src.outlet, reader([src.id])));
+      row.append(read);
     }
+    if (src.url) {
+      const a = el('a', 'muted small', t('reader.original'));
+      a.href = src.url; a.target = '_blank'; a.rel = 'noopener noreferrer';
+      row.append(a);
+      if (src.urlStatus === 'from_report_unverified') row.append(el('span', 'muted', `(${t('sourcesPanel.unverified')})`));
+    } else {
+      row.append(el('span', 'muted', t('sourcesPanel.missing')));
+    }
+    box.append(row);
     wrap.append(box);
   }
   openModal(t('sourcesPanel.title'), wrap);
