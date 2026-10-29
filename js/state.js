@@ -7,6 +7,7 @@ const SCHEMA = 1;
 const defaultSettings = () => ({
   hideSensitiveImages: true,
   muted: false,
+  music: true,
   reduceMotion: window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false
 });
 

@@ -6,6 +6,7 @@ import { makeAnims, feetBody, dirFrom, idleFrame, Npc } from './actors.js';
 import { roomStatus } from './grading.js';
 import * as story from './story.js';
 import { setPlace } from './hud.js';
+import { playMusic } from './music.js';
 
 const SPRITE_IDS = ['npc1', 'npc2', 'npc3', 'npc4', 'npc5', 'npc6', 'boss', 'boss_blank'];
 const MAPS = ['office', 'street', 'newsroom', 'cafe', 'boss'];
@@ -108,6 +109,8 @@ export class WorldScene extends Phaser.Scene {
     this.fitCamera();
     this.scale.on('resize', () => this.fitCamera());
 
+    this.mapMusic = propOf({ properties: map.properties }, 'music');
+    playMusic(this.mapMusic);
     this.lastSave = 0;
     this.leaving = false;
     this.zoneKey = null;

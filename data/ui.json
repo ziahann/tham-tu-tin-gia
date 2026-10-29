@@ -38,7 +38,7 @@
     "lookF": "Nữ"
   },
   "hud": {
-    "musicSoon": "Nhạc nền sẽ có ở bản sau."
+    "musicUnsupported": "trình duyệt này không phát được nhạc OGG"
   },
   "dialog": {
     "continueHint": "E / Space ▸",
@@ -131,7 +131,7 @@
     "title": "Cài đặt",
     "hideSensitive": "Ẩn hình ảnh nhạy cảm",
     "mute": "Tắt hiệu ứng âm thanh",
-    "music": "Nhạc nền",
+    "music": "Nhạc nền (CC0, Juhani Junkala)",
     "reduceMotion": "Giảm chuyển động (hiện chữ ngay)",
     "home": "Về màn hình chính"
   },
