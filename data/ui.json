@@ -236,32 +236,64 @@
     "taskLine": "Việc của hồ sơ \"{title}\":",
     "computer": {
       "name": "Máy tính tìm ngược ảnh",
-      "app": "Tìm bằng hình ảnh · bản ghi kết quả"
+      "app": "Tìm bằng hình ảnh · bản ghi kết quả",
+      "tutorial": [
+        "Hướng dẫn · Máy tính tìm ngược ảnh: máy đưa ảnh cần kiểm tra lên công cụ tìm bằng hình ảnh và ghi lại các nơi ảnh từng xuất hiện (bản ghi mô phỏng).",
+        "Đọc bản ghi: xem ai đăng, đăng ở đâu, có phải hãng tin, phóng viên hay nhân chứng tại hiện trường không. Kết quả trùng nhiều chưa chắc là bản gốc.",
+        "Trả lời bằng các nút bên dưới. Bí thì bấm \"Trợ giúp\" để xin gợi ý hoặc mở lại nguồn."
+      ]
     },
     "magnifier": {
       "name": "Bàn soi kính lúp",
-      "app": "Kính soi · khung ảnh mô phỏng"
+      "app": "Kính soi · khung ảnh mô phỏng",
+      "tutorial": [
+        "Hướng dẫn · Bàn soi kính lúp: ảnh được chia thành nhiều khung đánh số.",
+        "Bấm vào khung có dấu hiệu bất thường (tay, chữ, bóng đổ, viền mờ...) để đánh dấu; bấm lại để bỏ. Chọn xong thì bấm \"Nộp\".",
+        "Khung bị mờ thì không đủ căn cứ: ghi là chưa kết luận được, đừng đoán."
+      ]
     },
     "monitor": {
       "name": "Màn hình theo dõi mạng xã hội",
-      "app": "Trình xem trang mạng"
+      "app": "Trình xem trang mạng",
+      "tutorial": [
+        "Hướng dẫn · Màn hình mạng xã hội: xem lại các bài đăng được lưu (mô phỏng), không mở trang thật.",
+        "So sánh từng ô ảnh với ảnh cần kiểm tra, chú ý góc chụp và chi tiết nhỏ; chọn ô khớp rồi trả lời."
+      ]
     },
     "detector": {
       "name": "Máy dò ảnh AI",
-      "app": "Máy dò ảnh AI · bản ghi Hive"
+      "app": "Máy dò ảnh AI · bản ghi Hive",
+      "tutorial": [
+        "Hướng dẫn · Máy dò ảnh AI: đọc bản ghi kết quả của công cụ (Hive), gồm phần trăm khả năng ảnh do AI tạo và nguồn tạo dự đoán.",
+        "Gõ con số hoặc tên đúng như trong bản ghi.",
+        "Nhớ: máy dò chỉ là bằng chứng bổ trợ, có thể sai. Luôn kết hợp với nguồn gốc ảnh và chi tiết bất thường."
+      ]
     },
     "archive": {
       "name": "Đầu đọc kho báo",
-      "app": "Kho báo · tóm tắt các bài đã kiểm tra"
+      "app": "Kho báo · tóm tắt các bài đã kiểm tra",
+      "tutorial": [
+        "Hướng dẫn · Đầu đọc kho báo: mỗi thẻ ở trên là một bài báo đã kiểm tra. Bấm thẻ để đọc tóm tắt.",
+        "Bấm một dòng trong bài để ghi vào sổ tay (balo → Sổ tay). Câu trả lời phải lấy từ bài đã đọc, gõ vào ô bên dưới."
+      ]
     },
     "timeline": {
       "name": "Bảng dòng thời gian",
-      "app": "Bảng mốc thời gian"
+      "app": "Bảng mốc thời gian",
+      "tutorial": [
+        "Hướng dẫn · Bảng dòng thời gian: các mốc được trộn lẫn.",
+        "Bấm các mốc lần lượt từ sớm nhất đến muộn nhất; bấm nhầm thì làm lại. Ngày đăng của bản gốc quan trọng hơn ngày bản đăng lại."
+      ]
     },
     "evidence": {
       "name": "Tường bằng chứng",
-      "app": "Tường bằng chứng · thẻ đã thu thập"
-    }
+      "app": "Tường bằng chứng · thẻ đã thu thập",
+      "tutorial": [
+        "Hướng dẫn · Tường bằng chứng: các thẻ evidence bạn thu được khi khép từng nhiệm vụ được ghim ở đây.",
+        "Dùng tường để ôn lại bằng chứng trước khi đối đầu Kẻ Dệt Chuyện."
+      ]
+    },
+    "tutorialAgain": "Xem hướng dẫn"
   },
   "reader": {
     "summary": "Tóm tắt nội dung đã kiểm tra ngày {date} (không phải bản sao bài báo).",
@@ -321,5 +353,16 @@
     "challenge": "Thử thách",
     "challengeFull": "Đầy đủ: hạn chót, kẻ tung tin đuổi theo, mất độ tin cậy",
     "challengeLight": "Nhẹ: không hạn chót, kẻ tung tin không đuổi, không mất độ tin cậy (hợp khi trình chiếu)"
+  },
+  "card": {
+    "title": "Thẻ sinh viên",
+    "school": "VAN LANG UNIVERSITY",
+    "kind": "STUDENT CARD",
+    "faculty": "Quan hệ công chúng – Truyền thông",
+    "sim": "Thẻ mô phỏng trong game · GIẢ LẬP",
+    "trust": "Uy tín",
+    "trustNote": "Trung bình độ tin cậy của các hồ sơ (bị trừ khi trả lời sai, bị lừa hoặc đăng vội).",
+    "badges": "Huy hiệu",
+    "cases": "Hồ sơ đã khép"
   }
 }
