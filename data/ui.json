@@ -4,12 +4,11 @@
   "gameTitle": "Thám tử tin giả",
   "simulated": "GIẢ LẬP",
   "fakeImage": "ẢNH GIẢ",
-  "scoreDisclaimer": "Điểm số và chiến thắng chỉ đo kết quả chơi, không chứng minh thông tin đúng hay sai.",
+  "scoreDisclaimer": "Huy hiệu và chiến thắng chỉ đo kết quả chơi, không chứng minh thông tin đúng hay sai.",
   "loading": "Đang tải hồ sơ…",
   "loadError": "Không tải được dữ liệu game. Hãy chạy qua một máy chủ web (xem README).",
   "lostSave": "Dữ liệu lưu không đọc được nên game bắt đầu lại từ đầu.",
   "system": "Thông báo",
-  "score": "Điểm",
   "close": "Đóng",
   "yes": "Đồng ý",
   "no": "Hủy",
@@ -76,7 +75,6 @@
     "missingCards": "Còn thiếu {n} nhóm nội dung.",
     "conclusion": "Kết luận nhỏ: {text}",
     "newCard": "Bạn nhận thẻ evidence {fact}: {title}",
-    "points": "+{n} điểm. (Điểm chỉ để chơi.)",
     "doorLocked": "Cửa đang khóa. Hãy làm xong các nhiệm vụ trước.",
     "doorBuilding": "{room} chưa mở trong bản dựng thử này.",
     "exitBuilding": "Khu phố ven vịnh chưa mở trong bản dựng thử này.",
@@ -106,7 +104,8 @@
     "pickCase": "Bạn muốn làm hồ sơ nào?",
     "caseOption": "{room}: {title}",
     "notNow": "Để sau",
-    "tracking": "Đang theo dõi: {title}"
+    "tracking": "Đang theo dõi: {title}",
+    "badge": "🏅 Huy hiệu mới: {name}. {learned}"
   },
   "backpack": {
     "title": "Balo",
@@ -146,7 +145,9 @@
     "bossLocked": "Xuất hiện khi xong mọi hồ sơ bắt buộc ({done}/{total} nhiệm vụ, {cards}/{minCards} thẻ evidence).",
     "bossOpen": "Cửa Phòng họp đã mở.",
     "notes2": "Ghi chép từ báo",
-    "noNotes": "Chưa ghi chép gì. Đọc báo trong game và bấm một dòng để ghi lại."
+    "noNotes": "Chưa ghi chép gì. Đọc báo trong game và bấm một dòng để ghi lại.",
+    "badges": "Huy hiệu kỹ năng",
+    "noBadges": "Chưa có huy hiệu. Khép một hồ sơ để nhận huy hiệu kỹ năng."
   },
   "sourcesPanel": {
     "title": "Nguồn tham khảo",
@@ -284,5 +285,6 @@
     "locked": "🔒 chưa mở",
     "lockedLine": "Tầng thượng (Phòng họp) chỉ mở khi đã xong mọi hồ sơ bắt buộc.",
     "cancel": "Ở lại tầng này"
-  }
+  },
+  "progress": "🏅 {badges} · Hồ sơ {done}/{total}"
 }

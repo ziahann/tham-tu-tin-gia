@@ -1,7 +1,7 @@
 // Balo: khung dọc bên phải với Sổ tay, Nhiệm vụ + bản đồ nhỏ, Bảng ghim, Lịch sử trò chuyện theo NPC.
 import { data, t, evidenceById, sourceById, shortCite, citeLine, npcById, questById } from './data.js';
 import { state, clearAllStorage, isQuestDone } from './state.js';
-import { questStatus, nextQuestIn, isUnlocked, bossStatus } from './grading.js';
+import { questStatus, nextQuestIn, isUnlocked, bossStatus, earnedBadges } from './grading.js';
 import { objective, track, giverOf } from './story.js';
 import { currentRunByNpc, exportLog } from './history.js';
 import { heroTitle } from './dialogue.js';
@@ -74,8 +74,14 @@ export function evidenceCard(ev) {
   return card;
 }
 
-/** Sổ tay: câu hỏi xác minh + thẻ evidence. */
+/** Sổ tay: huy hiệu kỹ năng, câu hỏi xác minh, thẻ evidence, ghi chép từ báo. */
 function notebook() {
+  els.body.append(el('h3', null, t('backpack.badges')));
+  const badges = earnedBadges(state.progress?.flags || []);
+  if (!badges.length) els.body.append(el('p', 'muted', t('backpack.noBadges')));
+  const shelf = el('div', 'badge-shelf');
+  badges.forEach(r => { const d = el('div', 'badge'); d.append(el('strong', null, `🏅 ${r.badge.name}`), el('span', null, r.badge.learned)); shelf.append(d); });
+  els.body.append(shelf);
   els.body.append(el('h3', null, t('backpack.questions')));
   const ol = el('ol');
   data.quests.verificationQuestions.forEach(q => ol.append(el('li', null, q)));
