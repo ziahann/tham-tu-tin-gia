@@ -47,7 +47,16 @@ export function playMusic(key) {
   audio.preload = 'auto';
   audio.volume = 0;
   current = { key, audio };
-  audio.play().then(() => fade(audio, VOLUME)).catch(() => { /* bị chặn hoặc lỗi tải: im lặng */ });
+  audio.play().then(() => fade(audio, ducked ? VOLUME * 0.4 : VOLUME)).catch(() => { /* bị chặn hoặc lỗi tải: im lặng */ });
+}
+
+let ducked = false;
+
+/** Hạ nhỏ nhạc khi đang hội thoại để nghe rõ giọng / hiệu ứng; trả lại khi xong. */
+export function duckMusic(on) {
+  if (ducked === on) return;
+  ducked = on;
+  if (current) fade(current.audio, on ? VOLUME * 0.4 : VOLUME);
 }
 
 /** Gọi ở thao tác đầu tiên của người chơi để được phép phát nhạc. */

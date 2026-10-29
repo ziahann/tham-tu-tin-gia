@@ -8,6 +8,7 @@ const defaultSettings = () => ({
   hideSensitiveImages: true,
   muted: false,
   music: true,
+  ambience: true,
   reduceMotion: window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false
 });
 
