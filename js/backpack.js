@@ -9,6 +9,7 @@ import { heroTitle } from './dialogue.js';
 import { confirmBox } from './ui.js';
 import { investigationBoard } from './board.js';
 import { vinhFeed, feedAlerts } from './feed.js';
+import { exportReport } from './report.js';
 
 const els = {};
 let tab = 'notebook';
@@ -130,6 +131,11 @@ function studentCard() {
 /** Sổ tay: thẻ sinh viên, huy hiệu kỹ năng, câu hỏi xác minh, thẻ evidence, ghi chép từ báo. */
 function notebook() {
   els.body.append(el('h3', null, t('card.title')), studentCard());
+  const pdf = el('button', 'btn-small', t('report.button'));
+  pdf.type = 'button';
+  pdf.title = t('report.hint');
+  pdf.addEventListener('click', exportReport);
+  els.body.append(pdf);
   els.body.append(el('h3', null, t('backpack.badges')));
   const earned = new Set(earnedBadges(state.progress?.flags || []).map(r => r.id));
   if (!earned.size) els.body.append(el('p', 'muted', t('backpack.noBadges')));

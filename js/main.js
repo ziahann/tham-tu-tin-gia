@@ -14,6 +14,7 @@ import { WorldScene } from './world.js';
 import { reader } from './tools.js';
 import { randomWeather, dayPhase } from './weather.js';
 import { showClock } from './hud.js';
+import { exportReport } from './report.js';
 import { applyUiText, toast, openModal, closeModal, confirmBox } from './ui.js';
 
 const $ = id => document.getElementById(id);
@@ -298,6 +299,14 @@ function showResults() {
   $('results-continue').textContent = r.keepPlaying;
   $('results-sources').textContent = r.sources;
   $('results-replay').textContent = r.replay;
+  let pdf = $('results-pdf');
+  if (!pdf) {
+    pdf = el('button', 'btn', t('report.button'));
+    pdf.id = 'results-pdf';
+    pdf.type = 'button';
+    pdf.addEventListener('click', exportReport);
+    $('results-continue').after(pdf);
+  }
   $('results').hidden = false;
   playMusic('ending');
   $('results-continue').focus();
