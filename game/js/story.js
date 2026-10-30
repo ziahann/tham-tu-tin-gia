@@ -10,6 +10,7 @@ import { toast } from './ui.js';
 import { toolWindow, browseContent, deviceSpeaker } from './tools.js';
 import { targetMap } from './guide.js';
 import { loseCred, easePressure, isLight, roomName, caseOpen, PENALTY } from './obstacles.js';
+import { bossStartShares, feedAlerts } from './feed.js';
 
 let world = null;
 let busy = false;
@@ -1127,7 +1128,8 @@ export async function runBoss() {
   p.boss ||= { phase: 0, fails: 0, endingB: 0 };
   b.guessCards.forEach(addEvidence);
   saveProgress();
-  const shares = bossShares(p.boss.shares || 1200);
+  const fresh = !p.boss.shares;
+  const shares = bossShares(p.boss.shares || bossStartShares());
   let won = false;
   await conversation('boss', async () => {
     if (!hasFlag('boss_intro')) {
@@ -1135,6 +1137,10 @@ export async function runBoss() {
       await dlg.say('system', t('boss.guessNote'));
       setFlag('boss_intro');
       saveProgress();
+    }
+    if (fresh) {
+      const left = feedAlerts();
+      await dlg.say('system', t(left ? 'boss.feedStart' : 'boss.feedCalm', { n: left, shares: shares.value().toLocaleString('vi-VN') }));
     }
     for (let i = p.boss.phase; i < b.phases.length; i++) {
       const ph = b.phases[i];

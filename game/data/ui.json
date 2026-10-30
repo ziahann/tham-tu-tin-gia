@@ -240,7 +240,9 @@
     "comment": "Bình luận {n}/{total} · Lượt chịu sai: {lives}",
     "pickReply": "Trả lời thế nào?",
     "stopped": "Bài sai dừng ở {n} lượt chia sẻ.",
-    "locked": "Phòng phát trực tiếp chưa mở. Hoàn thành các hồ sơ bắt buộc trước đã."
+    "locked": "Phòng phát trực tiếp chưa mở. Hoàn thành các hồ sơ bắt buộc trước đã.",
+    "feedStart": "Vịnh Feed: còn {n} bài sai chưa được xử lý nên bài của trang bắt đầu với {shares} lượt chia sẻ.",
+    "feedCalm": "Vịnh Feed: các bài sai đã có ghi chú, bài của trang bắt đầu với {shares} lượt chia sẻ."
   },
   "results": {
     "disclaimer": "Điểm số và chiến thắng chỉ đo kết quả chơi, không chứng minh thông tin đúng hay sai."
@@ -408,15 +410,37 @@
   "feed": {
     "empty": "Chưa có bài nào.",
     "shares": "chia sẻ",
-    "slowed": "Đã có ghi chú · lượt chia sẻ chững lại",
-    "report": "Báo cáo bài viết",
+    "slowed": "Đã có ghi chú · chững lại",
+    "report": "Báo cáo",
     "reported": "✓ Đã báo cáo",
-    "addNote": "Thêm ghi chú cộng đồng",
-    "noted": "✓ Đã thêm ghi chú",
+    "addNote": "Viết ghi chú cộng đồng",
+    "noted": "✓ Đã có ghi chú",
     "noteLocked": "Cần khép hồ sơ liên quan để có bằng chứng viết ghi chú.",
     "noteTitle": "Ghi chú cộng đồng:",
-    "reportDone": "Đã báo cáo bài viết với nền tảng.",
-    "noteDone": "Đã thêm ghi chú cộng đồng:"
+    "reportDone": "Đã báo cáo với nền tảng. Báo cáo một mình chưa đủ: ghi chú có nguồn mới giúp người đọc hiểu.",
+    "noteDone": "Ghi chú được chấm hữu ích, bài chững lại, tòa soạn bớt giục.",
+    "rising": "▲ đang lan",
+    "reply": "Trả lời người đăng",
+    "replyLocked": "Cần có bằng chứng (khép hồ sơ Phòng Phân tích ảnh) để nhắc người đăng.",
+    "investigate": "🔍 Điều tra",
+    "investigateHint": "Theo dõi hồ sơ {room}",
+    "pickNote": "Chọn bản ghi chú để đăng:",
+    "pickReply": "Chọn lời trả lời:",
+    "replyDone": "Người đăng đã gỡ bài.",
+    "noteBad": "Ghi chú bị gỡ vì vượt bằng chứng.",
+    "replyBad": "Người đăng nổi giận, giữ nguyên bài.",
+    "vague": "Ghi chú bị chấm \"chưa hữu ích\".",
+    "reportUser": "Đã báo cáo. Người đăng chỉ chia sẻ vô tình, một lời nhắc nhẹ kèm nguồn thường hiệu quả hơn.",
+    "reportWrong": "Bài này đúng. Kiểm tra trước khi báo cáo.",
+    "bait": "Em vừa bấm link \"đọc tiếp\" dẫn ra website ngoài. Đây là thủ đoạn câu tương tác, link có thể tiềm ẩn nguy cơ.",
+    "credLost": "(Độ tin cậy hồ sơ {room} −{n})",
+    "credReset": "(Độ tin cậy hồ sơ {room} về 0, hồ sơ làm lại từ đầu.)",
+    "classTitle": "Phân loại:",
+    "heat": "Độ lan truyền",
+    "heatOn": "{n} bài sai đang lan · hạn chót nhanh ×{x}",
+    "heatOff": "Đã kiểm soát",
+    "newOne": "📱 Vịnh Feed: bài mới từ {who}",
+    "newMany": "📱 Vịnh Feed: {n} bài mới"
   },
   "report": {
     "button": "Xuất kết quả (PDF)",
@@ -450,7 +474,7 @@
     "badgesTitle": "Huy hiệu kỹ năng",
     "evidence": "Thẻ evidence đã thu",
     "feed": "Vịnh Feed",
-    "feedLine": "Đã báo cáo {reports} bài sai, thêm {notes} ghi chú cộng đồng.",
+    "feedLine": "Đã báo cáo {reports} bài, viết {notes} ghi chú cộng đồng hữu ích, nhắc {replies} người chia sẻ vô tình; báo cáo nhầm bài đúng {wrong} lần, bấm link câu tương tác {clicks} lần.",
     "takeaway": "Điều rút ra",
     "sources": "Nguồn đã dùng (APA)",
     "disclaimer": "Huy hiệu và chỉ số trong báo cáo chỉ để chơi, không phải bằng chứng cho tin thật hay giả."
