@@ -3,11 +3,11 @@ import { data, loadAll, t, citeLine } from './data.js';
 import { Bay } from './bay.js';
 import { playMusic, unlockMusic, refreshMusic, musicSupported } from './music.js';
 import { stopAmbience } from './audio.js';
-import { state, loadState, saveSettings, startNewProgress } from './state.js';
+import { state, loadState, saveSettings, startNewProgress, hasFlag } from './state.js';
 import { initInput, on, releaseAll } from './input.js';
 import * as dlg from './dialogue.js';
 import * as backpack from './backpack.js';
-import { setOnChange, setOnEnding, track } from './story.js';
+import { setOnChange, setOnEnding, track, skipToBoss } from './story.js';
 import { nextQuestIn, earnedBadges, caseProgress } from './grading.js';
 import { updateScore } from './hud.js';
 import { WorldScene } from './world.js';
@@ -252,6 +252,15 @@ function openSettings() {
   }
   wrap.append(ch);
   const actions = el('div', 'actions');
+  // Tới thẳng boss (bỏ qua các hồ sơ chưa làm): hỏi lại trước khi làm
+  const toBoss = el('button', 'btn', t('settingsPanel.skipBoss'));
+  toBoss.type = 'button';
+  toBoss.hidden = !game || hasFlag('boss_done');
+  toBoss.addEventListener('click', async () => {
+    if (!(await confirmBox(t('settingsPanel.skipBoss'), t('settingsPanel.skipBossConfirm')))) return;
+    skipToBoss();
+  });
+  actions.append(toBoss);
   const home = el('button', 'btn', t('settingsPanel.home'));
   home.type = 'button';
   home.addEventListener('click', () => { closeModal(); showTitle(); });

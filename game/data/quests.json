@@ -121,7 +121,7 @@
     },
     {
       "id": "S9",
-      "name": "Phòng họp (Phòng Boss)",
+      "name": "Phòng họp",
       "place": "Trụ sở Báo Thanh Niên (tầng thượng)",
       "npc": "boss",
       "quests": [],
@@ -1832,7 +1832,7 @@
       "id": "ev_f1",
       "fact": "F1",
       "title": "Tai nạn có thật",
-      "text": "Chiều 19/7/2025, tàu du lịch Vịnh Xanh 58 (QN-7105) bị lật trên vịnh Hạ Long, Quảng Ninh.",
+      "text": "Chiều 19/7/2025, tàu du lịch Vịnh Xanh 58 (QN⁠-⁠7105) bị lật trên vịnh Hạ Long, Quảng Ninh.",
       "sources": [
         "thuthao2025",
         "thuonghuyen2025"
@@ -2046,7 +2046,7 @@
       {
         "id": "i2",
         "title": "Chiều 19/7/2025",
-        "text": "Dông lốc rất lớn bất ngờ ập đến. Tàu du lịch Vịnh Xanh 58 (QN-7105) bị lật trên vịnh. Đây là một thảm kịch có thật, gây mất mát lớn cho nhiều gia đình.",
+        "text": "Dông lốc rất lớn bất ngờ ập đến. Tàu du lịch Vịnh Xanh 58 (QN⁠-⁠7105) bị lật trên vịnh. Đây là một thảm kịch có thật, gây mất mát lớn cho nhiều gia đình.",
         "facts": [
           "F1",
           "F2"

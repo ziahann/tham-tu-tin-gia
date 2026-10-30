@@ -172,7 +172,9 @@
     "reduceMotion": "Giảm chuyển động (hiện chữ ngay)",
     "home": "Về màn hình chính",
     "ambience": "Âm thanh môi trường (mưa, gió, sóng, xe cộ)",
-    "clickMove": "Di chuyển bằng nháy chuột / chạm: bấm vào nền để đi tới, bấm vào người hoặc đồ vật để đi tới và tương tác"
+    "clickMove": "Di chuyển bằng nháy chuột / chạm: bấm vào nền để đi tới, bấm vào người hoặc đồ vật để đi tới và tương tác",
+    "skipBoss": "Tới thẳng phòng boss",
+    "skipBossConfirm": "Đi thẳng tới trận đối đầu Kẻ Dệt Chuyện? Các hồ sơ chưa làm sẽ được tính là đã khép (nhận thẻ evidence nhưng không nhận huy hiệu). Hợp khi trình chiếu hoặc ôn nhanh."
   },
   "result": {
     "correct": "✓ Đúng.",
