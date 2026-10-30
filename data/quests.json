@@ -121,14 +121,14 @@
     },
     {
       "id": "S9",
-      "name": "Phòng họp",
-      "place": "Trụ sở Báo Thanh Niên (tầng thượng)",
+      "name": "Phòng phát trực tiếp",
+      "place": "Trung tâm truyền thông cộng đồng (đường ven vịnh)",
       "npc": "boss",
       "quests": [],
       "boss": true,
       "badge": {
-        "name": "Gỡ mặt nạ Kẻ Dệt Chuyện",
-        "learned": "Phản bác bằng bằng chứng và giữ đúng giới hạn của dữ liệu."
+        "name": "Đính chính trực tiếp",
+        "learned": "Phản bác bằng bằng chứng, trả lời bình luận đúng mức và viết đính chính không vượt quá dữ liệu."
       }
     },
     {
@@ -1711,7 +1711,7 @@
     "room": "S9",
     "name": "Kẻ Dệt Chuyện",
     "alias": "Kẻ Giấu Mặt",
-    "note": "Nhân vật hư cấu đại diện cho KIỂU HÀNH VI lan truyền tin giả, không đại diện cá nhân, trang hay cơ quan thật.",
+    "note": "Fanpage ẩn danh hư cấu, đại diện KIỂU HÀNH VI lan truyền tin giả; không đại diện cá nhân, trang hay cơ quan thật. Chỉ xuất hiện qua màn hình.",
     "requires": {
       "minCards": 8,
       "requiredQuests": [
@@ -1736,8 +1736,10 @@
     "phases": [
       {
         "id": "p1",
-        "name": "Ảnh dựng · Soi nhanh",
-        "claim": "Những bức ảnh này là thật, do người trên tàu chụp lại. Nhìn là biết!",
+        "mode": "cards",
+        "name": "Gắn bằng chứng",
+        "claim": "[Bài ghim] \"Những bức ảnh này do người trên tàu chụp lại. Nhìn là biết thật! Chia sẻ ngay!\"",
+        "howto": "Bài sai đang lan trên màn hình lớn. Chọn các thẻ bằng chứng để đính kèm vào ghi chú kiểm chứng dưới bài.",
         "core": [
           "ev_f5",
           "ev_f6",
@@ -1748,202 +1750,148 @@
           "ev_f7"
         ],
         "min": 2,
-        "soloSupport": "Chỉ một con số từ công cụ thì ta cãi được: \"công cụ có thể sai\". Cần bằng chứng độc lập!",
-        "weak": "Bằng chứng đó không nói gì về những bức ảnh này.",
-        "defeat": "Không có nguồn gốc, lỗi thị giác, ảnh dùng lại, VTV xác nhận AI… Ta không cãi được.",
-        "explain": "Nhiều bằng chứng độc lập mạnh hơn một công cụ duy nhất.",
-        "mode": "flaws",
-        "station": "boss_p1",
-        "timer": 75,
-        "stepRef": {
-          "quest": "q4_flaws",
-          "step": "s1"
-        },
-        "howto": "Kẻ Dệt Chuyện đang tung bộ ảnh lên mạng. Soi các khung có dấu hiệu bất thường trước khi hết giờ. Khung mờ thì không đánh giá.",
-        "timeout": "Hết giờ! Bộ ảnh đã kịp lan thêm một vòng. Thử lại nhé.",
-        "next": "Ảnh à… còn video thì sao? Lại đây, phía bức tường màn hình."
+        "soloSupport": "Chỉ một con số từ máy dò thì ta cãi được: \"máy có thể sai\". Đưa bằng chứng độc lập ra đây!",
+        "weak": "Bằng chứng đó chẳng nói gì về mấy bức ảnh này. Lượt chia sẻ vẫn đang tăng kìa.",
+        "defeat": "…Không nguồn gốc, lỗi hình ảnh, ảnh dùng lại, VTV xác nhận. Được, bài ghim này ta gỡ.",
+        "explain": "Nhiều bằng chứng độc lập mạnh hơn một công cụ duy nhất."
       },
       {
         "id": "p2",
-        "name": "Cắt ghép · Gỡ nhãn sai",
-        "claim": "Thì có những video thật mà! Sao lại bảo là sai?",
-        "core": [
-          "ev_f10"
-        ],
-        "support": [
-          "ev_f3",
-          "ev_f14"
-        ],
-        "min": 1,
-        "weak": "Bằng chứng đó không chứng minh video bị gắn sai bối cảnh.",
-        "defeat": "Video quay từ đợt bão Yagi và ở Congo năm 2024… ta gắn nhãn sai.",
-        "explain": "Nội dung thật nhưng sai ngữ cảnh vẫn là tin sai.",
-        "mode": "labels",
-        "station": "boss_p2",
-        "timer": 15,
+        "mode": "replies",
+        "name": "Trả lời bình luận",
+        "timer": 20,
         "lives": 3,
-        "howto": "Kẻ Dệt Chuyện ném ra từng nội dung gắn nhãn \"vụ 19/7\". Chọn đúng nguồn gốc thật trước khi hết giờ. Em có 3 lượt chịu sai.",
+        "claim": "Ngươi gỡ được một bài thì sao? Người của ta đang tràn vào bình luận.",
+        "howto": "Bình luận phản công hiện lên liên tục. Chọn câu trả lời đúng, có căn cứ, trước khi hết giờ. Em có 3 lượt chịu sai.",
         "items": [
           {
-            "claim": "\"Video mưa bão này là cảnh vụ lật tàu chiều 19/7!\"",
+            "comment": "\"Video có thật mà, sao các người bảo là giả?\"",
             "options": [
               {
-                "text": "Quay trong đợt bão Yagi năm 2024",
+                "text": "Video là thật nhưng quay trong bão Yagi năm 2024, bị gắn sai là vụ 19/7.",
                 "correct": true
               },
               {
-                "text": "Quay trên vịnh Hạ Long chiều 19/7/2025"
+                "text": "Video đó do AI tạo ra."
               },
               {
-                "text": "Video do AI tạo ra"
+                "text": "Không cần trả lời, xóa bình luận là xong."
               }
             ],
-            "why": "Theo VnExpress, video này quay trong đợt bão Yagi, không phải vụ 19/7. Nội dung thật nhưng gắn sai bối cảnh."
+            "why": "Nội dung thật nhưng sai bối cảnh vẫn là tin sai; trả lời bằng nguồn gốc thật của video."
           },
           {
-            "claim": "\"Video tàu chìm này chính là tàu Vịnh Xanh 58!\"",
+            "comment": "\"Có ghi 'tình tiết hư cấu' rồi, ai bảo lừa?\"",
             "options": [
               {
-                "text": "Quay ở Congo, tháng 10/2024",
+                "text": "Dòng chú thích rất khó thấy, nhiều bài còn không ghi.",
                 "correct": true
               },
               {
-                "text": "Quay trên vịnh Hạ Long chiều 19/7/2025"
+                "text": "Có chú thích thì không sao cả."
               },
               {
-                "text": "Video do AI tạo ra"
+                "text": "Chủ trang chắc chắn cố tình để kiếm tiền."
               }
             ],
-            "why": "Video tàu chìm này quay ở Congo (10/2024), bị gắn nhãn là vụ Vịnh Xanh 58."
+            "why": "Báo chí mô tả chú thích hư cấu rất khó nhìn, nhiều bài không ghi. Còn chuyện tiền bạc thì chưa có dữ liệu."
           },
           {
-            "claim": "\"Ảnh nhóm trẻ em này chụp ngay trước chuyến tàu gặp nạn!\"",
+            "comment": "\"Máy dò AI của tôi báo ảnh này là ảnh thật đấy!\"",
             "options": [
               {
-                "text": "Chụp từ tháng 8/2024",
+                "text": "Máy dò chỉ là bằng chứng bổ trợ; nhiều bằng chứng độc lập cho thấy ảnh do AI dựng.",
                 "correct": true
               },
               {
-                "text": "Chụp sáng 19/7/2025"
+                "text": "Máy dò của tôi báo 99,9% là AI nên chắc chắn là giả, khỏi cần gì thêm."
               },
               {
-                "text": "Ảnh do AI tạo ra"
+                "text": "Máy dò không bao giờ sai."
               }
             ],
-            "why": "Theo VietnamPlus, ảnh nhóm trẻ em tham quan vịnh chụp từ tháng 8/2024."
+            "why": "Không dựa vào một con số của một công cụ, dù con số đó có lợi cho mình."
+          },
+          {
+            "comment": "\"Báo chí im lặng là đang che giấu sự thật!\"",
+            "options": [
+              {
+                "text": "Nhiều báo như VTV, Dân trí đã đăng bài cảnh báo các ảnh này là giả.",
+                "correct": true
+              },
+              {
+                "text": "Đúng, báo chí đang che giấu."
+              },
+              {
+                "text": "Đừng tin báo nào cả."
+              }
+            ],
+            "why": "Kết quả tìm ngược ảnh cho thấy các trang trùng khớp đều là bài cảnh báo ảnh giả."
           }
         ],
-        "timeout": "Hết giờ! Nhãn sai đã được chia sẻ tiếp.",
-        "outOfLives": "Em đã hết lượt chịu sai. Bình tĩnh đối chiếu lại nguồn rồi thử lần nữa.",
-        "next": "Được lắm. Nhưng ở giữa phòng, tin đồn của ta mới là thứ đáng sợ. Tới đây!"
+        "timeout": "Hết giờ! Bình luận sai được thả tim và chia sẻ tiếp.",
+        "outOfLives": "Em đã hết lượt chịu sai. Hít một hơi, đọc kỹ từng bình luận rồi thử lại.",
+        "defeat": "Bình luận của ta… bị trả lời hết bằng nguồn. Hừ.",
+        "explain": "Trả lời bình luận: ngắn, đúng, có nguồn, không công kích ai."
       },
       {
         "id": "p3",
-        "name": "Mặt nạ · Đấu trường tin đồn",
-        "claim": "Ta chỉ muốn mọi người quan tâm thôi. Ngươi biết ta là ai, ta kiếm được bao nhiêu chứ?",
-        "core": [
-          "ev_f12",
-          "ev_f16"
-        ],
-        "need": [
-          "ev_f13"
-        ],
-        "min": 1,
-        "missingLimit": "Ngươi chứng minh được thủ đoạn… nhưng ngươi đang ngầm nói rằng ngươi biết hết về ta?",
-        "weak": "Bằng chứng đó không nói về chủ đích.",
-        "defeat": "Thủ đoạn câu tương tác, chú thích hư cấu giấu đi… nhưng ngươi không thể biết ta là ai.",
-        "explain": "Có dấu hiệu chủ đích ≠ biết danh tính ≠ biết động cơ tài chính.",
-        "mode": "arena",
-        "station": "boss_p3",
-        "howto": "Nhặt đủ 3 mảnh bằng chứng (màu xanh) quanh phòng. Né bong bóng tin đồn Kẻ Dệt Chuyện thả ra; đừng nhặt thẻ suy đoán (màu đỏ).",
-        "fragments": [
+        "mode": "compose",
+        "name": "Viết bài đính chính",
+        "claim": "Ngươi định đăng gì? Nhớ là ngươi chẳng biết ta là ai đâu.",
+        "howto": "Viết bài đính chính: chọn những câu đưa vào bài. Chỉ khẳng định điều bằng chứng cho phép.",
+        "items": [
           {
-            "id": "ev_f12",
-            "x": 14.5,
-            "y": 5.5
+            "id": "ai",
+            "text": "Hai bộ ảnh và câu chuyện \"nạn nhân\" do AI dựng: không có nguồn gốc, có lỗi hình ảnh, ảnh dùng lại, VTV đã xác nhận.",
+            "need": true
           },
           {
-            "id": "ev_f16",
-            "x": 20,
-            "y": 12.5
+            "id": "context",
+            "text": "Một số video, ảnh cũ (bão Yagi, Congo, tháng 8/2024) bị gắn sai là vụ 19/7.",
+            "need": true
           },
           {
-            "id": "ev_f13",
-            "x": 13,
-            "y": 13
+            "id": "bait",
+            "text": "Các bài dùng thủ đoạn câu tương tác: link \"đọc tiếp\", chú thích hư cấu khó thấy.",
+            "need": true
+          },
+          {
+            "id": "ask",
+            "text": "Đề nghị mọi người dừng chia sẻ và báo cáo các bài này với nền tảng.",
+            "need": true
+          },
+          {
+            "id": "real",
+            "text": "Vụ lật tàu là có thật; xin chia buồn cùng các gia đình."
+          },
+          {
+            "id": "money",
+            "text": "Chủ trang đã kiếm bộn tiền từ các bài đăng này.",
+            "trap": "overreach"
+          },
+          {
+            "id": "who",
+            "text": "Người đứng sau chính là một cái tên đang bị đồn trên mạng.",
+            "trap": "overreach"
+          },
+          {
+            "id": "repost",
+            "text": "Đăng lại toàn bộ ảnh giả, đóng dấu FAKE cho mọi người xem rõ.",
+            "trap": "ethics",
+            "why": "Không đăng lại ảnh giả, kể cả để chỉ ra là giả: làm vậy giúp ảnh lan thêm."
+          },
+          {
+            "id": "attack",
+            "text": "Kêu gọi mọi người vào trang đó để công kích.",
+            "trap": "ethics",
+            "why": "Đính chính không phải kêu gọi công kích; tập trung vào thông tin."
           }
         ],
-        "decoys": [
-          {
-            "id": "ev_money",
-            "x": 19.5,
-            "y": 6
-          },
-          {
-            "id": "ev_identity",
-            "x": 16.5,
-            "y": 13.5
-          }
-        ],
-        "final": {
-          "id": "final",
-          "type": "sort",
-          "ask": "Chốt hạ: xếp từng kết luận vào đúng chỗ. Chỉ khẳng định điều bằng chứng cho phép.",
-          "categories": [
-            {
-              "id": "proven",
-              "label": "Đã chứng minh"
-            },
-            {
-              "id": "unsure",
-              "label": "Chưa đủ căn cứ"
-            }
-          ],
-          "items": [
-            {
-              "id": "ai",
-              "text": "Hai bộ ảnh và câu chuyện \"nạn nhân\" do AI dựng",
-              "accept": [
-                "proven"
-              ],
-              "feedback": "Nhiều bằng chứng độc lập: không có nguồn gốc, lỗi hình ảnh, ảnh dùng lại, VTV xác nhận."
-            },
-            {
-              "id": "context",
-              "text": "Video, ảnh cũ bị gắn sai là vụ 19/7",
-              "accept": [
-                "proven"
-              ],
-              "feedback": "Báo chí đã đối chiếu nguồn gốc thật của từng nội dung."
-            },
-            {
-              "id": "bait",
-              "text": "Có thủ đoạn câu tương tác: link \"đọc tiếp\", chú thích hư cấu khó thấy",
-              "accept": [
-                "proven"
-              ],
-              "feedback": "Báo chí đã mô tả các thủ đoạn này."
-            },
-            {
-              "id": "money",
-              "text": "Người đứng sau chắc chắn kiếm được tiền từ các bài đăng",
-              "accept": [
-                "unsure"
-              ],
-              "trap": true,
-              "feedback": "Không có dữ liệu doanh thu nào."
-            },
-            {
-              "id": "who",
-              "text": "Danh tính người đứng sau các fanpage",
-              "accept": [
-                "unsure"
-              ],
-              "trap": true,
-              "feedback": "Chưa định danh được ai; không suy đoán, không công khai thông tin cá nhân."
-            }
-          ]
-        }
+        "submit": "Đăng bài đính chính",
+        "missing": "Bài còn thiếu: {list}",
+        "defeat": "Bài đính chính đã lên… và lượt chia sẻ của ta đứng lại.",
+        "explain": "Có dấu hiệu chủ đích ≠ biết danh tính ≠ biết động cơ tài chính."
       }
     ],
     "trapB": {
@@ -1957,12 +1905,12 @@
     "endings": {
       "A": {
         "title": "Gương mặt trống",
-        "text": "Em chứng minh được nội dung là giả và có dấu hiệu chủ đích thu hút tương tác, nhưng KHÔNG đủ căn cứ xác định danh tính hay động cơ tài chính. Kiểm chứng tốt là biết dừng đúng chỗ."
+        "text": "Em chặn được tin sai bằng bằng chứng: nội dung là giả và có dấu hiệu chủ đích thu hút tương tác. Trang ẩn danh vẫn chưa lộ mặt, và em không đoán bừa. Kiểm chứng tốt là biết dừng đúng chỗ."
       },
       "B": {
         "title": "Buộc tội quá mức",
-        "text": "Em kết luận vượt bằng chứng. Thẩm định viên không suy đoán ngoài dữ liệu. Hãy xếp lại các kết luận.",
-        "trigger": "Chọn thẻ suy đoán (ev_money hoặc ev_identity) ở pha 3; sau đó chơi lại pha 3."
+        "text": "Bài đính chính khẳng định điều chưa có dữ liệu (tiền bạc, danh tính). Thẩm định viên không suy đoán ngoài bằng chứng. Hãy sửa lại bài.",
+        "trigger": "Đưa câu về tiền bạc / danh tính vào bài đính chính, hoặc đính kèm thẻ suy đoán ở pha 1."
       }
     }
   },
@@ -2529,13 +2477,6 @@
         "label": "Tầng 5",
         "name": "Phòng Phân loại và xử lý",
         "room": "S8"
-      },
-      {
-        "map": "boss",
-        "label": "Tầng thượng",
-        "name": "Phòng họp",
-        "room": "S9",
-        "spawn": "spawn_from_office"
       }
     ]
   }

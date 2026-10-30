@@ -909,7 +909,7 @@ export function skipToBoss() {
   saveProgress();
   track('boss', true);
   onChange();
-  world?.travel('boss', 'spawn_from_office', 'up');
+  world?.travel('boss', 'spawn_from_street', 'up');
 }
 
 /** Thông báo một câu của hệ thống (cửa khóa, khu chưa mở...). */
@@ -969,7 +969,11 @@ function bossBar(left, total) {
   meter.setAttribute('aria-label', `${left}/${total}`);
 }
 
-/** Đối đầu Kẻ Dệt Chuyện: 3 pha, mỗi pha một kiểu chơi (soi ảnh có giờ, gỡ nhãn sai, đấu trường tin đồn) ở một bục khác nhau. */
+/**
+ * Trận cuối: buổi đính chính trực tiếp với fanpage ẩn danh "Kẻ Dệt Chuyện" (chỉ hiện qua màn hình).
+ * Ba bước, mỗi bước một kiểu chơi: gắn bằng chứng (chọn thẻ), trả lời bình luận (có giờ, lượt chịu sai),
+ * viết bài đính chính (chọn câu). Bộ đếm lượt chia sẻ của bài sai tăng dần, tăng vọt khi trả lời sai.
+ */
 export async function runBoss() {
   const b = data.quests.boss;
   const p = state.progress;
@@ -978,152 +982,41 @@ export async function runBoss() {
     return;
   }
   if (busy) return;
-  if (world?.arena) { toast(t('boss.arenaBusy')); return; }
   p.boss ||= { phase: 0, fails: 0, endingB: 0 };
+  b.guessCards.forEach(addEvidence);
   saveProgress();
-  let arenaPhase = null;
+  const shares = bossShares(p.boss.shares || 1200);
+  let won = false;
   await conversation('boss', async () => {
     if (!hasFlag('boss_intro')) {
-      for (const line of data.npcs.dialogues.boss_intro || []) await dlg.say(line.npc, line.text, { mood: 'smug' });
+      for (const line of data.npcs.dialogues.boss_intro || []) await dlg.say(line.npc, line.text, { mood: line.npc === 'boss' ? 'smug' : undefined });
       await dlg.say('system', t('boss.guessNote'));
       setFlag('boss_intro');
       saveProgress();
     }
-    const i = p.boss.phase;
-    const ph = b.phases[i];
-    bossBar(b.phases.length - i, b.phases.length);
-    await dlg.say('system', t('boss.phase', { n: i + 1, name: ph.name }));
-    await dlg.say('boss', ph.claim, { mood: 'smug' });
-    await dlg.say('system', ph.howto);
-    if (ph.mode === 'arena') { arenaPhase = ph; return; }
-    const won = ph.mode === 'flaws' ? await bossFlaws(ph) : await bossLabels(ph);
-    if (!won) { p.boss.fails++; saveProgress(); return; }
-    sfx('correct');
-    p.boss.fails = 0;
-    p.boss.phase = i + 1;
-    saveProgress();
-    onChange();
-    bossBar(b.phases.length - i - 1, b.phases.length);
-    await dlg.say('boss', ph.defeat, { mood: 'cracked' });
-    await dlg.say('system', ph.explain);
-    if (ph.next) await dlg.say('boss', ph.next, { mood: 'angry' });
-    world?.bossMove(p.boss.phase);
-  });
-  // Pha đấu trường chơi ngay trên bản đồ; nhặt đủ mảnh bằng chứng thì chốt hạ (bossFinale)
-  if (arenaPhase) world?.startArena(arenaPhase);
-  else bossBar(null);
-  world?.refresh();
-}
-
-/** Đồng hồ đếm ngược nổi trên màn hình (pha có giới hạn thời gian). Trả về { left(), stop() }. */
-function bossTimer(seconds) {
-  const el0 = document.getElementById('boss-timer') || Object.assign(document.createElement('div'), { id: 'boss-timer', className: 'boss-timer' });
-  document.body.append(el0);
-  const end = Date.now() + seconds * 1000;
-  const tick = () => {
-    const s = Math.max(0, Math.ceil((end - Date.now()) / 1000));
-    el0.textContent = t('boss.timer', { s });
-    el0.classList.toggle('is-low', s <= 10);
-  };
-  tick();
-  el0.hidden = false;
-  const id = setInterval(tick, 250);
-  return { left: () => (end - Date.now()) / 1000, stop: () => { clearInterval(id); el0.hidden = true; } };
-}
-
-/** Pha 1: soi khung ảnh có giới hạn thời gian (dùng lại bước soi khung đã kiểm chứng của nhiệm vụ Q4). */
-async function bossFlaws(ph) {
-  const src = questById(ph.stepRef.quest)?.steps.find(st => st.id === ph.stepRef.step);
-  const step = { ...src, tool: null };
-  const qs = { answers: {} };
-  for (;;) {
-    const timer = bossTimer(ph.timer);
-    const r = await STEP_RUNNERS.flaws(step, 'boss', qs);
-    const late = timer.left() <= 0;
-    timer.stop();
-    if (r === 'help') { for (const h of step.hints || []) await dlg.say('npc2', h); continue; }
-    if (late) { sfx('wrong'); await dlg.say('system', ph.timeout); return false; }
-    if (r === 'ok') return true;
-    sfx('wrong');
-    await dlg.say('boss', ph.weak, { mood: 'smug' });
-    return false;
-  }
-}
-
-/** Pha 2: gỡ nhãn sai — từng nội dung một, chọn nguồn gốc thật trong thời gian ngắn; có lượt chịu sai. */
-async function bossLabels(ph) {
-  let lives = ph.lives;
-  for (let k = 0; k < ph.items.length; k++) {
-    const it = ph.items[k];
-    const opts = shuffle(it.options.map((o, j) => ({ id: String(j), text: o.text })));
-    await dlg.say('boss', it.claim, { mood: 'smug' });
-    const timer = bossTimer(ph.timer);
-    const c = await dlg.choose(opts, { speaker: 'boss', text: `${t('boss.label', { n: k + 1, total: ph.items.length })} · ${t('boss.lives', { n: lives })}\n${t('boss.pickOrigin')}` });
-    const late = timer.left() <= 0;
-    timer.stop();
-    const right = !late && it.options[+c.id].correct;
-    if (right) {
-      sfx('partial');
-      await dlg.say('system', `✓ ${it.why}`);
-      continue;
+    for (let i = p.boss.phase; i < b.phases.length; i++) {
+      const ph = b.phases[i];
+      bossBar(b.phases.length - i, b.phases.length);
+      await dlg.say('system', t('boss.phase', { n: i + 1, name: ph.name }));
+      await dlg.say('boss', ph.claim, { mood: 'smug' });
+      await dlg.say('system', ph.howto);
+      const run = { cards: bossCards, replies: bossReplies, compose: bossCompose }[ph.mode];
+      const ok = await run(ph, shares);
+      p.boss.shares = shares.value();
+      if (!ok) { p.boss.fails++; saveProgress(); return; } // nói chuyện lại để chơi tiếp bước này
+      sfx('correct');
+      p.boss.fails = 0;
+      p.boss.phase = i + 1;
+      saveProgress();
+      onChange();
+      bossBar(b.phases.length - i - 1, b.phases.length);
+      await dlg.say('boss', ph.defeat, { mood: 'cracked' });
+      await dlg.say('system', ph.explain);
     }
-    sfx('wrong');
-    await dlg.say('system', late ? ph.timeout : `✗ ${it.why}`);
-    lives--;
-    if (lives <= 0) { await dlg.say('system', ph.outOfLives); return false; }
-    k--; // làm lại nội dung này
-  }
-  return true;
-}
-
-/** Đấu trường: nhặt phải thẻ suy đoán (kết luận vượt bằng chứng) — nhắc lại, không tính là bằng chứng. */
-export async function bossTrap(cardId) {
-  const b = data.quests.boss;
-  const ev = evidenceById(cardId);
-  state.progress.boss.endingB++;
-  saveProgress();
-  sfx('wrong');
-  await conversation('boss', async () => {
-    await dlg.say('boss', data.npcs.dialogues.boss_trap_b?.[0]?.text || b.trapB.feedback, { mood: 'smug' });
-    await dlg.say('system', `${t('boss.arenaTrap')} ${ev?.text || ''}`);
-    await dlg.say('npc1', b.trapB.feedback);
-  });
-}
-
-/** Nhặt đủ mảnh bằng chứng ở đấu trường: chốt hạ bằng phân loại kết luận, rồi gỡ mặt nạ (kết thúc A). */
-export async function bossFinale() {
-  const b = data.quests.boss;
-  const p = state.progress;
-  const ph = b.phases[b.phases.length - 1];
-  let won = false;
-  await conversation('boss', async () => {
-    const qs = { answers: {} };
-    for (;;) {
-      const r = await STEP_RUNNERS.sort(ph.final, 'boss', qs);
-      if (r === 'help') { await dlg.say('npc1', ph.explain); continue; }
-      if (r === 'ok') break;
-      const choice = qs.answers[ph.final.id] || {};
-      const overreach = ph.final.items.some(it => it.trap && choice[it.id] !== 'unsure');
-      sfx('wrong');
-      if (overreach) {
-        // Kết thúc B: kết luận vượt bằng chứng — xếp lại
-        p.boss.endingB++;
-        saveProgress();
-        await dlg.say('boss', data.npcs.dialogues.boss_trap_b?.[0]?.text || b.trapB.feedback, { mood: 'smug' });
-        await dlg.say('system', `${b.endings.B.title}: ${b.endings.B.text}`);
-        for (const line of data.npcs.dialogues.boss_endings?.B || []) await dlg.say(line.npc, line.text);
-      } else {
-        await dlg.say('system', t('boss.finalBad'));
-      }
-    }
-    sfx('correct');
-    p.boss.phase = b.phases.length;
-    bossBar(0, b.phases.length);
-    await dlg.say('boss', ph.defeat, { mood: 'cracked' });
-    await dlg.say('system', ph.explain);
-    // Kết thúc A: gỡ mặt nạ — gương mặt trống
+    shares.stop();
+    await dlg.say('system', t('boss.stopped', { n: shares.value().toLocaleString('vi-VN') }));
+    // Kết thúc A: trang ẩn danh vẫn không lộ mặt — một khung trống
     await dlg.say('system', t('boss.unmask'));
-    world?.bossUnmask();
     dlg.pinMood('boss', 'blank');
     sfx('unlock');
     await dlg.say('system', t('boss.blank'));
@@ -1135,7 +1028,115 @@ export async function bossFinale() {
     await awardBadge('S9');
     won = true;
   });
+  shares.stop(true);
   bossBar(null);
   world?.refresh();
   if (won) onEnding();
+}
+
+/** Bộ đếm lượt chia sẻ của bài sai (nổi trên màn hình): tăng đều theo thời gian, bump(n) khi người chơi sai. */
+function bossShares(start) {
+  let n = start;
+  const box = document.getElementById('boss-shares') || Object.assign(document.createElement('div'), { id: 'boss-shares', className: 'boss-shares' });
+  document.body.append(box);
+  const show = () => { box.textContent = t('boss.shares', { n: Math.round(n).toLocaleString('vi-VN') }); };
+  box.hidden = false;
+  show();
+  let id = setInterval(() => { n += 3 + Math.random() * 6; show(); }, 700);
+  return {
+    value: () => Math.round(n),
+    bump: k => { n += k; show(); box.classList.remove('is-bump'); void box.offsetWidth; box.classList.add('is-bump'); },
+    stop: (hide = false) => { clearInterval(id); id = null; if (hide) box.hidden = true; }
+  };
+}
+
+/** Đồng hồ đếm ngược nổi trên màn hình. Trả về { left(), stop() }. */
+function bossTimer(seconds) {
+  const box = document.getElementById('boss-timer') || Object.assign(document.createElement('div'), { id: 'boss-timer', className: 'boss-timer' });
+  document.body.append(box);
+  const end = Date.now() + seconds * 1000;
+  const tick = () => {
+    const sLeft = Math.max(0, Math.ceil((end - Date.now()) / 1000));
+    box.textContent = t('boss.timer', { s: sLeft });
+    box.classList.toggle('is-low', sLeft <= 5);
+  };
+  tick();
+  box.hidden = false;
+  const id = setInterval(tick, 250);
+  return { left: () => (end - Date.now()) / 1000, stop: () => { clearInterval(id); box.hidden = true; } };
+}
+
+/** Kết luận vượt bằng chứng (tiền bạc, danh tính): kết thúc B — nhắc lại rồi làm lại bước này. */
+async function bossOverreach() {
+  const b = data.quests.boss;
+  state.progress.boss.endingB++;
+  saveProgress();
+  sfx('wrong');
+  await dlg.say('boss', data.npcs.dialogues.boss_trap_b?.[0]?.text || b.trapB.feedback, { mood: 'smug' });
+  await dlg.say('system', `${b.endings.B.title}: ${b.endings.B.text}`);
+  await dlg.say('npc1', b.trapB.feedback);
+}
+
+/** Bước 1 — gắn bằng chứng: chọn thẻ đính kèm vào ghi chú kiểm chứng dưới bài sai. */
+async function bossCards(ph, shares) {
+  const b = data.quests.boss;
+  for (;;) {
+    const cards = state.progress.evidenceCards.map(evidenceById).filter(Boolean).map(ev => ({ id: ev.id, text: ev.title }));
+    const r = await dlg.multi(cards, { speaker: 'boss', text: ph.claim, submitLabel: t('boss.submit') });
+    if (r.help) { await dlg.say('npc1', ph.explain); continue; }
+    if (r.ids.some(id => b.trapB.cards.includes(id))) { shares.bump(400); await bossOverreach(); continue; }
+    const core = r.ids.filter(id => ph.core.includes(id));
+    const support = r.ids.filter(id => (ph.support || []).includes(id));
+    let msg = null;
+    if (!core.length && support.length) msg = ph.soloSupport;
+    else if (core.length < ph.min) msg = ph.weak;
+    if (!msg) return true;
+    sfx('wrong');
+    shares.bump(250);
+    await dlg.say('boss', msg, { mood: 'smug' });
+  }
+}
+
+/** Bước 2 — trả lời bình luận: từng bình luận một, chọn câu trả lời có căn cứ trong thời gian ngắn. */
+async function bossReplies(ph, shares) {
+  let lives = ph.lives;
+  for (let k = 0; k < ph.items.length; k++) {
+    const it = ph.items[k];
+    await dlg.say('boss', it.comment, { mood: 'smug' });
+    const opts = shuffle(it.options.map((o, j) => ({ id: String(j), text: o.text })));
+    const timer = bossTimer(ph.timer);
+    const c = await dlg.choose(opts, { speaker: 'boss', text: `${t('boss.comment', { n: k + 1, total: ph.items.length, lives })}\n${t('boss.pickReply')}` });
+    const late = timer.left() <= 0;
+    timer.stop();
+    if (!late && it.options[+c.id].correct) {
+      sfx('partial');
+      await dlg.say('system', `✓ ${it.why}`);
+      continue;
+    }
+    sfx('wrong');
+    shares.bump(300);
+    await dlg.say('system', late ? ph.timeout : `✗ ${it.why}`);
+    if (--lives <= 0) { await dlg.say('system', ph.outOfLives); return false; }
+    k--; // trả lời lại bình luận này
+  }
+  return true;
+}
+
+/** Bước 3 — viết bài đính chính: chọn câu đưa vào bài; thiếu ý chính, vượt bằng chứng hay sai đạo đức đều phải sửa. */
+async function bossCompose(ph, shares) {
+  let picked = [];
+  for (;;) {
+    const r = await dlg.multi(ph.items.map(it => ({ id: it.id, text: it.text })), { speaker: 'boss', text: ph.howto, picked, submitLabel: ph.submit });
+    if (r.help) { await dlg.say('npc1', ph.explain); continue; }
+    picked = r.ids;
+    const chosen = ph.items.filter(it => picked.includes(it.id));
+    if (chosen.some(it => it.trap === 'overreach')) { shares.bump(400); await bossOverreach(); continue; }
+    const bad = chosen.filter(it => it.trap === 'ethics');
+    const missing = ph.items.filter(it => it.need && !picked.includes(it.id));
+    if (!bad.length && !missing.length) return true;
+    sfx('wrong');
+    shares.bump(200);
+    for (const it of bad) await dlg.say('npc1', `✗ ${it.why}`);
+    if (missing.length) await dlg.say('npc1', fill(ph.missing, { list: missing.map(it => `"${it.text}"`).join('; ') }));
+  }
 }
