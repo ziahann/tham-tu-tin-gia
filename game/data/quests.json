@@ -917,7 +917,7 @@
             "manh2025",
             "thuthao2025"
           ],
-          "ask": "Bấm các mốc lần lượt từ sớm nhất đến muộn nhất.",
+          "ask": "Kéo từng mốc thả vào đúng ngày trên trục thời gian (hoặc bấm mốc rồi bấm ô ngày). Ngày đăng của mỗi bài báo nằm ở đầu bài.",
           "items": [
             {
               "id": "a",
@@ -952,7 +952,24 @@
             "Ba bài báo: xem ngày đăng ở đầu mỗi bài (20/7, 21/7, 22/7)."
           ],
           "walkthrough": "Tai nạn (chiều 19/7) → video sai (tối 19/7) → VnExpress (20/7) → Tuổi Trẻ (21/7) → VTV (22/7).",
-          "tool": "timeline"
+          "tool": "timeline",
+          "slots": [
+            "Chiều 19/7",
+            "Tối 19/7",
+            "20/7",
+            "21/7",
+            "22/7"
+          ],
+          "spread": {
+            "from": 1,
+            "label": "Tin sai lan rộng",
+            "fix": [
+              2,
+              3,
+              4
+            ],
+            "fixLabel": "Báo chí đính chính"
+          }
         },
         {
           "id": "s2",
