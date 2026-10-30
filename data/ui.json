@@ -110,7 +110,10 @@
     "tracking": "Đang theo dõi: {title}",
     "badge": "🏅 Huy hiệu mới: {name}. {learned}",
     "minimize": "Thu nhỏ khung thoại (đi lại tự do, bấm thanh dưới để mở lại)",
-    "minimized": "▲ Đang trò chuyện với {name} · bấm (hoặc E) để mở lại"
+    "minimized": "▲ Đang trò chuyện với {name} · bấm (hoặc E) để mở lại",
+    "timelineDrop": "Thả mốc vào đây",
+    "timelinePick": "Đã chọn: {text}. Bấm một ô ngày để đặt.",
+    "next": "Tiếp tục"
   },
   "backpack": {
     "title": "Balo",

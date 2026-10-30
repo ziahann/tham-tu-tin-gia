@@ -511,6 +511,106 @@ function actionRow(...buttons) {
   return row;
 }
 
+/**
+ * Dòng thời gian kéo thả: các mốc nằm lẫn lộn phía trên, trục ngày phía dưới (step.slots). Kéo thả mốc vào ô ngày,
+ * hoặc bấm mốc rồi bấm ô (điện thoại, bàn phím). Xếp đúng thì vệt "tin sai lan" chạy dọc trục (step.spread).
+ */
+async function timelineStep(step, npc, qs) {
+  const placed = Array(step.slots.length).fill(null);
+  const order = shuffled(step.items);
+  let picked = null;
+  // cửa sổ công cụ (kèm trình đọc báo) do toolHost dựng; không thêm tư liệu lần nữa
+  const r = await dlg.interactive({ speaker: npc, text: step.ask, wide: true }, (outer, done, help) => {
+    const box = toolHost(outer, step);
+    const pool = el('div', 'tl-pool');
+    const axis = el('div', 'tl-axis');
+    const note = el('p', 'muted tl-note', '');
+    const card = it => {
+      const c = dlg.makeButton('tl-card', it.text, e => { e?.stopPropagation?.(); picked = picked === it ? null : it; sfx('click'); render(); });
+      c.draggable = true;
+      c.addEventListener('dragstart', e => { picked = it; e.dataTransfer.setData('text/plain', it.id); });
+      c.classList.toggle('is-picked', picked === it);
+      return c;
+    };
+    const put = (i, it) => {
+      const old = placed.indexOf(it);
+      if (old >= 0) placed[old] = null;
+      placed[i] = it;
+      picked = null;
+      sfx('paper');
+      render();
+    };
+    const render = () => {
+      pool.innerHTML = '';
+      order.filter(it => !placed.includes(it)).forEach(it => pool.append(card(it)));
+      axis.innerHTML = '';
+      step.slots.forEach((label, i) => {
+        const slot = el('div', 'tl-slot');
+        slot.append(el('div', 'tl-date', label));
+        const drop = el('div', 'tl-drop');
+        drop.tabIndex = 0;
+        if (placed[i]) drop.append(card(placed[i]));
+        else drop.textContent = t('dialog.timelineDrop');
+        const act = () => { if (picked) put(i, picked); };
+        drop.addEventListener('click', act);
+        drop.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); act(); } });
+        drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('is-over'); });
+        drop.addEventListener('dragleave', () => drop.classList.remove('is-over'));
+        drop.addEventListener('drop', e => {
+          e.preventDefault();
+          const it = step.items.find(x => x.id === e.dataTransfer.getData('text/plain'));
+          if (it) put(i, it);
+        });
+        slot.append(drop);
+        axis.append(slot);
+      });
+      note.textContent = picked ? t('dialog.timelinePick', { text: picked.text }) : '';
+    };
+    render();
+    box.append(pool, note, axis, actionRow(
+      dlg.makeButton('btn-primary', t('dialog.orderSubmit'), () => {
+        if (placed.some(x => !x)) { toast(t('dialog.sortMissing')); return; }
+        done({ ids: placed.map(it => it.id), log: placed.map((it, i) => `${step.slots[i]}: ${it.text}`).join('\n') });
+      }),
+      dlg.makeButton('btn', t('dialog.orderReset'), () => { placed.fill(null); picked = null; render(); }),
+      dlg.makeButton('btn', t('dialog.help'), help)
+    ));
+  });
+  if (r.help) return 'help';
+  qs.answers[step.id] = r.ids;
+  const ok = r.ids.filter((id, i) => step.answer[i] === id).length;
+  if (ok === step.answer.length) {
+    sfx('partial');
+    await dlg.interactive({ speaker: npc, text: t('result.correct'), wide: true }, (box, done) => {
+      box.append(spreadAxis(step), actionRow(dlg.makeButton('btn-primary', t('dialog.next'), () => done({}))));
+    });
+    return 'ok';
+  }
+  await dlg.say(npc, `✗ ${t('dialog.orderWrong', { n: ok, total: step.answer.length })}`);
+  return ok > 0 ? 'partial' : 'wrong';
+}
+
+/** Trục thời gian đã xếp đúng: vệt đỏ "tin sai lan" chạy từ mốc tin sai tới cuối, mốc đính chính màu xanh. */
+function spreadAxis(step) {
+  const wrap = el('div', 'tl-result');
+  const axis = el('div', 'tl-axis is-done');
+  step.answer.forEach((id, i) => {
+    const slot = el('div', `tl-slot${step.spread?.fix?.includes(i) ? ' is-fix' : ''}${i === step.spread?.from ? ' is-start' : ''}`);
+    slot.append(el('div', 'tl-date', step.slots[i]), el('div', 'tl-card is-static', step.items.find(it => it.id === id).text));
+    axis.append(slot);
+  });
+  wrap.append(axis);
+  if (step.spread) {
+    const n = step.slots.length;
+    const bar = el('div', 'tl-spread', step.spread.label);
+    bar.style.left = `${(step.spread.from / n) * 100}%`;
+    bar.style.setProperty('--w', `${((n - step.spread.from) / n) * 100}%`);
+    wrap.prepend(bar);
+    if (step.spread.fixLabel) wrap.append(el('p', 'tl-legend', `■ ${step.spread.fixLabel}`));
+  }
+  return wrap;
+}
+
 // Mỗi loại bước trả về 'ok' | 'partial' | 'wrong' | 'help'.
 const STEP_RUNNERS = {
   /** Chọn một đáp án; NPC nhận xét theo lựa chọn. */
@@ -632,6 +732,7 @@ Object.assign(STEP_RUNNERS, {
 
   /** Xếp thứ tự: bấm lần lượt các mốc từ sớm đến muộn. */
   async order(step, npc, qs) {
+    if (step.slots) return timelineStep(step, npc, qs);
     const pool = shuffled(step.items);
     const r = await dlg.interactive({ speaker: npc, text: step.ask, exhibit: exhibitOf(step), wide: true }, (outer, done, help) => {
       const box = toolHost(outer, step);
