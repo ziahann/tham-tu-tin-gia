@@ -589,3 +589,24 @@ button.frame:hover { border-color: var(--grey); }
 .frame .lens-ring { position: absolute; width: 30px; height: 30px; margin: -15px 0 0 -15px; border: 3px solid #ff3b4a; border-radius: 50%; box-shadow: 0 0 0 1px #fff; pointer-events: none; animation: ring-in 0.25s steps(3); }
 @keyframes ring-in { from { transform: scale(2); opacity: 0; } to { transform: none; opacity: 1; } }
 .frame-grid { cursor: zoom-in; }
+
+/* Bảng điều tra dây đỏ */
+.board { background: #6b4a2e; background-image: radial-gradient(#7a5636 1px, transparent 1px); background-size: 6px 6px; border: var(--px) solid #3a2716; padding: 8px; }
+.board > .muted { color: #f4e2c4; }
+.board-status { color: #f4eedc; margin: 4px 0; }
+.board-status.is-done { color: #9ff5c8; }
+.board-grid { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 34px; align-items: start; }
+.board-claims, .board-cards { display: flex; flex-direction: column; gap: 8px; position: relative; z-index: 1; }
+.board-claim, .board-card { font: inherit; font-size: 15px; line-height: 1.15; text-align: left; padding: 6px 8px; cursor: pointer; box-shadow: 2px 3px 0 rgb(0 0 0 / 0.45); }
+.board-claim { background: #f2d36b; color: #2b1d0e; border: 2px solid #8a6a20; transform: rotate(-1deg); }
+.board-claim:nth-child(even) { transform: rotate(1deg); }
+.board-card { background: #f4eedc; color: #1a1420; border: 2px solid #1a1420; }
+.board-card.is-guess { background: #f4c8c8; border-style: dashed; }
+.board-card.is-picked { outline: 3px solid #ff3b4a; transform: translateX(-4px); }
+.board-card.is-linked, .board-claim.is-linked { box-shadow: 2px 3px 0 rgb(0 0 0 / 0.45), inset 4px 0 0 #c8323c; }
+.board-strings { position: absolute; inset: 0; pointer-events: none; z-index: 2; overflow: visible; }
+.board-strings .string { fill: none; stroke: #d42a36; stroke-width: 2.5; stroke-linecap: round; filter: drop-shadow(1px 2px 0 rgb(0 0 0 / 0.4)); }
+.board-strings .string-pin { fill: #ff4a56; stroke: #3a0a10; stroke-width: 1.5; }
+.board-strings .string.is-wrong { stroke: #c9d1dc; stroke-dasharray: 6 4; animation: blink 0.35s steps(2) 2; }
+.board-strings .string.is-wrong-pin { fill: #c9d1dc; }
+.board-strings .string.is-drop { opacity: 0; transform: translateY(20px); transition: opacity 0.4s, transform 0.4s; }
