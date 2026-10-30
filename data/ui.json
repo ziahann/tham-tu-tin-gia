@@ -135,7 +135,7 @@
     "statusBuilding": "⚙ Đang xây dựng",
     "map": "Bản đồ khu vực",
     "youAreHere": "Bạn đang ở: {place}",
-    "pinboardNote": "Các thẻ evidence bạn thu được được ghim ở đây. Nối thẻ với mệnh đề và gắn nhãn sẽ có ở các phòng sau.",
+    "pinboardNote": "Bảng điều tra: nối từng thẻ evidence với mệnh đề mà nó chứng minh.",
     "historyEmpty": "Chưa có cuộc trò chuyện nào.",
     "export": "Xuất lịch sử (JSON)",
     "clear": "Xóa dữ liệu của tôi",
@@ -395,5 +395,13 @@
     "stamp": "ĐÃ XÁC MINH",
     "stampBoss": "ĐÃ ĐÍNH CHÍNH",
     "skip": "Bấm để tiếp tục"
+  },
+  "board": {
+    "status": "Dây đã nối: {done}/{total}",
+    "pickCard": "Chọn một thẻ evidence trước (cột bên phải).",
+    "right": "Thẻ \"{card}\" chứng minh: {claim}.",
+    "wrong": "Thẻ \"{card}\" không chứng minh \"{claim}\". Thẻ này thuộc về: {right}.",
+    "guess": "\"{card}\" chỉ là thẻ suy đoán, không phải bằng chứng. Không nối vào đâu cả.",
+    "complete": "Bảng điều tra đã nối đủ: mọi bằng chứng đều có chỗ đứng."
   }
 }
