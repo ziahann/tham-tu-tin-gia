@@ -7,6 +7,7 @@ import { objective, track, giverOf } from './story.js';
 import { currentRunByNpc, exportLog } from './history.js';
 import { heroTitle } from './dialogue.js';
 import { confirmBox } from './ui.js';
+import { investigationBoard } from './board.js';
 
 const els = {};
 let tab = 'notebook';
@@ -246,14 +247,7 @@ function minimap(mm) {
 
 /** Bảng ghim: các thẻ evidence ghim trên bảng gỗ. */
 function pinboard() {
-  els.body.append(el('p', 'muted', t('backpack.pinboardNote')));
-  const cork = el('div', 'cork');
-  (state.progress?.evidenceCards || []).map(evidenceById).filter(Boolean).forEach(ev => {
-    const n = el('div', 'note');
-    n.append(el('strong', null, ev.title), el('p', null, ev.text));
-    cork.append(n);
-  });
-  els.body.append(cork);
+  els.body.append(investigationBoard());
 }
 
 /** Tên hiển thị cho một người nói trong lịch sử. */
