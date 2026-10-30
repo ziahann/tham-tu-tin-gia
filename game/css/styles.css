@@ -638,3 +638,27 @@ button.frame:hover { border-color: var(--grey); }
 
 .hud-clock { min-width: 64px; text-align: center; }
 @media (max-width: 700px) { .hud-clock { display: none; } }
+
+/* Vịnh Feed: độ lan truyền, bảng chọn ghi chú / trả lời */
+.icon-btn.has-alert { position: relative; }
+.icon-btn.has-alert::after { content: ''; position: absolute; top: 2px; right: 2px; width: 9px; height: 9px; background: #e5484d; border: 2px solid #10131c; }
+.feed-heat { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding: 6px; font-size: 14px; color: #9ff5c8; border-bottom: 2px solid #2c3550; }
+.feed-heat.is-hot { color: #ff9aa2; }
+.feed-heat-bar { flex: 1 1 80px; height: 8px; background: #2a3044; min-width: 60px; }
+.feed-heat-fill { display: block; height: 100%; background: linear-gradient(90deg, #f0b44a, #e5484d); transition: width .4s; }
+.feed-heat-txt { flex-basis: 100%; font-size: 13px; }
+.feed-av.is-user { background: #8a6bb0; }
+.feed-badge { color: #6fb6ff; font-size: 13px; }
+.feed-tag { color: #7fb0ff; }
+.feed-text { white-space: pre-line; }
+.feed-fine { margin: 2px 0 0; font-size: 9px; color: #4a5468; text-align: right; }
+.feed-rise { color: #ff9aa2; }
+.feed-class { margin: 6px 0 0; font-size: 14px; color: #e8d38a; border-left: 4px solid #e8d38a; padding-left: 6px; }
+.feed-gone { font-style: italic; color: #9fb3c8; margin: 6px 0; }
+.feed-post.is-handled { opacity: .85; }
+.feed-comment.is-tip { color: #ffe08a; }
+.feed-comment.is-angry { color: #ff9aa2; }
+.feed-link { background: none; border: 0; padding: 0; color: #6fb6ff; text-decoration: underline; font: inherit; cursor: pointer; text-align: left; }
+.feed-pick { margin-top: 6px; display: flex; flex-direction: column; gap: 6px; background: #10151f; border: 2px dashed #4a5470; padding: 6px; }
+.feed-pick .btn-small { text-align: left; white-space: normal; line-height: 1.25; }
+.feed-pick-ask { margin: 0; color: #7fe3ff; font-size: 14px; }

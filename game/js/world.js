@@ -9,6 +9,7 @@ import * as story from './story.js';
 import * as dlg from './dialogue.js';
 import { setPlace, updateMeters } from './hud.js';
 import { tickPressure, isLight, caseOpen } from './obstacles.js';
+import { feedPressureRate } from './feed.js';
 import { buildGrid, findPath } from './pathfind.js';
 import { playMusic } from './music.js';
 import { buildGraph, guideTarget, updateTrackLine, GuideArrow } from './guide.js';
@@ -834,7 +835,7 @@ export class WorldScene extends Phaser.Scene {
         footstep(this.ground.getTileAtWorldXY(this.player.x, this.player.y - 2)?.properties?.name, this.weather?.kind === 'rain');
       }
       const room = story.trackedRoom();
-      if (tickPressure(delta * this.fx().pressure, room)) story.deadlineCall(room);
+      if (tickPressure(delta * this.fx().pressure * feedPressureRate(), room)) story.deadlineCall(room);
       if (time - this.lastSave > 1000) {
         this.lastSave = time;
         this.savePos();

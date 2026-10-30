@@ -235,3 +235,11 @@
 | Vịnh Feed | Tab điện thoại trong balo: bài sai, bài báo chí, bài đính chính của em hiện theo tiến độ; báo cáo bài và thêm ghi chú cộng đồng (cần khép hồ sơ liên quan); lượt chia sẻ bài sai chững lại. Mọi bài và số lượt là hư cấu |
 | Ánh sáng theo giờ | Đồng hồ trong game (1 giây thật = 1 phút), lượt mới bắt đầu 16:00; chiều tà phủ cam, đêm bật đèn đường; trong nhà đèn bàn, màn hình, đèn sàn hắt sáng; thời tiết ngẫu nhiên không còn "đêm" |
 | Xuất kết quả PDF | Trang báo cáo A4: người chơi, chỉ số, đã kiểm chứng / chưa đủ căn cứ, chi tiết từng hồ sơ (lần sai, gợi ý, độ tin cậy), huy hiệu, thẻ evidence, Vịnh Feed, nguồn APA, tác giả, disclaimer |
+
+## Chốt ngày 30/10/2026 (đợt 17: Vịnh Feed có tác động)
+
+| Mục | Cách làm |
+|---|---|
+| Nội dung bài | 10 bài (5 bài sai, 5 bài chính thống). Bài sai: chuyện "người cha" đăng nhiều kỳ, có link "đọc tiếp" và dòng "tình tiết hư cấu" chữ rất nhỏ; lưới ảnh AI; người dùng Hoa Biển chia sẻ lại vì thương cảm; video bão Yagi; video chìm tàu ở Congo; trang mạo danh quỹ (sau trận cuối). Bình luận có gợi ý điều tra (chữ vàng). Trang và người dùng đều hư cấu, nội dung ghi chú chỉ dùng dữ kiện đã kiểm chứng |
+| Xử lý bài | Báo cáo (bài nào cũng bấm được; báo cáo nhầm bài đúng bị nhắc); viết ghi chú cộng đồng = chọn 1 trong 3 bản nháp (đúng có nguồn / vượt bằng chứng / chung chung); trả lời người chia sẻ vô tình (nhắc nhẹ kèm nguồn / công kích / cụt lủn); "Điều tra" để theo dõi hồ sơ liên quan. Phân loại Dis / Mis theo từng nhóm hiện sau khi khép S8 |
+| Ảnh hưởng | Độ lan truyền (bài sai chưa xử lý) làm hạn chót nhanh tới ×1,5 và tăng lượt chia sẻ đầu trận cuối; xử lý đúng giảm hạn chót; xử lý sai, báo cáo nhầm, bấm link câu tương tác trừ độ tin cậy hồ sơ đang theo dõi; lượt chia sẻ bài sai tăng theo giờ trong game tới khi có ghi chú; bài mới báo bằng thông báo và chấm đỏ trên nút balo |
