@@ -136,6 +136,25 @@ function setPortrait(node, id, mood) {
   node.style.backgroundPosition = `${col * 25}% 0`;
 }
 
+/**
+ * Phản ứng tức thì khi người chơi trả lời: 'good' → cả hai chân dung vui, nảy nhẹ; 'bad' → người hỏi nhíu mày, lắc,
+ * nhân vật chính bối rối. Biểu cảm đổi lại ở câu thoại kế tiếp.
+ */
+export function react(kind) {
+  if (!open) return;
+  const good = kind === 'good';
+  setPortrait(els.left, heroFile(), good ? 'happy' : 'surprised');
+  if (rightId) setPortrait(els.right, rightId, good ? 'happy' : 'serious');
+  for (const node of [els.left, els.right]) {
+    node.classList.remove('react-good', 'react-bad');
+    void node.offsetWidth;
+    node.classList.add(good ? 'react-good' : 'react-bad');
+  }
+  clearTimeout(reactTimer);
+  reactTimer = setTimeout(() => [els.left, els.right].forEach(n => n.classList.remove('react-good', 'react-bad')), 700);
+}
+let reactTimer = null;
+
 /** Làm sáng chân dung một bên ('left' | 'right'), bên kia mờ đi; null = cả hai mờ (hệ thống nói). */
 function focus(side) {
   els.left.classList.toggle('is-on', side === 'left');

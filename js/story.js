@@ -241,6 +241,13 @@ async function helpMenu(q, qs, npc, afterWrong, field = null) {
   return 'retry';
 }
 
+/** Phản ứng khi trả lời: chân dung đổi biểu cảm, bong bóng trên đầu NPC và nhân vật chính ngoài bản đồ. */
+function reactTo(npc, kind) {
+  dlg.react(kind);
+  world?.emote(npc, kind === 'good' ? '♪' : '!');
+  world?.emote('hero', kind === 'good' ? '✓' : '?');
+}
+
 /**
  * Trả lời sai / một phần: trừ độ tin cậy của hồ sơ. Về 0 thì hồ sơ đặt lại từ đầu: báo cho người chơi và trả về true
  * (nhiệm vụ đang chạy phải dừng ngay).
@@ -274,6 +281,7 @@ async function runCards(q, qs, npc) {
     picked = r.ids;
     qs.answers.picked = picked;
     const res = checkCards(q, picked);
+    reactTo(npc, res.status === 'correct' ? 'good' : 'bad');
     if (res.status === 'correct') return 'done';
     qs.fails++;
     saveProgress();
@@ -308,6 +316,7 @@ async function runFields(q, qs, npc) {
       }
       qs.answers[f.id] = r.value;
       const res = matchField(r.value, f.accepts, f.fuzzy !== false);
+      reactTo(npc, res !== 'wrong' ? 'good' : 'bad');
       if (res !== 'wrong') {
         qs.fieldOk[f.id] = true;
         saveProgress();
@@ -368,6 +377,7 @@ async function runSteps(q, qs, npc, device = null) {
       }
       if (r === 'again') continue;
       if (r === 'ok') {
+        reactTo(speaker, 'good');
         qs.stepOk[step.id] = true;
         easePressure(20);
         saveProgress();
@@ -377,6 +387,7 @@ async function runSteps(q, qs, npc, device = null) {
       qs.fails++;
       saveProgress();
       sfx(r === 'partial' ? 'partial' : 'wrong');
+      reactTo(speaker, 'bad');
       if (await penalize(q, speaker, r)) return 'later';
       if (await helpMenu(q, qs, speaker, true, step) === 'later') return 'later';
     }
@@ -1090,8 +1101,9 @@ async function bossCards(ph, shares) {
     let msg = null;
     if (!core.length && support.length) msg = ph.soloSupport;
     else if (core.length < ph.min) msg = ph.weak;
-    if (!msg) return true;
+    if (!msg) { reactTo('boss', 'good'); return true; }
     sfx('wrong');
+    reactTo('boss', 'bad');
     shares.bump(250);
     await dlg.say('boss', msg, { mood: 'smug' });
   }
@@ -1109,11 +1121,13 @@ async function bossReplies(ph, shares) {
     const late = timer.left() <= 0;
     timer.stop();
     if (!late && it.options[+c.id].correct) {
+      reactTo('boss', 'good');
       sfx('partial');
       await dlg.say('system', `✓ ${it.why}`);
       continue;
     }
     sfx('wrong');
+    reactTo('boss', 'bad');
     shares.bump(300);
     await dlg.say('system', late ? ph.timeout : `✗ ${it.why}`);
     if (--lives <= 0) { await dlg.say('system', ph.outOfLives); return false; }
