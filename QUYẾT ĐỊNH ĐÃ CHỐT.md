@@ -202,3 +202,14 @@
 | Menu | Cài đặt, Nguồn và hộp xác nhận luôn mở thành khung bên phải |
 | Intro | Chữ căn giữa, ngắt dòng cân đối; số hiệu tàu không bị cắt đôi |
 | Rìa bản đồ | Nền phố, biển kéo dài ra ngoài bản đồ; thêm dãy nhà và đảo đá ở rìa để không lộ khoảng trống |
+
+## Chốt ngày 30/10/2026 (đợt 14)
+
+| Mục | Quyết định |
+|---|---|
+| Phòng boss | Đấu trường 22x16, ba khu: bàn soi ảnh (tây), tường màn hình (bắc), đấu trường tin đồn (giữa – đông, có cột khung ảnh làm chỗ nấp). Kẻ Dệt Chuyện chuyển bục sau mỗi pha |
+| Pha 1 · Soi nhanh | Soi các khung ảnh lỗi trong 75 giây (khung mờ là bẫy) |
+| Pha 2 · Gỡ nhãn sai | Ba nội dung gắn nhãn "vụ 19/7", chọn nguồn gốc thật trong 15 giây mỗi nội dung, 3 lượt chịu sai |
+| Pha 3 · Đấu trường | Chơi trên bản đồ: nhặt 3 mảnh bằng chứng, né bong bóng tin đồn (chạm thì khựng lại), tránh 2 thẻ suy đoán đỏ |
+| Chốt hạ | Xếp 5 kết luận vào "Đã chứng minh" / "Chưa đủ căn cứ"; xếp chuyện tiền bạc, danh tính vào "Đã chứng minh" là kết thúc B (xếp lại); đúng hết thì gỡ mặt nạ, kết thúc A |
+| Chế độ Nhẹ | Bong bóng chậm và thưa hơn |

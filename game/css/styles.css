@@ -525,3 +525,8 @@ button.frame:hover { border-color: var(--grey); }
 .modal[open] { display: flex; }
 .modal .modal-body { flex: 1; max-height: none; }
 .modal::backdrop { background: rgb(15 14 23 / 0.35); }
+
+/* Đồng hồ đếm ngược ở trận boss */
+.boss-timer { position: fixed; top: calc(var(--hud-h) + 64px); left: 50%; transform: translateX(-50%); z-index: 45; font-size: 26px; color: var(--straw); background: rgb(20 16 31 / 0.92); border: var(--px) solid var(--ink); box-shadow: 0 0 0 var(--px) var(--lavender); padding: 2px 14px; }
+.boss-timer.is-low { color: #ff8a8a; animation: blink 0.5s steps(2) infinite; }
+.boss-timer[hidden] { display: none; }

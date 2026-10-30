@@ -1321,32 +1321,38 @@ const cafe2 = decorRoom('cafe2', {
   ]
 });
 
-// ---------------- Phòng Boss (không gian trừu tượng)
-const BOSS = [
-  '####################',
-  '#XXXXXXXXXXXXXXXXXX#',
-  '#vvvvvvvvvvvvvvvvvv#',
-  '#vfvvvvvvvvvvvvvvfv#',
-  '#vvvvvvvvvvvvvvvvvv#',
-  '#vvvvsvvvvvvvvsvvvv#',
-  '#vfvvvvvvvvvvvvvvfv#',
-  '#vvvvvvvvvvvvvvvvvv#',
-  '#vvvsvvvvvvvvvvsvvv#',
-  '#vfvvvvvvvvvvvvvvfv#',
-  '#vvvvvvvvvvvvvvvvvv#',
-  '#vvvvvvvvvvvvvvvvvv#',
-  '#vvvvvvvvvvvvvvvvvv#',
-  '#########EE#########'
-];
+// ---------------- Phòng Boss: đấu trường ba khu (tây: soi ảnh; bắc: tường màn hình; giữa / đông: đấu trường tin đồn)
+const BOSS = (() => {
+  const W = 22, H = 16;
+  const { g, put, rows } = grid(W, H, 'v');
+  put(0, 0, '#'.repeat(W)); put(0, H - 1, '#'.repeat(W));
+  for (let y = 0; y < H; y++) { g[y][0] = '#'; g[y][W - 1] = '#'; }
+  put(1, 1, 'X'.repeat(W - 2));
+  g[H - 1][10] = g[H - 1][11] = 'E';
+  // nền: mảnh vỡ thành vòng quanh đấu trường, lối mảnh vỡ nối ba khu
+  for (let y = 4; y <= 13; y++) for (let x = 11; x <= 20; x++) {
+    const d = Math.hypot(x - 16, (y - 9) * 1.1);
+    if (d > 3.4 && d < 4.4) g[y][x] = 's';
+  }
+  for (let x = 3; x <= 11; x++) g[9][x] = (x % 2 ? 's' : 'v');
+  // cột khung ảnh làm chỗ nấp trong đấu trường
+  for (const [x, y] of [[13, 7], [19, 7], [13, 11], [19, 11]]) g[y][x] = 'f';
+  // dãy khung treo ở khu soi ảnh phía tây
+  for (const y of [4, 6, 8]) g[y][1] = 'f';
+  return rows();
+})();
 const boss = buildMap('boss', {
   rows: BOSS, label: 'Phòng họp — nơi Kẻ Dệt Chuyện ẩn mình', music: 'boss',
   legend: { '#': 'wall_top', X: 'frame_wall', f: 'frame' },
   ground: ch => (ch === 's' ? 'shard' : ch === 'E' ? 'exit_mat' : 'void'),
   objects: () => [
-    point('spawn', 'spawn_from_office', 10, 12.4),
-    rectT('zone', 'zone_boss', 1, 1, 18, 12, { room: 'S9' }),
-    rectT('exit', 'exit_office', 9, 12.7, 2, 1.3, { target: 'tn_lobby', spawn: 'spawn_elevator' }),
-    point('npc', 'boss', 10, 5)
+    point('spawn', 'spawn_from_office', 11, 14.4),
+    rectT('zone', 'zone_boss', 1, 2, 20, 13, { room: 'S9' }),
+    rectT('exit', 'exit_office', 10, 14.7, 2, 1.3, { target: 'tn_lobby', spawn: 'spawn_elevator' }),
+    // ba bục của ba pha
+    point('station', 'boss_p1', 5, 6), point('station', 'boss_p2', 11, 4.2), point('station', 'boss_p3', 16, 9.2),
+    pp('dev_magnifier', 4.6, 8.6), pp('dev_monitor', 8, 4.4), pp('dev_monitor', 14, 4.4),
+    point('npc', 'boss', 5, 6)
   ]
 });
 
