@@ -213,3 +213,12 @@
 | Pha 3 · Đấu trường | Chơi trên bản đồ: nhặt 3 mảnh bằng chứng, né bong bóng tin đồn (chạm thì khựng lại), tránh 2 thẻ suy đoán đỏ |
 | Chốt hạ | Xếp 5 kết luận vào "Đã chứng minh" / "Chưa đủ căn cứ"; xếp chuyện tiền bạc, danh tính vào "Đã chứng minh" là kết thúc B (xếp lại); đúng hết thì gỡ mặt nạ, kết thúc A |
 | Chế độ Nhẹ | Bong bóng chậm và thưa hơn |
+
+## Chốt ngày 30/10/2026 (đợt 15) — thay đợt 14
+
+| Mục | Quyết định |
+|---|---|
+| Boss | Fanpage ẩn danh "Kẻ Dệt Chuyện", chỉ hiện qua màn hình (bài đăng, bình luận); không có hình người, không lộ danh tính |
+| Địa điểm | Phòng phát trực tiếp trong tòa "Truyền thông – trung tâm cộng đồng" trên đường ven vịnh (không còn ở tầng thượng Báo Thanh Niên); cửa mở khi xong các hồ sơ bắt buộc; chị Tuệ Lâm có mặt |
+| Trận đấu | Buổi đính chính trực tiếp, bộ đếm lượt chia sẻ của bài sai: 1) gắn bằng chứng vào ghi chú kiểm chứng; 2) trả lời 4 bình luận phản công (20 giây, 3 lượt chịu sai); 3) viết bài đính chính bằng cách chọn câu |
+| Kết thúc | A: tin sai bị chặn, trang thông tin của fanpage chỉ là khung trống — em không đoán bừa. B: bài đính chính khẳng định chuyện tiền bạc / danh tính, phải sửa lại |

@@ -1079,7 +1079,7 @@ const street = buildMap('street', {
     bld('bld_clinic', 50, 6, C_BOTTOM, 'TRUNG TÂM Y TẾ'),
     bld('bld_warehouse', 57, 12, C_BOTTOM),
     bld('bld_cafe2', 70, 6, C_BOTTOM, 'CÀ PHÊ SƯƠNG SỚM'),
-    bld('bld_books', 77, 5, C_BOTTOM),
+    bld('bld_media', 77, 6, C_BOTTOM, 'TRUYỀN THÔNG', 'trung tâm cộng đồng'),
     bld('bld_pharmacy', 83, 5, C_BOTTOM, null, null, { flip: true }),
     bld('bld_closed', 89, 6, C_BOTTOM, null, null, { flip: true }),
     // --- lối vào các tòa nhà tương tác
@@ -1090,6 +1090,8 @@ const street = buildMap('street', {
     doorExit('door_office2', 4.5, N_BOTTOM, 'office2'),
     doorExit('door_clinic', 52.5, C_BOTTOM, 'clinic'),
     doorExit('door_cafe2', 72.5, C_BOTTOM, 'cafe2'),
+    rectT('exit', 'door_media', 79.5, C_BOTTOM, 2, 0.7, { target: 'boss', spawn: 'spawn_from_street', room: 'S9' }),
+    point('spawn', 'spawn_from_media', 80.5, 39.4),
     point('spawn', 'spawn_from_office2', 5.5, 20.4),
     point('spawn', 'spawn_from_clinic', 53.5, 39.4),
     point('spawn', 'spawn_from_cafe2', 73.5, 39.4),
@@ -1321,38 +1323,24 @@ const cafe2 = decorRoom('cafe2', {
   ]
 });
 
-// ---------------- Phòng Boss: đấu trường ba khu (tây: soi ảnh; bắc: tường màn hình; giữa / đông: đấu trường tin đồn)
-const BOSS = (() => {
-  const W = 22, H = 16;
-  const { g, put, rows } = grid(W, H, 'v');
-  put(0, 0, '#'.repeat(W)); put(0, H - 1, '#'.repeat(W));
-  for (let y = 0; y < H; y++) { g[y][0] = '#'; g[y][W - 1] = '#'; }
-  put(1, 1, 'X'.repeat(W - 2));
-  g[H - 1][10] = g[H - 1][11] = 'E';
-  // nền: mảnh vỡ thành vòng quanh đấu trường, lối mảnh vỡ nối ba khu
-  for (let y = 4; y <= 13; y++) for (let x = 11; x <= 20; x++) {
-    const d = Math.hypot(x - 16, (y - 9) * 1.1);
-    if (d > 3.4 && d < 4.4) g[y][x] = 's';
-  }
-  for (let x = 3; x <= 11; x++) g[9][x] = (x % 2 ? 's' : 'v');
-  // cột khung ảnh làm chỗ nấp trong đấu trường
-  for (const [x, y] of [[13, 7], [19, 7], [13, 11], [19, 11]]) g[y][x] = 'f';
-  // dãy khung treo ở khu soi ảnh phía tây
-  for (const y of [4, 6, 8]) g[y][1] = 'f';
-  return rows();
-})();
+// ---------------- Phòng phát trực tiếp (Trung tâm truyền thông cộng đồng): trận cuối là buổi đính chính trực tiếp.
+// Kẻ Dệt Chuyện là fanpage ẩn danh, chỉ hiện qua màn hình: NPC 'boss' vô hình đứng trước bàn điều khiển để tương tác.
 const boss = buildMap('boss', {
-  rows: BOSS, label: 'Phòng họp — nơi Kẻ Dệt Chuyện ẩn mình', music: 'boss',
-  legend: { '#': 'wall_top', X: 'frame_wall', f: 'frame' },
-  ground: ch => (ch === 's' ? 'shard' : ch === 'E' ? 'exit_mat' : 'void'),
+  rows: floorRows(20, 13, g => { g[12][9] = g[12][10] = 'E'; }), legend: TN_LEGEND, label: 'Phòng phát trực tiếp', music: 'boss',
+  ground: (ch, x, y) => (ch === 'E' ? 'exit_mat' : y >= 9 ? 'carpet' : 'floor_dark'),
   objects: () => [
-    point('spawn', 'spawn_from_office', 11, 14.4),
-    rectT('zone', 'zone_boss', 1, 2, 20, 13, { room: 'S9' }),
-    rectT('exit', 'exit_office', 10, 14.7, 2, 1.3, { target: 'tn_lobby', spawn: 'spawn_elevator' }),
-    // ba bục của ba pha
-    point('station', 'boss_p1', 5, 6), point('station', 'boss_p2', 11, 4.2), point('station', 'boss_p3', 16, 9.2),
-    pp('dev_magnifier', 4.6, 8.6), pp('dev_monitor', 8, 4.4), pp('dev_monitor', 14, 4.4),
-    point('npc', 'boss', 5, 6)
+    point('spawn', 'spawn_from_street', 10, 10.6),
+    rectT('zone', 'zone_boss', 1, 3, 18, 9, { room: 'S9' }),
+    rectT('exit', 'exit_street', 9, 11.6, 2, 1.4, { target: 'street', spawn: 'spawn_from_media' }),
+    label('live_sign', 3.4, 1.5, '● TRỰC TIẾP', { size: 16, color: '#ff6b6b', plate: true }),
+    // tường màn hình: bài đăng, bình luận, lượt chia sẻ
+    pp('tv_wall', 7.2, 2.6), pp('tv_wall', 10.4, 2.6), pp('tv_wall', 13.6, 2.6), pp('whiteboard', 17.2, 2.75),
+    // bàn điều khiển giữa phòng, hai bàn trực mạng hai bên
+    pp('desk_lab', 10, 6.4), pp('chair', 10, 7.5),
+    pp('desk_pc', 4.4, 6.4), pp('chair', 4.4, 7.5), pp('desk_pc', 15.6, 6.4), pp('chair', 15.6, 7.5),
+    pp('dev_monitor', 16.6, 4.4), pp('cabinet', 1.9, 4.2), pp('plant_big', 18.4, 10.6), pp('sofa', 4, 10.8), pp('floor_lamp', 1.6, 10.6),
+    point('npc', 'boss', 10, 8.3),
+    point('station', 'npc1_media', 7, 8.6)
   ]
 });
 

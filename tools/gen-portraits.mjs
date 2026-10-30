@@ -301,36 +301,39 @@ function drawPerson(spec, expr) {
   return outlined(f);
 }
 
-/** Boss: mũ trùm, áo choàng ghép khung ảnh trống, mặt nạ gương. mood: neutral | smug | cracked | blank | angry. */
+/**
+ * Kẻ Dệt Chuyện: ảnh đại diện mặc định của một fanpage ẩn danh (hình người xám trong khung tròn), quanh là thông báo.
+ * mood: neutral | smug (huy hiệu đỏ "!!!", mũi tên chia sẻ) | cracked (nhiễu sóng) | blank (khung trống) | angry (đỏ).
+ */
 function drawBoss(mood) {
   const f = new Img(W, H);
   const R = (x, y, w, h, c) => f.rect(x, y, w, h, c);
-  const cloak = '#232044', cloakD = '#16142c', cloakL = '#35315e';
-  for (let y = 46; y < H; y++) { const hw = Math.min(35, 16 + Math.round((y - 46) * 0.9)); R(CX - hw, y, hw * 2, 1, cloak); R(CX + hw - 5, y, 5, 1, cloakD); }
-  [[CX - 28, 62, 12, 10], [CX + 12, 58, 14, 10], [CX - 10, 70, 13, 11], [CX + 8, 74, 12, 10], [CX - 30, 78, 11, 9]].forEach(([x, y, w, h]) => {
-    f.frame(x, y, w, h, '#8f95a8'); R(x + 1, y + 1, w - 2, h - 2, '#2e2a4e'); R(x + 2, y + 2, w - 4, 1, '#ffffff18');
-  });
-  // mũ trùm
-  for (let y = 6; y < 56; y++) {
-    const hw = y < 20 ? Math.round(20 * Math.sqrt(Math.max(0, 1 - ((20 - y) / 14) ** 2))) : 20 + Math.floor((y - 20) / 6);
-    R(CX - hw, y, hw * 2 + 1, 1, cloak); R(CX - hw, y, 2, 1, cloakL);
+  const bg = mood === 'angry' ? '#3a1622' : '#1b1f2e', edge = mood === 'angry' ? '#c8323c' : '#4a5470';
+  // thẻ trang mạng
+  R(4, 6, W - 8, H - 10, edge); R(6, 8, W - 12, H - 14, bg);
+  R(6, 8, W - 12, 10, mood === 'angry' ? '#5a1f2a' : '#2c3550');
+  for (let x = 10; x < 40; x += 6) R(x, 12, 4, 2, '#8e97a8');
+  // khung ảnh đại diện tròn
+  const cx = CX, cy = 44, r = 20;
+  for (let y = -r; y <= r; y++) for (let x = -r; x <= r; x++) {
+    const d = Math.hypot(x, y);
+    if (d <= r) f.set(cx + x, cy + y, d > r - 2 ? '#c9d1dc' : mood === 'blank' ? '#e8ecf2' : '#3a4256');
   }
-  for (let y = 18; y < 54; y++) { const hw = faceHalf(Math.min(y + 1, 52)) - 1; R(CX - hw, y, hw * 2 + 1, 1, '#0a0914'); }
-  if (mood === 'blank') {
-    f.frame(CX - 11, 24, 23, 26, '#b4b8c5'); f.frame(CX - 10, 25, 21, 24, '#5b5d6e');
-    return outlined(f);
+  if (mood !== 'blank') {
+    // hình người mặc định, không mặt
+    for (let y = -9; y <= 5; y++) for (let x = -7; x <= 7; x++) if (Math.hypot(x, y + 2) <= 7) f.set(cx + x, cy - 4 + y, '#7a8394');
+    for (let y = 0; y <= 12; y++) { const hw = 6 + y; R(cx - hw, cy + 8 + y, hw * 2 + 1, 1, '#7a8394'); }
+    for (let y = -r; y <= r; y++) for (let x = -r; x <= r; x++) if (Math.hypot(x, y) > r - 1) f.set(cx + x, cy + y, '#c9d1dc');
+    R(cx - 2, cy - 8, 4, 4, '#3a4256'); R(cx - 1, cy - 4, 2, 1, '#3a4256'); R(cx - 1, cy - 2, 2, 2, '#3a4256'); // dấu ?
   }
-  // mặt nạ gương
-  for (let y = 22; y < 52; y++) { const hw = faceHalf(y + 1) - 3; R(CX - hw, y, hw * 2 + 1, 1, '#d6dce6'); R(CX + hw - 3, y, 3, 1, '#aab2c2'); R(CX - hw + 1, y, 1, 1, '#ffffff'); }
-  const glow = mood === 'angry' ? '#ff5a6a' : '#b28cff';
-  if (mood === 'smug') { R(CX - 10, 33, 6, 1, '#14101f'); R(CX - 11, 32, 1, 1, '#14101f'); R(CX + 5, 33, 6, 1, '#14101f'); R(CX + 11, 32, 1, 1, '#14101f'); R(CX - 3, 43, 8, 1, '#14101f'); R(CX + 5, 42, 2, 1, '#14101f'); }
-  else if (mood === 'angry') { R(CX - 10, 31, 6, 3, '#14101f'); R(CX + 5, 31, 6, 3, '#14101f'); R(CX - 9, 32, 3, 1, glow); R(CX + 7, 32, 3, 1, glow); R(CX - 4, 44, 9, 1, '#14101f'); R(CX - 5, 45, 1, 1, '#14101f'); R(CX + 5, 45, 1, 1, '#14101f'); }
-  else { R(CX - 10, 32, 6, 2, '#14101f'); R(CX + 5, 32, 6, 2, '#14101f'); R(CX - 8, 32, 2, 1, glow); R(CX + 7, 32, 2, 1, glow); R(CX - 3, 43, 7, 1, '#14101f'); }
-  // vết nứt
-  const crack = [[CX - 4, 22], [CX - 3, 25], [CX - 1, 27], [CX, 30], [CX - 1, 33], [CX + 1, 36], [CX + 3, 38]];
-  if (mood === 'cracked') crack.push([CX + 4, 41], [CX + 6, 44], [CX + 5, 47], [CX - 6, 36], [CX - 9, 38], [CX - 11, 41], [CX + 8, 28], [CX + 10, 25]);
-  crack.forEach(([x, y]) => R(x, y, 1, 3, '#4a4e60'));
-  if (mood === 'cracked') { R(CX + 6, 46, 6, 5, '#0a0914'); R(CX + 7, 45, 3, 1, '#0a0914'); }
+  // dòng tên trang bị che
+  R(14, 70, 44, 4, '#8e97a8'); R(18, 77, 30, 3, '#5b6370');
+  if (mood === 'smug' || mood === 'angry') {
+    R(50, 20, 16, 10, '#c8323c'); R(53, 22, 2, 5, '#ffffff'); R(57, 22, 2, 5, '#ffffff'); R(61, 22, 2, 5, '#ffffff');
+    // mũi tên chia sẻ
+    R(8, 58, 10, 2, '#ff9fd0'); R(16, 56, 2, 6, '#ff9fd0'); R(18, 58, 2, 2, '#ff9fd0');
+  }
+  if (mood === 'cracked') for (const y of [30, 37, 49, 56]) { R(8, y, W - 16, 2, '#9fd8ff'); R(10 + (y % 7) * 3, y + 2, 20, 1, '#ff6b8a'); }
   return outlined(f);
 }
 
