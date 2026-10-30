@@ -146,9 +146,9 @@
     "caseDone": "✓ Đã khép",
     "optional": "tùy chọn",
     "giver": "{npc} · {place}",
-    "bossCase": "Phòng họp — Kẻ Dệt Chuyện",
+    "bossCase": "Đính chính trực tiếp — Kẻ Dệt Chuyện",
     "bossLocked": "Xuất hiện khi xong mọi hồ sơ bắt buộc ({done}/{total} nhiệm vụ, {cards}/{minCards} thẻ evidence).",
-    "bossOpen": "Cửa Phòng họp đã mở.",
+    "bossOpen": "Phòng phát trực tiếp ở Trung tâm truyền thông cộng đồng đã mở.",
     "notes2": "Ghi chép từ báo",
     "noNotes": "Chưa ghi chép gì. Đọc báo trong game và bấm một dòng để ghi lại.",
     "badges": "Huy hiệu kỹ năng",
@@ -224,30 +224,18 @@
     }
   },
   "boss": {
-    "barLabel": "Uy tín lập luận của {name}",
-    "phase": "Pha {n}/3: {name}",
-    "pick": "Chọn thẻ evidence để phản bác",
-    "submit": "Phản bác",
-    "guessNote": "Trên đường tới đây, em nghe được hai lời đồn về \"chủ trang\". Chúng là thẻ suy đoán, đừng dùng làm bằng chứng.",
-    "unmask": "Em gỡ chiếc mặt nạ gương…",
-    "blank": "Phía sau chỉ là một khung trống.",
-    "replay": "Thử lại pha cuối",
+    "barLabel": "Sức lan của bài sai",
+    "phase": "Bước {n}/3: {name}",
+    "submit": "Đính kèm bằng chứng",
+    "guessNote": "Trong phần bình luận có hai lời đồn về \"chủ trang\". Chúng là thẻ suy đoán, đừng dùng làm bằng chứng.",
+    "unmask": "Em mở trang thông tin của fanpage…",
+    "blank": "Không tên thật, không ảnh, không địa chỉ — chỉ một khung trống.",
     "timer": "⏳ {s} giây",
-    "lives": "Lượt chịu sai: {n}",
-    "label": "Nội dung {n}/{total}",
-    "pickOrigin": "Nguồn gốc thật là gì?",
-    "wait": "Kẻ Dệt Chuyện đang chờ em ở {place}.",
-    "places": {
-      "boss_p1": "bàn soi ảnh phía tây",
-      "boss_p2": "bức tường màn hình phía bắc",
-      "boss_p3": "giữa đấu trường"
-    },
-    "arenaStart": "Nhặt 3 mảnh bằng chứng xanh, né bong bóng tin đồn!",
-    "arenaGot": "Đã nhặt: {title} ({n}/{total})",
-    "arenaHit": "Bị bong bóng tin đồn cuốn vào!",
-    "arenaTrap": "Đó là thẻ suy đoán, không phải bằng chứng.",
-    "arenaBusy": "Đang ở đấu trường: nhặt đủ mảnh bằng chứng xanh trước đã.",
-    "finalBad": "Có kết luận chưa đúng chỗ. Xếp lại nhé."
+    "shares": "↻ {n} lượt chia sẻ",
+    "comment": "Bình luận {n}/{total} · Lượt chịu sai: {lives}",
+    "pickReply": "Trả lời thế nào?",
+    "stopped": "Bài sai dừng ở {n} lượt chia sẻ.",
+    "locked": "Phòng phát trực tiếp chưa mở. Hoàn thành các hồ sơ bắt buộc trước đã."
   },
   "results": {
     "disclaimer": "Điểm số và chiến thắng chỉ đo kết quả chơi, không chứng minh thông tin đúng hay sai."
