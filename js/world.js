@@ -19,7 +19,7 @@ import { iso, setupIso, buildGround, buildWalls, ViewLayer, fadeOccluders, shear
 
 const MAPS = ['tn_lobby', 'tn_f2', 'tn_f3', 'tn_f4', 'tn_f5', 'street', 'newsroom', 'cafe', 'agency', 'office2', 'clinic', 'cafe2', 'boss'];
 const SPEED = 120;
-const MAP_VERSION = 5; // tăng khi sửa bố cục bản đồ: vị trí đã lưu theo bản cũ bị bỏ qua
+const MAP_VERSION = 6; // tăng khi sửa bố cục bản đồ: vị trí đã lưu theo bản cũ bị bỏ qua
 const BOSS_SCALE = 1.5;
 
 /** Sprite của mọi nhân vật trong npc_dialogues.json (NPC chính, người qua đường, boss) + boss đã gỡ mặt nạ. */
@@ -187,6 +187,8 @@ export class WorldScene extends Phaser.Scene {
     story.setWorld(this);
     this.refresh();
     if (state.progress.introBus && this.mapKey === 'street') this.busIntro();
+    if (this.mapKey === 'boss' && !hasFlag('boss_done')) this.bossMove(state.progress.boss?.phase || 0, false);
+    this.events.once('shutdown', () => this.stopArena());
   }
 
   /**
@@ -329,6 +331,113 @@ export class WorldScene extends Phaser.Scene {
       cx = next;
     }
     return parts;
+  }
+
+  /** Đưa boss tới bục của pha phase (0..2); khi vào phòng cũng đặt đúng bục theo tiến độ. */
+  bossMove(phase, effect = true) {
+    const boss = this.npcs?.get('boss');
+    const ph = data.quests.boss.phases[Math.min(phase, data.quests.boss.phases.length - 1)];
+    const pt = ph && this.points[ph.station];
+    if (!boss || !pt) return;
+    boss.teleport(pt);
+    boss.patrol(null);
+    if (effect) {
+      this.cameras.main.flash(250, 120, 90, 200);
+      sfx('door');
+      toastLater(t('boss.wait', { place: t(`boss.places.${ph.station}`) }));
+    }
+  }
+
+  /**
+   * Pha đấu trường: mảnh bằng chứng (xanh) và thẻ suy đoán (đỏ) nằm quanh phòng; boss thả bong bóng tin đồn bay theo
+   * người chơi. Chạm bong bóng: khựng lại. Nhặt đủ mảnh xanh: chốt hạ (story.bossFinale).
+   */
+  startArena(ph) {
+    this.stopArena();
+    const mk = (spec, good) => {
+      const ev = data.quests.evidence.find(e => e.id === spec.id);
+      const x = spec.x * 32, y = spec.y * 32;
+      const q = iso.P(x, y);
+      const color = good ? 0x5fe0c8 : 0xe0555f;
+      const glow = this.add.ellipse(q.x, q.y, 34, 17, color, 0.35).setStrokeStyle(2, color).setDepth(iso.depth(x, y) - 2);
+      const gem = this.add.text(q.x, q.y - 14, good ? '◆' : '?', { fontFamily: 'VT323', fontSize: '26px', color: good ? '#9ff5e4' : '#ff9aa2', stroke: '#0f0e17', strokeThickness: 4 }).setOrigin(0.5, 1).setDepth(iso.depth(x, y) + 1);
+      const tag = this.add.text(q.x, q.y - 40, ev?.title || '', { fontFamily: 'VT323', fontSize: '14px', color: '#e8ecf2', backgroundColor: good ? '#1d4a44cc' : '#5a1f2acc', padding: { x: 4, y: 1 } }).setOrigin(0.5, 1).setDepth(100001);
+      return { id: spec.id, x, y, good, parts: [glow, gem, tag], gem, baseY: q.y - 14 };
+    };
+    this.arena = {
+      ph,
+      items: [...ph.fragments.map(f => mk(f, true)), ...ph.decoys.map(f => mk(f, false))],
+      got: 0, need: ph.fragments.length,
+      bubbles: [], spawnIn: 1500, hitToast: 0
+    };
+    toastLater(t('boss.arenaStart'));
+  }
+
+  /** Dọn đấu trường. */
+  stopArena() {
+    if (!this.arena) return;
+    this.arena.items.forEach(it => it.parts.forEach(o => o.destroy()));
+    this.arena.bubbles.forEach(b => b.parts.forEach(o => o.destroy()));
+    this.arena = null;
+  }
+
+  /** Mỗi khung hình của đấu trường: thả / di chuyển bong bóng, chạm, nhặt mảnh. */
+  updateArena(time, delta) {
+    const A = this.arena;
+    const p = this.player;
+    const light = isLight();
+    const dt = delta / 1000;
+    A.items.forEach((it, i) => { if (!this.reduceMotion) it.gem.setY(it.baseY + Math.round(Math.sin(time / 260 + i) * 3)); });
+    // nhặt
+    for (const it of [...A.items]) {
+      if (Phaser.Math.Distance.Between(p.x, p.y, it.x, it.y) > 24) continue;
+      it.parts.forEach(o => o.destroy());
+      A.items = A.items.filter(x => x !== it);
+      if (it.good) {
+        A.got++;
+        sfx('unlock');
+        toastLater(t('boss.arenaGot', { title: data.quests.evidence.find(e => e.id === it.id)?.title || '', n: A.got, total: A.need }));
+        if (A.got >= A.need) { this.stopArena(); story.bossFinale(); return; }
+      } else {
+        this.walkPath = null;
+        story.bossTrap(it.id);
+        return;
+      }
+    }
+    // thả bong bóng từ chỗ boss
+    const boss = this.npcs.get('boss')?.sprite;
+    A.spawnIn -= delta;
+    if (boss && A.spawnIn <= 0 && A.bubbles.length < (light ? 3 : 6)) {
+      A.spawnIn = light ? 3600 : 2100;
+      const lines = data.npcs.rumors?.map(r => r.headline) || [];
+      const txt = this.add.text(0, 0, '!!!', { fontFamily: 'VT323', fontSize: '16px', color: '#ffe0e6' }).setOrigin(0.5);
+      const ring = this.add.ellipse(0, 0, 30, 30, 0xb04a7a, 0.55).setStrokeStyle(2, 0xff9fd0);
+      A.bubbles.push({ x: boss.x, y: boss.y - 6, life: 9000, parts: [ring, txt], ring, txt, tip: Phaser.Utils.Array.GetRandom(lines) });
+    }
+    const speed = light ? 38 : 62;
+    for (const bb of [...A.bubbles]) {
+      bb.life -= delta;
+      const dx = p.x - bb.x, dy = p.y - 8 - bb.y, d = Math.hypot(dx, dy) || 1;
+      bb.x += (dx / d) * speed * dt;
+      bb.y += (dy / d) * speed * dt;
+      const q = iso.P(bb.x, bb.y);
+      const bob = this.reduceMotion ? 0 : Math.sin(time / 200 + bb.life / 300) * 3;
+      bb.ring.setPosition(q.x, q.y - 26 + bob).setDepth(iso.depth(bb.x, bb.y) + 4);
+      bb.txt.setPosition(q.x, q.y - 26 + bob).setDepth(iso.depth(bb.x, bb.y) + 5);
+      const hit = d < 20 && time >= (this.stunUntil || 0);
+      if (hit || bb.life <= 0) {
+        bb.parts.forEach(o => o.destroy());
+        A.bubbles = A.bubbles.filter(x => x !== bb);
+        if (hit) {
+          this.stunUntil = time + 800;
+          this.walkPath = null;
+          this.player.setVelocity(0, 0);
+          this.cameras.main.shake(160, 0.006);
+          sfx('wrong');
+          if (time > A.hitToast) { A.hitToast = time + 3000; toastLater(`${t('boss.arenaHit')} ${bb.tip || ''}`); }
+        }
+      }
+    }
   }
 
   /** Gỡ mặt nạ boss: thay sprite bằng khung trống. */
@@ -852,6 +961,7 @@ export class WorldScene extends Phaser.Scene {
       this.player.setFrame(idleFrame(this.facing));
     }
     this.npcs.forEach(n => n.update(delta, frozen, this.player));
+    if (this.arena && !this.leaving && !story.isBusy() && !window.uiBlocked?.()) this.updateArena(time, delta);
     const far = this.fx().hideFar;
     this.npcs.forEach(n => { if (n.chaser && n.sprite.view) n.sprite.view.setAlpha(far && Phaser.Math.Distance.Between(n.sprite.x, n.sprite.y, this.player.x, this.player.y) > far ? 0.25 : 1); });
     this.traffic?.update(delta, frozen);
