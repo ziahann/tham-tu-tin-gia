@@ -1107,6 +1107,7 @@ export function allProps() {
     bld_office: { deep: 5, cols: 7, floors: 6, style: 'glass', door: 2, sign: true, signGlow: '#9fb3c8', roof: ['antenna', 'ac', 'vent'] },
     bld_clinic: { deep: 5, cols: 6, floors: 2, style: 'clinic', door: 2, shop: 'glass', sign: true, signGlow: '#4aa35b', roof: ['ac', 'skylight'] },
     bld_cafe2: { deep: 5, cols: 6, floors: 2, style: 'shop', door: 2, shop: 'glass', awning: '#2f5446', sign: true, signGlow: '#f2c46b', roof: ['garden'] },
+    bld_media: { deep: 5, cols: 6, floors: 3, style: 'glass', door: 2, shop: 'glass', sign: true, signGlow: '#ff6b8a', roof: ['antenna', 'antenna', 'ac'] },
     bld_tenement: { deep: 5, cols: 6, floors: 4, style: 'brick', door: 1, fireEscape: true, sign: false, roof: ['tank', 'ac', 'antenna'] }
   };
   // bản isometric của đồ phẳng (thảm)

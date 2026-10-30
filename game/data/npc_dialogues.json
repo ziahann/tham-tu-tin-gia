@@ -150,14 +150,14 @@
     {
       "id": "boss",
       "name": "Kẻ Dệt Chuyện",
-      "role": "Boss hư cấu — đại diện hành vi lan truyền tin giả",
-      "room": "S9",
+      "role": "Quản trị ẩn danh của chuỗi fanpage lan tin sai",
+      "room": "Phòng phát trực tiếp (Trung tâm truyền thông cộng đồng)",
       "alias": "Kẻ Giấu Mặt",
-      "job": "Boss hư cấu, đại diện KIỂU HÀNH VI lan truyền tin giả (không phải người/trang thật)",
+      "job": "Fanpage ẩn danh hư cấu, đại diện kiểu hành vi lan truyền tin giả; chỉ xuất hiện qua màn hình",
       "personality": "Xảo trá nhưng không bạo lực; luôn tự bào chữa",
       "voice": "Thì thầm, nói nửa câu, luôn \"chỉ kể chuyện thôi mà…\"",
       "catchphrase": "Chỉ kể chuyện thôi mà…",
-      "look": "Áo choàng ghép từ nhiều khung ảnh trống lệch nhau, mặt nạ gương nứt, các dòng chữ \"Xem tiếp...\" bay quanh",
+      "look": "Ảnh đại diện mặc định của một fanpage: hình người xám, không tên, quanh là thông báo chia sẻ",
       "mustNot": "Không dùng lại ảnh AI giả, không gợi hình nạn nhân/tàu chìm/trẻ em",
       "sprite": "boss",
       "isFictional": true,
@@ -330,11 +330,11 @@
     "boss_intro": [
       {
         "npc": "boss",
-        "text": "Hừ… ngươi đã lần theo được đến đây."
+        "text": "Ồ, có người muốn \"đính chính\" à? Bài của ta đang lan nhanh lắm."
       },
       {
-        "npc": "boss",
-        "text": "Ba trò, ba góc phòng. Thắng cả ba rồi hẵng nói chuyện với ta."
+        "npc": "npc1",
+        "text": "Màn hình lớn đang hiện trang của họ. Em làm từng bước: bằng chứng, bình luận, rồi bài đính chính. Chị ở ngay đây."
       }
     ],
     "boss_phase_claims": {
@@ -350,19 +350,19 @@
     "boss_trap_b": [
       {
         "npc": "boss",
-        "text": "Ha! Ngươi buộc tội ta kiếm tiền, lộ mặt ta? Bằng chứng đâu?",
-        "feedback": "Không có dữ liệu doanh thu/danh tính. Kết luận vượt bằng chứng."
+        "text": "Ha! Ngươi bảo ta kiếm tiền, ngươi biết ta là ai? Bằng chứng đâu?",
+        "feedback": "Không có dữ liệu doanh thu hay danh tính. Kết luận vượt bằng chứng."
       }
     ],
     "boss_endings": {
       "A": [
         {
           "npc": "boss",
-          "text": "Gương mặt trống… ngươi chỉ chứng minh những gì có thể chứng minh."
+          "text": "Ngươi chặn được bài này… nhưng ngươi vẫn chẳng biết ta là ai."
         },
         {
           "npc": "npc1",
-          "text": "Đúng chuẩn thẩm định: đủ căn cứ về nội dung và thủ đoạn, chưa đủ căn cứ xác định danh tính."
+          "text": "Đúng chuẩn thẩm định: đủ căn cứ về nội dung và thủ đoạn, chưa đủ căn cứ về danh tính. Mình dừng đúng chỗ."
         }
       ],
       "B": [
@@ -900,7 +900,7 @@
       "lines": [
         {
           "id": "npc1_end_l1",
-          "text": "Kiểm chứng luôn dựa vào nguồn và bằng chứng. Điểm số chỉ để chơi."
+          "text": "Kiểm chứng luôn dựa vào nguồn và bằng chứng. Huy hiệu chỉ để chơi."
         }
       ],
       "choices": [],
@@ -1082,11 +1082,11 @@
       "lines": [
         {
           "id": "boss_appears_l1",
-          "text": "Mọi hồ sơ bắt buộc đã đủ. Nhưng có một thứ vẫn lẩn khuất sau tất cả những câu chuyện kia…"
+          "text": "Mọi hồ sơ bắt buộc đã đủ. Nhưng chuỗi fanpage ẩn danh vẫn đang đăng tiếp."
         },
         {
           "id": "boss_appears_l2",
-          "text": "Cửa Phòng họp cuối sảnh vừa mở. Mang theo các thẻ evidence của em."
+          "text": "Trung tâm truyền thông cộng đồng bên đường ven vịnh cho mình mượn phòng phát trực tiếp. Mình sẽ đính chính ngay trên sóng. Gặp em ở đó nhé."
         }
       ]
     }
@@ -1358,6 +1358,13 @@
         "map": "tn_lobby",
         "station": "npc1_lobby_end",
         "patrol": "patrol_npc1_lobby"
+      },
+      {
+        "requires": [
+          "boss_announced"
+        ],
+        "map": "boss",
+        "station": "npc1_media"
       },
       {
         "map": "tn_f2",
