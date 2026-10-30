@@ -228,10 +228,26 @@
     "phase": "Pha {n}/3: {name}",
     "pick": "Chọn thẻ evidence để phản bác",
     "submit": "Phản bác",
-    "guessNote": "Bạn vừa nhặt được hai \"thẻ suy đoán\" từ mạng xã hội. Chúng nằm chung trong túi thẻ.",
-    "unmask": "Bạn gỡ chiếc mặt nạ gương…",
+    "guessNote": "Trên đường tới đây, em nghe được hai lời đồn về \"chủ trang\". Chúng là thẻ suy đoán, đừng dùng làm bằng chứng.",
+    "unmask": "Em gỡ chiếc mặt nạ gương…",
     "blank": "Phía sau chỉ là một khung trống.",
-    "replay": "Thử lại pha cuối"
+    "replay": "Thử lại pha cuối",
+    "timer": "⏳ {s} giây",
+    "lives": "Lượt chịu sai: {n}",
+    "label": "Nội dung {n}/{total}",
+    "pickOrigin": "Nguồn gốc thật là gì?",
+    "wait": "Kẻ Dệt Chuyện đang chờ em ở {place}.",
+    "places": {
+      "boss_p1": "bàn soi ảnh phía tây",
+      "boss_p2": "bức tường màn hình phía bắc",
+      "boss_p3": "giữa đấu trường"
+    },
+    "arenaStart": "Nhặt 3 mảnh bằng chứng xanh, né bong bóng tin đồn!",
+    "arenaGot": "Đã nhặt: {title} ({n}/{total})",
+    "arenaHit": "Bị bong bóng tin đồn cuốn vào!",
+    "arenaTrap": "Đó là thẻ suy đoán, không phải bằng chứng.",
+    "arenaBusy": "Đang ở đấu trường: nhặt đủ mảnh bằng chứng xanh trước đã.",
+    "finalBad": "Có kết luận chưa đúng chỗ. Xếp lại nhé."
   },
   "results": {
     "disclaimer": "Điểm số và chiến thắng chỉ đo kết quả chơi, không chứng minh thông tin đúng hay sai."

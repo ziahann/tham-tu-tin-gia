@@ -334,7 +334,7 @@
       },
       {
         "npc": "boss",
-        "text": "Chứng minh đi. Chỉ bằng chứng thật mới làm ta lung lay."
+        "text": "Ba trò, ba góc phòng. Thắng cả ba rồi hẵng nói chuyện với ta."
       }
     ],
     "boss_phase_claims": {
@@ -368,14 +368,14 @@
       "B": [
         {
           "npc": "npc1",
-          "text": "Bạn đã kết luận vượt bằng chứng. Thử lại: chỉ khẳng định điều dữ liệu cho phép."
+          "text": "Em đã kết luận vượt bằng chứng. Thử lại: chỉ khẳng định điều dữ liệu cho phép."
         }
       ]
     },
     "S10_wrapup": [
       {
         "npc": "npc1",
-        "text": "Cảm ơn {hero}. Điểm số chỉ để chơi, KHÔNG phải bằng chứng cho tin thật/giả. Kiểm chứng luôn dựa vào nguồn và bằng chứng."
+        "text": "Cảm ơn em, {hero}. Huy hiệu chỉ để chơi, không phải bằng chứng cho tin thật hay giả. Kiểm chứng luôn dựa vào nguồn và bằng chứng."
       }
     ]
   },
