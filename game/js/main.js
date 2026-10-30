@@ -12,7 +12,8 @@ import { nextQuestIn, earnedBadges, caseProgress } from './grading.js';
 import { updateScore } from './hud.js';
 import { WorldScene } from './world.js';
 import { reader } from './tools.js';
-import { randomWeather } from './weather.js';
+import { randomWeather, dayPhase } from './weather.js';
+import { showClock } from './hud.js';
 import { applyUiText, toast, openModal, closeModal, confirmBox } from './ui.js';
 
 const $ = id => document.getElementById(id);
@@ -350,6 +351,15 @@ function bindEvents() {
   on('backpack', () => { if (!titleOpen() && !introOpen() && !modalOpen()) backpack.toggle(); });
   const openCases = () => { if (!titleOpen() && !introOpen() && !modalOpen()) backpack.open('quests'); };
   on('cases', openCases);
+  // Đồng hồ trong game: 1 giây thật = 1 phút trong game (một ngày ≈ 24 phút); dừng khi ở màn hình chính / intro
+  setInterval(() => {
+    if (!state.progress || !game || titleOpen() || introOpen()) return;
+    const p = state.progress;
+    p.clock = ((p.clock ?? 960) + 1) % 1440;
+    showClock();
+    const world = game.scene.getScene('world');
+    world?.weather?.setTime(dayPhase(p.clock));
+  }, 1000);
   // Thời tiết thành phố đổi ngẫu nhiên mỗi 5 phút (chỉ có hiệu lực ngoài trời; lưu trong cài đặt)
   setInterval(() => {
     const world = game?.scene.getScene('world');

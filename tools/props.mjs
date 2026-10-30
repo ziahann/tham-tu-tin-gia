@@ -1036,15 +1036,15 @@ export function allProps() {
   seed = 7;
   const P = {};
   const add = (key, img, meta = {}) => { P[key] = { img, meta: { base: [img.w - 8, Math.min(20, img.h / 3)], ...meta } }; };
-  add('desk_pc', desk('pc'), { base: [68, 26] });
-  add('desk_papers', desk('papers'), { base: [68, 26] });
+  add('desk_pc', desk('pc'), { base: [68, 26], lights: [[19, 9, 0x7fb0ff, 60, 0.8], [60, 4, 0xffd28a, 50, 0.6]] });
+  add('desk_papers', desk('papers'), { base: [68, 26], lights: [[60, 4, 0xffd28a, 70, 0.9]] });
   add('desk_lab', desk('lab'), { base: [68, 26], lights: [[20, 10, 0x7fb0ff, 50, 0.7]] });
   add('chair', officeChair(), { base: [0, 0] });
   add('cabinet', cabinet(), { base: [30, 16] });
   add('bookshelf', bookshelf(), { base: [64, 18] });
   add('sofa', sofa(), { base: [96, 22] });
   add('coffee_table', coffeeTable(), { base: [64, 14] });
-  add('reception', reception(), { base: [160, 30] });
+  add('reception', reception(), { base: [160, 30], lights: [[80, 10, 0xffe2a0, 110, 0.8]] });
   add('plant_big', plant(true), { base: [20, 10] });
   add('plant_small', plant(false), { base: [16, 8] });
   add('water_cooler', waterCooler(), { base: [20, 10] });
