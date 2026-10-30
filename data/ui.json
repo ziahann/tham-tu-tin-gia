@@ -385,5 +385,11 @@
     "trustNote": "Trung bình độ tin cậy của các hồ sơ (bị trừ khi trả lời sai, bị lừa hoặc đăng vội).",
     "badges": "Huy hiệu",
     "cases": "Hồ sơ đã khép"
+  },
+  "cutscene": {
+    "file": "HỒ SƠ",
+    "stamp": "ĐÃ XÁC MINH",
+    "stampBoss": "ĐÃ ĐÍNH CHÍNH",
+    "skip": "Bấm để tiếp tục"
   }
 }

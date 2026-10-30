@@ -20,7 +20,8 @@ const sounds = {
   boot: [[220, 0.06, 'square'], [330, 0.06, 'square'], [660, 0.1, 'square']],
   door: [[180, 0.08, 'triangle'], [140, 0.12, 'triangle']],
   track: [[740, 0.05, 'triangle'], [988, 0.08, 'triangle']],
-  ding: [[1319, 0.18, 'sine'], [1047, 0.3, 'sine']]
+  ding: [[1319, 0.18, 'sine'], [1047, 0.3, 'sine']],
+  stamp: [[90, 0.06, 'square'], [60, 0.18, 'triangle']]
 };
 
 /** Khởi tạo AudioContext (lần đầu có thao tác của người chơi). */
