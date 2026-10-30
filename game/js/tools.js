@@ -1,6 +1,7 @@
 // Phòng xác minh: khung cửa sổ công cụ MÔ PHỎNG bọc quanh tư liệu, trình đọc báo trong game, chế độ xem thử.
 // Kết quả trong công cụ lấy từ bản ghi của nhóm (quests.json → exhibits) và tóm tắt nguồn đã kiểm tra (sources.json).
-import { data, t, sourceById, shortCite, evidenceById } from './data.js';
+import { investigationBoard } from './board.js';
+import { data, t, sourceById, shortCite } from './data.js';
 import { state, saveProgress, markSourceOpened } from './state.js';
 import { sfx } from './audio.js';
 import { toast } from './ui.js';
@@ -129,7 +130,7 @@ export function browseContent(device, exhibitFor) {
     case 'monitor': return ex('mco9');
     case 'archive': return reader(data.sources.sources.filter(s => s.verifiedContent).map(s => s.id));
     case 'timeline': return timelineBoard();
-    case 'evidence': return evidenceWall();
+    case 'evidence': return investigationBoard();
     default: return el('p', 'muted', t('devices.browse'));
   }
 }
@@ -146,17 +147,4 @@ function timelineBoard() {
     ol.append(li);
   });
   return ol;
-}
-
-/** Tường bằng chứng: các thẻ evidence đã thu thập. */
-function evidenceWall() {
-  const cork = el('div', 'cork');
-  const cards = (state.progress?.evidenceCards || []).map(evidenceById).filter(Boolean);
-  if (!cards.length) cork.append(el('p', 'muted', t('backpack.noCards')));
-  cards.forEach(ev => {
-    const n = el('div', 'note');
-    n.append(el('strong', null, ev.title), el('p', null, ev.text));
-    cork.append(n);
-  });
-  return cork;
 }

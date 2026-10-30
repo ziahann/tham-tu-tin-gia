@@ -2496,5 +2496,74 @@
         "room": "S8"
       }
     ]
+  },
+  "board": {
+    "howto": "Bấm một thẻ evidence rồi bấm mệnh đề mà thẻ đó chứng minh để căng dây đỏ. Thẻ suy đoán không chứng minh được gì.",
+    "claims": [
+      {
+        "id": "real",
+        "text": "Vụ lật tàu là có thật",
+        "cards": [
+          "ev_f1",
+          "ev_f2"
+        ]
+      },
+      {
+        "id": "ai",
+        "text": "Hai bộ ảnh \"nạn nhân\" do AI dựng",
+        "cards": [
+          "ev_f4",
+          "ev_f5",
+          "ev_f6",
+          "ev_f7",
+          "ev_f8",
+          "ev_f9"
+        ],
+        "why": {
+          "ev_f7": "Đúng hướng, nhưng máy dò AI chỉ là bằng chứng bổ trợ: cần thêm bằng chứng độc lập."
+        }
+      },
+      {
+        "id": "context",
+        "text": "Video, ảnh cũ bị gắn sai là vụ 19/7",
+        "cards": [
+          "ev_f10"
+        ]
+      },
+      {
+        "id": "spread",
+        "text": "Tin sai lan nhanh và gây tác động",
+        "cards": [
+          "ev_f3",
+          "ev_f11",
+          "ev_f14",
+          "ev_f15"
+        ]
+      },
+      {
+        "id": "bait",
+        "text": "Các bài dùng thủ đoạn câu tương tác",
+        "cards": [
+          "ev_f12",
+          "ev_f16"
+        ]
+      },
+      {
+        "id": "limit",
+        "text": "Chưa đủ căn cứ về danh tính, tiền bạc",
+        "cards": [
+          "ev_f13"
+        ]
+      },
+      {
+        "id": "act",
+        "text": "Cách ứng xử đúng với tin sai",
+        "cards": [
+          "ev_class",
+          "ev_response",
+          "ev_platform"
+        ]
+      }
+    ]
   }
 }
