@@ -644,8 +644,10 @@ const STEP_RUNNERS = {
     const marked = new Set(qs.answers[step.id] || []);
     const r = await dlg.interactive({ speaker: npc, text: step.ask, wide: true }, (outer, done, help) => {
       const box = toolHost(outer, step);
+      box.append(el('p', 'muted', t('exhibit.lensHint')));
       box.append(frameGrid(step.exhibit, {
         marked,
+        lens: true,
         onPick: n => { marked.has(n) ? marked.delete(n) : marked.add(n); sfx('click'); }
       }));
       box.append(actionRow(
