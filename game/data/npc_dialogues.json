@@ -1927,5 +1927,163 @@
         "text": "Dạ, em chào anh. Em là {hero}."
       }
     ]
+  },
+  "feed": {
+    "name": "Vịnh Feed",
+    "tagline": "mạng xã hội trong game",
+    "note": "Bài đăng, trang và số lượt trên Vịnh Feed đều hư cấu, chỉ để minh họa cách tin sai lan và bị đính chính. Không dùng số liệu thật của vụ việc.",
+    "posts": [
+      {
+        "id": "p_ai",
+        "order": 10,
+        "fake": true,
+        "author": "Trang Chuyện Vịnh",
+        "time": "20/7",
+        "art": "ship",
+        "text": "XÓT XA!!! Bộ ảnh do người trên tàu chụp lại khoảnh khắc cuối… Đọc tiếp ở bình luận 👇 Chia sẻ ngay trước khi bị xóa!",
+        "likes": 18400,
+        "shares": 6200,
+        "slowedBy": [
+          "done_S4"
+        ],
+        "note": "Bộ ảnh do AI dựng: không có nguồn gốc từ hiện trường, có lỗi hình ảnh, một ảnh được dùng lại; VTV đã xác nhận.",
+        "noteNeeds": [
+          "done_S4"
+        ],
+        "noteAfter": [
+          "done_S4",
+          "done_S7"
+        ],
+        "comments": [
+          {
+            "who": "Người dùng",
+            "text": "Thương quá, chia sẻ liền."
+          },
+          {
+            "who": "Người dùng",
+            "text": "Ảnh này tìm ngược ra toàn bài cảnh báo ảnh giả mà?",
+            "after": [
+              "done_S4"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "p_clip",
+        "order": 9,
+        "fake": true,
+        "author": "Tin Nóng 24/7",
+        "time": "20/7",
+        "art": "storm",
+        "text": "VIDEO CẬN CẢNH vụ lật tàu chiều 19/7!!! Xem đến cuối mới thấy…",
+        "likes": 9100,
+        "shares": 3300,
+        "slowedBy": [
+          "done_S5",
+          "done_S6"
+        ],
+        "note": "Video quay trong đợt bão Yagi năm 2024, không phải vụ 19/7 (theo VnExpress).",
+        "noteNeeds": [
+          "done_S5"
+        ],
+        "noteAfter": [
+          "done_S5",
+          "done_S6"
+        ],
+        "comments": [
+          {
+            "who": "Người dùng",
+            "text": "Kinh khủng quá."
+          },
+          {
+            "who": "Người dùng",
+            "text": "Clip này mình xem từ năm ngoái rồi mà.",
+            "after": [
+              "done_S5"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "p_fund",
+        "order": 8,
+        "fake": true,
+        "author": "Quỹ Thiện nguyện Hải Đăng",
+        "time": "21/7",
+        "art": "card",
+        "after": [
+          "boss_done"
+        ],
+        "text": "Kêu gọi chuyển khoản vào tài khoản cá nhân để \"giúp gia đình nạn nhân\". Link bên dưới!",
+        "likes": 1200,
+        "shares": 800,
+        "slowedBy": [
+          "done_BONUS"
+        ],
+        "note": "Trang mạo danh một quỹ thiện nguyện (tên không có thật). Chỉ ủng hộ qua kênh chính thức đã xác minh.",
+        "noteNeeds": [
+          "boss_done"
+        ],
+        "noteAfter": [
+          "done_BONUS"
+        ]
+      },
+      {
+        "id": "o_real",
+        "order": 7,
+        "official": true,
+        "author": "Báo chí",
+        "time": "19/7",
+        "art": "karst",
+        "text": "Tàu du lịch Vịnh Xanh 58 bị lật trên vịnh Hạ Long chiều 19/7/2025 khi gặp dông lốc. Xin chia buồn cùng các gia đình.",
+        "likes": 5200,
+        "shares": 900,
+        "after": [
+          "done_S3"
+        ]
+      },
+      {
+        "id": "o_vtv",
+        "order": 11,
+        "official": true,
+        "author": "Bài cảnh báo của báo chí",
+        "time": "22/7",
+        "art": "card",
+        "text": "Cảnh báo: các bộ ảnh và câu chuyện \"nạn nhân\" đang lan truyền do AI dựng nên. Đừng chia sẻ khi chưa kiểm chứng.",
+        "likes": 4100,
+        "shares": 2600,
+        "after": [
+          "done_S4"
+        ]
+      },
+      {
+        "id": "o_context",
+        "order": 12,
+        "official": true,
+        "author": "Bài đối chiếu của báo chí",
+        "time": "20/7",
+        "art": "card",
+        "text": "Nhiều video gắn nhãn \"vụ 19/7\" thật ra là video cũ: bão Yagi, một vụ chìm tàu ở Congo, ảnh nhóm trẻ em chụp từ tháng 8/2024.",
+        "likes": 2300,
+        "shares": 1400,
+        "after": [
+          "done_S5"
+        ]
+      },
+      {
+        "id": "o_mine",
+        "order": 20,
+        "official": true,
+        "author": "Bài đính chính của em",
+        "time": "hôm nay",
+        "art": "card",
+        "text": "Đính chính: hai bộ ảnh \"nạn nhân\" do AI dựng; một số video, ảnh cũ bị gắn sai là vụ 19/7; các bài dùng thủ đoạn câu tương tác. Mời mọi người dừng chia sẻ và báo cáo các bài này.",
+        "likes": 3600,
+        "shares": 2100,
+        "after": [
+          "boss_done"
+        ]
+      }
+    ]
   }
 }

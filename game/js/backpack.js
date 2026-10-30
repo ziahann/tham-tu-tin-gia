@@ -8,6 +8,7 @@ import { currentRunByNpc, exportLog } from './history.js';
 import { heroTitle } from './dialogue.js';
 import { confirmBox } from './ui.js';
 import { investigationBoard } from './board.js';
+import { vinhFeed, feedAlerts } from './feed.js';
 
 const els = {};
 let tab = 'notebook';
@@ -62,7 +63,10 @@ export function render() {
   if (!isOpen()) return;
   els.root.querySelectorAll('[data-tab]').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === tab)));
   els.body.innerHTML = '';
-  ({ notebook, quests, pinboard, history })[tab]();
+  ({ notebook, quests, feed, pinboard, history })[tab]();
+  const alerts = feedAlerts();
+  const ft = els.root.querySelector('[data-tab="feed"]');
+  ft.dataset.alert = alerts ? String(alerts) : '';
 }
 
 /** Thẻ huy hiệu: hình huy hiệu (assets/badges/<mã>.png), tên, điều đã học; chưa nhận thì mờ và ẩn nội dung. */
@@ -246,6 +250,11 @@ function minimap(mm) {
 }
 
 /** Bảng ghim: các thẻ evidence ghim trên bảng gỗ. */
+/** Vịnh Feed: mạng xã hội trong game. */
+function feed() {
+  els.body.append(vinhFeed(() => render()));
+}
+
 function pinboard() {
   els.body.append(investigationBoard());
 }
