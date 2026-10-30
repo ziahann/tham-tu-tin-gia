@@ -222,3 +222,16 @@
 | Địa điểm | Phòng phát trực tiếp trong tòa "Truyền thông – trung tâm cộng đồng" trên đường ven vịnh (không còn ở tầng thượng Báo Thanh Niên); cửa mở khi xong các hồ sơ bắt buộc; chị Tuệ Lâm có mặt |
 | Trận đấu | Buổi đính chính trực tiếp, bộ đếm lượt chia sẻ của bài sai: 1) gắn bằng chứng vào ghi chú kiểm chứng; 2) trả lời 4 bình luận phản công (20 giây, 3 lượt chịu sai); 3) viết bài đính chính bằng cách chọn câu |
 | Kết thúc | A: tin sai bị chặn, trang thông tin của fanpage chỉ là khung trống — em không đoán bừa. B: bài đính chính khẳng định chuyện tiền bạc / danh tính, phải sửa lại |
+
+## Chốt ngày 30/10/2026 (đợt 16)
+
+| Tính năng | Cách làm |
+|---|---|
+| Biểu cảm theo lựa chọn | Trả lời đúng: hai chân dung vui, nảy lên, viền xanh, bong bóng ♪ / ✓; sai: người hỏi nhíu mày, chân dung rung, viền đỏ, bong bóng ! / ? |
+| Cảnh cắt khép hồ sơ | Tập hồ sơ trượt vào, con dấu đỏ "ĐÃ XÁC MINH" (trận cuối: "ĐÃ ĐÍNH CHÍNH"), huy hiệu hiện ra rồi bay vào nút balo; bấm để bỏ qua |
+| Dòng thời gian | Kéo thả (hoặc bấm chọn rồi bấm ô) 5 mốc vào trục ngày 19/7 → 22/7; xếp đúng thì vệt đỏ "Tin sai lan rộng" chạy dọc trục, mốc đính chính màu xanh |
+| Kính lúp tự do | Rê chuột / chạm trên ảnh để phóng to 3 lần; bấm khoanh đỏ đúng chỗ; khung mờ nhìn qua kính vẫn mờ |
+| Bảng điều tra dây đỏ | 7 mệnh đề, nối từng thẻ evidence bằng dây đỏ; nối sai có giải thích; thẻ suy đoán không nối được |
+| Vịnh Feed | Tab điện thoại trong balo: bài sai, bài báo chí, bài đính chính của em hiện theo tiến độ; báo cáo bài và thêm ghi chú cộng đồng (cần khép hồ sơ liên quan); lượt chia sẻ bài sai chững lại. Mọi bài và số lượt là hư cấu |
+| Ánh sáng theo giờ | Đồng hồ trong game (1 giây thật = 1 phút), lượt mới bắt đầu 16:00; chiều tà phủ cam, đêm bật đèn đường; trong nhà đèn bàn, màn hình, đèn sàn hắt sáng; thời tiết ngẫu nhiên không còn "đêm" |
+| Xuất kết quả PDF | Trang báo cáo A4: người chơi, chỉ số, đã kiểm chứng / chưa đủ căn cứ, chi tiết từng hồ sơ (lần sai, gợi ý, độ tin cậy), huy hiệu, thẻ evidence, Vịnh Feed, nguồn APA, tác giả, disclaimer |
