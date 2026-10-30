@@ -747,23 +747,51 @@ Object.assign(STEP_RUNNERS, {
 });
 
 /** Trao huy hiệu kỹ năng của một hồ sơ (phòng) khi khép lại. */
+/**
+ * Cảnh cắt khi khép hồ sơ: tập hồ sơ trượt vào, con dấu đỏ đóng xuống, huy hiệu bay về nút balo.
+ * Bấm để bỏ qua; chế độ giảm chuyển động hiện tĩnh trong chốc lát.
+ */
+export function caseCutscene(roomId, badge) {
+  const room = data.quests.rooms.find(r => r.id === roomId);
+  const wrap = document.createElement('div');
+  wrap.className = 'case-cut';
+  wrap.setAttribute('role', 'status');
+  const folder = document.createElement('div');
+  folder.className = 'case-folder';
+  const tab = Object.assign(document.createElement('div'), { className: 'case-folder-tab', textContent: t('cutscene.file') });
+  const title = Object.assign(document.createElement('div'), { className: 'case-folder-title', textContent: room?.name || '' });
+  const learned = Object.assign(document.createElement('p'), { className: 'case-folder-text', textContent: badge.learned });
+  const stamp = Object.assign(document.createElement('div'), { className: 'case-stamp', textContent: t(room?.boss ? 'cutscene.stampBoss' : 'cutscene.stamp') });
+  const img = Object.assign(document.createElement('img'), { className: 'case-badge', src: `assets/badges/${roomId}.png`, alt: '' });
+  const cap = Object.assign(document.createElement('div'), { className: 'case-cap', textContent: `${t('backpack.newBadge')}: ${badge.name}` });
+  folder.append(tab, title, learned, stamp);
+  wrap.append(folder, img, cap, Object.assign(document.createElement('div'), { className: 'case-skip', textContent: t('cutscene.skip') }));
+  document.body.append(wrap);
+  const fast = state.settings.reduceMotion;
+  return new Promise(resolve => {
+    const timers = [];
+    const finish = () => { timers.forEach(clearTimeout); wrap.remove(); resolve(); };
+    wrap.addEventListener('click', finish);
+    timers.push(setTimeout(() => { wrap.classList.add('is-stamped'); sfx('stamp'); }, fast ? 0 : 900));
+    timers.push(setTimeout(() => { wrap.classList.add('is-badge'); sfx('unlock'); }, fast ? 0 : 1700));
+    // huy hiệu bay về nút balo
+    timers.push(setTimeout(() => {
+      const bp = document.getElementById('btn-backpack')?.getBoundingClientRect();
+      if (bp && !fast) {
+        const r = img.getBoundingClientRect();
+        img.style.transform = `translate(${bp.left + bp.width / 2 - (r.left + r.width / 2)}px, ${bp.top + bp.height / 2 - (r.top + r.height / 2)}px) scale(0.2)`;
+        img.style.opacity = '0.2';
+      }
+    }, fast ? 1500 : 3000));
+    timers.push(setTimeout(finish, fast ? 1800 : 3800));
+  });
+}
+
 async function awardBadge(roomId) {
   const b = data.quests.rooms.find(r => r.id === roomId)?.badge;
   if (!b) return;
-  sfx('unlock');
   onChange();
-  // hình huy hiệu nổi giữa màn hình trong vài giây
-  const pop = document.createElement('div');
-  pop.className = 'badge-pop';
-  pop.setAttribute('role', 'status');
-  const img = document.createElement('img');
-  img.src = `assets/badges/${roomId}.png`;
-  img.alt = '';
-  const cap = document.createElement('div');
-  cap.textContent = `${t('backpack.newBadge')}: ${b.name}`;
-  pop.append(img, cap);
-  document.body.append(pop);
-  setTimeout(() => pop.remove(), 3800);
+  await caseCutscene(roomId, b);
   await dlg.say('system', t('dialog.badge', b));
 }
 
