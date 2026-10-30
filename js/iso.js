@@ -32,21 +32,28 @@ const isWall = t => !!t && WALL_NAMES.has(t.properties?.name);
  * Vẽ nền: mọi ô lớp ground (và nước của lớp walls) thành ô thoi vào các RenderTexture 2048 px.
  * Trả về danh sách RenderTexture (để bật ánh sáng ban đêm).
  */
-export function buildGround(scene, map, ground, walls) {
+export function buildGround(scene, map, ground, walls, extend = false) {
   const { width, height } = { width: map.widthInPixels + map.heightInPixels, height: (map.widthInPixels + map.heightInPixels) / 2 };
+  // ngoài trời: nền kéo dài ra ngoài bản đồ (lặp ô ở mép) phủ kín khung camera, không lộ khoảng trống
+  const top = extend ? -512 : 0, bottom = height + (extend ? 128 : 64);
   const chunks = [];
-  for (let cy = 0; cy * CHUNK < height + 64; cy++) for (let cx = 0; cx * CHUNK < width; cx++) {
-    const w = Math.min(CHUNK, width - cx * CHUNK), h = Math.min(CHUNK, height + 64 - cy * CHUNK);
-    const rt = scene.add.renderTexture(cx * CHUNK, cy * CHUNK, w, h).setOrigin(0).setDepth(-10);
-    chunks.push({ rt, x0: cx * CHUNK, y0: cy * CHUNK, w, h });
+  for (let cy = 0; top + cy * CHUNK < bottom; cy++) for (let cx = 0; cx * CHUNK < width; cx++) {
+    const y0 = top + cy * CHUNK;
+    const w = Math.min(CHUNK, width - cx * CHUNK), h = Math.min(CHUNK, bottom - y0);
+    const rt = scene.add.renderTexture(cx * CHUNK, y0, w, h).setOrigin(0).setDepth(-10);
+    chunks.push({ rt, x0: cx * CHUNK, y0, w, h });
   }
   // danh sách ô cần vẽ (một lần), rồi vẽ vào từng mảnh — mỗi RenderTexture một lượt beginDraw / endDraw
   const cells = [];
-  for (let ty = 0; ty < map.height; ty++) for (let tx = 0; tx < map.width; tx++) {
+  const pad = extend ? Math.max(map.width, map.height) : 0;
+  const clamp = (v, n) => Math.max(0, Math.min(n - 1, v));
+  for (let ty = -pad; ty < map.height + pad; ty++) for (let tx = -pad; tx < map.width + pad; tx++) {
     const p = iso.P(tx * T, ty * T);
-    const g = ground.getTileAt(tx, ty);
+    if (p.x + 32 < 0 || p.x - 32 > width || p.y + 32 < top || p.y > bottom) continue;
+    const ix = clamp(tx, map.width), iy = clamp(ty, map.height);
+    const g = ground.getTileAt(ix, iy);
     if (g) cells.push([g.index - 1, p.x - 32, p.y]);
-    const w = walls.getTileAt(tx, ty);
+    const w = walls.getTileAt(ix, iy);
     if (w && w.properties?.name === 'water') cells.push([w.index - 1, p.x - 32, p.y]);
   }
   for (const c of chunks) {

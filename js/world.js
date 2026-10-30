@@ -74,7 +74,7 @@ export class WorldScene extends Phaser.Scene {
     // Hiển thị isometric: lớp tilemap chỉ để va chạm / tra cứu; nền và tường vẽ lại theo phép chiếu
     this.isoSize = setupIso(map.widthInPixels, map.heightInPixels);
     [this.ground, this.walls, this.doors].forEach(l => l.setVisible(false));
-    this.groundRTs = buildGround(this, map, this.ground, this.walls);
+    this.groundRTs = buildGround(this, map, this.ground, this.walls, this.mapKey === 'street');
     this.wallImgs = buildWalls(this, map, this.walls);
     this.views = new ViewLayer(this);
 

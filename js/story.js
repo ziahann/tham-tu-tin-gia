@@ -891,6 +891,27 @@ export function inspectDecoy(id) {
   world?.refresh();
 }
 
+/**
+ * Tới thẳng trận đấu với Kẻ Dệt Chuyện (dùng khi trình chiếu / ôn nhanh): các nhiệm vụ bắt buộc chưa làm được tính là
+ * đã khép (nhận thẻ evidence của nhiệm vụ để đủ điều kiện), nhưng không trao huy hiệu của hồ sơ.
+ */
+export function skipToBoss() {
+  for (const id of data.quests.boss.requires.requiredQuests) {
+    const q = questById(id);
+    const qs = questState(id);
+    if (qs.status === 'done') continue;
+    qs.status = 'done';
+    qs.skipped = true;
+    (q?.evidenceCards || []).forEach(addEvidence);
+  }
+  setFlag('boss_announced');
+  setFlag('skipped_to_boss');
+  saveProgress();
+  track('boss', true);
+  onChange();
+  world?.travel('boss', 'spawn_from_office', 'up');
+}
+
 /** Thông báo một câu của hệ thống (cửa khóa, khu chưa mở...). */
 export function notice(text) {
   return conversation('system', () => dlg.say('system', text));
