@@ -193,3 +193,12 @@
 | Xưng hô | NPC gọi người chơi là "em", người chơi xưng "em"; boss giữ "ta – ngươi" |
 | Điểm | Bỏ mọi chữ "−… điểm" ở gợi ý và câu trả lời |
 | Mã dữ kiện | Không hiện mã F… trong lời thoại, phản hồi, thẻ evidence, tư liệu |
+
+## Chốt ngày 30/10/2026 (đợt 13)
+
+| Mục | Quyết định |
+|---|---|
+| Tới thẳng boss | Nút trong Cài đặt, hỏi xác nhận; hồ sơ chưa làm tính là đã khép (có thẻ evidence, không có huy hiệu) |
+| Menu | Cài đặt, Nguồn và hộp xác nhận luôn mở thành khung bên phải |
+| Intro | Chữ căn giữa, ngắt dòng cân đối; số hiệu tàu không bị cắt đôi |
+| Rìa bản đồ | Nền phố, biển kéo dài ra ngoài bản đồ; thêm dãy nhà và đảo đá ở rìa để không lộ khoảng trống |

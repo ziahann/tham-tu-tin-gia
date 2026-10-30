@@ -1067,6 +1067,15 @@ const street = buildMap('street', {
     bld('bld_tenement', 78, 6, N_BOTTOM),
     bld('bld_store', 84, 6, N_BOTTOM),
     // --- dãy nhà thấp giữa hai con đường, quay mặt ra đường ven vịnh
+    // --- ngoài rìa bản đồ: một vòng nhà phía bắc, tây, đông để khung hình không lộ khoảng trống
+    ...[[-12, 'bld_warehouse', 12], [1, 'bld_hotel', 10], [13, 'bld_apartment', 9], [24, 'bld_tenement', 6], [32, 'bld_warehouse', 12],
+      [46, 'bld_apartment2', 7], [55, 'bld_hotel', 10], [67, 'bld_apartment', 9], [78, 'bld_tenement', 6], [86, 'bld_warehouse', 12], [100, 'bld_hotel', 10]]
+      .map(([x, k, c]) => bld(k, x, c, 3)),
+    bld('bld_apartment', -11, 9, 11), bld('bld_store', -8, 6, N_BOTTOM), bld('bld_closed', -16, 6, N_BOTTOM),
+    bld('bld_warehouse', -14, 12, C_BOTTOM), bld('bld_books', -6, 5, C_BOTTOM),
+    bld('bld_apartment', 97, 9, 11), bld('bld_store', 97, 6, N_BOTTOM), bld('bld_hotel', 104, 10, N_BOTTOM, null, null, { flip: true }),
+    bld('bld_warehouse', 96, 12, C_BOTTOM),
+    pp('karst_big', 40, 72), pp('karst', 62, 69), pp('karst_big', -8, 60), pp('karst', 104, 62),
     bld('bld_clinic', 50, 6, C_BOTTOM, 'TRUNG TÂM Y TẾ'),
     bld('bld_warehouse', 57, 12, C_BOTTOM),
     bld('bld_cafe2', 70, 6, C_BOTTOM, 'CÀ PHÊ SƯƠNG SỚM'),
