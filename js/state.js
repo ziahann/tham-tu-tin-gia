@@ -54,7 +54,8 @@ function freshProgress(heroName, heroLook = 'm') {
     evidenceCards: [],
     sourcesOpened: [],
     pos: null,
-    tracked: null
+    tracked: null,
+    clock: 960
   };
 }
 
