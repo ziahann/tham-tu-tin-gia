@@ -46,7 +46,7 @@ export class Traffic {
     const w = s.width;
     s.body.setSize(fw0 - 8, d0 - 4).setOffset(4, s.height - d0 + 4);
     s.body.pushable = false;
-    if (this.scene.weather?.kind === 'night' && this.scene.renderer.type === Phaser.WEBGL) s.setPipeline('Light2D');
+    if (this.scene.weather?.lit) s.setPipeline('Light2D');
     const [fw, fh, d] = ISO_SIZE[key === 'bus' ? 'bus' : key.startsWith('bike') ? 'bike' : 'car'];
     const isoKey = `${key}_${lane.dir > 0 ? 'e' : 'w'}`;
     const tex = this.scene.textures.get(isoKey).getSourceImage();
