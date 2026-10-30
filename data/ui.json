@@ -157,7 +157,8 @@
     "badges": "Huy hiệu kỹ năng",
     "noBadges": "Chưa có huy hiệu. Khép một hồ sơ để nhận huy hiệu kỹ năng.",
     "badgeLocked": "Khép hồ sơ \"{room}\" để nhận.",
-    "newBadge": "Huy hiệu mới"
+    "newBadge": "Huy hiệu mới",
+    "tabFeed": "Vịnh Feed"
   },
   "sourcesPanel": {
     "title": "Nguồn tham khảo",
@@ -403,5 +404,18 @@
     "wrong": "Thẻ \"{card}\" không chứng minh \"{claim}\". Thẻ này thuộc về: {right}.",
     "guess": "\"{card}\" chỉ là thẻ suy đoán, không phải bằng chứng. Không nối vào đâu cả.",
     "complete": "Bảng điều tra đã nối đủ: mọi bằng chứng đều có chỗ đứng."
+  },
+  "feed": {
+    "empty": "Chưa có bài nào.",
+    "shares": "chia sẻ",
+    "slowed": "Đã có ghi chú · lượt chia sẻ chững lại",
+    "report": "Báo cáo bài viết",
+    "reported": "✓ Đã báo cáo",
+    "addNote": "Thêm ghi chú cộng đồng",
+    "noted": "✓ Đã thêm ghi chú",
+    "noteLocked": "Cần khép hồ sơ liên quan để có bằng chứng viết ghi chú.",
+    "noteTitle": "Ghi chú cộng đồng:",
+    "reportDone": "Đã báo cáo bài viết với nền tảng.",
+    "noteDone": "Đã thêm ghi chú cộng đồng:"
   }
 }
