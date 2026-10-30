@@ -15,6 +15,7 @@ import { reader } from './tools.js';
 import { randomWeather, dayPhase } from './weather.js';
 import { showClock } from './hud.js';
 import { exportReport } from './report.js';
+import { feedTick } from './feed.js';
 import { applyUiText, toast, openModal, closeModal, confirmBox } from './ui.js';
 
 const $ = id => document.getElementById(id);
@@ -366,6 +367,7 @@ function bindEvents() {
     const p = state.progress;
     p.clock = ((p.clock ?? 960) + 1) % 1440;
     showClock();
+    feedTick();
     const world = game.scene.getScene('world');
     world?.weather?.setTime(dayPhase(p.clock));
   }, 1000);

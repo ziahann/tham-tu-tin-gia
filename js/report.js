@@ -93,7 +93,7 @@ ${caseBlocks}
 ${cards.length ? `<ul>${cards.map(ev => `<li><b>${esc(ev.title)}</b> — ${esc(ev.text)}</li>`).join('')}</ul>` : `<p class="muted">${esc(t('backpack.noCards'))}</p>`}
 
 <h2>${esc(t('report.feed'))}</h2>
-<p>${esc(t('report.feedLine', { reports: feed.filter(x => x.report).length, notes: feed.filter(x => x.note).length }))}</p>
+<p>${esc(t('report.feedLine', { reports: feed.filter(x => x.report).length, notes: feed.filter(x => x.note).length, replies: feed.filter(x => x.reply).length, wrong: feed.reduce((s, x) => s + (x.wrongReport || 0), 0), clicks: feed.reduce((s, x) => s + (x.clicked || 0), 0) }))}</p>
 
 <h2>${esc(t('report.takeaway'))}</h2>
 <p>${esc(r.takeaway)}</p>

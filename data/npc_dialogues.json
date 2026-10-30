@@ -1931,22 +1931,116 @@
   "feed": {
     "name": "Vịnh Feed",
     "tagline": "mạng xã hội trong game",
-    "note": "Bài đăng, trang và số lượt trên Vịnh Feed đều hư cấu, chỉ để minh họa cách tin sai lan và bị đính chính. Không dùng số liệu thật của vụ việc.",
+    "note": "Trang, người dùng, bài đăng và số lượt trên Vịnh Feed đều hư cấu, chỉ để minh họa cách tin sai lan và bị đính chính. Nội dung ghi chú lấy từ dữ kiện đã kiểm chứng trong game.",
     "posts": [
       {
-        "id": "p_ai",
-        "order": 10,
+        "id": "p_story",
+        "order": 14,
         "fake": true,
+        "kind": "page",
+        "case": "S7",
         "author": "Trang Chuyện Vịnh",
-        "time": "20/7",
-        "art": "ship",
-        "text": "XÓT XA!!! Bộ ảnh do người trên tàu chụp lại khoảnh khắc cuối… Đọc tiếp ở bình luận 👇 Chia sẻ ngay trước khi bị xóa!",
-        "likes": 18400,
-        "shares": 6200,
-        "slowedBy": [
-          "done_S4"
+        "badge": "✔",
+        "time": "20/7 · 21:40",
+        "art": "text",
+        "text": "Câu chuyện khiến cả triệu người rơi nước mắt 😢 Trên chuyến tàu chiều 19/7, người cha kịp cài áo phao cho con gái rồi thì thầm một câu cuối cùng… (Phần 1)\n👇 Đọc trọn vẹn câu chuyện ở bình luận đầu tiên",
+        "tags": [
+          "#VịnhHạLong",
+          "#cầunguyện"
         ],
-        "note": "Bộ ảnh do AI dựng: không có nguồn gốc từ hiện trường, có lỗi hình ảnh, một ảnh được dùng lại; VTV đã xác nhận.",
+        "fine": "*tình tiết hư cấu",
+        "likes": 21500,
+        "comments_n": 3400,
+        "shares": 2600,
+        "comments": [
+          {
+            "who": "Trang Chuyện Vịnh",
+            "text": "👉 Đoạn kết: chuyenvinh-xemtiep.site/doan-ket",
+            "link": true
+          },
+          {
+            "who": "Thu Hà",
+            "text": "Đọc mà nghẹn lòng, cầu mong hai bố con bình an 🙏"
+          },
+          {
+            "who": "Minh Tú",
+            "text": "Bấm link phần 2 hoài không vào được, toàn quảng cáo…"
+          },
+          {
+            "who": "Đức Anh",
+            "text": "Bé xíu cuối bài có dòng \"tình tiết hư cấu\" kìa. Trang biết truyện không có thật mà vẫn đăng?",
+            "after": [
+              "done_S7"
+            ],
+            "tip": true
+          }
+        ],
+        "noteNeeds": [
+          "done_S7"
+        ],
+        "noteAfter": [
+          "done_S7",
+          "done_S8"
+        ],
+        "note": "Nhân vật và câu chuyện không trích nguồn chính thống; VTV xác nhận ảnh và câu chuyện do AI dựng. Bài có dòng \"tình tiết hư cấu\" đặt ở chỗ rất khó thấy. Link \"đọc tiếp\" dẫn ra website ngoài, báo chí cảnh báo có thể tiềm ẩn nguy cơ.",
+        "noteOptions": [
+          {
+            "ok": true,
+            "text": "Câu chuyện không trích nguồn chính thống; VTV xác nhận ảnh và truyện do AI dựng. Dòng \"tình tiết hư cấu\" bị giấu cuối bài. Link \"đọc tiếp\" dẫn ra web ngoài, có thể tiềm ẩn nguy cơ.",
+            "why": "Ghi chú nêu đúng điều đã kiểm chứng, có nguồn, và cảnh báo đường link."
+          },
+          {
+            "text": "Trang này dựng chuyện để kiếm tiền quảng cáo, chủ trang là một nhóm lừa đảo chuyên nghiệp.",
+            "why": "Chưa có dữ liệu về doanh thu hay danh tính người đứng sau trang. Ghi chú chỉ được nói điều đã chứng minh."
+          },
+          {
+            "vague": true,
+            "text": "Tin giả đấy, mọi người đừng tin!",
+            "why": "Ghi chú không nêu căn cứ hay nguồn, người đọc không tự kiểm tra được nên thường bị chấm \"chưa hữu ích\"."
+          }
+        ],
+        "classify": "Disinformation: nội dung bịa, kèm thủ đoạn câu tương tác và chú thích hư cấu khó thấy."
+      },
+      {
+        "id": "p_ai",
+        "order": 13,
+        "fake": true,
+        "kind": "page",
+        "case": "S4",
+        "author": "Góc Chia Sẻ 365",
+        "time": "20/7 · 09:15",
+        "art": "grid",
+        "artFake": true,
+        "text": "XÓT XA!!! Bộ ảnh \"khoảnh khắc cuối cùng\" trên chuyến tàu định mệnh. Ai xem cũng không cầm được nước mắt 💔 Chia sẻ ngay trước khi bị xóa!",
+        "tags": [
+          "#VịnhXanh58"
+        ],
+        "likes": 18400,
+        "comments_n": 2900,
+        "shares": 6200,
+        "comments": [
+          {
+            "who": "Lan Phương",
+            "text": "Thương quá, chia sẻ liền."
+          },
+          {
+            "who": "Quốc Bảo",
+            "text": "Ai thử tìm ngược ảnh chưa? Mấy cái máy ở Phòng xác minh làm được đó.",
+            "tip": true
+          },
+          {
+            "who": "Ngọc Trâm",
+            "text": "Sao con tàu ở ảnh này với ảnh kia khác hẳn nhau vậy?",
+            "tip": true
+          },
+          {
+            "who": "Hải Yến",
+            "text": "Tìm ngược ra toàn bài cảnh báo ảnh giả mà mọi người.",
+            "after": [
+              "done_S4"
+            ]
+          }
+        ],
         "noteNeeds": [
           "done_S4"
         ],
@@ -1954,135 +2048,309 @@
           "done_S4",
           "done_S7"
         ],
-        "comments": [
+        "note": "Bộ ảnh do AI dựng: tìm ngược không ra bản gốc từ hãng tin hay nhân chứng, chỉ ra các bài cảnh báo ảnh giả; hình dạng tàu đổi giữa các ô, chữ trên áo méo; một ảnh được nhiều trang dùng lại. VTV đã xác nhận.",
+        "noteOptions": [
           {
-            "who": "Người dùng",
-            "text": "Thương quá, chia sẻ liền."
+            "text": "Máy phát hiện AI báo 99,9% nên chắc chắn là ảnh giả, khỏi cần kiểm tra gì thêm.",
+            "why": "Detector chỉ là bằng chứng bổ trợ. Kết luận phải dựa trên tìm ngược ảnh, lỗi hình ảnh và đối chiếu báo chí."
           },
           {
-            "who": "Người dùng",
-            "text": "Ảnh này tìm ngược ra toàn bài cảnh báo ảnh giả mà?",
-            "after": [
-              "done_S4"
-            ]
+            "ok": true,
+            "text": "Tìm ngược không ra bản gốc từ hãng tin hay nhân chứng, chỉ ra bài cảnh báo ảnh giả. Tàu đổi hình dạng giữa các ô, chữ trên áo méo, một ảnh bị nhiều trang dùng lại. VTV đã xác nhận ảnh do AI dựng.",
+            "why": "Nhiều bằng chứng độc lập, có nguồn đối chiếu."
+          },
+          {
+            "vague": true,
+            "text": "Nhìn là biết ảnh AI rồi.",
+            "why": "\"Nhìn là biết\" không phải bằng chứng; hãy chỉ ra lỗi cụ thể và nguồn đối chiếu."
           }
-        ]
+        ],
+        "classify": "Disinformation: nội dung bịa, kèm thủ đoạn câu tương tác và chú thích hư cấu khó thấy."
+      },
+      {
+        "id": "p_share",
+        "order": 12,
+        "fake": true,
+        "kind": "user",
+        "case": "S8",
+        "author": "Hoa Biển",
+        "time": "20/7 · 11:02",
+        "art": "grid",
+        "artFake": true,
+        "text": "Xem mà nghẹn lòng 😭 Cầu mong mọi người trên tàu bình an. Ai đi Hạ Long dịp này nhớ cẩn thận nha.",
+        "likes": 340,
+        "comments_n": 28,
+        "shares": 95,
+        "comments": [
+          {
+            "who": "Bạn của Hoa",
+            "text": "Thương quá chị ơi 🙏"
+          }
+        ],
+        "replyNeeds": [
+          "done_S4"
+        ],
+        "replyOptions": [
+          {
+            "text": "Lại thêm một người cả tin share tin giả. Gỡ ngay đi, đừng làm loạn mạng nữa!",
+            "why": "Công kích người chia sẻ vô tình khiến họ phòng thủ và giữ bài lại. Họ đăng vì thương cảm, cần nhắc nhẹ kèm nguồn.",
+            "backlash": "Hoa Biển: Mình chia sẻ vì thương thôi mà, nói chuyện kiểu gì vậy? Mình không gỡ đâu."
+          },
+          {
+            "ok": true,
+            "text": "Chị ơi, bộ ảnh này VTV đã xác nhận do AI dựng, em gửi chị bài đối chiếu. Chị cân nhắc gỡ giúp để người khác không nhầm nhé. Cảm ơn chị đã quan tâm 🙏",
+            "why": "Nhắc nhẹ, có nguồn, ghi nhận thiện ý của người chia sẻ."
+          },
+          {
+            "vague": true,
+            "text": "Fake đó.",
+            "why": "Không có nguồn, người đăng không biết vì sao và cũng không tin."
+          }
+        ],
+        "removed": "Hoa Biển đã gỡ bài: \"Cảm ơn em nhắc, chị không biết đó là ảnh AI. Chị gỡ rồi nha.\"",
+        "classify": "Misinformation: chia sẻ tin sai vì thương cảm, không có ý gây hại."
       },
       {
         "id": "p_clip",
-        "order": 9,
+        "order": 11,
         "fake": true,
+        "kind": "page",
+        "case": "S5",
         "author": "Tin Nóng 24/7",
-        "time": "20/7",
+        "time": "20/7 · 07:30",
         "art": "storm",
-        "text": "VIDEO CẬN CẢNH vụ lật tàu chiều 19/7!!! Xem đến cuối mới thấy…",
+        "text": "🔴 VIDEO CẬN CẢNH: sóng lớn đánh dạt tàu trên vịnh chiều 19/7!!! Xem đến cuối mới thấy hết sự kinh hoàng…",
+        "tags": [
+          "#nóng",
+          "#HạLong"
+        ],
         "likes": 9100,
+        "comments_n": 1500,
         "shares": 3300,
-        "slowedBy": [
-          "done_S5",
-          "done_S6"
-        ],
-        "note": "Video quay trong đợt bão Yagi năm 2024, không phải vụ 19/7 (theo VnExpress).",
-        "noteNeeds": [
-          "done_S5"
-        ],
-        "noteAfter": [
-          "done_S5",
-          "done_S6"
-        ],
         "comments": [
           {
-            "who": "Người dùng",
-            "text": "Kinh khủng quá."
+            "who": "Tuấn Kiệt",
+            "text": "Kinh khủng quá, ở ngoài đó chắc sợ lắm."
           },
           {
-            "who": "Người dùng",
-            "text": "Clip này mình xem từ năm ngoái rồi mà.",
+            "who": "Bích Ngọc",
+            "text": "Ơ clip này hình như mình xem từ năm ngoái rồi mà?",
+            "tip": true
+          },
+          {
+            "who": "Văn Hùng",
+            "text": "Báo đối chiếu rồi nhé, clip quay trong bão Yagi năm 2024.",
             "after": [
               "done_S5"
             ]
           }
-        ]
+        ],
+        "noteNeeds": [
+          "done_S5"
+        ],
+        "noteAfter": [
+          "done_S5",
+          "done_S6"
+        ],
+        "note": "Video quay trong bão Yagi năm 2024, không phải vụ 19/7/2025 (theo báo chí đối chiếu).",
+        "noteOptions": [
+          {
+            "ok": true,
+            "text": "Video quay trong bão Yagi năm 2024, không phải vụ 19/7/2025. Báo chí đã đối chiếu và đính chính.",
+            "why": "Nêu đúng bối cảnh gốc, thời gian và nguồn đối chiếu."
+          },
+          {
+            "text": "Video này do AI tạo ra để câu view.",
+            "why": "Video là cảnh thật nhưng cũ, bị gắn sai bối cảnh. Gọi là AI là kết luận sai loại."
+          },
+          {
+            "vague": true,
+            "text": "Clip cũ rồi.",
+            "why": "Cũ từ khi nào, quay ở đâu, nguồn nào xác nhận? Ghi chú thiếu căn cứ."
+          }
+        ],
+        "classify": "Misinformation hoặc chưa đủ căn cứ về chủ đích: chưa có bằng chứng về ý định của từng người đăng."
+      },
+      {
+        "id": "p_congo",
+        "order": 10,
+        "fake": true,
+        "kind": "page",
+        "case": "S5",
+        "author": "Chuyện Lạ Bốn Phương",
+        "time": "20/7 · 15:20",
+        "art": "river",
+        "text": "Khoảnh khắc chiếc tàu chở đầy khách chìm dần… Đây là vụ 19/7 mà nhiều người chưa được xem 😱",
+        "likes": 6400,
+        "comments_n": 980,
+        "shares": 2100,
+        "comments": [
+          {
+            "who": "Thanh Tâm",
+            "text": "Cảnh này đâu giống vịnh Hạ Long, sông gì mà nước đục vậy?",
+            "tip": true
+          },
+          {
+            "who": "Gia Huy",
+            "text": "Video tàu chìm ở Congo tháng 10/2024 đó, báo đã đối chiếu.",
+            "after": [
+              "done_S5"
+            ]
+          }
+        ],
+        "noteNeeds": [
+          "done_S5"
+        ],
+        "noteAfter": [
+          "done_S5",
+          "done_S6"
+        ],
+        "note": "Video ghi lại vụ chìm tàu tại Congo (10/2024), bị gán nhãn là vụ 19/7/2025 (theo báo chí đối chiếu).",
+        "noteOptions": [
+          {
+            "text": "Người đăng cố tình lừa mọi người để kiếm lượt xem.",
+            "why": "Chưa có bằng chứng về chủ đích của người đăng clip cũ. Chỉ nói điều đã kiểm chứng: video cũ, sai bối cảnh."
+          },
+          {
+            "vague": true,
+            "text": "Không phải Hạ Long đâu.",
+            "why": "Đúng hướng nhưng chưa nêu video gốc là gì, nguồn nào xác nhận."
+          },
+          {
+            "ok": true,
+            "text": "Video ghi lại vụ chìm tàu tại Congo (10/2024), không phải vụ 19/7/2025. Báo chí đã đối chiếu.",
+            "why": "Nêu bối cảnh gốc và nguồn, không suy đoán chủ đích."
+          }
+        ],
+        "classify": "Misinformation hoặc chưa đủ căn cứ về chủ đích: chưa có bằng chứng về ý định của từng người đăng."
       },
       {
         "id": "p_fund",
-        "order": 8,
+        "order": 15,
         "fake": true,
-        "author": "Quỹ Thiện nguyện Hải Đăng",
-        "time": "21/7",
+        "kind": "page",
+        "case": "BONUS",
+        "author": "Quỹ Thiện nguyện Hải Đăngg",
+        "badge": "✔",
+        "time": "21/7 · 08:00",
         "art": "card",
         "after": [
           "boss_done"
         ],
-        "text": "Kêu gọi chuyển khoản vào tài khoản cá nhân để \"giúp gia đình nạn nhân\". Link bên dưới!",
+        "text": "THÔNG BÁO KHẨN: Quỹ nhận quyên góp giúp gia đình nạn nhân. Chuyển khoản ngay vào tài khoản cá nhân bên dưới, xác nhận qua link 👇",
         "likes": 1200,
+        "comments_n": 210,
         "shares": 800,
-        "slowedBy": [
-          "done_BONUS"
+        "comments": [
+          {
+            "who": "Quỹ Thiện nguyện Hải Đăngg",
+            "text": "👉 Xác nhận chuyển khoản: bit.ly/hd-ung-ho",
+            "link": true
+          },
+          {
+            "who": "Mỹ Linh",
+            "text": "Sao tên quỹ có hai chữ g vậy, trang mới lập tháng này à?",
+            "tip": true
+          }
         ],
-        "note": "Trang mạo danh một quỹ thiện nguyện (tên không có thật). Chỉ ủng hộ qua kênh chính thức đã xác minh.",
         "noteNeeds": [
-          "boss_done"
-        ],
-        "noteAfter": [
           "done_BONUS"
+        ],
+        "noteAfter": [],
+        "note": "Trang mạo danh: tên sai chính tả, tích xanh giả, trang mới tạo, nhận tiền vào tài khoản cá nhân, link rút gọn lạ. Chỉ ủng hộ qua kênh chính thức đã xác minh.",
+        "noteOptions": [
+          {
+            "ok": true,
+            "text": "Dấu hiệu mạo danh: tên sai chính tả, tích xanh giả, trang mới tạo, nhận tiền vào tài khoản cá nhân, link rút gọn lạ. Chỉ ủng hộ qua kênh chính thức đã xác minh.",
+            "why": "Liệt kê dấu hiệu kiểm chứng được và chỉ cách ủng hộ an toàn."
+          },
+          {
+            "text": "Em tra được chủ tài khoản này tên là… ở…, mọi người vào nhắn cho họ đi!",
+            "why": "Công khai thông tin cá nhân và kêu gọi nhắn tin là doxxing, có thể làm hại người vô can. Hãy báo cáo cho nền tảng và cơ quan chức năng."
+          },
+          {
+            "vague": true,
+            "text": "Lừa đảo đấy!",
+            "why": "Không nêu dấu hiệu nào nên người đọc không biết cách tự nhận diện lần sau."
+          }
         ]
       },
       {
         "id": "o_real",
-        "order": 7,
+        "order": 5,
         "official": true,
-        "author": "Báo chí",
-        "time": "19/7",
+        "author": "Bản tin báo chí",
+        "time": "19/7 · 18:30",
         "art": "karst",
-        "text": "Tàu du lịch Vịnh Xanh 58 bị lật trên vịnh Hạ Long chiều 19/7/2025 khi gặp dông lốc. Xin chia buồn cùng các gia đình.",
+        "text": "Chiều 19/7/2025, tàu du lịch Vịnh Xanh 58 bị lật trên vịnh Hạ Long (Quảng Ninh) khi gặp giông lốc bất ngờ. Xin gửi lời chia buồn tới các gia đình.",
         "likes": 5200,
+        "comments_n": 640,
         "shares": 900,
-        "after": [
-          "done_S3"
-        ]
+        "reportWrong": "Bài này đưa tin sự kiện có thật, từ báo chí chính thống. Báo cáo nhầm bài đúng làm loãng hàng chờ kiểm duyệt; hãy kiểm tra trước khi báo cáo."
       },
       {
         "id": "o_vtv",
-        "order": 11,
+        "order": 16,
         "official": true,
         "author": "Bài cảnh báo của báo chí",
-        "time": "22/7",
+        "time": "22/7 · 10:00",
         "art": "card",
-        "text": "Cảnh báo: các bộ ảnh và câu chuyện \"nạn nhân\" đang lan truyền do AI dựng nên. Đừng chia sẻ khi chưa kiểm chứng.",
-        "likes": 4100,
-        "shares": 2600,
         "after": [
           "done_S4"
-        ]
+        ],
+        "text": "Cảnh báo: các bộ ảnh và câu chuyện \"nạn nhân\" vụ lật tàu đang lan truyền do AI dựng, không trích nguồn chính thống. Nhiều người đã để lại lời chia buồn vì tưởng là thật. Đừng chia sẻ khi chưa kiểm chứng.",
+        "likes": 4100,
+        "comments_n": 520,
+        "shares": 2600,
+        "reportWrong": "Đây là bài đính chính của báo chí, đúng là thứ nên lan rộng. Báo cáo nó là giúp tin sai."
       },
       {
         "id": "o_context",
-        "order": 12,
+        "order": 17,
         "official": true,
         "author": "Bài đối chiếu của báo chí",
-        "time": "20/7",
+        "time": "20/7 · 20:00",
         "art": "card",
-        "text": "Nhiều video gắn nhãn \"vụ 19/7\" thật ra là video cũ: bão Yagi, một vụ chìm tàu ở Congo, ảnh nhóm trẻ em chụp từ tháng 8/2024.",
-        "likes": 2300,
-        "shares": 1400,
         "after": [
           "done_S5"
-        ]
+        ],
+        "text": "Nhiều video, ảnh gắn nhãn \"vụ 19/7\" thật ra là tư liệu cũ: video bão Yagi (2024), video chìm tàu ở Congo (10/2024), ảnh một nhóm khách du lịch Hạ Long năm 2024.",
+        "likes": 2300,
+        "comments_n": 300,
+        "shares": 1400,
+        "reportWrong": "Bài đối chiếu của báo chí chỉ ra tư liệu cũ, nội dung đúng. Đừng báo cáo bài đính chính."
+      },
+      {
+        "id": "o_police",
+        "order": 18,
+        "official": true,
+        "author": "Bản tin báo chí",
+        "time": "21/7 · 16:00",
+        "art": "card",
+        "after": [
+          "done_S6"
+        ],
+        "text": "Công an tỉnh Quảng Ninh thông tin về việc xử lý người đăng tin sai sự thật liên quan vụ lật tàu.",
+        "likes": 3800,
+        "comments_n": 450,
+        "shares": 1700,
+        "reportWrong": "Đây là thông tin chính thức của cơ quan chức năng, được báo chí đăng. Báo cáo nhầm bài đúng làm loãng hàng chờ kiểm duyệt."
       },
       {
         "id": "o_mine",
-        "order": 20,
+        "order": 30,
         "official": true,
         "author": "Bài đính chính của em",
         "time": "hôm nay",
         "art": "card",
-        "text": "Đính chính: hai bộ ảnh \"nạn nhân\" do AI dựng; một số video, ảnh cũ bị gắn sai là vụ 19/7; các bài dùng thủ đoạn câu tương tác. Mời mọi người dừng chia sẻ và báo cáo các bài này.",
-        "likes": 3600,
-        "shares": 2100,
         "after": [
           "boss_done"
-        ]
+        ],
+        "text": "Đính chính: hai bộ ảnh \"nạn nhân\" do AI dựng; một số video, ảnh cũ bị gắn sai là vụ 19/7; các bài dùng thủ đoạn câu tương tác. Mời mọi người dừng chia sẻ và báo cáo các bài này. Điều chưa đủ căn cứ (ai đứng sau, có thu lợi hay không) em không kết luận.",
+        "likes": 3600,
+        "comments_n": 410,
+        "shares": 2100,
+        "reportWrong": "Đây là bài đính chính của chính em!"
       }
     ]
   }
