@@ -224,7 +224,8 @@
     "tone": {
       "orange": "cam",
       "red": "đỏ"
-    }
+    },
+    "lensHint": "Rê chuột (hoặc chạm và kéo) trên ảnh để soi bằng kính lúp. Bấm vào chỗ bất thường để khoanh đỏ; bấm lại để bỏ."
   },
   "boss": {
     "barLabel": "Sức lan của bài sai",

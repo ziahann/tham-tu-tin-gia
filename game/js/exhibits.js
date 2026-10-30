@@ -94,14 +94,64 @@ export function frameGrid(setKey, opts = {}) {
         const on = opts.marked?.has(f.n);
         cell.classList.toggle('is-marked', !!on);
         cell.setAttribute('aria-pressed', String(!!on));
+        if (!on) cell.querySelectorAll('.lens-ring').forEach(r => r.remove());
       };
       sync();
-      cell.addEventListener('click', () => { opts.onPick(f.n); sync(); });
+      cell.addEventListener('click', e => {
+        const wasOn = opts.marked?.has(f.n);
+        opts.onPick(f.n);
+        sync();
+        // kính lúp: khoanh đỏ đúng chỗ vừa bấm
+        if (opts.lens && !wasOn && opts.marked?.has(f.n) && e.clientX) {
+          const r = cv.getBoundingClientRect();
+          const ring = el('span', 'lens-ring');
+          ring.style.left = `${((e.clientX - r.left) / r.width) * 100}%`;
+          ring.style.top = `${((e.clientY - r.top) / r.height) * 100}%`;
+          cell.append(ring);
+        }
+      });
     }
     grid.append(cell);
   }
   wrap.append(grid);
+  if (opts.lens) attachLens(grid);
   return wrap;
+}
+
+/**
+ * Kính lúp tự do: rê chuột / chạm kéo trên lưới khung, một vòng kính phóng to 3 lần vùng dưới con trỏ.
+ * Khung mờ nhìn qua kính vẫn mờ (không lộ chi tiết mà hồ sơ không đánh giá được).
+ */
+function attachLens(grid) {
+  const ZOOM = 3, SIZE = 132;
+  const lens = el('canvas', 'lens');
+  lens.width = lens.height = SIZE;
+  lens.hidden = true;
+  document.body.append(lens);
+  const ctx = lens.getContext('2d');
+  const hide = () => { lens.hidden = true; };
+  const move = e => {
+    const cv = document.elementFromPoint(e.clientX, e.clientY)?.closest('.frame')?.querySelector('canvas');
+    if (!cv || !grid.contains(cv)) { hide(); return; }
+    const r = cv.getBoundingClientRect();
+    const sx = ((e.clientX - r.left) / r.width) * cv.width, sy = ((e.clientY - r.top) / r.height) * cv.height;
+    const half = (SIZE / ZOOM) / 2 * (cv.width / r.width);
+    ctx.imageSmoothingEnabled = false;
+    ctx.fillStyle = '#0b0f18';
+    ctx.fillRect(0, 0, SIZE, SIZE);
+    ctx.filter = cv.classList.contains('is-blur') ? 'blur(6px)' : 'none';
+    ctx.drawImage(cv, sx - half, sy - half, half * 2, half * 2, 0, 0, SIZE, SIZE);
+    ctx.filter = 'none';
+    lens.hidden = false;
+    lens.style.left = `${e.clientX - SIZE / 2}px`;
+    lens.style.top = `${e.clientY - SIZE - 18}px`;
+  };
+  grid.addEventListener('pointermove', move);
+  grid.addEventListener('pointerdown', move);
+  grid.addEventListener('pointerleave', hide);
+  // dọn kính khi lưới bị gỡ khỏi trang (đóng hội thoại)
+  const watch = new MutationObserver(() => { if (!document.body.contains(grid)) { lens.remove(); watch.disconnect(); } });
+  watch.observe(document.body, { childList: true, subtree: true });
 }
 
 /** Một khung đơn lẻ để so sánh (ví dụ khung 11 của M.P.V.). */
