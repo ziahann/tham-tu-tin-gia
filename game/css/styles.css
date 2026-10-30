@@ -635,3 +635,6 @@ button.frame:hover { border-color: var(--grey); }
 .feed-comment { margin: 4px 0 0; font-size: 14px; color: #c9d1dc; border-top: 1px solid #2c3550; padding-top: 3px; }
 .feed-actions { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
 .feed-hint { font-size: 13px; color: var(--muted); margin: 4px 0 0; }
+
+.hud-clock { min-width: 64px; text-align: center; }
+@media (max-width: 700px) { .hud-clock { display: none; } }

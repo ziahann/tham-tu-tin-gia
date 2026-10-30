@@ -18,6 +18,16 @@ export function updateScore() {
   updateMeters();
 }
 
+/** Giờ trong game trên thanh trên (biểu tượng theo buổi). */
+export function showClock() {
+  const box = document.getElementById('hud-clock');
+  const m = state.progress?.clock;
+  if (!box || m == null) return;
+  const h = Math.floor(m / 60), mm = m % 60;
+  const icon = h >= 19 || h < 5 ? '☾' : h >= 17 || h < 6 ? '◐' : '☀';
+  box.textContent = `${icon} ${String(h).padStart(2, '0')}:${String(mm).padStart(2, '0')}`;
+}
+
 /** Thanh độ tin cậy (hồ sơ đang theo dõi) và thanh hạn chót; ẩn khi không có hồ sơ đang làm. */
 export function updateMeters() {
   const box = document.getElementById('hud-meters');

@@ -366,7 +366,7 @@ export class WorldScene extends Phaser.Scene {
     npc.chaser = !!data.npcs.npcs.find(n => n.id === id)?.rumor;
     npc.homePatrol = homePatrol;
     if (id === 'boss') npc.marker.setVisible(false);
-    if (this.weather?.kind === 'night' && this.renderer.type === Phaser.WEBGL) npc.sprite.setPipeline('Light2D');
+    if (this.weather?.lit) npc.sprite.setPipeline('Light2D');
     this.npcs.set(id, npc);
     npc.collider = this.physics.add.collider(this.player, npc.sprite);
     this.views.add(npc.sprite);
@@ -573,7 +573,7 @@ export class WorldScene extends Phaser.Scene {
   canChase() { return !isLight(); }
 
   /** Hiệu ứng thời tiết đang có ở bản đồ này (trong nhà: không có). */
-  fx() { return WEATHER_FX[this.weather?.kind] || WEATHER_FX.clear; }
+  fx() { return WEATHER_FX[this.weather?.dark ? 'night' : this.weather?.kind] || WEATHER_FX.clear; }
 
   /** Xong lượt gặp kẻ tung tin: một lúc sau mới đuổi tiếp. */
   rumorDone(id) {
@@ -852,6 +852,7 @@ export class WorldScene extends Phaser.Scene {
     if (!this.reduceMotion) this.devices.forEach((d, i) => d.marker.setY(iso.P(d.obj.x + d.obj.width / 2, d.obj.y).y - 40 + Math.round(Math.sin(time / 250 + i) * 2)));
 
     this.weather.update(delta, this.player.view);
+    if (this.mapKey === 'boss' && this.weather.liveLight) this.weather.liveLight.setIntensity(0.6 + 0.9 * (Math.sin(time / 280) > 0 ? 1 : 0.25));
     this.ambIn -= delta;
     if (this.ambIn <= 0) { this.updateAmbience(250 - this.ambIn); this.ambIn = 250; updateMeters(); }
     if (!this.reduceMotion) this.decoys.forEach((d, i) => d.marker.setY(iso.P(d.obj.x + d.obj.width / 2, d.obj.y + d.obj.height / 2).y - 22 + Math.round(Math.sin(time / 300 + i) * 2)));
