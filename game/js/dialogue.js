@@ -121,7 +121,11 @@ export function heroTitle() {
 }
 
 /** Biến thay thế trong lời thoại. */
-const vars = () => ({ hero: heroTitle(), org: data.quests.organization.name });
+// {anhchi}: người nhỏ tuổi hơn (em học sinh) gọi nhân vật chính là anh / chị theo mẫu nhân vật đã chọn
+const vars = () => {
+  const ac = state.progress?.heroLook === 'f' ? 'chị' : 'anh';
+  return { hero: heroTitle(), org: data.quests.organization.name, anhchi: ac, Anhchi: ac[0].toUpperCase() + ac.slice(1) };
+};
 
 /** Giữ một biểu cảm cho nhân vật tới hết cuộc trò chuyện (ví dụ boss sau khi gỡ mặt nạ: 'blank'). */
 export function pinMood(id, mood) { pinned[id] = mood; if (id === rightId) setPortrait(els.right, id, mood); }
