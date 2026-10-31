@@ -22,7 +22,11 @@ import { iso, setupIso, buildGround, buildWalls, ViewLayer, fadeOccluders, shear
 const MAPS = ['tn_lobby', 'tn_f2', 'tn_f3', 'tn_f4', 'tn_f5', 'street', 'newsroom', 'cafe', 'agency', 'office2', 'clinic', 'cafe2', 'boss', 'home', 'hcm', 'tn_hcm'];
 const CITY_MAPS = new Set(['street', 'hcm']); // phố ngoài trời: nền kéo dài ra ngoài bản đồ, ra khỏi nhà nhìn xuống
 const SPEED = 120;
-const MAP_VERSION = 10; // tăng khi sửa bố cục bản đồ: vị trí đã lưu theo bản cũ bị bỏ qua
+const MAP_VERSION = 11;
+// Xe buýt (tools/props.mjs → bus): mũi xe bên phải ảnh nhìn ngang 240 px; cửa lên ở đầu xe, cửa xuống ở giữa thân.
+// Xe chạy làn đông (bus_e) dọc vỉa hè nam nên mặt có cửa quay về phía người chơi. Toạ độ x cửa = bus.x − 120 + cột.
+const BUS_FRONT_DOOR = 216, BUS_MID_DOOR = 122;
+const busIso = scene => ({ fw: 240, ay: 28 + 84, h: scene.textures.get('bus_e').getSourceImage().height, d: 56 }); // tăng khi sửa bố cục bản đồ: vị trí đã lưu theo bản cũ bị bỏ qua
 
 /** Sprite của mọi nhân vật trong npc_dialogues.json (NPC chính, người qua đường, boss) + boss đã gỡ mặt nạ. */
 const spriteIds = () => [...new Set([...data.npcs.npcs.map(n => n.sprite || n.id), 'boss', 'boss_blank'])];
@@ -233,18 +237,17 @@ export class WorldScene extends Phaser.Scene {
     const spawn = this.points.spawn_bus || { x: this.player.x, y: this.player.y };
     if (this.reduceMotion) { delete state.progress.introBus; saveProgress(); journey.onArrive(this.mapKey); return; }
     this.cutscene = true;
-    // xe buýt diễn: ảnh isometric hướng tây, chạy trong làn sát vỉa hè bắc rồi dừng ngay trạm
-    const lane = this.traffic?.lanes.find(l => l.dir < 0 && Math.abs(l.bottom - spawn.y) < 100);
-    const by = lane ? lane.bottom - 4 : spawn.y + 70;
-    const stopX = spawn.x + 40;
-    const bus = this.add.sprite(stopX + 900, by, 'bus').setOrigin(0.5, 1);
-    const tex = this.textures.get('bus_w').getSourceImage();
-    this.views.add(bus, { isoTex: { key: 'bus_w', fw: 240, ay: 28 + 84, h: tex.height, d: 56 } });
+    // xe buýt diễn: chạy làn đông sát vỉa hè nam (cửa xe quay về vỉa hè), dừng để cửa xuống (giữa thân) ngay trước trạm
+    const lane = this.traffic?.lanes.find(l => l.dir > 0 && Math.abs(l.bottom - spawn.y) < 100);
+    const by = lane ? lane.bottom - 4 : spawn.y - 50;
+    const stopX = spawn.x + 120 - BUS_MID_DOOR;
+    const bus = this.add.sprite(stopX - 900, by, 'bus').setOrigin(0.5, 1);
+    this.views.add(bus, { isoTex: { key: 'bus_e', ...busIso(this) } });
     // dọn xe cùng làn để không chồng lên xe buýt
     if (lane) this.traffic.cars.filter(c => c.lane === lane).forEach(c => { c.sprite.destroy(); });
     if (lane) this.traffic.cars = this.traffic.cars.filter(c => c.lane !== lane);
     this.player.view.setAlpha(0);
-    this.player.body.reset(spawn.x, by - 20);
+    this.player.body.reset(spawn.x, by - 2);
     const cam = this.cameras.main;
     cam.startFollow(bus.view, true, 0.08, 0.08);
     // khung điện ảnh + dòng chú thích
@@ -260,19 +263,22 @@ export class WorldScene extends Phaser.Scene {
       onComplete: () => {
         if (!this.cutscene) return;
         sfx('ding');
-        // nhân vật bước xuống, đi lên vỉa hè
+        // cửa giữa mở, nhân vật bước xuống vỉa hè, cửa đóng rồi xe chạy tiếp
+        bus.view.setTexture('bus_e_open');
+        sfx('door');
         this.player.view.setAlpha(1);
         cam.startFollow(this.player.view, true, 0.1, 0.1);
-        this.player.anims.play('hero-walk-up', true);
+        this.player.anims.play('hero-walk-down', true);
         this.tweens.add({
-          targets: this.player, y: spawn.y, x: spawn.x, duration: 900, delay: 400,
+          targets: this.player, y: spawn.y, x: spawn.x, duration: 900, delay: 500,
           onComplete: () => {
             if (!this.cutscene) return;
             this.player.anims.stop();
-            this.facing = 'up';
-            this.player.setFrame(idleFrame('up'));
+            this.facing = 'down';
+            this.player.setFrame(idleFrame('down'));
             leaving = true;
-            this.tweens.add({ targets: bus, x: -400, duration: 5200, delay: 500, ease: 'Sine.easeIn', onComplete: () => bus.destroy() });
+            this.time.delayedCall(400, () => bus.active && bus.view?.setTexture('bus_e'));
+            this.tweens.add({ targets: bus, x: this.map.widthInPixels + 400, duration: 5200, delay: 900, ease: 'Sine.easeIn', onComplete: () => bus.destroy() });
             this.time.delayedCall(1800, done);
           }
         });
@@ -293,12 +299,13 @@ export class WorldScene extends Phaser.Scene {
     this.walkPath = null;
     this.player.setVelocity(0, 0);
     this.player.body.reset(spawn.x, spawn.y);
-    this.facing = 'down';
+    this.facing = 'up';
     this.player.anims.stop();
-    this.player.setFrame(idleFrame('down'));
-    const lane = this.traffic?.lanes.find(l => l.dir < 0 && Math.abs(l.bottom - spawn.y) < 100);
-    const by = lane ? lane.bottom - 4 : spawn.y + 70;
-    const stopX = spawn.x + 40;
+    this.player.setFrame(idleFrame('up'));
+    // xe tới từ phía tây trên làn đông sát vỉa hè; dừng để cửa lên (đầu xe) ngay trước chỗ người chơi đứng
+    const lane = this.traffic?.lanes.find(l => l.dir > 0 && Math.abs(l.bottom - spawn.y) < 100);
+    const by = lane ? lane.bottom - 4 : spawn.y - 50;
+    const stopX = spawn.x + 120 - BUS_FRONT_DOOR;
     if (lane) { this.traffic.cars.filter(c => c.lane === lane).forEach(c => c.sprite.destroy()); this.traffic.cars = this.traffic.cars.filter(c => c.lane !== lane); }
     const { width: w, height: h } = this.scale;
     const bars = [this.add.rectangle(0, 0, w, 54, 0x05060a).setOrigin(0), this.add.rectangle(0, h - 54, w, 54, 0x05060a).setOrigin(0)];
@@ -306,7 +313,6 @@ export class WorldScene extends Phaser.Scene {
     const cap = this.add.text(w / 2, h - 27, J.wait, { fontFamily: 'VT323', fontSize: '22px', color: '#e8ecf2', align: 'center' })
       .setOrigin(0.5).setScrollFactor(0).setDepth(200001);
     const say = (text, color = '#e8ecf2') => cap.setText(text).setColor(color);
-    const tex = this.textures.get('bus_w').getSourceImage();
     let bus = null, near = false, hailed = false, tw = null;
     const tap = () => this.hailFn?.();
     this.input.on('pointerdown', tap);
@@ -318,15 +324,18 @@ export class WorldScene extends Phaser.Scene {
     };
     const board = () => {
       say(J.stop, '#7fe3ff');
-      this.player.anims.play('hero-walk-down', true);
+      // cửa trước mở, nhân vật bước lên bậc cửa, cửa đóng, xe chạy về phía đông
+      bus.view.setTexture('bus_e_open');
+      sfx('door');
+      this.player.anims.play('hero-walk-up', true);
       this.tweens.add({
-        targets: this.player, x: stopX - 30, y: by - 24, duration: 700, delay: 300,
+        targets: this.player, x: spawn.x, y: by + 2, duration: 800, delay: 400,
         onComplete: () => {
           this.player.anims.stop();
           this.player.view.setAlpha(0);
-          sfx('door');
+          this.time.delayedCall(350, () => { if (bus?.active) bus.view.setTexture('bus_e'); sfx('door'); });
           this.cameras.main.startFollow(bus.view, true, 0.08, 0.08);
-          this.tweens.add({ targets: bus, x: stopX - 900, duration: 3000, delay: 400, ease: 'Sine.easeIn' });
+          this.tweens.add({ targets: bus, x: stopX + 900, duration: 3000, delay: 700, ease: 'Sine.easeIn' });
           // fade(..., force): camera còn giữ trạng thái "đã xong" của lần sáng dần lúc vào bản đồ, fadeOut thường sẽ bị bỏ qua
           let left = false;
           const leave = () => { if (left) return; left = true; cleanup(); this.cutscene = false; onBoard(); };
@@ -344,17 +353,17 @@ export class WorldScene extends Phaser.Scene {
       sfx('ding');
       this.emote?.('hero', '!');
       tw?.stop();
-      this.tweens.add({ targets: bus, x: stopX, duration: Math.max(500, (bus.x - stopX) * 2.2), ease: 'Sine.easeOut', onComplete: board });
+      this.tweens.add({ targets: bus, x: stopX, duration: Math.max(500, (stopX - bus.x) * 2.2), ease: 'Sine.easeOut', onComplete: board });
     };
     const run = () => {
       near = false;
-      bus = this.add.sprite(stopX + 1000, by, 'bus').setOrigin(0.5, 1);
-      this.views.add(bus, { isoTex: { key: 'bus_w', fw: 240, ay: 28 + 84, h: tex.height, d: 56 } });
+      bus = this.add.sprite(stopX - 1000, by, 'bus').setOrigin(0.5, 1);
+      this.views.add(bus, { isoTex: { key: 'bus_e', ...busIso(this) } });
       say(J.wait);
       tw = this.tweens.add({
-        targets: bus, x: stopX - 900, duration: 6200,
+        targets: bus, x: stopX + 900, duration: 6200,
         onUpdate: () => {
-          const n = bus.x < stopX + 460 && bus.x > stopX + 30;
+          const n = bus.x > stopX - 460 && bus.x < stopX - 30;
           if (n !== near) { near = n; say(n ? J.now : J.wait, n ? '#ffc857' : '#e8ecf2'); }
         },
         onComplete: () => {

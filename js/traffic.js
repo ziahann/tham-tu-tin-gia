@@ -5,13 +5,15 @@ import { isLight } from './obstacles.js';
 
 const propOf = (o, name) => (o.properties || []).find(p => p.name === name)?.value;
 
-export const VEHICLE_SPRITES = ['car1', 'car2', 'car3', 'car4', 'bus', 'bike1', 'bike2'].flatMap(k => [k, `${k}_e`, `${k}_w`]);
+export const VEHICLE_SPRITES = [...['car1', 'car2', 'car3', 'car4', 'bus', 'bike1', 'bike2', 'bike3', 'bike4'].flatMap(k => [k, `${k}_e`, `${k}_w`]), 'bus_e_open', 'bus_w_open'];
 /** Kích thước bản isometric của xe (xem tools/props.mjs → vehicles): bề rộng mặt nam, cao ảnh gốc, chiều sâu. */
-const ISO_SIZE = { car: [96, 50, 40], bus: [240, 84, 56], bike: [50, 50, 16] };
+const ISO_SIZE = { car: [96, 50, 40], bus: [240, 84, 56], bike: [50, 50, 8] };
 const KINDS = {
   car: [['car1', 110], ['car2', 100], ['car3', 120], ['car4', 105], ['bus', 75]],
-  bike: [['bike1', 85], ['bike2', 78]],
-  mixed: [['car1', 110], ['car2', 100], ['car3', 120], ['car4', 105], ['bus', 75], ['bike1', 85], ['bike2', 78], ['car1', 110], ['bike1', 85]]
+  bike: [['bike1', 85], ['bike2', 78], ['bike3', 80], ['bike4', 88]],
+  // phố TP.HCM: xe máy là chính
+  moto: [['bike1', 85], ['bike2', 78], ['bike3', 80], ['bike4', 88], ['bike1', 82], ['bike3', 76], ['car3', 110], ['bike2', 84], ['bus', 75]],
+  mixed: [['car1', 110], ['car2', 100], ['car3', 120], ['car4', 105], ['bus', 75], ['bike1', 85], ['bike2', 78], ['bike3', 80], ['bike4', 88]]
 };
 const GAP = 26;         // khoảng cách tối thiểu tới xe phía trước
 const LOOK = 70;        // tầm nhìn phía trước để dừng xe

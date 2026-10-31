@@ -97,7 +97,7 @@ export function trustScore() {
   return Math.round(rooms.reduce((s, r) => s + credOf(r.id), 0) / (rooms.length || 1));
 }
 
-/** Thẻ sinh viên (mô phỏng): ảnh chân dung, tên, ngành, uy tín, số huy hiệu / hồ sơ đã khép. */
+/** Thẻ sinh viên (mô phỏng): ảnh chân dung, tên, trường (không ghi ngành), uy tín, số huy hiệu / hồ sơ đã khép. */
 function studentCard() {
   const flags = state.progress?.flags || [];
   const card = el('div', 'student-card');

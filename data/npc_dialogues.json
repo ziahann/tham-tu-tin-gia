@@ -775,7 +775,7 @@
       "lines": [
         {
           "id": "s5_intro_l1",
-          "text": "À, em là sinh viên Văn Lang bên Báo Thanh Niên nhờ tới phải không? Bác là Tín Thư, coi kho lưu trữ này."
+          "text": "À, cháu là sinh viên Văn Lang bên Báo Thanh Niên nhờ tới phải không? Bác là Tín Thư, coi kho lưu trữ này."
         },
         {
           "id": "s5_intro_l2",
@@ -792,7 +792,7 @@
       "lines": [
         {
           "id": "s5_q7_intro_l1",
-          "text": "Có mấy đoạn video người ta bảo là \"cận cảnh vụ 19/7\". Bác ngờ lắm. Em đọc báo xem chúng thật ra từ đâu."
+          "text": "Có mấy đoạn video người ta bảo là \"cận cảnh vụ 19/7\". Bác ngờ lắm. Cháu đọc báo xem chúng thật ra từ đâu."
         }
       ],
       "choices": [],
@@ -805,7 +805,7 @@
       "lines": [
         {
           "id": "s5_done_l1",
-          "text": "Tốt lắm. Phòng bên cạnh có bảng dòng thời gian, khi nào em muốn thì sang."
+          "text": "Tốt lắm. Phòng bên cạnh có bảng dòng thời gian, khi nào cháu muốn thì sang."
         }
       ],
       "choices": [],
@@ -1013,7 +1013,7 @@
       "lines": [
         {
           "id": "npc3_wait_l1",
-          "text": "Bác ở kho lưu trữ đây. Em cần gì ở kho lưu trữ thì ghé nhé."
+          "text": "Bác ở kho lưu trữ đây. Cháu cần gì ở kho lưu trữ thì ghé nhé."
         }
       ],
       "choices": [],
@@ -1113,7 +1113,7 @@
       "lines": [
         {
           "id": "cafe_q10b_intro_l1",
-          "text": "Em hỏi gì thì hỏi lẹ, chú còn uống cà phê."
+          "text": "Cháu hỏi gì thì hỏi lẹ, chú còn uống cà phê."
         }
       ],
       "choices": [],
@@ -1666,7 +1666,7 @@
     "note": "Người qua đường: nói lần lượt từng câu, không giao nhiệm vụ, không đưa dữ kiện mới ngoài F1–F16. Nhân vật GIẢ LẬP.",
     "amb_guard": [
       "Ai vào đây cũng phải trình thẻ. Tin trên mạng cũng nên vậy: hỏi xem nó từ đâu tới.",
-      "Trời mưa thì đi chậm thôi em, sàn sảnh trơn lắm."
+      "Trời mưa thì đi chậm thôi cháu, sàn sảnh trơn lắm."
     ],
     "amb_worker": [
       "Máy in lại kẹt giấy rồi… Còn em thì sao, hồ sơ nào đang dở?",
@@ -1690,7 +1690,7 @@
     ],
     "amb_student": [
       "Cô giáo dạy em hỏi ba câu trước khi chia sẻ: Ai đăng? Đăng khi nào? Có nguồn khác xác nhận không?",
-      "Bạn em bảo ảnh nào có chữ \"SỐC\" là phải nghi ngay. Đúng không anh chị?"
+      "Bạn em bảo ảnh nào có chữ \"SỐC\" là phải nghi ngay. Đúng không {anhchi}?"
     ],
     "amb_elder": [
       "Hồi xưa tin đồn đi bằng miệng, giờ đi bằng điện thoại. Nhanh hơn, nên càng phải chậm lại.",
@@ -1717,7 +1717,7 @@
     ],
     "amb_clerk2": [
       "Chị làm truyền thông nội bộ. Ảnh nào đưa lên bản tin cũng phải ghi nguồn và ngày chụp.",
-      "Sinh viên Quan hệ công chúng hả? Nhớ nhé: uy tín mất rất nhanh, gây dựng lại rất lâu."
+      "Sinh viên Văn Lang hả? Nhớ nhé: uy tín mất rất nhanh, gây dựng lại rất lâu."
     ],
     "amb_barista2": [
       "Quán mở từ sáng sớm. Khách hay hỏi \"tin này thật không\", anh chỉ họ cách tìm ngược ảnh."
@@ -1727,7 +1727,7 @@
       "Tiêu đề viết hoa với ba dấu chấm than là mình dừng lại đọc kỹ ngay."
     ],
     "amb_hcm_vendor": [
-      "Bánh mì nóng đây em! Mà hôm qua cô thấy trên mạng cái ảnh gì buồn lắm, chưa biết thật giả sao.",
+      "Bánh mì nóng đây cháu! Mà hôm qua cô thấy trên mạng cái ảnh gì buồn lắm, chưa biết thật giả sao.",
       "Con gái cô dặn: thấy tin lạ thì hỏi nguồn trước, đừng chia sẻ vội."
     ],
     "amb_hcm_student": [
@@ -1755,8 +1755,8 @@
       "Clip càng \"nóng\" thì chị càng muốn biết nó được quay ở đâu."
     ],
     "amb_intern": [
-      "Em mới thực tập ở đây… anh Phát Vội lúc nào cũng giục đăng nhanh.",
-      "Em đang tập thói quen: chưa tìm thấy bản gốc thì chưa đăng."
+      "Mình mới thực tập ở đây… anh Phát Vội lúc nào cũng giục đăng nhanh.",
+      "Mình đang tập thói quen: chưa tìm thấy bản gốc thì chưa đăng."
     ],
     "amb_hcm_student2": [
       "Nhóm lớp mình nhắn liên tục về vụ lật tàu ở Hạ Long, đọc mà rối cả lên.",
@@ -1940,16 +1940,16 @@
     ],
     "npc6": [
       {
-        "text": "Chào em. Chú là Sáu, quản trị một nhóm trên mạng. Chiều nào chú cũng ngồi đây uống cà phê."
+        "text": "Chào cháu. Chú là Sáu, quản trị một nhóm trên mạng. Chiều nào chú cũng ngồi đây uống cà phê."
       },
       {
         "npc": "hero",
-        "text": "Dạ, em chào chú. Em là {hero}, sinh viên Văn Lang."
+        "text": "Dạ, cháu chào chú. Cháu là {hero}, sinh viên Văn Lang."
       }
     ],
     "amb_guard": [
       {
-        "text": "Chào em. Chú là Tấn, bảo vệ tòa nhà. Có hẹn với ai trên tầng thì báo chú một tiếng nhé."
+        "text": "Chào cháu. Chú là Tấn, bảo vệ tòa nhà. Có hẹn với ai trên tầng thì báo chú một tiếng nhé."
       }
     ],
     "amb_worker": [
@@ -1965,29 +1965,29 @@
     ],
     "amb_vendor": [
       {
-        "text": "Chào em! Cô bán báo ở đầu phố này cũng chục năm rồi."
+        "text": "Chào cháu! Cô bán báo ở đầu phố này cũng chục năm rồi."
       }
     ],
     "amb_tourist": [
       {
-        "text": "Chào em! Mình đi du lịch vịnh mấy hôm. Em là người ở đây à?",
+        "text": "Chào bạn! Mình đi du lịch vịnh mấy hôm. Bạn là người ở đây à?",
         "mood": "happy"
       }
     ],
     "amb_fisher": [
       {
-        "text": "Chào em. Chú câu cá ở bến này mỗi sáng sớm."
+        "text": "Chào cháu. Chú câu cá ở bến này mỗi sáng sớm."
       }
     ],
     "amb_student": [
       {
-        "text": "Em chào ạ! Em vừa tan học về.",
+        "text": "Em chào {anhchi} ạ! Em vừa tan học về.",
         "mood": "happy"
       }
     ],
     "amb_elder": [
       {
-        "text": "Chào em. Chiều nào ông cũng ra ghế đá này hóng gió."
+        "text": "Chào cháu. Chiều nào ông cũng ra ghế đá này hóng gió."
       }
     ],
     "amb_jogger": [
@@ -2008,7 +2008,7 @@
     ],
     "amb_patient": [
       {
-        "text": "Chào em. Ông đang chờ tới lượt khám."
+        "text": "Chào cháu. Ông đang chờ tới lượt khám."
       }
     ],
     "amb_clerk": [
@@ -2030,7 +2030,7 @@
     ],
     "amb_patron": [
       {
-        "text": "Chào em, ngồi đây đọc báo cùng mình không?"
+        "text": "Chào bạn, ngồi đây đọc báo cùng mình không?"
       }
     ],
     "npc7": [
