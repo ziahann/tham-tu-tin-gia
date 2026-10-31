@@ -873,8 +873,12 @@ function grid(W, H, fill) {
 // Tường phía bắc cao 2 ô (^ nửa trên, _ nửa dưới); đồ đạc là props đúng tỉ lệ.
 /** Đạo cụ đặt tại (tx, ty) = tâm đáy tính theo ô. */
 const pp = (key, tx, ty, props = {}) => obj('prop', key, tx * T, ty * T, 0, 0, props, { point: true });
-/** Manh mối đánh lừa: tờ giấy nằm trên đất + vùng tương tác (dữ liệu ở npc_dialogues.json → decoys). */
-const decoyAt = (id, tx, ty) => [pp('flyer', tx + 0.35, ty + 0.25), rectT('decoy', id, tx - 0.6, ty - 0.6, 1.2, 1.2, { decoy: id })];
+/**
+ * Manh mối đánh lừa: tờ báo đặt trên đồ vật (tủ báo, ghế, bàn nhỏ — không nằm dưới đất) + vùng tương tác
+ * (dữ liệu ở npc_dialogues.json → decoys). lift: độ cao dấu "?" trên mặt đồ.
+ */
+const DECOY_HOST = { news_rack: 62, bench_paper: 34, paper_table: 40 };
+const decoyAt = (id, tx, ty, host = 'paper_table') => [pp(host, tx, ty + 0.45), rectT('decoy', id, tx - 0.8, ty - 0.5, 1.6, 1.4, { decoy: id, lift: DECOY_HOST[host] })];
 /** Chữ ghi trên tường / sàn (biển tầng, biển phòng). */
 const label = (name, tx, ty, text, props = {}) => obj('label', name, tx * T, ty * T, 0, 0, { text, ...props }, { point: true });
 
@@ -1164,7 +1168,7 @@ const street = buildMap('street', {
     // vỉa hè bắc đang thi công: rào kín vỉa hè và mép đường, phải sang đường ở vạch kẻ
     pp('barrier_ns', 36.5, 22.05), pp('barrier', 35.4, 19.3), pp('barrier', 35.4, 22.2),
     rectT('inspect', 'inspect_barrier', 35, 18.8, 3.2, 3.2, { text: 'inspect_barrier' }),
-    ...decoyAt('decoy_S4', 13.4, 33.2), ...decoyAt('decoy_S7', 29.2, 20.6), ...decoyAt('decoy_S8', 40.2, 33.6),
+    ...decoyAt('decoy_S4', 13.4, 33.2, 'news_rack'), ...decoyAt('decoy_S7', 29.2, 20.6, 'bench_paper'), ...decoyAt('decoy_S8', 40.2, 33.6, 'news_rack'),
     path_('patrol_jogger', [[2, 47.6], [94, 47.6]]),
     // --- đồ vật xem được
     rectT('inspect', 'inspect_office_sign', 13, 18.3, 3, 0.7, { text: 'inspect_office_sign' }),
