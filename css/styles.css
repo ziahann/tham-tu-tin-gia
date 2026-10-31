@@ -266,13 +266,23 @@ input:not([type]), input[type="text"] {
 /* ---------- Phím ảo ---------- */
 .touch { position: fixed; inset: auto 0 16px 0; z-index: 22; pointer-events: none; display: flex; justify-content: space-between; padding: 0 16px; }
 .touch button { pointer-events: auto; touch-action: none; user-select: none; -webkit-user-select: none; }
-.dpad { display: grid; grid-template-columns: repeat(3, 56px); grid-template-rows: repeat(3, 56px); }
-.dpad button { background: rgb(36 48 73 / 0.8); color: var(--paper); border: 3px solid var(--ink); font-size: 22px; }
-.dpad [data-dir="up"] { grid-column: 2; grid-row: 1; }
-.dpad [data-dir="left"] { grid-column: 1; grid-row: 2; }
-.dpad [data-dir="right"] { grid-column: 3; grid-row: 2; }
-.dpad [data-dir="down"] { grid-column: 2; grid-row: 3; }
-.touch.is-dialog .dpad { visibility: hidden; }
+.stick {
+  --sz: 132px;
+  position: relative; pointer-events: auto; touch-action: none; user-select: none; -webkit-user-select: none;
+  width: var(--sz); height: var(--sz); border-radius: 50%;
+  background:
+    linear-gradient(transparent calc(50% - 1px), rgb(232 236 242 / 0.18) 0 calc(50% + 1px), transparent 0),
+    linear-gradient(90deg, transparent calc(50% - 1px), rgb(232 236 242 / 0.18) 0 calc(50% + 1px), transparent 0),
+    radial-gradient(circle, rgb(36 48 73 / 0.55) 60%, rgb(36 48 73 / 0.8) 61%);
+  border: 3px solid var(--ink); box-shadow: 0 0 0 2px rgb(163 173 191 / 0.4);
+}
+.stick-knob {
+  position: absolute; left: 50%; top: 50%; width: 56px; height: 56px; margin: -28px 0 0 -28px; border-radius: 50%;
+  background: var(--teal); border: 3px solid var(--ink); box-shadow: inset -4px -4px 0 #24706d;
+  transition: transform 0.08s;
+}
+.stick.is-on .stick-knob { transition: none; }
+.touch.is-dialog .stick { visibility: hidden; }
 .touch-a { align-self: flex-end; width: 76px; height: 76px; border-radius: 50%; background: rgb(58 167 163 / 0.9); border: 4px solid var(--ink); color: var(--ink); font-size: 30px; margin-bottom: 30px; }
 
 /* ---------- Hộp thoại phụ + thông báo ---------- */
@@ -662,3 +672,35 @@ button.frame:hover { border-color: var(--grey); }
 .feed-pick { margin-top: 6px; display: flex; flex-direction: column; gap: 6px; background: #10151f; border: 2px dashed #4a5470; padding: 6px; }
 .feed-pick .btn-small { text-align: left; white-space: normal; line-height: 1.25; }
 .feed-pick-ask { margin: 0; color: #7fe3ff; font-size: 14px; }
+
+/* ---------- Điện thoại: chơi màn hình ngang ---------- */
+.rotate { display: none; }
+@media (pointer: coarse) and (orientation: portrait) and (max-width: 760px) {
+  .rotate {
+    position: fixed; inset: 0; z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px;
+    background: var(--ink); color: var(--paper); text-align: center; padding: 24px;
+  }
+  .rotate p { max-width: 260px; margin: 0; }
+  .rotate-phone { width: 54px; height: 92px; border: 4px solid var(--straw); border-radius: 8px; animation: rotate-hint 2s steps(8) infinite; }
+}
+@keyframes rotate-hint { 0%, 30% { transform: rotate(0); } 60%, 100% { transform: rotate(-90deg); } }
+@media (max-height: 500px) {
+  :root { --fs: 18px; --px: 3px; --hud-h: 42px; }
+  .hud { padding: 4px 10px; }
+  .hud-title, .hud-clock { display: none; }
+  .icon-btn { width: 36px; height: 36px; padding: 4px; }
+  .hud-track { min-height: 28px; max-width: 32vw; }
+  .dialog { bottom: 6px; --dlg-max: 62dvh; --pw: 112px; --ph: 137px; }
+  .dialog-box { padding: 6px 10px; gap: 8px; }
+  .dialog-text { min-height: 2em; }
+  .backpack { width: min(380px, 52vw); }
+  body.backpack-open .dialog { width: calc(100vw - min(380px, 52vw) - 24px); --pw: 96px; --ph: 118px; }
+  .modal { max-height: calc(100dvh - var(--hud-h) - 8px); }
+  .touch { bottom: 10px; padding: 0 max(14px, env(safe-area-inset-right)) 0 max(14px, env(safe-area-inset-left)); }
+  .stick { --sz: 116px; }
+  .touch-a { width: 64px; height: 64px; font-size: 26px; margin-bottom: 20px; }
+  .phone { display: none; }
+  .intro { padding: 8px; }
+  .title-screen { padding: 8px 16px; }
+  .logo { font-size: clamp(32px, 13dvh, 104px); margin-bottom: 6px; }
+}
