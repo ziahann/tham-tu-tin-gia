@@ -1,5 +1,5 @@
 // Cốt truyện: chọn hội thoại khi nói chuyện với NPC, chạy nhiệm vụ trong hội thoại, xem đồ vật, cửa, khu vực.
-import { data, t, fill, questById, evidenceById, sceneById, npcById, sourceById, shortCite } from './data.js';
+import { data, t, fill, questById, evidenceById, sceneById, npcById, sourceById } from './data.js';
 import { state, questState, saveProgress, setFlag, hasFlag, addEvidence, isQuestDone } from './state.js';
 import * as dlg from './dialogue.js';
 import { matchField, checkCards, isUnlocked, isPlayable, roomStatus, bossStatus, nextQuestIn } from './grading.js';
