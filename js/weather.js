@@ -13,7 +13,7 @@ export function dayPhase(min) {
   if (h >= 17 || h < 6) return 'dusk';
   return 'day';
 }
-const OUTDOOR = new Set(['street', 'city']);
+const OUTDOOR = new Set(['street', 'city', 'hcm']);
 const DEPTH = 200000;
 
 // Ô phát sáng ban đêm: màu, bán kính, cường độ

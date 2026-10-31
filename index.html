@@ -103,12 +103,6 @@
         <svg class="logo-icon" viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M5 1h4v1h1v1h1v1h1v4h-1v1h-1v1h1v1h1v1h1v1h1v2h-2v-1h-1v-1h-1v-1h-1v-1H9v1H5v-1H4v-1H3V9H2V4h1V3h1V2h1zm0 2v1H4v4h1v1h4V8h1V4H9V3z"/><path fill="#fff" d="M5 4h1v1H5z"/></svg>
         <span data-ui="gameTitle"></span>
       </h1>
-      <div class="case-file">
-        <span class="case-label" data-ui="title.caseLabel"></span>
-        <p id="title-case" class="case-title"></p>
-        <p class="case-sub" data-ui="title.caseSub"></p>
-        <span class="stamp" data-ui="title.stamp"></span>
-      </div>
       <div id="title-actions" class="actions title-actions">
         <button type="button" id="title-start" class="btn-primary" data-ui="title.start"></button>
         <button type="button" id="title-continue" class="btn-primary" data-ui="title.continue"></button>
@@ -131,34 +125,23 @@
   </section>
 
   <!-- Intro: bối cảnh vụ án trên nền vịnh chuyển động -->
-  <section id="intro" class="intro" hidden aria-label="Bối cảnh vụ án">
-    <div id="intro-phone" class="phone" hidden></div>
+  <section id="intro" class="intro" hidden aria-label="Chọn nhân vật">
     <div class="intro-box">
-      <p id="intro-step" class="intro-step"></p>
-      <h2 id="intro-title"></h2>
-      <p id="intro-text" class="intro-text" aria-live="polite"></p>
-      <p id="intro-cite" class="cite-line"></p>
-      <div id="intro-final" hidden>
-        <h3 id="intro-questions-title"></h3>
-        <ol id="intro-questions"></ol>
-        <form id="intro-name">
-          <p data-ui="title.lookLabel"></p>
-          <div class="look-pick" role="radiogroup">
-            <button type="button" class="look" data-look="m" aria-pressed="true"><span class="look-img"></span><span data-ui="title.lookM"></span></button>
-            <button type="button" class="look" data-look="f" aria-pressed="false"><span class="look-img"></span><span data-ui="title.lookF"></span></button>
-          </div>
-          <label for="intro-name-input" data-ui="title.nameLabel"></label>
-          <div class="answer-row">
-            <input id="intro-name-input" maxlength="20" autocomplete="off" required>
-            <button type="submit" class="btn-primary" id="intro-start"></button>
-          </div>
-          <p class="muted small" data-ui="title.nameHint"></p>
-        </form>
-      </div>
-      <div id="intro-actions" class="actions">
-        <button type="button" id="intro-next" class="btn-primary"></button>
-        <button type="button" id="intro-skip" class="btn"></button>
-      </div>
+      <h2 id="intro-title" data-ui="title.pickTitle"></h2>
+      <form id="intro-name">
+        <p data-ui="title.lookLabel"></p>
+        <div class="look-pick" role="radiogroup">
+          <button type="button" class="look" data-look="m" aria-pressed="true"><span class="look-img"></span><span data-ui="title.lookM"></span></button>
+          <button type="button" class="look" data-look="f" aria-pressed="false"><span class="look-img"></span><span data-ui="title.lookF"></span></button>
+        </div>
+        <label for="intro-name-input" data-ui="title.nameLabel"></label>
+        <div class="answer-row">
+          <input id="intro-name-input" maxlength="20" autocomplete="off" required>
+          <button type="submit" class="btn-primary" id="intro-start" data-ui="title.nameConfirm"></button>
+        </div>
+        <p class="muted small" data-ui="title.nameHint"></p>
+        <button type="button" id="intro-back" class="btn" data-ui="title.back"></button>
+      </form>
     </div>
   </section>
 

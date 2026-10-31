@@ -72,6 +72,7 @@ export function reportHtml() {
 <div class="card">
   <div>${esc(t('report.casesClosed'))}<b>${cp.done}/${cp.total}</b></div>
   <div>${esc(t('report.badges'))}<b>${badges.length}</b></div>
+  ${p.title ? `<div>${esc(t('journey.resultsTitle'))}: <b>${esc(p.title.name)}</b></div>` : ''}
   <div>${esc(t('report.trust'))}<b>${trust}/${CRED_MAX}</b></div>
   <div>${esc(t('report.board'))}<b>${bp.done}/${bp.total}</b></div>
 </div>

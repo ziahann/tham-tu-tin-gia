@@ -19,7 +19,9 @@
     "cases": "Hồ sơ vụ án (J)",
     "weather": "Thời tiết (T)"
   },
-  "rotate": { "text": "Xoay ngang điện thoại để chơi nhé. Kéo cần điều khiển bên trái để đi theo 8 hướng." },
+  "rotate": {
+    "text": "Xoay ngang điện thoại để chơi nhé. Kéo cần điều khiển bên trái để đi theo 8 hướng."
+  },
   "title": {
     "warningTitle": "Cảnh báo nội dung",
     "warning": "Game dựa trên một vụ tai nạn có thật. Nội dung nhắc đến thiệt hại về người. Game không hiển thị hình ảnh nạn nhân; ảnh giả chỉ là mô phỏng pixel trừu tượng có nhãn ẢNH GIẢ. Bạn có thể thoát bất cứ lúc nào.",
@@ -30,7 +32,7 @@
     "restartConfirm": "Bắt đầu lượt chơi mới? Tiến trình hiện tại sẽ bị xóa (lịch sử trò chuyện cũ vẫn được giữ).",
     "nameLabel": "Tên của bạn",
     "nameHint": "Không cần dùng tên thật.",
-    "nameConfirm": "Vào văn phòng",
+    "nameConfirm": "Bắt đầu",
     "controlsTitle": "Cách chơi",
     "controls": "Đi lại: WASD hoặc phím mũi tên, hoặc nháy chuột vào nơi muốn tới (điện thoại: phím ảo hoặc chạm). Nói chuyện / xem đồ vật / tiếp lời thoại: E, Space hoặc Enter (điện thoại: nút A). Mở balo: B. Chọn hồ sơ để theo dõi: J (mũi tên vàng chỉ đường). Thu nhỏ khung thoại: nút — trên khung. Đóng: Esc.",
     "firstHint": "Mọi hồ sơ đều đã mở. Bấm J (hoặc nút Hồ sơ) để chọn hồ sơ muốn điều tra; mũi tên vàng sẽ chỉ đường.",
@@ -39,14 +41,13 @@
     "lookM": "Nam",
     "lookF": "Nữ",
     "course": "Môn Thẩm định tin tức · Trường Đại học Văn Lang",
-    "caseLabel": "HỒ SƠ VỤ ÁN",
-    "caseSub": "Ảnh AI giả quanh vụ lật tàu Vịnh Xanh 58 · vịnh Hạ Long, 19/7/2025",
-    "stamp": "ĐANG ĐIỀU TRA",
-    "warningShort": "Dựa trên một vụ tai nạn có thật. Không có hình ảnh nạn nhân. Nhân vật, tổ chức, cuộc trò chuyện và công cụ trong game là GIẢ LẬP.",
+    "warningShort": "Game có nhắc tới một vụ tai nạn có thật nhưng không có hình ảnh nạn nhân. Nhân vật, tổ chức, cuộc trò chuyện và công cụ trong game là GIẢ LẬP, không đại diện cho Báo Thanh Niên.",
     "warningMore": "Đọc cảnh báo đầy đủ và cách chơi",
     "authors": "Tác giả: Trần Huỳnh Gia Hân và Đào Thị Mai Chi",
     "namePlaceholder": "Nhập tên nhân vật",
-    "nameRequired": "Hãy nhập tên nhân vật để bắt đầu."
+    "nameRequired": "Hãy nhập tên nhân vật để bắt đầu.",
+    "pickTitle": "Nhân vật của em",
+    "back": "◂ Quay lại"
   },
   "hud": {
     "musicUnsupported": "trình duyệt này không phát được nhạc MP3",
@@ -478,6 +479,19 @@
     "feedLine": "Đã báo cáo {reports} bài, viết {notes} ghi chú cộng đồng hữu ích, nhắc {replies} người chia sẻ vô tình; báo cáo nhầm bài đúng {wrong} lần, bấm link câu tương tác {clicks} lần.",
     "takeaway": "Điều rút ra",
     "sources": "Nguồn đã dùng (APA)",
-    "disclaimer": "Huy hiệu và chỉ số trong báo cáo chỉ để chơi, không phải bằng chứng cho tin thật hay giả."
+    "disclaimer": "Huy hiệu và chỉ số trong báo cáo chỉ để chơi, không phải bằng chứng cho tin thật hay giả.",
+    "titleLine": "Danh hiệu: {name}"
+  },
+  "journey": {
+    "calling": "Đang gọi…",
+    "phone": "Điện thoại",
+    "titleStamp": "DANH HIỆU",
+    "titleCap": "Danh hiệu: {name}",
+    "titleFile": "TÒA SOẠN GHI NHẬN",
+    "resultsTitle": "Danh hiệu",
+    "skipPrologue": "Bỏ qua phần mở đầu",
+    "skipPrologueConfirm": "Tới thẳng Hạ Long? Em vẫn nhận thẻ cộng tác viên và ba câu hỏi xác minh.",
+    "pcSource": "Nguồn: {list}",
+    "shared": "lượt chia sẻ"
   }
 }
