@@ -347,7 +347,8 @@ function drawTile(img, name, ox, oy, rnd) {
       break;
     case 'crosswalk':
       R(0, 0, T, T, '#4a4d57'); noise('#4a4d57', 0.18, 40);
-      for (let x = 2; x < T; x += 10) R(x, 0, 6, T, '#e6e1d6');
+      // vạch ngựa vằn: các vạch dài song song với hướng xe chạy (trục x), xếp nối nhau theo hướng người đi bộ băng qua
+      for (let y = 2; y < T; y += 10) R(0, y, T, 6, '#e6e1d6');
       break;
     case 'kiosk':
       // sạp báo: mái, kệ báo, tạp chí
@@ -1131,11 +1132,11 @@ const street = buildMap('street', {
     // --- vỉa hè phố chính
     ...[4, 24, 40, 56, 72, 92].map((x, i) => pp('street_lamp', x, 20.2, i % 2 ? { flip: true } : {})),
     pp('tree', 9.6, 20.6), pp('tree', 34.5, 20.6), pp('tree', 61.5, 20.6), pp('tree', 89, 20.6),
-    // trạm xe buýt trước Trụ sở Báo Thanh Niên (intro: nhân vật xuống xe buýt ở đây)
-    pp('bus_stop', 13.8, 20.9), point('spawn', 'spawn_bus', 15.4, 21.3),
-    rectT('spot', 'bus_halong', 12, 19.6, 4, 1.8, { act: 'bus', to: 'hcm' }),
     pp('hydrant', 23, 20.5), pp('street_bin', 49.8, 20.5), pp('street_bin', 75.6, 20.5), pp('kiosk', 31.5, 20.8),
-    pp('bus_stop', 10, 29.8), pp('bollard', 19.3, 28.8), pp('bollard', 22.7, 28.8), pp('bollard', 59.3, 28.8), pp('bollard', 62.7, 28.8),
+    // trạm xe khách ở vỉa hè nam, chéo Trụ sở Báo Thanh Niên (qua vạch cột 20): xe chạy làn đông, cửa xe quay về vỉa hè
+    pp('bus_stop', 10, 29.8), point('spawn', 'spawn_bus', 12, 28.5),
+    rectT('spot', 'bus_halong', 10.4, 27.8, 3.2, 1.4, { act: 'bus', to: 'hcm' }),
+    pp('bollard', 19.3, 28.8), pp('bollard', 22.7, 28.8), pp('bollard', 59.3, 28.8), pp('bollard', 62.7, 28.8),
     ...[30, 52, 66, 86].map(x => pp('street_lamp', x, 29.6)),
     pp('planter', 38, 29.6), pp('planter', 80, 29.6),
     // --- công viên
@@ -1414,15 +1415,19 @@ const HCM = (() => {
   for (const cx of [12, 40]) for (let y = 19; y <= 23; y++) g[y][cx] = g[y][cx + 1] = '%';
   fill(0, 25, HW, 2, '_');
   fill(0, 27, HW, 9, ',');
-  fill(4, 28, 22, 7, 'g'); fill(34, 28, 22, 7, 'g');
-  for (let y = 28; y < 35; y++) g[y][14] = g[y][15] = ':';
-  fill(0, 36, HW, 4, '_');
+  fill(4, 28, 22, 6, 'g'); fill(34, 28, 22, 6, 'g');
+  for (let y = 28; y < 34; y++) g[y][14] = g[y][15] = ':';
+  // bờ sông: lối dạo, lan can, mặt sông (nền kéo dài ra ngoài bản đồ thành dòng sông)
+  put(0, 36, '|'.repeat(HW));
+  fill(0, 37, HW, 3, '~');
   return rows();
 })();
 const hcm = buildMap('hcm', {
   rows: HCM, label: 'Phố trung tâm · TP.HCM', music: 'street',
-  legend: {},
+  legend: { '|': 'railing', '~': 'water' },
   ground: (ch, x) => {
+    if (ch === '~') return 'water';
+    if (ch === '|') return 'promenade';
     if (ch === '=') return 'road';
     if (ch === '-') return x % 3 === 0 ? 'road' : 'road_line';
     if (ch === '%') return 'crosswalk';
@@ -1448,33 +1453,41 @@ const hcm = buildMap('hcm', {
     // --- vòng nhà ngoài rìa
     ...[[-12, 'bld_villa', 8], [-4, 'bld_tube4', 3], [62, 'bld_tube5', 4], [66, 'bld_villa', 8]].map(([x, k, c]) => bld(k, x, c, H_BOTTOM)),
     ...[[-10, 'bld_hotel', 10], [12, 'bld_colonial', 12], [36, 'bld_market', 10], [62, 'bld_tower', 10]].map(([x, k, c]) => bld(k, x, c, 0)),
-    ...[[-8, 'bld_tube3', 4], [-4, 'bld_tube1', 3], [2, 'bld_villa', 8], [12, 'bld_tube2', 3], [15, 'bld_tube5', 4], [22, 'bld_hotel_gable', 10],
-      [34, 'bld_tube4', 3], [37, 'bld_tube3', 4], [44, 'bld_tower2', 8], [54, 'bld_villa', 8], [62, 'bld_tube1', 3]].map(([x, k, c]) => bld(k, x, c, 46)),
+    // phía nam là sông: không dựng nhà che quảng trường; vài tàu khách trên sông
+    pp('tour_boat', 16, 40.4), pp('tour_boat', 46, 41.2, { flip: true }),
     // --- cửa vào
     doorExit('door_home', 8.5, H_BOTTOM, 'home'),
     doorExit('door_btn_hcm', 20.5, H_BOTTOM, 'tn_hcm'),
     point('spawn', 'spawn_from_home', 9.5, 17.4),
     point('spawn', 'spawn_from_btn', 21.5, 17.4),
-    // --- bến xe khách: trạm đón ngay trước bến (người chơi vẫy xe ở đây)
-    pp('bus_stop', 49.8, 17.9), point('spawn', 'spawn_bus', 51.4, 18.3),
-    rectT('spot', 'bus_hcm', 48, 16.6, 4, 1.8, { act: 'bus', to: 'street' }),
-    // --- vỉa hè bắc
+    // --- trạm xe khách ở vỉa hè nam, đối diện bến (qua vạch cột 40): xe chạy làn đông, cửa xe quay về vỉa hè
+    pp('bus_stop', 46.6, 26.8), point('spawn', 'spawn_bus', 48.6, 25.5),
+    rectT('spot', 'bus_hcm', 47, 24.8, 3.2, 1.4, { act: 'bus', to: 'street' }),
+    // --- vỉa hè bắc: hàng cây dầu, đèn, xe máy đỗ trước nhà ống, quán cóc ghế nhựa
     ...[3, 14, 26, 38, 55].map((x, i) => pp('street_lamp', x, 17.2, i % 2 ? { flip: true } : {})),
-    pp('tree_big', 6, 17.6), pp('tree_big', 33, 17.6), pp('tree', 44.6, 17.6), pp('street_bin', 25, 17.4), pp('hydrant', 37, 17.5),
-    pp('kiosk', 29.5, 17.8),
-    // --- vỉa hè nam + quảng trường
-    ...[8, 22, 36, 50].map(x => pp('street_lamp', x, 26.6)),
-    pp('market_stall', 18.5, 26.9), pp('bollard', 11.3, 25.8), pp('bollard', 14.7, 25.8), pp('bollard', 39.3, 25.8), pp('bollard', 42.7, 25.8),
-    pp('tree_big', 7, 30.6), pp('tree_big', 12, 33.6), pp('tree_big', 20, 30.4), pp('tree_big', 24.4, 34.2),
-    pp('tree_big', 37, 31), pp('tree_big', 45, 34), pp('tree_big', 53, 30.6),
-    pp('fountain', 29.5, 33.4), pp('flowerbed', 41, 30.6), pp('flowerbed', 49, 33.2), pp('hedge', 6.5, 28.7), pp('hedge', 50.5, 28.7),
+    ...[6, 11.5, 24.5, 33, 36.5, 44.6, 57.5].map(x => pp('tree_big', x, 17.7)),
+    pp('street_bin', 25.6, 17.4), pp('hydrant', 37.6, 17.5), pp('kiosk', 29.5, 17.8),
+    pp('moto_row_s', 2.6, 17.6), pp('moto_row_s', 41, 17.6), pp('moto_row_s', 52.4, 17.6),
+    pp('stools', 13.2, 17.7),
+    // --- vỉa hè nam: cây, đèn, xe bánh mì, xe máy đỗ, trụ chắn
+    ...[8, 22, 36, 53].map(x => pp('street_lamp', x, 26.6)),
+    ...[3.5, 16, 28, 31.5, 57].map(x => pp('tree_big', x, 26.8)),
+    pp('market_stall', 18.5, 26.9), pp('stools', 21.4, 26.8), pp('moto_row_n', 25, 26.9), pp('moto_row_n', 55, 26.9),
+    pp('bollard', 11.3, 25.8), pp('bollard', 14.7, 25.8), pp('bollard', 39.3, 25.8), pp('bollard', 42.7, 25.8),
+    // --- quảng trường
+    pp('tree_big', 7, 30.6), pp('tree_big', 12, 33.6), pp('tree_big', 20, 30.4), pp('tree_big', 24.4, 33.8),
+    pp('tree_big', 37, 31), pp('tree_big', 45, 33.6), pp('tree_big', 53, 30.6),
+    pp('fountain', 29.5, 33.2), pp('flowerbed', 41, 30.6), pp('flowerbed', 49, 33.2), pp('hedge', 6.5, 28.7), pp('hedge', 50.5, 28.7),
     pp('bench', 9.5, 31.4), pp('bench', 18.2, 33.4), pp('bench', 44.2, 31.4), pp('bench', 52.6, 34.4),
-    pp('kiosk', 34, 35.6), pp('planter', 26, 36.8), pp('planter', 33, 36.8),
+    // --- bờ sông: lối dạo, đèn, ghế nhìn ra sông, sạp nước
+    ...[4, 18, 32, 46, 58].map(x => pp('street_lamp', x, 35.7)),
+    pp('bench', 11, 35.6), pp('bench', 25, 35.6), pp('bench', 39, 35.6), pp('kiosk', 34.6, 35.6), pp('stools', 37, 35.4),
+    pp('life_ring', 21.6, 35.8), pp('life_ring', 50.6, 35.8),
     // --- vùng, làn xe, vạch qua đường
     rectT('zone', 'zone_hcm_street', 0, 16, HW, 11, { area: 'hcm_street' }),
     rectT('zone', 'zone_hcm_park', 0, 27, HW, 13, { area: 'hcm_park' }),
-    rectT('lane', 'lane_w', 0, 19, HW, 2, { dir: -1, kind: 'mixed' }),
-    rectT('lane', 'lane_e', 0, 22, HW, 2, { dir: 1, kind: 'mixed' }),
+    rectT('lane', 'lane_w', 0, 19, HW, 2, { dir: -1, kind: 'moto' }),
+    rectT('lane', 'lane_e', 0, 22, HW, 2, { dir: 1, kind: 'moto' }),
     ...[12, 40].map((x, i) => rectT('crosswalk', `cross_${i}`, x, 19, 2, 5)),
     // --- người qua đường
     point('npc', 'amb_hcm_vendor', 18.5, 27.9),

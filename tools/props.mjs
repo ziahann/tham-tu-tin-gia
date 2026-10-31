@@ -1152,6 +1152,10 @@ function voxelProps() {
   // hàng rào cây xén
   out.hedge = voxel({ w: 96, d: 20, cell: 4, maxH: 22, seed: 23,
     height: () => 16 + Math.floor(Math.random() * 3), color: (i, j, h) => h > 17 ? '#2f5446' : '#26463c' });
+  // hàng xe máy đỗ trên vỉa hè (đầu xe ra lòng đường) và quán cóc ghế nhựa
+  out.moto_row_n = motoRow(4, true, 3);
+  out.moto_row_s = motoRow(4, false, 5);
+  out.stools = stoolSet();
   // đài phun nước: thành đá tròn, mặt nước, bệ giữa hai tầng, vòi
   out.fountain = voxel({ w: 112, d: 112, cell: 4, maxH: 60, seed: 41,
     height: (i, j) => {
@@ -1305,7 +1309,7 @@ export function allProps() {
   }
   // đồ ngoài trời dựng bằng voxel thay bản cắt xiên (đá vôi, ghế, bồn hoa...) + đồ mới (đài phun nước, luống hoa, hàng rào)
   for (const [k, v] of Object.entries(voxelProps())) {
-    const base = { karst_big: [140, 100], karst: [86, 66], bench: [60, 16], bench_paper: [60, 16], planter: [60, 20], flowerbed: [60, 60], hedge: [92, 16], fountain: [104, 104] }[k];
+    const base = { karst_big: [140, 100], karst: [86, 66], bench: [60, 16], bench_paper: [60, 16], planter: [60, 20], flowerbed: [60, 60], hedge: [92, 16], fountain: [104, 104], moto_row_n: [70, 40], moto_row_s: [70, 40], stools: [36, 36] }[k];
     P[k] = { img: v.img, meta: { base, iso: { ay: v.ay, fw: v.fw, d: v.d } } };
     delete P[`${k}@iso`];
   }
@@ -1333,42 +1337,73 @@ function car(body) {
   return outline(img);
 }
 
-/** Xe buýt 7,5 ô x 2,5 ô. */
-function bus() {
+/**
+ * Xe buýt điện 7,5 ô x 2,5 ô (kiểu xe buýt điện đô thị: thân xanh cốm, dải kính đen liền, viền xanh dương; không logo).
+ * Mũi xe bên phải. Cửa lên ở phần đầu xe (trước bánh trước), cửa xuống đôi ở giữa thân; không cửa nào đè lên bánh.
+ * open: hai cửa mở (cánh gấp sang hai bên, thấy bậc lên xuống).
+ */
+export const BUS_DOORS = { front: [204, 228], middle: [106, 138] }; // cột ảnh nhìn ngang (mũi xe bên phải)
+function bus(open = false) {
   const img = new Img(240, 84), { R, E, G } = brush(img);
+  const lime = '#8fd13a', limeD = '#72b02a', limeL = '#b6ea6c', black = '#15181d';
   E(120, 80, 114, 4, '#00000055');
-  G(4, 8, 232, 60, '#2e6e6c', '#24585a'); R(4, 8, 232, 4, '#4a9a96'); R(4, 62, 232, 6, '#1c4442');
-  for (let x = 14; x < 200; x += 30) { G(x, 16, 26, 22, '#9cc4dc', '#5a88a8'); R(x + 2, 18, 6, 3, '#e6f4fb'); }
-  G(208, 14, 24, 30, '#9cc4dc', '#5a88a8'); R(176, 40, 22, 28, '#1c4442'); R(178, 42, 8, 24, '#7aa8c4'); R(188, 42, 8, 24, '#7aa8c4');
-  R(10, 46, 150, 6, '#e9e4d6'); R(10, 48, 150, 1, '#c9c2b4'); R(228, 52, 6, 6, '#ffe9a0'); R(4, 52, 4, 6, '#ff5a5a');
-  for (const cx of [44, 192]) { E(cx, 68, 12, 12, '#14161c'); E(cx, 68, 7, 7, '#5b6170'); E(cx, 68, 3, 3, '#9aa1b3'); }
+  // thân: góc trên bo tròn, đuôi tròn, mũi dốc nhẹ
+  G(4, 10, 232, 56, lime, limeD); R(8, 8, 222, 2, limeL); R(6, 9, 2, 2, limeL); R(230, 9, 3, 2, limeL);
+  R(4, 60, 232, 6, '#5f9a22');
+  // dải kính đen liền từ đuôi tới mũi, viền xanh dương mảnh bên dưới
+  R(10, 16, 226, 28, black); R(10, 44, 226, 1, '#3d9fe0');
+  const win = (x, w) => { G(x, 18, w, 24, '#3c4a5c', '#1b222c'); R(x + 2, 20, Math.min(8, w - 4), 2, '#6f8196'); };
+  win(14, 26); win(44, 28); win(76, 26); win(144, 24); win(172, 26);
+  // vạt đen chéo dưới kính giữa thân (như mẫu xe điện)
+  for (let y = 45; y < 58; y++) R(96 - (y - 45), y, 60 + (y - 45) * 2, 1, black);
+  // kính chắn gió sát mũi
+  G(230, 14, 6, 34, '#4a5a6e', '#22303e');
+  // vòm bánh + bánh xe (bánh sau 50, bánh trước 184)
+  for (const cx of [50, 184]) E(cx, 64, 16, 12, '#1d2a12');
+  for (const cx of [50, 184]) { E(cx, 68, 12, 12, '#14161c'); E(cx, 68, 7, 7, '#c9ced6'); E(cx, 68, 3, 3, '#5b6170'); }
+  // cửa: khung đen, kính, tay vịn; mở thì thấy lòng xe tối và bậc
+  const door = ([x0, x1], dbl) => {
+    R(x0, 16, x1 - x0, 50, black);
+    if (open) {
+      R(x0 + 2, 18, x1 - x0 - 4, 44, '#0b0d11'); R(x0 + 2, 58, x1 - x0 - 4, 6, '#7a828f'); R(x0 + 2, 58, x1 - x0 - 4, 1, '#c9ced6');
+      R(x0 + 1, 18, 3, 44, '#4a5a6e'); R(x1 - 4, 18, 3, 44, '#4a5a6e');   // cánh cửa gấp sát hai bên
+      R(x0 + 6, 24, 2, 30, '#c9ced6');                                        // tay vịn
+    } else {
+      const half = dbl ? (x1 - x0) / 2 : x1 - x0;
+      for (let x = x0; x < x1 - 1; x += half) { G(x + 2, 18, half - 3, 44, '#4a5a6e', '#26313d'); R(x + 3, 20, 2, 40, '#6f8196'); }
+      if (dbl) for (let k = 0; k < 2; k++) for (let y = 0; y < 14; y++) R(x0 + 4 + k * half + Math.floor(y * 0.7), 44 + y, 2, 1, '#e3c24a');
+      R(x0 + 2, 62, x1 - x0 - 4, 2, '#3a4150');
+    }
+  };
+  door(BUS_DOORS.front, false);
+  door(BUS_DOORS.middle, true);
+  // đèn
+  R(232, 52, 4, 5, '#ffe9a0'); R(4, 50, 3, 6, '#ff5a5a'); R(150, 52, 3, 3, '#ff9a3a'); R(30, 52, 3, 3, '#ff9a3a');
   return outline(img);
 }
 
 /**
  * Mặt đầu (front) / đuôi xe buýt nhìn thẳng, rộng = chiều sâu khối (56), cao = thân xe (60): dán lên mặt đông của khối
- * isometric thay cho dải màu kéo dài từ mép ảnh nhìn ngang. Đầu: bảng tuyến, kính chắn gió hai tấm, gạt mưa, đèn pha, lưới
- * tản nhiệt, cản, biển số. Đuôi: kính sau nhỏ, lưới máy, đèn hậu đỏ, cản.
+ * isometric. Đầu: bảng tuyến, kính chắn gió lớn đen bóng, đèn pha, cản, biển số. Đuôi: kính sau, đèn hậu, cản.
  */
 function busEnd(front) {
   const img = new Img(56, 60), { R, G } = brush(img);
-  G(0, 0, 56, 60, '#2e6e6c', '#24585a'); R(0, 0, 56, 2, '#4a9a96'); R(0, 54, 56, 6, '#1c4442');
-  R(0, 0, 2, 54, '#24585a'); R(54, 0, 2, 54, '#1f4c4c');
+  G(0, 0, 56, 60, '#8fd13a', '#72b02a'); R(0, 0, 56, 2, '#b6ea6c'); R(0, 52, 56, 8, '#5f9a22');
+  R(0, 0, 2, 52, '#7fbf32'); R(54, 0, 2, 52, '#6aa526');
   if (front) {
-    R(6, 3, 44, 7, '#14161c'); R(8, 5, 26, 3, '#ff9a3a'); R(37, 5, 10, 3, '#ffc857');
-    G(4, 12, 48, 22, '#a8d0e6', '#4f7f9e'); R(27, 12, 2, 22, '#1c4442'); R(7, 14, 7, 3, '#e6f4fb'); R(31, 14, 5, 2, '#e6f4fb');
-    R(12, 31, 12, 1, '#14161c'); R(32, 31, 12, 1, '#14161c');
-    R(4, 36, 48, 2, '#e9e4d6');
-    R(3, 41, 9, 6, '#ffe9a0'); R(4, 42, 4, 3, '#ffffff'); R(44, 41, 9, 6, '#ffe9a0'); R(48, 42, 4, 3, '#ffffff');
-    R(3, 47, 9, 2, '#ff9a3a'); R(44, 47, 9, 2, '#ff9a3a');
-    for (let y = 40; y < 48; y += 2) R(15, y, 26, 1, '#1c2a2e');
-    R(2, 50, 52, 4, '#3a4150'); R(20, 50, 16, 4, '#e8ecf2'); R(22, 51, 12, 2, '#3a4150');
+    R(5, 3, 46, 6, '#15181d'); R(8, 4, 26, 3, '#ff9a3a'); R(37, 4, 10, 3, '#ffc857');
+    G(3, 10, 50, 28, '#4a5a6e', '#1b222c'); R(6, 12, 9, 3, '#8a9bb0'); R(30, 12, 5, 2, '#8a9bb0');
+    R(10, 35, 14, 1, '#0b0d11'); R(32, 35, 14, 1, '#0b0d11');
+    R(3, 38, 50, 2, '#3d9fe0');
+    R(3, 42, 10, 4, '#ffe9a0'); R(4, 43, 5, 2, '#ffffff'); R(43, 42, 10, 4, '#ffe9a0'); R(47, 43, 5, 2, '#ffffff');
+    R(14, 43, 28, 2, '#15181d');
+    R(2, 48, 52, 4, '#3a4150'); R(20, 49, 16, 4, '#e8ecf2'); R(22, 50, 12, 2, '#3a4150');
   } else {
-    R(10, 8, 36, 14, '#5a88a8'); R(12, 10, 8, 3, '#9cc4dc'); R(27, 8, 2, 14, '#1c4442');
-    for (let y = 26; y < 44; y += 3) R(12, y, 32, 2, '#1c4442');
-    R(3, 30, 6, 14, '#ff5a5a'); R(4, 31, 3, 5, '#ffb0a0'); R(47, 30, 6, 14, '#ff5a5a'); R(49, 31, 3, 5, '#ffb0a0');
-    R(3, 44, 6, 3, '#ff9a3a'); R(47, 44, 6, 3, '#ff9a3a');
-    R(2, 48, 52, 5, '#3a4150'); R(20, 49, 16, 4, '#e8ecf2'); R(22, 50, 12, 2, '#3a4150');
+    R(8, 8, 40, 20, '#15181d'); G(10, 10, 36, 16, '#3c4a5c', '#1b222c'); R(12, 12, 8, 2, '#6f8196');
+    R(3, 30, 50, 1, '#3d9fe0');
+    R(3, 34, 6, 12, '#ff5a5a'); R(4, 35, 3, 4, '#ffb0a0'); R(47, 34, 6, 12, '#ff5a5a'); R(49, 35, 3, 4, '#ffb0a0');
+    R(3, 46, 6, 2, '#ff9a3a'); R(47, 46, 6, 2, '#ff9a3a');
+    R(2, 48, 52, 4, '#3a4150'); R(20, 49, 16, 4, '#e8ecf2'); R(22, 50, 12, 2, '#3a4150');
   }
   return img;
 }
@@ -1390,32 +1425,117 @@ function paintEnd(out, d, xr, y0, end) {
   return out;
 }
 
-/** Xe máy có người lái đội mũ bảo hiểm, 1,5 ô x 1,5 ô. */
-function scooter(body, shirt, helmet) {
+/**
+ * Xe tay ga nhìn ngang (mũi bên phải), không người: bánh nhỏ, sàn để chân, yếm trước, đầu đèn, yên, đuôi xe.
+ * Ảnh 50x50, xe ở nửa dưới (chừa chỗ cho người lái).
+ */
+function scooter(body) {
   const img = new Img(50, 50), { R, E } = brush(img);
-  E(25, 46, 20, 3, '#00000055');
-  R(8, 30, 30, 7, body); R(30, 22, 8, 10, body); R(36, 18, 6, 3, '#3a4150'); R(12, 26, 16, 5, '#22262e'); R(40, 26, 4, 3, '#ffe9a0');
-  R(18, 12, 11, 15, shirt); R(26, 16, 12, 4, shirt); R(20, 26, 9, 6, '#2d3a5a'); R(24, 31, 4, 7, '#2d3a5a'); R(23, 37, 6, 2, '#14161c');
-  E(23, 7, 7, 6, helmet); R(25, 5, 6, 4, '#9cc4dc'); R(18, 11, 4, 2, '#e8c0a0');
-  for (const cx of [12, 38]) { E(cx, 40, 6, 6, '#14161c'); E(cx, 40, 2, 2, '#9aa1b3'); }
+  E(25, 47, 20, 2, '#00000055');
+  const dark = shade(body, -0.3), light = shade(body, 0.25);
+  // đuôi xe + yên
+  R(6, 30, 18, 8, body); R(8, 29, 14, 1, light); R(4, 32, 3, 4, body); R(4, 32, 2, 2, '#ff5a5a');
+  R(9, 26, 16, 4, '#22262e'); R(10, 26, 14, 1, '#3a3f4d');
+  // sàn để chân
+  R(20, 37, 14, 3, dark);
+  // yếm trước, cổ lái, ghi đông, gương, đèn
+  R(31, 23, 6, 17, body); R(31, 23, 2, 17, light); R(29, 21, 10, 2, '#3a4150'); R(30, 17, 1, 4, '#3a4150'); R(30, 16, 3, 2, '#9cc4dc');
+  R(37, 24, 3, 4, '#ffe9a0'); R(34, 38, 8, 2, body);
+  // bánh xe
+  for (const cx of [13, 38]) { E(cx, 42, 6, 6, '#14161c'); E(cx, 42, 3, 3, '#9aa1b3'); E(cx, 42, 1, 1, '#3a4150'); }
   return outline(img);
+}
+
+/** Người lái ngồi nhìn ngang (mặt về bên phải), đội mũ bảo hiểm, tay cầm lái: ảnh đứng (không đẩy khối), đặt lên yên xe. */
+function rider(shirt, helmet, pants = '#2d3a5a') {
+  const img = new Img(24, 32), { R, E } = brush(img);
+  const skin = '#e8c0a0';
+  E(10, 5, 6, 5, helmet); R(5, 6, 12, 2, shade(helmet, -0.25)); R(13, 3, 4, 4, '#9cc4dc');   // mũ + kính chắn
+  R(10, 9, 5, 3, skin);                                                                        // cằm
+  R(6, 11, 8, 11, shirt); R(6, 11, 2, 11, shade(shirt, -0.2));                                   // thân
+  R(11, 13, 9, 3, shirt); R(19, 13, 3, 3, skin);                                                 // tay vươn tới ghi đông
+  R(6, 21, 11, 4, pants); R(14, 24, 4, 6, pants); R(14, 29, 6, 2, '#14161c');                   // đùi, cẳng chân, giày
+  return outline(img);
+}
+
+/**
+ * Xe máy có người lái, isometric: xe đẩy khối mỏng (d = 8, như thân xe thật), người lái là hình đứng đặt giữa yên
+ * (giống cách vẽ nhân vật) thay vì bị đẩy thành khối dày. flip: chạy về phía tây.
+ */
+function bikeIso(body, shirt, helmet, flip) {
+  const sc = scooter(body), rd = rider(shirt, helmet);
+  const r = isoExtrude(flip ? mirror(sc) : sc, 8, 0);
+  const out = r.img;
+  // yên xe (ảnh nhìn ngang) ở (16, 27) → điểm trên ảnh isometric, lùi nửa chiều sâu
+  const sx = flip ? 50 - 16 : 16, k = 4;
+  const ox = sx + k, oy = Math.ceil(8 / 2) + 27 + Math.floor(sx / 2) - Math.floor(k / 2);
+  // hông người lái (ảnh 24x32) ở (8, 22)
+  const hx = flip ? 24 - 8 : 8;
+  out.blit(flip ? mirror(rd) : rd, 0, 0, rd.w, rd.h, ox - hx, oy - 22);
+  return out;
 }
 
 /** Ảnh các xe (khóa → Img), lưu thành sprite riêng cho traffic.js. */
 export function vehicles() {
   // ảnh nhìn ngang (cho thân va chạm) + bản isometric theo hướng chạy: _e (xuôi trục x, đông nam), _w (ngược, tây bắc)
-  const base = {
-    car1: car('#8a2a30'), car2: car('#2c4a6b'), car3: car('#c9ced6'), car4: car('#3a3f4d'), bus: bus(),
-    bike1: scooter('#8a2a30', '#2c4a6b', '#c9a24a'), bike2: scooter('#2b303b', '#9b5a3a', '#e6ebf2')
-  };
+  const base = { car1: car('#8a2a30'), car2: car('#2c4a6b'), car3: car('#c9ced6'), car4: car('#3a3f4d'), bus: bus() };
   const out = {};
   for (const [id, img] of Object.entries(base)) {
-    const [d, fromY] = id === 'bus' ? [56, 0] : id.startsWith('bike') ? [16, 30] : [40, 0];
+    const d = id === 'bus' ? 56 : 40;
     out[id] = img;
-    out[`${id}_e`] = isoExtrude(img, d, fromY).img;
-    out[`${id}_w`] = isoExtrude(mirror(img), d, fromY).img;
-    // xe buýt: chạy xuôi (_e) thấy mặt đầu, chạy ngược (_w) thấy đuôi xe
-    if (id === 'bus') { paintEnd(out.bus_e, d, 236, 8, busEnd(true)); paintEnd(out.bus_w, d, 236, 8, busEnd(false)); }
+    out[`${id}_e`] = isoExtrude(img, d, 0).img;
+    out[`${id}_w`] = isoExtrude(mirror(img), d, 0).img;
+  }
+  // xe buýt: chạy xuôi (_e) thấy mặt đầu, chạy ngược (_w) thấy đuôi; bản cửa mở cho cảnh lên / xuống xe
+  const open = bus(true);
+  out.bus_e_open = isoExtrude(open, 56, 0).img;
+  out.bus_w_open = isoExtrude(mirror(open), 56, 0).img;
+  for (const k of ['bus_e', 'bus_e_open']) paintEnd(out[k], 56, 236, 8, busEnd(true));
+  for (const k of ['bus_w', 'bus_w_open']) paintEnd(out[k], 56, 236, 8, busEnd(false));
+  // xe máy: người lái hình đứng trên xe đẩy khối mỏng
+  const BIKES = { bike1: ['#8a2a30', '#2c4a6b', '#c9a24a'], bike2: ['#2b303b', '#9b5a3a', '#e6ebf2'], bike3: ['#e8ecf2', '#c86a8a', '#3d7fd1'], bike4: ['#3d7fd1', '#e8ecf2', '#c8323c'] };
+  for (const [id, [b, s, h]] of Object.entries(BIKES)) {
+    out[id] = scooter(b);
+    out[`${id}_e`] = bikeIso(b, s, h, false);
+    out[`${id}_w`] = bikeIso(b, s, h, true);
   }
   return out;
+}
+
+/**
+ * Hàng xe máy đỗ trên vỉa hè (đầu xe quay ra lòng đường), dựng voxel để đúng góc nhìn isometric:
+ * n xe cách nhau 18 px theo trục x, mỗi xe dài 44 px theo trục y. noseNorth: đầu xe về phía bắc (vỉa hè nam).
+ */
+function motoRow(n, noseNorth, sd) {
+  const cols = ['#8a2a30', '#e8ecf2', '#3a3f4d', '#3d7fd1', '#c8a24a', '#2f5446'];
+  // hình một xe theo (x trong xe 0..17, y từ mũi xe 0..43) → [cao, màu] (null = trống)
+  const part = (x, y, body) => {
+    const c = Math.abs(x - 8.5);
+    if (y < 6) return c < 1.6 ? [9, '#14161c'] : null;                        // bánh trước
+    if (y < 7) return c < 4.6 ? [25, '#3a4150'] : null;                       // ghi đông + gương
+    if (y < 10) return c < 3.6 ? [21, body] : null;                           // yếm trước
+    if (y < 17) return c < 3.1 ? [8, shade(body, -0.3)] : null;               // sàn để chân
+    if (y < 31) return c < 2.6 ? [17, '#22262e'] : c < 3.6 ? [13, body] : null; // yên + thân
+    if (y < 36) return c < 3.1 ? [13, body] : null;                           // đuôi xe
+    if (y < 41) return c < 1.6 ? [9, '#14161c'] : null;                       // bánh sau
+    return null;
+  };
+  const at = (i, j) => {
+    const k = Math.floor(i / 18), y = noseNorth ? j : 43 - j;
+    return part(i % 18, y, cols[(k * 7 + sd) % cols.length]);
+  };
+  return voxel({ w: n * 18, d: 44, cell: 1, maxH: 26, seed: sd,
+    height: (i, j) => at(i, j)?.[0] || 0, color: (i, j) => at(i, j)?.[1] || '#000000' });
+}
+
+/** Quán cóc vỉa hè: bàn nhựa thấp và bốn ghế nhựa đỏ / xanh (voxel). */
+function stoolSet() {
+  return voxel({ w: 40, d: 40, cell: 2, maxH: 14,
+    height: (i, j) => {
+      const x = i * 2, y = j * 2;
+      if (x >= 12 && x < 28 && y >= 12 && y < 28) return 12;
+      const st = [[16, 2], [16, 32], [2, 16], [32, 16]].find(([sx, sy]) => x >= sx && x < sx + 8 && y >= sy && y < sy + 7);
+      return st ? 7 : 0;
+    },
+    color: (i, j, h) => h === 12 ? '#c9d1dc' : (i * 2 < 12 || j * 2 >= 28 ? '#3d7fd1' : '#c8323c') });
 }

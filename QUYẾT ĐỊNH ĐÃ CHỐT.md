@@ -273,3 +273,14 @@
 | NPC | Một số đi lại, một số ngồi (ghế đá, bàn cà phê, bàn làm việc, ghế chờ, cầu tàu), một số đứng trò chuyện theo nhóm (bong bóng câu ngắn luân phiên) |
 | Nghe lén | Nhóm trò chuyện có dấu "…" xanh: đứng gần (không sát) bấm E → máy quay cận nhóm, nghe đoạn hội thoại, nhân vật chính rút ra điều cần kiểm chứng, ghi vào sổ tay. Bốn nhóm: công viên Hạ Long (ảnh bị dùng lại giữa các trang), quán Gió Biển (clip không rõ nơi / thời điểm quay), Tin Vịnh (Phát Vội giục đăng khi chưa có bản gốc), công viên TP.HCM (nhiều lượt chia sẻ ≠ thật). Lời người qua đường là tin đồn để kiểm chứng, không phải dữ kiện |
 | Đồ vật | Đầu / đuôi xe buýt vẽ riêng (bảng tuyến, kính, đèn, biển số); bình nước thành khối 3D; tờ báo đánh lừa đặt trên tủ báo, ghế đá, bàn nhỏ (không nằm dưới đất) |
+
+## Chốt ngày 31/10/2026 (đợt 21: xe cộ, xưng hô, thẻ sinh viên, TP.HCM)
+
+| Mục | Cách làm |
+|---|---|
+| Xe máy | Thân xe là khối mỏng như xe thật, người lái vẽ đứng trên yên (không bị đẩy thành khối dày); xe đỗ trên vỉa hè dựng khối, đầu xe quay ra đường |
+| Xe buýt | Theo dáng xe buýt điện đô thị (xanh cốm, dải kính đen, không logo): cửa lên ở đầu xe, cửa xuống đôi giữa thân, không đè lên bánh. Trạm ở vỉa hè phía nam, xe dừng sát vỉa hè, mở cửa: lên cửa trước, xuống cửa giữa |
+| Xưng hô | Cô / chú / bác / ông ↔ cháu; anh / chị ↔ em; bạn đồng trang lứa: mình ↔ bạn; em học sinh gọi anh / chị theo nhân vật đã chọn; boss: ta ↔ ngươi |
+| Thẻ sinh viên, tiểu sử | Bỏ ngành học; chỉ tên + Trường Đại học Văn Lang (thẻ, cuộc gọi tòa soạn, PDF kết quả, mô tả nhân vật) |
+| Bản đồ TP.HCM | Bờ sông phía nam (không còn dãy nhà che quảng trường), hàng cây dầu hai bên đường, xe máy đỗ, quán cóc, xe chủ yếu là xe máy, trạm xe khách vỉa hè nam đối diện bến |
+| Vạch qua đường | Vạch ngựa vằn đúng chiều: các vạch song song với hướng xe chạy |
