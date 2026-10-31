@@ -509,6 +509,27 @@ function flyer() {
   R(0, 0, 22, 16, '#d8d2c0'); R(2, 2, 12, 2, '#8a2a30'); R(2, 6, 18, 1, '#6b7280'); R(2, 9, 16, 1, '#6b7280'); R(2, 12, 10, 1, '#6b7280'); R(16, 2, 4, 3, '#3a4150');
   return img;
 }
+/** Giá báo đứng (tủ báo ngoài phố): khung kim loại ba tầng nghiêng, mỗi tầng cắm một xấp báo. */
+function newsRack() {
+  const img = new Img(40, 60), { R } = brush(img);
+  shadow(img, 20, 57, 16);
+  R(3, 6, 3, 50, '#2b303b'); R(34, 6, 3, 50, '#2b303b'); R(3, 4, 34, 3, '#3a4150'); R(3, 54, 34, 3, '#3a4150');
+  for (let k = 0; k < 3; k++) {
+    const y = 9 + k * 15;
+    R(6, y + 10, 28, 2, '#5b6170');
+    R(8, y, 24, 11, '#e6e0cc'); R(9, y + 1, 22, 2, k === 1 ? '#2c4a6b' : '#8a2a30'); R(9, y + 4, 14, 1, '#6b7280'); R(9, y + 6, 18, 1, '#6b7280');
+    R(24, y + 4, 6, 5, '#9aa1b3'); R(9, y + 8, 10, 1, '#6b7280');
+  }
+  return outline(img);
+}
+/** Bàn nhỏ có tờ báo gấp đặt trên mặt (manh mối đánh lừa trong nhà). */
+function paperTable() {
+  const img = new Img(36, 32), { R } = brush(img);
+  shadow(img, 18, 29, 15);
+  R(2, 11, 32, 4, '#6b4f3a'); R(2, 11, 32, 1, '#8a6a4e'); R(4, 15, 3, 13, '#4a3626'); R(29, 15, 3, 13, '#4a3626'); R(6, 23, 24, 2, '#4a3626');
+  R(8, 8, 20, 3, '#e6e0cc'); R(9, 8, 8, 1, '#8a2a30'); R(19, 9, 7, 1, '#6b7280');
+  return outline(img);
+}
 function bollard() { const img = new Img(14, 28), { R } = brush(img); shadow(img, 7, 25, 5); R(3, 6, 8, 18, '#2b303b'); R(3, 9, 8, 2, '#c9a24a'); R(2, 3, 10, 4, '#3a4150'); return outline(img); }
 function planter() {
   const img = new Img(68, 40), { R, E } = brush(img);
@@ -876,7 +897,7 @@ export function isoExtrude(src, d, fromY = 0) {
  * thân đồ vật (đẩy khối sâu d); phần phía trên được tách thành từng món theo các cột liền nhau, mỗi món đẩy thành khối nhỏ
  * riêng và đặt lên mặt trên, lùi về phía sau — thay cho ảnh phẳng dán ở mặt trước.
  */
-export function isoWithItems(src, d, fromY) {
+export function isoWithItems(src, d, fromY, itemD = 0) {
   const body = new Img(src.w, src.h);
   body.blit(src, 0, fromY, src.w, src.h - fromY, 0, fromY);
   const base = isoExtrude(body, d, 0);
@@ -899,8 +920,8 @@ export function isoWithItems(src, d, fromY) {
     const crop = new Img(w, fromY - top);
     crop.blit(src, x0, top, w, fromY - top, 0, 0);
     // món cao và rộng (màn hình, bảng) thì mỏng; món nhỏ (cốc, giấy) thì dày gần bằng bề ngang
-    const dk = crop.h > 12 && w > 14 ? 4 : Math.max(3, Math.min(12, Math.round(w * 0.6)));
-    const k = Math.max(2, Math.min(d - dk - 2, Math.round(d * 0.55)));
+    const dk = itemD || (crop.h > 12 && w > 14 ? 4 : Math.max(3, Math.min(12, Math.round(w * 0.6))));
+    const k = itemD ? Math.max(1, Math.round((d - dk) / 2)) : Math.max(2, Math.min(d - dk - 2, Math.round(d * 0.55)));
     const it = isoExtrude(crop, dk, 0);
     const px = x0 + k, py = base.ay + Math.floor(x0 / 2) - Math.floor(k / 2) - z - it.ay;
     out.blit(it.img, 0, 0, it.img.w, it.img.h, px, py);
@@ -1101,6 +1122,10 @@ function voxelProps() {
   out.bench = voxel({ w: 64, d: 20, cell: 4, maxH: 26,
     height: (i, j) => j === 0 ? 24 : (i === 0 || i === 15) ? 12 : 11,
     color: (i, j) => (i === 0 || i === 15) ? '#2b303b' : j === 0 ? '#4a3c2e' : '#5b4a3a' });
+  // ghế có tờ báo để quên trên mặt ngồi
+  out.bench_paper = voxel({ w: 64, d: 20, cell: 4, maxH: 26,
+    height: (i, j) => j === 0 ? 24 : (i === 0 || i === 15) ? 12 : (i >= 8 && i <= 11 && j >= 2 && j <= 3) ? 12 : 11,
+    color: (i, j) => (i === 0 || i === 15) ? '#2b303b' : j === 0 ? '#4a3c2e' : (i >= 8 && i <= 11 && j >= 2 && j <= 3) ? (i === 8 ? '#8a2a30' : '#e6e0cc') : '#5b4a3a' });
   // bồn hoa bên đường: thành bê tông, đất, hoa nhiều màu
   const flowers = ['#9b5a7a', '#c8a24a', '#c9d1dc', '#8a2a30', '#6a8ab8'];
   const planter = (w, d, wallH, sd) => {
@@ -1197,6 +1222,8 @@ export function allProps() {
   add('barrier_ns', barrierNS(), { base: [8, 96] });
   add('life_ring', lifeRing(), { base: [8, 6] });
   add('flyer', flyer(), { base: [0, 0], flat: true });
+  add('news_rack', newsRack(), { base: [34, 12] });
+  add('paper_table', paperTable(), { base: [30, 16] });
   add('planter', planter(), { base: [64, 16] });
   add('market_stall', marketStall(), { base: [76, 20] });
   add('tour_boat', tourBoat(), { base: [290, 34], lights: [[160, 48, 0xffe2a0, 120, 0.8]] });
@@ -1249,10 +1276,12 @@ export function allProps() {
     filing_boxes: [22, 0], meeting_table: [56, 16], archive_shelf: [24, 0], cafe_counter: [30, 22], coffee_table: [26, 8], sofa: [30, 0],
     water_cooler: [18, 24], trash: [14, 0], dev_computer: [28, 22], dev_detector: [26, 0], dev_archive: [28, 30], dev_magnifier: [30, 28],
     dev_monitor: [16, 0], kiosk: [44, 0], bus_stop: [32, 0], market_stall: [40, 0], street_bin: [16, 0], planter: [24, 0], bench: [18, 0], barrier: [8, 0], barrier_ns: [96, 0],
-    tour_boat: [96, 0], bed: [76, 14]
+    tour_boat: [96, 0], bed: [76, 14], news_rack: [18, 0], paper_table: [24, 11]
   };
   // đồ có món đặt trên mặt (tách thành khối riêng); đồ có bản quay về đông
-  const ON_TOP = new Set(['desk_pc', 'desk_papers', 'desk_lab', 'dev_computer', 'dev_magnifier', 'dev_archive', 'reception', 'cafe_counter']);
+  const ON_TOP = new Set(['desk_pc', 'desk_papers', 'desk_lab', 'dev_computer', 'dev_magnifier', 'dev_archive', 'reception', 'cafe_counter', 'water_cooler', 'paper_table']);
+  // độ dày riêng cho món đặt trên (bình nước tròn: dày gần bằng bề ngang thay vì mỏng như màn hình)
+  const ITEM_D = { water_cooler: 13, paper_table: 14 };
   const FACE_EAST = new Set(['bookshelf', 'cabinet', 'archive_shelf', 'filing_boxes', 'sofa', 'printer', 'water_cooler']);
   for (const [k, [d, fromY]] of Object.entries(ISO)) {
     const p = P[k];
@@ -1263,20 +1292,20 @@ export function allProps() {
       P[name] = { img: r.img, meta: { ...p.meta, lights, iso: { ay: r.ay, fw: r.fw, d: r.d } } };
     };
     if (ON_TOP.has(k)) {
-      const r = isoWithItems(p.img, d, fromY);
+      const r = isoWithItems(p.img, d, fromY, ITEM_D[k]);
       const lights = (p.meta.lights || []).map(([x, y, c, rr, i]) => [x, Math.ceil(d / 2) + y + x / 2, c, rr, i]);
       P[`${k}@iso`] = { img: r.img, meta: { ...p.meta, lights, iso: { ay: r.ay, fw: r.fw, d: r.d } } };
     } else mk(p.img, `${k}@iso`);
     if (k === 'tour_boat') mk(mirror(p.img), `${k}@isoW`);
     // đồ áp tường tây: mặt trước quay về phía đông (vào trong phòng)
     if (FACE_EAST.has(k)) {
-      const r = isoExtrude(mirror(p.img), d, fromY);
+      const r = ON_TOP.has(k) ? isoWithItems(mirror(p.img), d, fromY, ITEM_D[k]) : isoExtrude(mirror(p.img), d, fromY);
       P[`${k}@isoE`] = { img: mirror(r.img), meta: { ...p.meta, lights: [], iso: { ay: r.ay, fw: r.fw, d: r.d, east: true } } };
     }
   }
   // đồ ngoài trời dựng bằng voxel thay bản cắt xiên (đá vôi, ghế, bồn hoa...) + đồ mới (đài phun nước, luống hoa, hàng rào)
   for (const [k, v] of Object.entries(voxelProps())) {
-    const base = { karst_big: [140, 100], karst: [86, 66], bench: [60, 16], planter: [60, 20], flowerbed: [60, 60], hedge: [92, 16], fountain: [104, 104] }[k];
+    const base = { karst_big: [140, 100], karst: [86, 66], bench: [60, 16], bench_paper: [60, 16], planter: [60, 20], flowerbed: [60, 60], hedge: [92, 16], fountain: [104, 104] }[k];
     P[k] = { img: v.img, meta: { base, iso: { ay: v.ay, fw: v.fw, d: v.d } } };
     delete P[`${k}@iso`];
   }
@@ -1312,9 +1341,53 @@ function bus() {
   for (let x = 14; x < 200; x += 30) { G(x, 16, 26, 22, '#9cc4dc', '#5a88a8'); R(x + 2, 18, 6, 3, '#e6f4fb'); }
   G(208, 14, 24, 30, '#9cc4dc', '#5a88a8'); R(176, 40, 22, 28, '#1c4442'); R(178, 42, 8, 24, '#7aa8c4'); R(188, 42, 8, 24, '#7aa8c4');
   R(10, 46, 150, 6, '#e9e4d6'); R(10, 48, 150, 1, '#c9c2b4'); R(228, 52, 6, 6, '#ffe9a0'); R(4, 52, 4, 6, '#ff5a5a');
-  R(212, 4, 20, 6, '#14161c'); R(214, 5, 16, 4, '#ff9a3a');
   for (const cx of [44, 192]) { E(cx, 68, 12, 12, '#14161c'); E(cx, 68, 7, 7, '#5b6170'); E(cx, 68, 3, 3, '#9aa1b3'); }
   return outline(img);
+}
+
+/**
+ * Mặt đầu (front) / đuôi xe buýt nhìn thẳng, rộng = chiều sâu khối (56), cao = thân xe (60): dán lên mặt đông của khối
+ * isometric thay cho dải màu kéo dài từ mép ảnh nhìn ngang. Đầu: bảng tuyến, kính chắn gió hai tấm, gạt mưa, đèn pha, lưới
+ * tản nhiệt, cản, biển số. Đuôi: kính sau nhỏ, lưới máy, đèn hậu đỏ, cản.
+ */
+function busEnd(front) {
+  const img = new Img(56, 60), { R, G } = brush(img);
+  G(0, 0, 56, 60, '#2e6e6c', '#24585a'); R(0, 0, 56, 2, '#4a9a96'); R(0, 54, 56, 6, '#1c4442');
+  R(0, 0, 2, 54, '#24585a'); R(54, 0, 2, 54, '#1f4c4c');
+  if (front) {
+    R(6, 3, 44, 7, '#14161c'); R(8, 5, 26, 3, '#ff9a3a'); R(37, 5, 10, 3, '#ffc857');
+    G(4, 12, 48, 22, '#a8d0e6', '#4f7f9e'); R(27, 12, 2, 22, '#1c4442'); R(7, 14, 7, 3, '#e6f4fb'); R(31, 14, 5, 2, '#e6f4fb');
+    R(12, 31, 12, 1, '#14161c'); R(32, 31, 12, 1, '#14161c');
+    R(4, 36, 48, 2, '#e9e4d6');
+    R(3, 41, 9, 6, '#ffe9a0'); R(4, 42, 4, 3, '#ffffff'); R(44, 41, 9, 6, '#ffe9a0'); R(48, 42, 4, 3, '#ffffff');
+    R(3, 47, 9, 2, '#ff9a3a'); R(44, 47, 9, 2, '#ff9a3a');
+    for (let y = 40; y < 48; y += 2) R(15, y, 26, 1, '#1c2a2e');
+    R(2, 50, 52, 4, '#3a4150'); R(20, 50, 16, 4, '#e8ecf2'); R(22, 51, 12, 2, '#3a4150');
+  } else {
+    R(10, 8, 36, 14, '#5a88a8'); R(12, 10, 8, 3, '#9cc4dc'); R(27, 8, 2, 14, '#1c4442');
+    for (let y = 26; y < 44; y += 3) R(12, y, 32, 2, '#1c4442');
+    R(3, 30, 6, 14, '#ff5a5a'); R(4, 31, 3, 5, '#ffb0a0'); R(47, 30, 6, 14, '#ff5a5a'); R(49, 31, 3, 5, '#ffb0a0');
+    R(3, 44, 6, 3, '#ff9a3a'); R(47, 44, 6, 3, '#ff9a3a');
+    R(2, 48, 52, 5, '#3a4150'); R(20, 49, 16, 4, '#e8ecf2'); R(22, 50, 12, 2, '#3a4150');
+  }
+  return img;
+}
+
+/**
+ * Dán ảnh mặt đầu `end` (rộng = chiều sâu d) lên mặt đông của khối isoExtrude: hàng y0.. của ảnh nhìn ngang, mép phải xr.
+ * Mặt đông nhận ít sáng hơn nên tối đi một chút.
+ */
+function paintEnd(out, d, xr, y0, end) {
+  const yo = Math.ceil(d / 2);
+  for (let k = 1; k <= d; k++) for (let j = 0; j < end.h; j++) {
+    const c = end.get(Math.min(end.w - 1, k - 1), j);
+    if (c[3] < 200) continue;
+    const col = shade(`#${c.slice(0, 3).map(v => v.toString(16).padStart(2, '0')).join('')}`, -0.12);
+    const yy = yo + y0 + j + Math.floor(xr / 2);
+    out.set(xr + k, yy - Math.floor(k / 2), col);
+    out.set(xr + k, yy - Math.ceil(k / 2), col);
+  }
+  return out;
 }
 
 /** Xe máy có người lái đội mũ bảo hiểm, 1,5 ô x 1,5 ô. */
@@ -1341,6 +1414,8 @@ export function vehicles() {
     out[id] = img;
     out[`${id}_e`] = isoExtrude(img, d, fromY).img;
     out[`${id}_w`] = isoExtrude(mirror(img), d, fromY).img;
+    // xe buýt: chạy xuôi (_e) thấy mặt đầu, chạy ngược (_w) thấy đuôi xe
+    if (id === 'bus') { paintEnd(out.bus_e, d, 236, 8, busEnd(true)); paintEnd(out.bus_w, d, 236, 8, busEnd(false)); }
   }
   return out;
 }
