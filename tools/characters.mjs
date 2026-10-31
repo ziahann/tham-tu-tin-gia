@@ -46,6 +46,12 @@ export const CHARACTERS = {
   amb_hcm_student: { skin: '#f1c7a0', hair: '#1b1418', hairStyle: 'short', top: '#ffffff', bottom: '#2d3a5a', shoes: '#2b2b2b', backpack: '#2c4a6b' },
   amb_hcm_elder: { skin: '#e6bb98', hair: '#e0e0e0', hairStyle: 'grey', top: '#4a6a8a', inner: '#e8dcc0', bottom: '#4b4b4b', shoes: '#2b2b2b' },
   amb_hcm_reporter: { skin: '#f0c8aa', hair: '#3a2318', hairStyle: 'long', top: '#3a5a7a', inner: '#e8ecf2', bottom: '#2f3440', skirt: true, shoes: '#22252e', lanyard: true, camera: true },
+  // nhóm trò chuyện / nghe lén (đợt 20)
+  amb_auntie: { skin: '#e9bd98', hair: '#3a2318', hairStyle: 'bob', top: '#c86a8a', bottom: '#2d3a5a', shoes: '#f4f4f4' },
+  amb_cafe_a: { skin: '#e2b08a', hair: '#1b1418', hairStyle: 'short', top: '#4a7aa8', inner: '#e8ecf2', bottom: '#3a3f4d', shoes: '#22252e' },
+  amb_cafe_b: { skin: '#f3cdb0', hair: '#2b1d1a', hairStyle: 'long', top: '#e3cf9a', bottom: '#5a4a6a', skirt: true, shoes: '#22252e', glasses: true },
+  amb_intern: { skin: '#f1c7a0', hair: '#1b1418', hairStyle: 'spiky', top: '#e8ecf2', inner: '#2a9d8f', bottom: '#2d3a5a', shoes: '#2b2b2b', lanyard: true },
+  amb_hcm_student2: { skin: '#f0c8aa', hair: '#3a2318', hairStyle: 'long', top: '#2a9d8f', bottom: '#2d3a5a', shoes: '#f4f4f4', backpack: '#c8a24a' },
   amb_rumor2: { skin: '#f1c7a0', hair: '#2b1d1a', hairStyle: 'bob', top: '#4a2f6a', inner: '#c8a24a', bottom: '#2a2a33', shoes: '#14161c' }
 };
 

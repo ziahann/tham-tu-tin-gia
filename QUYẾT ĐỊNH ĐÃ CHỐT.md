@@ -262,3 +262,14 @@
 | Kết thúc | Thắng trận cuối → chú Quốc Trung gọi về → bắt xe về TP.HCM → báo cáo (trả lời lại ba câu hỏi, chọn sai được nhắc) → danh hiệu: Thẩm định viên xuất sắc (khép đủ hồ sơ, uy tín ≥ 80, không đi tắt) / Thẩm định viên (uy tín ≥ 50, không đi tắt) / Thẩm định viên tập sự → màn kết quả + PDF có dòng danh hiệu |
 | Tòa nhà | Mái dốc, mái bốn mặt, vòm, tòa bậc thang; mặt tiền kiểu Pháp, nhà ống nhiều màu, kính hiện đại. Hạ Long đổi một số tòa; TP.HCM có dãy nhà ống, tòa vàng kiểu Pháp, cao ốc |
 
+
+## Chốt ngày 31/10/2026 (đợt 20: nguồn, tên trên đầu, góc máy, NPC ngồi / trò chuyện / nghe lén)
+
+| Mục | Cách làm |
+|---|---|
+| Chú thích nguồn | Bỏ khỏi mọi chỗ trong lúc chơi (thẻ evidence, tư liệu, sổ tay, trình đọc báo, máy tính phòng trọ, lời thoại, câu hỏi: không còn "Nguồn: …", "(tác giả, năm)", "theo …"). Danh mục nguồn chỉ còn ở tab **Nguồn tham khảo** (màn hình chính, màn kết quả) và trang PDF kết quả. Trình đọc báo vẫn hiện tên báo + ngày như tờ báo |
+| Tên trên đầu | Người chơi (xanh ngọc), người giao hồ sơ (vàng), kẻ tung tin (đỏ), người qua đường (xám); chỉ hiện người trong khoảng ~12 ô quanh người chơi. Kẻ Dệt Chuyện không có hình nên không có tên |
+| Góc máy | Lia + đẩy cận + dải đen điện ảnh ở các cảnh: tỉnh dậy ở phòng trọ, chú Quốc Trung giao việc, nghe lén, khép hồ sơ (trước con dấu), Kẻ Dệt Chuyện lên sóng, trao danh hiệu. Tắt khi bật giảm chuyển động |
+| NPC | Một số đi lại, một số ngồi (ghế đá, bàn cà phê, bàn làm việc, ghế chờ, cầu tàu), một số đứng trò chuyện theo nhóm (bong bóng câu ngắn luân phiên) |
+| Nghe lén | Nhóm trò chuyện có dấu "…" xanh: đứng gần (không sát) bấm E → máy quay cận nhóm, nghe đoạn hội thoại, nhân vật chính rút ra điều cần kiểm chứng, ghi vào sổ tay. Bốn nhóm: công viên Hạ Long (ảnh bị dùng lại giữa các trang), quán Gió Biển (clip không rõ nơi / thời điểm quay), Tin Vịnh (Phát Vội giục đăng khi chưa có bản gốc), công viên TP.HCM (nhiều lượt chia sẻ ≠ thật). Lời người qua đường là tin đồn để kiểm chứng, không phải dữ kiện |
+| Đồ vật | Đầu / đuôi xe buýt vẽ riêng (bảng tuyến, kính, đèn, biển số); bình nước thành khối 3D; tờ báo đánh lừa đặt trên tủ báo, ghế đá, bàn nhỏ (không nằm dưới đất) |

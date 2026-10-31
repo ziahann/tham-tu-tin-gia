@@ -582,8 +582,8 @@ function shade3d(f, w, h) {
 }
 
 /** Vẽ một khung nhân vật 32x48. dir: down | up | right. frame: 0 đứng, 1/2 bước chân. */
-function drawCharFrame(spec, dir, frame) {
-  const f = new Img(32, 48);
+function drawCharFrame(spec, dir, frame, sit = false) {
+  let f = new Img(32, 48);
   const R = (x, y, w, h, c) => f.rect(x, y, w, h, c);
   const step = frame === 0 ? 0 : frame === 1 ? 1 : -1;
   const bob = frame === 0 ? 0 : 1;
@@ -592,9 +592,9 @@ function drawCharFrame(spec, dir, frame) {
   const skin = spec.skin, skinDark = shade(spec.skin, -0.15);
   const y0 = bob; // nhún khi bước
 
-  // Chân
+  // Chân (tư thế ngồi: vẽ sau, khi đã hạ thân xuống)
   const legTop = 34;
-  if (dir === 'right') {
+  if (sit) { /* chân ngồi vẽ ở dưới */ } else if (dir === 'right') {
     R(13 + step * 2, legTop, 4, 10, spec.skirt ? skin : spec.bottom);
     R(16 - step * 2, legTop, 4, 10, spec.skirt ? skinDark : shade(spec.bottom, -0.2));
     R(13 + step * 2, 42, 5, 2, spec.shoes); R(16 - step * 2, 42, 5, 2, spec.shoes);
@@ -733,6 +733,24 @@ function drawCharFrame(spec, dir, frame) {
     if (dir === 'right') R(20, 7 + y0, 6, 2, shade(c, -0.3));
   }
 
+  // Ngồi: hạ thân 6 px, đùi gập về phía trước, cẳng chân thả xuống
+  if (sit) {
+    const g = new Img(32, 48);
+    g.blit(f, 0, 0, 32, 40, 0, 6);
+    f = g;
+    const lg = spec.skirt ? spec.bottom : spec.bottom, lgD = shade(spec.bottom, -0.2), sk = spec.skirt ? skin : null;
+    const Rf = (x, y, w, h, c) => f.rect(x, y, w, h, c);
+    if (dir === 'down') {
+      Rf(10, 39, 12, 3, lg); Rf(10, 41, 12, 1, lgD);
+      Rf(11, 42, 4, 3, sk || lg); Rf(17, 42, 4, 3, sk || lgD);
+      Rf(10, 45, 5, 2, spec.shoes); Rf(17, 45, 5, 2, spec.shoes);
+    } else if (dir === 'right') {
+      Rf(12, 38, 11, 4, lg); Rf(12, 41, 11, 1, lgD);
+      Rf(19, 42, 4, 3, sk || lg); Rf(19, 45, 6, 2, spec.shoes);
+    } else {
+      Rf(10, 39, 12, 3, lgD); Rf(11, 42, 4, 3, lgD); Rf(17, 42, 4, 3, lgD); Rf(11, 45, 4, 1, spec.shoes); Rf(17, 45, 4, 1, spec.shoes);
+    }
+  }
   // Khối giả 3D (nắng từ trên trái): mép trên sáng lên, mép phải tối đi; bóng đổ chéo sang phải
   shade3d(f, 32, 48);
   // Viền ngoài tự động
@@ -788,14 +806,21 @@ function buildBoss() {
   }
 }
 
-/** Sprite sheet 3 cột (đứng, bước 1, bước 2) x 4 hàng (xuống, trái, phải, lên). */
+/**
+ * Sprite sheet 3 cột (đứng, bước 1, bước 2) x 4 hàng (xuống, trái, phải, lên) + hai hàng tư thế ngồi:
+ * hàng 5 = ngồi nhìn xuống / phải / trái (khung 12, 13, 14), hàng 6 = ngồi quay lưng (khung 15).
+ */
 function buildCharacter(id, spec) {
-  const sheet = new Img(96, 192);
+  const sheet = new Img(96, 288);
   ['down', 'left', 'right', 'up'].forEach((dir, row) => {
     for (let fr = 0; fr < 3; fr++) {
       const frame = drawCharFrame(spec, dir === 'left' ? 'right' : dir, fr);
       sheet.blit(frame, 0, 0, 32, 48, fr * 32, row * 48, dir === 'left');
     }
+  });
+  [['down', 0, 4], ['right', 1, 4], ['left', 2, 4], ['up', 0, 5]].forEach(([dir, col, row]) => {
+    const frame = drawCharFrame(spec, dir === 'left' ? 'right' : dir, 0, true);
+    sheet.blit(frame, 0, 0, 32, 48, col * 32, row * 48, dir === 'left');
   });
   sheet.save(path.join(ROOT, `assets/sprites/${id}.png`));
 }
@@ -1155,10 +1180,12 @@ const street = buildMap('street', {
     point('npc', 'amb_vendor', 14.2, 37.7),
     point('npc', 'amb_tourist', 50, 48.6, { patrol: 'patrol_tourist' }),
     path_('patrol_tourist', [[50, 48.6], [66, 48.6]]),
-    point('npc', 'amb_fisher', 46.6, 51.8),
+    point('npc', 'amb_fisher', 46.6, 51.8, { pose: 'sit', face: 'down' }),
     point('npc', 'amb_student', 6, 19.6, { patrol: 'patrol_student' }),
     path_('patrol_student', [[2, 19.6], [34, 19.6]]),
-    point('npc', 'amb_elder', 26, 32.6),
+    // ông cụ ngồi ghế đá trò chuyện với cô tập dưỡng sinh (nghe lén được)
+    point('npc', 'amb_elder', 11, 32.66, { pose: 'sit', face: 'down', chat: 'park' }),
+    point('npc', 'amb_auntie', 9.7, 33.8, { chat: 'park' }),
     point('npc', 'amb_jogger', 70, 47.6, { patrol: 'patrol_jogger' }),
     // kẻ tung tin đi rong (GIẢ LẬP): đuổi theo người chơi khi lại gần
     point('npc', 'amb_rumor', 60, 28.8, { patrol: 'patrol_rumor' }),
@@ -1223,8 +1250,9 @@ const newsroom = buildMap('newsroom', {
     path_('patrol_npc3_home', [[4.6, 5.6], [9.4, 5.6]]),
     point('station', 'npc3_s6', 17, 5.6),
     path_('patrol_npc3_s6', [[15, 5.6], [21.4, 5.6]]),
-    point('npc', 'npc4', 12, 11.6, { patrol: 'patrol_npc4' }),
-    path_('patrol_npc4', [[9.6, 11.6], [14.4, 11.6]]),
+    // Phát Vội đứng giục bạn thực tập đang ngồi ở bàn (nghe lén được)
+    point('npc', 'npc4', 17.5, 14.7, { chat: 'rush' }),
+    point('npc', 'amb_intern', 16, 14.35, { pose: 'sit', face: 'up', chat: 'rush' }),
     rectT('inspect', 'inspect_archive', 1.8, 3.6, 3.2, 1, { text: 'inspect_archive' }),
     rectT('inspect', 'inspect_timeline', 15.5, 2, 4.2, 1, { text: 'inspect_timeline' }),
     rectT('inspect', 'inspect_newsdesk', 15, 12.2, 2, 1, { text: 'inspect_newsdesk' }),
@@ -1246,6 +1274,9 @@ const cafe = buildMap('cafe', {
     pp('cafe_table', 9.6, 6.8), pp('cafe_table', 13, 6.8), pp('cafe_table', 3.4, 9.4), pp('cafe_table', 12.6, 10),
     pp('plant_big', 14.4, 10.6), pp('plant_big', 1.6, 10.6), pp('floor_lamp', 14.4, 4.6),
     point('npc', 'npc6', 10.6, 8.6),
+    // hai khách ngồi hai bên bàn, bàn tán về một đoạn clip (nghe lén được)
+    point('npc', 'amb_cafe_a', 11.9, 6.75, { pose: 'sit', face: 'right', chat: 'cafe' }),
+    point('npc', 'amb_cafe_b', 14.1, 6.75, { pose: 'sit', face: 'left', chat: 'cafe' }),
     point('npc', 'amb_barista', 3, 3.9, { patrol: 'patrol_barista' }),
     path_('patrol_barista', [[1.8, 3.9], [6.6, 3.9]]),
     rectT('inspect', 'inspect_cafe_menu', 1.6, 4.2, 6, 1.2, { text: 'inspect_cafe_menu' }),
@@ -1312,7 +1343,7 @@ const clinic = decorRoom('clinic', {
     pp('plant_big', 14.4, 10.6), pp('floor_lamp', 1.6, 10.6),
     point('npc', 'amb_nurse', 4, 3.9, { patrol: 'patrol_nurse' }), path_('patrol_nurse', [[2.6, 3.9], [7.4, 3.9]]),
     point('npc', 'amb_doctor', 11, 6.6, { patrol: 'patrol_doctor' }), path_('patrol_doctor', [[9.6, 6.6], [13.2, 6.6]]),
-    point('npc', 'amb_patient', 12.2, 10)
+    point('npc', 'amb_patient', 12.2, 10, { pose: 'sit', face: 'down' })
   ]
 });
 const cafe2 = decorRoom('cafe2', {
@@ -1324,7 +1355,7 @@ const cafe2 = decorRoom('cafe2', {
     pp('cafe_table', 9.6, 6.2), pp('cafe_table', 13, 7.6), pp('cafe_table', 3.4, 8.6),
     pp('floor_lamp', 1.6, 6.6), pp('plant_big', 14.4, 9.6),
     point('npc', 'amb_barista2', 3, 3.9, { patrol: 'patrol_barista2' }), path_('patrol_barista2', [[1.8, 3.9], [6.4, 3.9]]),
-    point('npc', 'amb_patron', 11, 7.6)
+    point('npc', 'amb_patron', 12.1, 7.55, { pose: 'sit', face: 'right' })
   ]
 });
 
@@ -1447,9 +1478,10 @@ const hcm = buildMap('hcm', {
     ...[12, 40].map((x, i) => rectT('crosswalk', `cross_${i}`, x, 19, 2, 5)),
     // --- người qua đường
     point('npc', 'amb_hcm_vendor', 18.5, 27.9),
-    point('npc', 'amb_hcm_student', 30, 17, { patrol: 'patrol_hcm_student' }),
-    path_('patrol_hcm_student', [[24, 17], [44, 17]]),
-    point('npc', 'amb_hcm_elder', 10, 31.6),
+    // hai sinh viên ở ghế đá công viên bàn về ảnh trong nhóm lớp (nghe lén được, ngay cả trước khi nhận việc)
+    point('npc', 'amb_hcm_student2', 18.2, 33.46, { pose: 'sit', face: 'down', chat: 'class' }),
+    point('npc', 'amb_hcm_student', 19.6, 34.3, { chat: 'class' }),
+    point('npc', 'amb_hcm_elder', 9.5, 31.46, { pose: 'sit', face: 'down' }),
     // --- đồ vật xem được
     rectT('inspect', 'inspect_btn_hcm_sign', 18, 15.3, 6, 0.7, { text: 'inspect_btn_hcm_sign' }),
     rectT('inspect', 'inspect_coach_sign', 49, 15.3, 4, 0.7, { text: 'inspect_coach_sign' }),

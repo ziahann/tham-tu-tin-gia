@@ -3,7 +3,7 @@
 import { data, t } from './data.js';
 import { state, saveProgress, hasFlag } from './state.js';
 import { direction } from './input.js';
-import { makeAnims, feetBody, dirFrom, idleFrame, Npc, showEmote } from './actors.js';
+import { makeAnims, feetBody, dirFrom, idleFrame, Npc, showEmote, nameTag } from './actors.js';
 import { roomStatus } from './grading.js';
 import * as story from './story.js';
 import * as journey from './journey.js';
@@ -22,7 +22,7 @@ import { iso, setupIso, buildGround, buildWalls, ViewLayer, fadeOccluders, shear
 const MAPS = ['tn_lobby', 'tn_f2', 'tn_f3', 'tn_f4', 'tn_f5', 'street', 'newsroom', 'cafe', 'agency', 'office2', 'clinic', 'cafe2', 'boss', 'home', 'hcm', 'tn_hcm'];
 const CITY_MAPS = new Set(['street', 'hcm']); // phố ngoài trời: nền kéo dài ra ngoài bản đồ, ra khỏi nhà nhìn xuống
 const SPEED = 120;
-const MAP_VERSION = 9; // tăng khi sửa bố cục bản đồ: vị trí đã lưu theo bản cũ bị bỏ qua
+const MAP_VERSION = 10; // tăng khi sửa bố cục bản đồ: vị trí đã lưu theo bản cũ bị bỏ qua
 
 /** Sprite của mọi nhân vật trong npc_dialogues.json (NPC chính, người qua đường, boss) + boss đã gỡ mặt nạ. */
 const spriteIds = () => [...new Set([...data.npcs.npcs.map(n => n.sprite || n.id), 'boss', 'boss_blank'])];
@@ -130,6 +130,8 @@ export class WorldScene extends Phaser.Scene {
     feetBody(this.player);
     this.player.setCollideWorldBounds(true);
     this.views.add(this.player);
+    this.player.tag = nameTag(this, state.progress.heroName || '', 'hero');
+    this.player.on('destroy', () => this.player.tag?.destroy());
     this.facing = this.args.spawn ? (this.args.dir || 'down') : saved?.dir || 'up';
     this.savePos();
     this.player.setFrame(idleFrame(this.facing));
@@ -143,8 +145,16 @@ export class WorldScene extends Phaser.Scene {
     this.spawnZoneRoom = propOf(this.zones.find(z => inRect(z, start.x, start.y - 4)) || {}, 'room') || null;
     for (const o of objs.filter(o => o.type === 'npc')) {
       const at = this.npcMapOf(o.name);
-      if (!at || at === this.mapKey) this.spawnNpc(o.name, o.x, o.y, propOf(o, 'patrol'));
+      if (!at || at === this.mapKey) {
+        const npc = this.spawnNpc(o.name, o.x, o.y, propOf(o, 'patrol'));
+        // tư thế: ngồi (ghế, bàn) và hướng nhìn mặc định; nhóm trò chuyện
+        if (propOf(o, 'pose') === 'sit') npc.pose = 'sit';
+        if (propOf(o, 'face')) npc.restDir = propOf(o, 'face');
+        npc.chat = propOf(o, 'chat') || null;
+        npc.rest();
+      }
     }
+    this.buildChats();
     for (const id of Object.keys(data.npcs.stations || {})) {
       if (this.npcMapOf(id) === this.mapKey && !this.npcs.has(id)) this.spawnNpc(id, 0, 0, null);
     }
@@ -182,6 +192,8 @@ export class WorldScene extends Phaser.Scene {
     this.zoneKey = null;
     if (!state.settings.reduceMotion) cam.fadeIn(250, 15, 14, 23);
     this.target = null;
+    this.inShot = false;
+    document.body.classList.remove('is-cine');
     buildGraph(this, MAPS);
     this.guide = new GuideArrow(this);
     this.traffic = objs.some(o => o.type === 'lane') ? new Traffic(this, objs, this.player) : null;
@@ -460,6 +472,85 @@ export class WorldScene extends Phaser.Scene {
     return propOf(this.zones?.find(z => z.name === this.zoneKey) || {}, 'room') || null;
   }
 
+  /**
+   * Nhóm NPC trò chuyện với nhau (object npc có thuộc tính chat cùng mã): quay mặt vào nhau, thỉnh thoảng bật câu nói ngắn.
+   * Nhóm có dữ liệu nghe lén (npc_dialogues.json → chats[mã].eavesdrop) hiện dấu "…" xanh khi chưa nghe; đứng gần
+   * (không sát) rồi bấm E để nghe lén (story.eavesdrop).
+   */
+  buildChats() {
+    const groups = new Map();
+    this.npcs.forEach((npc, id) => { if (npc.chat) { if (!groups.has(npc.chat)) groups.set(npc.chat, []); groups.get(npc.chat).push(id); } });
+    this.chats = [...groups].map(([id, members]) => {
+      const sp = members.map(m => this.npcs.get(m).sprite);
+      const cx = sp.reduce((a, s) => a + s.x, 0) / sp.length, cy = sp.reduce((a, s) => a + s.y, 0) / sp.length;
+      members.forEach(m => {
+        const npc = this.npcs.get(m);
+        const other = members.find(o => o !== m);
+        if (!npc.restDir && other) { const o = this.npcs.get(other).sprite; npc.restAt = { x: o.x, y: o.y }; }
+        npc.rest();
+      });
+      const info = data.npcs.chats?.[id] || {};
+      const p = iso.P(cx, cy);
+      const mark = this.add.text(p.x, p.y - 84, '…', { fontFamily: 'VT323', fontSize: '28px', color: '#7fe3ff', stroke: '#0f0e17', strokeThickness: 4 })
+        .setOrigin(0.5, 1).setDepth(100000).setVisible(false);
+      return { id, members, x: cx, y: cy, info, mark, bubbleIn: 1500 + Math.random() * 2000, turn: 0 };
+    });
+  }
+
+  /** Nhóm còn chờ được nghe lén (chưa nghe, đủ điều kiện cờ). */
+  canEavesdrop(g) {
+    const e = g.info.eavesdrop;
+    return !!e && !hasFlag(`heard_${g.id}`) && (e.requires || []).every(hasFlag) && g.members.every(m => !this.npcs.get(m)?.talking);
+  }
+
+  /** Câu nói ngắn luân phiên trong nhóm trò chuyện (chỉ khi người chơi ở gần). */
+  updateChats(delta, frozen) {
+    for (const g of this.chats || []) {
+      const d = Phaser.Math.Distance.Between(this.player.x, this.player.y, g.x, g.y);
+      g.mark.setVisible(!frozen && this.canEavesdrop(g) && d < 360);
+      if (g.mark.visible && !this.reduceMotion) g.mark.setY(iso.P(g.x, g.y).y - 84 + Math.round(Math.sin(this.time.now / 260) * 2));
+      if (frozen || d > 420) continue;
+      g.bubbleIn -= delta;
+      if (g.bubbleIn > 0) continue;
+      g.bubbleIn = 2600 + Math.random() * 1800;
+      const who = this.npcs.get(g.members[g.turn++ % g.members.length]);
+      const lines = g.info.bubbles || data.npcs.chatBubbles || ['…'];
+      if (who && !who.talking) showEmote(this, who.sprite.view || who.sprite, Phaser.Utils.Array.GetRandom(lines), 2000, true);
+    }
+  }
+
+  /**
+   * Góc máy cho cảnh đặc biệt: thôi bám theo nhân vật, lia và đẩy cận vào trung tâm các mục tiêu ('hero', mã NPC hoặc
+   * điểm logic {x, y}), hiện hai dải đen điện ảnh. Trả về hàm trả góc máy về như cũ (Promise). Giảm chuyển động: bỏ qua.
+   */
+  shot(targets, { zoom = 1.5, dur = 700, lift = 24 } = {}) {
+    const cam = this.cameras.main;
+    const done = () => Promise.resolve();
+    if (this.reduceMotion || this.inShot) return done;
+    const pts = targets.map(tg => tg === 'hero' ? this.player : typeof tg === 'string' ? this.npcs.get(tg)?.sprite : tg).filter(Boolean);
+    if (!pts.length) return done;
+    const lx = pts.reduce((a, s) => a + s.x, 0) / pts.length, ly = pts.reduce((a, s) => a + s.y, 0) / pts.length;
+    const p = iso.P(lx, ly);
+    const base = cam.zoom;
+    this.inShot = true;
+    document.body.classList.add('is-cine');
+    cam.stopFollow();
+    cam.pan(p.x, p.y - lift, dur, 'Sine.easeInOut');
+    cam.zoomTo(base * zoom, dur, 'Sine.easeInOut');
+    return () => new Promise(resolve => {
+      document.body.classList.remove('is-cine');
+      if (!this.scene.isActive()) { resolve(); return; }
+      const pv = this.player.view;
+      cam.zoomTo(base, dur * 0.8, 'Sine.easeInOut');
+      cam.pan(pv.x, pv.y, dur * 0.8, 'Sine.easeInOut', true, (c, prog) => {
+        if (prog < 1) return;
+        cam.startFollow(pv, true, 0.2, 0.2);
+        this.inShot = false;
+        resolve();
+      });
+    });
+  }
+
   /** Tạo NPC trên bản đồ hiện tại (vị trí theo trạm nếu có). */
   spawnNpc(id, x, y, homePatrol) {
     const npc = new Npc(this, id, x, y);
@@ -467,6 +558,9 @@ export class WorldScene extends Phaser.Scene {
     npc.chaser = !!data.npcs.npcs.find(n => n.id === id)?.rumor;
     npc.homePatrol = homePatrol;
     if (id === 'boss') npc.marker.setVisible(false);
+    // tên trên đầu (trừ Kẻ Dệt Chuyện: fanpage ẩn danh, không có hình trên bản đồ)
+    const info = data.npcs.npcs.find(n => n.id === id);
+    if (info && id !== 'boss') npc.tag = nameTag(this, info.name, npc.chaser ? 'rumor' : id.startsWith('amb_') ? 'amb' : 'story');
     if (this.weather?.lit) npc.sprite.setPipeline('Light2D');
     this.npcs.set(id, npc);
     npc.collider = this.physics.add.collider(this.player, npc.sprite);
@@ -484,6 +578,7 @@ export class WorldScene extends Phaser.Scene {
     npc.collider?.destroy();
     npc.sprite.destroy();
     npc.marker.destroy();
+    npc.tag?.destroy();
     this.npcs.delete(id);
   }
 
@@ -700,6 +795,7 @@ export class WorldScene extends Phaser.Scene {
     const npc = this.npcs.get(id);
     if (!npc) return;
     npc.talking = talking;
+    if (!talking) { npc.rest(); return; }
     if (talking) {
       npc.face(this.player.x, this.player.y);
       const d = iso.toScreenDir(npc.sprite.x - this.player.x, npc.sprite.y - this.player.y);
@@ -732,6 +828,9 @@ export class WorldScene extends Phaser.Scene {
       if (d < (big ? 70 : 40) && d < bestD) { best = { kind: 'npc', id, x: npc.sprite.x, y: npc.sprite.y, lift: big ? 84 : 58 }; bestD = d; }
     });
     if (best) return best;
+    // nhóm đang trò chuyện ở gần (không sát): nghe lén
+    const g = (this.chats || []).find(g => this.canEavesdrop(g) && Phaser.Math.Distance.Between(this.player.x, this.player.y, g.x, g.y) < 120);
+    if (g) return { kind: 'eaves', id: g.id, x: g.x, y: g.y, lift: 112 };
     const PAD = 10;
     const lift = this.elevators.find(o => inRect(o, fx, fy, PAD));
     if (lift) return { kind: 'elevator', x: lift.x + lift.width / 2, y: lift.y + lift.height, lift: 70 };
@@ -761,6 +860,7 @@ export class WorldScene extends Phaser.Scene {
     else if (tg.kind === 'npc' && this.npcs.get(tg.id)?.chaser) story.rumorEncounter(tg.id);
     else if (tg.kind === 'npc') story.talkTo(tg.id);
     else if (tg.kind === 'decoy') story.inspectDecoy(tg.id);
+    else if (tg.kind === 'eaves') story.eavesdrop(tg.id);
     else if (tg.kind === 'portal') {
       const room = propOf(tg.portal, 'room');
       const st = roomStatus(room, state.progress.flags);
@@ -952,10 +1052,14 @@ export class WorldScene extends Phaser.Scene {
       this.player.setFrame(idleFrame(this.facing));
     }
     this.npcs.forEach(n => n.update(delta, frozen, this.player));
+    this.updateChats(delta, frozen);
     const far = this.fx().hideFar;
     this.npcs.forEach(n => { if (n.chaser && n.sprite.view) n.sprite.view.setAlpha(far && Phaser.Math.Distance.Between(n.sprite.x, n.sprite.y, this.player.x, this.player.y) > far ? 0.25 : 1); });
     this.traffic?.update(delta, frozen);
     this.views.sync();
+    this.npcs.forEach(n => n.syncTag(this.player));
+    const pv = this.player.view;
+    if (this.player.tag) this.player.tag.setPosition(pv.x, pv.y - 50 * (pv.scaleY || 1)).setVisible(pv.visible && pv.alpha > 0.5);
     fadeOccluders(this.occluders, this.player.view);
     if (!this.reduceMotion) this.devices.forEach((d, i) => d.marker.setY(iso.P(d.obj.x + d.obj.width / 2, d.obj.y).y - 40 + Math.round(Math.sin(time / 250 + i) * 2)));
 
