@@ -371,6 +371,46 @@
       "sprite": "amb_hcm_reporter",
       "isFictional": true,
       "ambient": true
+    },
+    {
+      "id": "amb_auntie",
+      "name": "Cô Tập Dưỡng Sinh",
+      "role": "Người tập thể dục ở công viên",
+      "sprite": "amb_auntie",
+      "isFictional": true,
+      "ambient": true
+    },
+    {
+      "id": "amb_cafe_a",
+      "name": "Anh Khách Áo Sọc",
+      "role": "Khách quán cà phê",
+      "sprite": "amb_cafe_a",
+      "isFictional": true,
+      "ambient": true
+    },
+    {
+      "id": "amb_cafe_b",
+      "name": "Chị Khách Đeo Kính",
+      "role": "Khách quán cà phê",
+      "sprite": "amb_cafe_b",
+      "isFictional": true,
+      "ambient": true
+    },
+    {
+      "id": "amb_intern",
+      "name": "Bạn Thực Tập",
+      "role": "Thực tập sinh trang tin Tin Vịnh",
+      "sprite": "amb_intern",
+      "isFictional": true,
+      "ambient": true
+    },
+    {
+      "id": "amb_hcm_student2",
+      "name": "Bạn cùng lớp",
+      "role": "Người qua đường",
+      "sprite": "amb_hcm_student2",
+      "isFictional": true,
+      "ambient": true
     }
   ],
   "dialogues": {
@@ -1701,6 +1741,26 @@
     "amb_hcm_reporter": [
       "Chú Trung giao việc nhanh lắm, nhưng dặn kỹ lắm. Nghe chú ấy là không sai.",
       "Đăng chậm mà đúng vẫn hơn đăng nhanh mà phải gỡ."
+    ],
+    "amb_auntie": [
+      "Cô tập dưỡng sinh mỗi sáng. Tập xong mới xem điện thoại, xem chậm thôi.",
+      "Tin nào làm mình xúc động quá thì càng phải hỏi: ai đăng, đăng khi nào?"
+    ],
+    "amb_cafe_a": [
+      "Anh chỉ ngồi uống cà phê thôi mà… Ừ, đang bàn mấy cái clip trên mạng.",
+      "Xem clip thì dễ, biết clip quay ở đâu, lúc nào mới khó."
+    ],
+    "amb_cafe_b": [
+      "Chị có thói quen xem ngày đăng trước khi tin một đoạn video.",
+      "Clip càng \"nóng\" thì chị càng muốn biết nó được quay ở đâu."
+    ],
+    "amb_intern": [
+      "Em mới thực tập ở đây… anh Phát Vội lúc nào cũng giục đăng nhanh.",
+      "Em đang tập thói quen: chưa tìm thấy bản gốc thì chưa đăng."
+    ],
+    "amb_hcm_student2": [
+      "Nhóm lớp mình nhắn liên tục về vụ lật tàu ở Hạ Long, đọc mà rối cả lên.",
+      "Bạn học Thẩm định tin tức à? Chỉ mình cách kiểm tra một bức ảnh với!"
     ]
   },
   "rumors": [
@@ -2428,5 +2488,125 @@
         "reportWrong": "Đây là bài đính chính của chính em!"
       }
     ]
+  },
+  "chatBubbles": [
+    "…",
+    "Thật à?",
+    "Ừ…",
+    "Nghe nói…",
+    "Hừm.",
+    "Thế à!",
+    "Ơ…",
+    "Đúng rồi!"
+  ],
+  "chats": {
+    "_note": "Nhóm NPC trò chuyện (object npc trên bản đồ có thuộc tính chat = mã nhóm). eavesdrop: đoạn hội thoại nghe lén được (tin đồn của người qua đường, KHÔNG phải dữ kiện); thought: nhân vật chính rút ra điều cần kiểm chứng; note: dòng ghi vào sổ tay. bubbles: câu nói ngắn riêng (mặc định chatBubbles).",
+    "park": {
+      "eavesdrop": {
+        "lines": [
+          {
+            "npc": "amb_auntie",
+            "text": "Bác xem bộ ảnh người cha cài áo phao cho con chưa? Nhìn mà thương quá, cháu định gửi vào nhóm gia đình.",
+            "mood": "thinking"
+          },
+          {
+            "npc": "amb_elder",
+            "text": "Ông xem rồi. Mà lạ lắm: ông gặp đúng tấm ảnh đó ở hai trang khác nhau, trang nào cũng kể một kiểu.",
+            "mood": "thinking"
+          },
+          {
+            "npc": "amb_auntie",
+            "text": "Chắc người ta chia sẻ lại cho nhau thôi bác…"
+          },
+          {
+            "npc": "amb_elder",
+            "text": "Có thể. Nhưng ông chưa thấy báo nào đăng tấm đó là ảnh chụp ở hiện trường. Khoan gửi đã cô ạ.",
+            "mood": "serious"
+          }
+        ],
+        "thought": "Cùng một tấm ảnh xuất hiện ở nhiều trang, mỗi trang kể một câu chuyện… Đó là dấu hiệu nên kiểm tra: ảnh có bị dùng lại giữa các trang không?",
+        "note": "Nghe ở công viên: ảnh \"người cha cài áo phao cho con\" xuất hiện ở hai trang khác nhau → kiểm tra ảnh có bị dùng lại giữa các trang."
+      }
+    },
+    "cafe": {
+      "eavesdrop": {
+        "lines": [
+          {
+            "npc": "amb_cafe_a",
+            "text": "Em xem clip con tàu chìm giữa mưa bão chưa? Người ta bảo quay đúng hôm lật tàu ở vịnh đấy."
+          },
+          {
+            "npc": "amb_cafe_b",
+            "text": "Xem rồi. Nhưng người đăng không ghi quay ở đâu, lúc nào. Mà sóng gió trong clip cũng chẳng giống vịnh lắm.",
+            "mood": "thinking"
+          },
+          {
+            "npc": "amb_cafe_a",
+            "text": "Ừ nhỉ… nghe cũng lạ. Anh suýt chia sẻ rồi đấy."
+          },
+          {
+            "npc": "amb_cafe_b",
+            "text": "Khoan đã anh. Có khi là clip cũ của một vụ khác bị gắn nhầm thôi.",
+            "mood": "serious"
+          }
+        ],
+        "thought": "Một đoạn clip không rõ nơi quay, thời điểm quay… Phải đối chiếu báo chí xem có phải tư liệu cũ bị gán nhãn sai không.",
+        "note": "Nghe ở quán Gió Biển: clip \"tàu chìm giữa mưa bão\" không ghi nơi quay, thời điểm quay → đối chiếu báo chí, có thể là tư liệu cũ bị gán nhãn sai."
+      }
+    },
+    "rush": {
+      "eavesdrop": {
+        "lines": [
+          {
+            "npc": "npc4",
+            "text": "Bộ ảnh 12 ô đang lên xu hướng kìa! Đăng ngay, ghi \"ảnh hiện trường\" cho anh!",
+            "mood": "happy"
+          },
+          {
+            "npc": "amb_intern",
+            "text": "Nhưng anh ơi, em tra ảnh rồi mà không thấy hãng tin, phóng viên hay nhân chứng nào đăng bản gốc cả.",
+            "mood": "thinking"
+          },
+          {
+            "npc": "npc4",
+            "text": "Kệ! Đăng trước, sửa sau!"
+          },
+          {
+            "npc": "amb_intern",
+            "text": "Em nghĩ mình nên chờ xác minh… đăng sai rồi đính chính khó lắm anh.",
+            "mood": "serious"
+          }
+        ],
+        "thought": "Không tìm thấy bản gốc từ hãng tin, phóng viên hay nhân chứng: đó là một dấu hiệu cần ghi lại, chưa phải kết luận. Còn \"đăng trước, sửa sau\" thì tuyệt đối không.",
+        "note": "Nghe ở Tin Vịnh: bộ ảnh 12 ô chưa tìm thấy bản gốc từ hãng tin, phóng viên hay nhân chứng → một dấu hiệu, cần thêm bằng chứng khác."
+      }
+    },
+    "class": {
+      "eavesdrop": {
+        "lines": [
+          {
+            "npc": "amb_hcm_student2",
+            "text": "Nhóm lớp đang chuyền nhau mấy tấm ảnh vụ lật tàu ở Hạ Long. Xem mà muốn khóc.",
+            "mood": "thinking"
+          },
+          {
+            "npc": "amb_hcm_student",
+            "text": "Ừ… nhưng có ai biết ảnh đó ai chụp không? Mình chẳng thấy bài nào ghi.",
+            "mood": "thinking"
+          },
+          {
+            "npc": "amb_hcm_student2",
+            "text": "Thì cả nghìn người chia sẻ rồi, chắc là thật chứ?"
+          },
+          {
+            "npc": "amb_hcm_student",
+            "text": "Nhiều người chia sẻ đâu có nghĩa là thật. Để xem báo chính thống nói gì đã.",
+            "mood": "serious"
+          }
+        ],
+        "thought": "Nhiều lượt chia sẻ không chứng minh được gì. Đây đúng là thứ mình cần đi kiểm chứng tận nơi.",
+        "note": "Nghe ở công viên TP.HCM: ảnh vụ lật tàu được chuyền tay rất nhiều nhưng không ai biết ai chụp → nhiều lượt chia sẻ không chứng minh ảnh là thật."
+      }
+    }
   }
 }

@@ -113,6 +113,15 @@ export async function conversation(partner, body, portrait) {
   }
 }
 
+/**
+ * Chạy fn trong một góc máy đặc biệt (world.shot: lia / đẩy cận vào các mục tiêu), xong thì trả góc máy về.
+ * targets: 'hero', mã NPC hoặc điểm logic; opts: { zoom, dur }.
+ */
+export async function withShot(targets, opts, fn) {
+  const release = world?.shot?.(targets, opts) || (() => Promise.resolve());
+  try { return await fn(); } finally { await release(); }
+}
+
 /** Phát một cảnh viết sẵn (lời thoại + lựa chọn rẽ nhánh). */
 async function playScene(sceneId) {
   let scene = sceneById(sceneId);
@@ -901,7 +910,12 @@ async function awardBadge(roomId) {
   const b = data.quests.rooms.find(r => r.id === roomId)?.badge;
   if (!b) return;
   onChange();
-  await caseCutscene(roomId, b);
+  // cận cảnh nhân vật chính trước khi tập hồ sơ được đóng dấu
+  await withShot(['hero'], { zoom: 1.8, dur: 600 }, async () => {
+    world?.emote('hero', '!');
+    await new Promise(r => setTimeout(r, state.settings.reduceMotion ? 0 : 650));
+    await caseCutscene(roomId, b);
+  });
   await dlg.say('system', t('dialog.badge', b));
 }
 
@@ -1041,6 +1055,31 @@ export function inspectDecoy(id) {
 }
 
 /**
+ * Nghe lén một nhóm NPC đang trò chuyện (npc_dialogues.json → chats[id].eavesdrop): máy quay cận vào nhóm, lời thoại của
+ * họ hiện trong khung thoại (họ không biết có người nghe), nhân vật chính rút ra điều cần kiểm chứng và ghi vào sổ tay.
+ * Lời của người qua đường chỉ là tin đồn để kiểm chứng, không phải dữ kiện.
+ */
+export async function eavesdrop(id) {
+  const e = data.npcs.chats?.[id]?.eavesdrop;
+  const g = world?.chats?.find(c => c.id === id);
+  if (!e || !g || busy) return;
+  const hero = { hero: state.progress.heroName };
+  await withShot(g.members, { zoom: 1.7, dur: 800 }, () => conversation(g.members[0], async () => {
+    await dlg.say('system', t('eaves.start'));
+    for (const l of e.lines) await dlg.say(l.npc, fill(l.text, hero), { mood: l.mood });
+    world?.emote('hero', '!');
+    await dlg.say('hero', fill(e.thought, hero), { mood: 'thinking' });
+    const notes = (state.progress.notes ||= []);
+    if (!notes.some(n => n.source === `eaves_${id}`)) notes.push({ source: `eaves_${id}`, text: e.note });
+    setFlag(`heard_${id}`);
+    saveProgress();
+    sfx('paper');
+    toast(t('eaves.noted'));
+  }));
+  world?.refresh();
+}
+
+/**
  * Tới thẳng trận đấu với Kẻ Dệt Chuyện (dùng khi trình chiếu / ôn nhanh): các nhiệm vụ bắt buộc chưa làm được tính là
  * đã khép (nhận thẻ evidence của nhiệm vụ để đủ điều kiện), nhưng không trao huy hiệu của hồ sơ.
  */
@@ -1141,7 +1180,10 @@ export async function runBoss() {
   let won = false;
   await conversation('boss', async () => {
     if (!hasFlag('boss_intro')) {
-      for (const line of data.npcs.dialogues.boss_intro || []) await dlg.say(line.npc, line.text, { mood: line.npc === 'boss' ? 'smug' : undefined });
+      // góc máy: lia tới bàn điều khiển phát trực tiếp, nơi Kẻ Dệt Chuyện "lên sóng"
+      await withShot(['boss'], { zoom: 1.6, dur: 900 }, async () => {
+        for (const line of data.npcs.dialogues.boss_intro || []) await dlg.say(line.npc, line.text, { mood: line.npc === 'boss' ? 'smug' : undefined });
+      });
       await dlg.say('system', t('boss.guessNote'));
       setFlag('boss_intro');
       saveProgress();

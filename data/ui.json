@@ -490,5 +490,9 @@
     "skipPrologue": "Bỏ qua phần mở đầu",
     "skipPrologueConfirm": "Tới thẳng Hạ Long? Em vẫn nhận thẻ cộng tác viên và ba câu hỏi xác minh.",
     "shared": "lượt chia sẻ"
+  },
+  "eaves": {
+    "start": "Đứng lặng gần đó, vờ xem điện thoại và lắng nghe…",
+    "noted": "Đã ghi điều nghe được vào sổ tay."
   }
 }
