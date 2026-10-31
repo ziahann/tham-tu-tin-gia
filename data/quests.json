@@ -635,7 +635,7 @@
           "resources": [
             "thuthao2025"
           ],
-          "ask": "Mở bài VTV (Thu Thảo, 2025). Bài viết nói gì về các hình ảnh và câu chuyện này?",
+          "ask": "Mở bài VTV. Bài viết nói gì về các hình ảnh và câu chuyện này?",
           "options": [
             {
               "id": "a",
@@ -796,13 +796,13 @@
           "resources": [
             "hoaianh2025"
           ],
-          "ask": "Theo VnExpress, một số video được gắn là vụ 19/7 thật ra quay trong đợt bão nào?",
+          "ask": "Một số video được gắn là vụ 19/7 thật ra quay trong đợt bão nào?",
           "accepts": [
             "yagi"
           ],
           "placeholder": "tên cơn bão",
           "hints": [
-            "Đọc bài VnExpress (Hoài Anh, 2025), đoạn nói về nguồn gốc các video.",
+            "Đọc bài VnExpress, đoạn nói về nguồn gốc các video.",
             "Cơn bão lớn đổ bộ miền Bắc năm 2024, tên bốn chữ cái."
           ],
           "walkthrough": "Mở bài VnExpress → tìm câu \"Một số video lấy từ đợt bão...\" → chép tên bão.",
@@ -833,7 +833,7 @@
           "resources": [
             "minhthu2025"
           ],
-          "ask": "Theo VietnamPlus, ảnh nhóm trẻ em tham quan vịnh thật ra được chụp năm nào?",
+          "ask": "Ảnh nhóm trẻ em tham quan vịnh thật ra được chụp năm nào?",
           "accepts": [
             "2024",
             "8/2024",
@@ -842,7 +842,7 @@
           "fuzzy": false,
           "placeholder": "năm",
           "hints": [
-            "Đọc bài VietnamPlus (Minh Thu, 2025), đoạn chủ ảnh lên tiếng.",
+            "Đọc bài VietnamPlus, đoạn chủ ảnh lên tiếng.",
             "Ảnh chụp trong chuyến du lịch của gia đình chủ ảnh, trước vụ tai nạn một năm."
           ],
           "walkthrough": "Mở bài VietnamPlus → tìm câu \"chụp trong chuyến du lịch Hạ Long của gia đình vào tháng 8/...\".",
@@ -1326,7 +1326,7 @@
       "mode": "G8",
       "title": "Phân loại rối loạn thông tin",
       "npcIntro": "s8_q11_intro",
-      "question": "Dùng khung của Wardle và Derakhshan để phân loại TỪNG nhóm đối tượng.",
+      "question": "Dùng khung Information Disorder để phân loại TỪNG nhóm đối tượng.",
       "resources": [
         "wardle2017"
       ],
@@ -1994,7 +1994,7 @@
       "id": "ev_f7",
       "fact": "F7",
       "title": "Công cụ phát hiện AI (bổ trợ)",
-      "text": "Hive (11/10/2026), khung 3 và 11: 99,9% khả năng ảnh AI, 0% deepfake; nguồn tạo dự đoán Imagen 4, kế đến Gemini; không có Content Credentials.",
+      "text": "Hive, khung 3 và 11: 99,9% khả năng ảnh AI, 0% deepfake; nguồn tạo dự đoán Imagen 4, kế đến Gemini; không có Content Credentials.",
       "sources": [
         "baocao",
         "hive"
@@ -2042,7 +2042,7 @@
       "id": "ev_f14",
       "fact": "F14",
       "title": "Cơ quan chức năng đã xử lý",
-      "text": "Tuổi Trẻ (21/7/2025): Công an tỉnh Quảng Ninh xử lý một người bình luận sai sự thật về số người tử vong.",
+      "text": "Ngày 21/7/2025, Công an tỉnh Quảng Ninh xử lý một người bình luận sai sự thật về số người tử vong.",
       "sources": [
         "manh2025"
       ]
@@ -2346,7 +2346,7 @@
       ]
     },
     "wardle": {
-      "title": "Khung Information Disorder (Wardle & Derakhshan, 2017)",
+      "title": "Khung Information Disorder",
       "rows": [
         [
           "Misinformation",

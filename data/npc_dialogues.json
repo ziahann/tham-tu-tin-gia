@@ -1498,7 +1498,7 @@
       "Tủ hồ sơ. Nhãn ghi: \"Ảnh chụp màn hình do báo chí đăng lại\". Hồ sơ kiểm chứng chỉ tiếp cận bài đăng qua các ảnh chụp này."
     ],
     "inspect_bookshelf": [
-      "Kệ sách: sổ tay kiểm chứng, tài liệu về SIFT và khung Information Disorder của Wardle và Derakhshan (2017)."
+      "Kệ sách: sổ tay kiểm chứng, tài liệu về SIFT và khung Information Disorder."
     ],
     "inspect_lab": [
       "Hai màn hình lớn hiển thị bản ghi kết quả công cụ. Một tờ giấy dán: \"Không tải lại ảnh giả lên công cụ.\""
@@ -2227,7 +2227,7 @@
           "done_S5",
           "done_S6"
         ],
-        "note": "Video quay trong bão Yagi năm 2024, không phải vụ 19/7/2025 (theo báo chí đối chiếu).",
+        "note": "Video quay trong bão Yagi năm 2024, không phải vụ 19/7/2025.",
         "noteOptions": [
           {
             "ok": true,
@@ -2280,7 +2280,7 @@
           "done_S5",
           "done_S6"
         ],
-        "note": "Video ghi lại vụ chìm tàu tại Congo (10/2024), bị gán nhãn là vụ 19/7/2025 (theo báo chí đối chiếu).",
+        "note": "Video ghi lại vụ chìm tàu tại Congo (10/2024), bị gán nhãn là vụ 19/7/2025.",
         "noteOptions": [
           {
             "text": "Người đăng cố tình lừa mọi người để kiếm lượt xem.",
