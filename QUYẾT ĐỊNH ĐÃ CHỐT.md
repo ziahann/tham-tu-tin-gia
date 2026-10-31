@@ -251,3 +251,14 @@
 | Hướng màn hình | Điện thoại chơi ngang. Cầm dọc: màn che "Xoay ngang điện thoại". Bấm nút ở màn hình chính: vào toàn màn hình và khóa ngang (Android Chrome); iOS không cho khóa nên chỉ có lời nhắc |
 | Di chuyển | Cần điều khiển ảo tròn bên trái, 8 hướng (bắt về bội số 45°, giữa vòng là vùng chết); nút A bên phải. Bàn phím đi chéo bằng hai phím cùng lúc. Sprite vẫn 4 hướng nhìn (hướng chéo lấy hướng trội) |
 | Bố cục màn thấp | Cao ≤ 500 px: thanh trên, chân dung, nút nhỏ lại; balo rộng tối đa 52% màn hình; khung thoại chừa chỗ cho balo |
+
+## Chốt ngày 31/10/2026 (đợt 19: mở đầu ở TP.HCM, xe khách, kết thúc báo cáo, kiến trúc đa dạng)
+
+| Mục | Cách làm |
+|---|---|
+| Màn hình chính | Giữ thông tin dự án (môn, trường, tác giả, cảnh báo, disclaimer); bỏ mọi thông tin vụ án (thẻ hồ sơ, tên vụ, con dấu). Bắt đầu → chọn nhân vật + tên ngay |
+| Mở đầu | Phòng trọ ở TP.HCM: disclaimer + chọn xem / bỏ qua mở đầu → máy tính (bản tin thật có nguồn + bài sai đang lan, chọn cách phản ứng) → điện thoại gọi tòa soạn Báo Thanh Niên TP.HCM → ra phố, vào tòa soạn gặp chú Quốc Trung (thư ký tòa soạn, hư cấu) nhận ba câu hỏi xác minh + thẻ cộng tác viên → bến xe khách |
+| Xe khách | Đi lại tự do TP.HCM ⇄ Hạ Long ở hai trạm. Cảnh vẫy xe có tương tác (bấm khi xe tới gần, lỡ thì chờ chuyến sau, không phạt), màn chuyến đi qua các tỉnh thành, xuống xe ở trạm đối diện |
+| Kết thúc | Thắng trận cuối → chú Quốc Trung gọi về → bắt xe về TP.HCM → báo cáo (trả lời lại ba câu hỏi, chọn sai được nhắc) → danh hiệu: Thẩm định viên xuất sắc (khép đủ hồ sơ, uy tín ≥ 80, không đi tắt) / Thẩm định viên (uy tín ≥ 50, không đi tắt) / Thẩm định viên tập sự → màn kết quả + PDF có dòng danh hiệu |
+| Tòa nhà | Mái dốc, mái bốn mặt, vòm, tòa bậc thang; mặt tiền kiểu Pháp, nhà ống nhiều màu, kính hiện đại. Hạ Long đổi một số tòa; TP.HCM có dãy nhà ống, tòa vàng kiểu Pháp, cao ốc |
+

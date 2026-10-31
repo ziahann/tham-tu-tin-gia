@@ -99,6 +99,13 @@ const ICONS = {
     R(28, 26, 5, 6, '#1d2638');
     img.set(19, 20, '#b28cff'); img.set(27, 20, '#b28cff');
   },
+  // Danh hiệu cuối game (tòa soạn trao): ngôi sao trên cuộn giấy chứng nhận — ba bậc vàng / bạc / đồng
+  ...Object.fromEntries(['gold', 'silver', 'bronze'].map(k => [`TITLE_${k}`, (R, E, img) => {
+    R(12, 26, 24, 9, '#e8dcc0'); R(12, 26, 24, 1, '#c9b48a'); R(15, 29, 18, 1, '#7a6a4a'); R(15, 32, 12, 1, '#7a6a4a');
+    const c = { gold: '#ffd54a', silver: '#e8ecf2', bronze: '#e0a060' }[k];
+    for (let y = 0; y < 13; y++) { const w = y < 5 ? 1 + y : y < 7 ? 12 - (y - 5) * 2 : 4 + Math.abs(y - 9); R(24 - Math.floor(w / 2), 11 + y, w, 1, c); }
+    img.set(24, 11, '#ffffff');
+  }])),
   // Nhận diện mạo danh: thẻ tên với dấu tích giả bị gạch chéo
   BONUS: (R, E, img) => {
     R(10, 14, 28, 18, '#e8ecf2'); R(10, 14, 28, 4, '#2c4a6b'); R(13, 21, 7, 8, '#9fb3c8'); R(22, 21, 13, 1, '#5b5d6e'); R(22, 24, 10, 1, '#5b5d6e');
@@ -110,7 +117,8 @@ const ICONS = {
 // màu kim loại / ruy băng theo nhóm: hồ sơ ảnh (bạc xanh), báo chí (đồng), tác động (vàng), boss (tím), tùy chọn (xanh lá)
 const STYLE = {
   S3: ['#c9d1dc', '#c8323c'], S4: ['#9fb3c8', '#2c6a8f'], S5: ['#c49a6c', '#7a4a2a'], S6: ['#c49a6c', '#2c4a6b'],
-  S7: ['#e8c66a', '#7a5a20'], S8: ['#e8c66a', '#3aa7a3'], CAFE: ['#7fbf8f', '#2f5a48'], S9: ['#b28cff', '#3b2c4a'], BONUS: ['#7fbf8f', '#c8323c']
+  S7: ['#e8c66a', '#7a5a20'], S8: ['#e8c66a', '#3aa7a3'], CAFE: ['#7fbf8f', '#2f5a48'], S9: ['#b28cff', '#3b2c4a'], BONUS: ['#7fbf8f', '#c8323c'],
+  TITLE_gold: ['#e8c66a', '#c8323c'], TITLE_silver: ['#c9d1dc', '#2c4a6b'], TITLE_bronze: ['#c49a6c', '#3a5a3a']
 };
 
 /** Ghi mọi huy hiệu ra game/assets/badges/<mã>.png. */

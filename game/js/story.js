@@ -11,6 +11,7 @@ import { toolWindow, browseContent, deviceSpeaker } from './tools.js';
 import { targetMap } from './guide.js';
 import { loseCred, easePressure, isLight, roomName, caseOpen, PENALTY } from './obstacles.js';
 import { bossStartShares, feedAlerts } from './feed.js';
+import { journeyTarget, editorWaiting, afterBoss, stage as journeyStage } from './journey.js';
 
 let world = null;
 let busy = false;
@@ -18,6 +19,8 @@ let onChange = () => {};
 
 /** Gắn cảnh bản đồ (để NPC dẫn đường, cập nhật cửa). */
 export function setWorld(w) { world = w; }
+/** Cảnh bản đồ đang chạy (cho journey.js). */
+export const getWorld = () => world;
 
 /** Hàm gọi sau mỗi thay đổi tiến độ (cập nhật thanh trên, balo). */
 export function setOnChange(fn) { onChange = fn; }
@@ -75,6 +78,7 @@ export function track(id, quiet = false) {
 
 /** NPC có việc cốt truyện / nhiệm vụ đang chờ không (để hiện dấu !). */
 export function hasStoryFor(npcId) {
+  if (npcId === 'npc10') return editorWaiting();
   const e = interactionFor(npcId);
   return (!!e && !e.idle) || questsFor(npcId).length > 0;
 }
@@ -98,7 +102,7 @@ async function pickQuest(npcId, room) {
 }
 
 /** Chạy một đoạn hội thoại có giới hạn: khóa điều khiển, mở khung thoại, đóng khi xong. */
-async function conversation(partner, body, portrait) {
+export async function conversation(partner, body, portrait) {
   if (busy) return;
   busy = true;
   dlg.begin(partner, portrait);
@@ -495,6 +499,8 @@ export async function useElevator() {
 
 /** Mục tiêu dẫn đường của hồ sơ đang theo dõi: { kind: 'npc' | 'device', id } hoặc null. */
 export function trackTarget() {
+  const jt = state.progress && journeyTarget();
+  if (jt) return jt;
   const id = state.progress?.tracked;
   if (!id) return null;
   const q = questById(id);
@@ -855,19 +861,19 @@ Object.assign(STEP_RUNNERS, {
  * Cảnh cắt khi khép hồ sơ: tập hồ sơ trượt vào, con dấu đỏ đóng xuống, huy hiệu bay về nút balo.
  * Bấm để bỏ qua; chế độ giảm chuyển động hiện tĩnh trong chốc lát.
  */
-export function caseCutscene(roomId, badge) {
+export function caseCutscene(roomId, badge, opts = {}) {
   const room = data.quests.rooms.find(r => r.id === roomId);
   const wrap = document.createElement('div');
   wrap.className = 'case-cut';
   wrap.setAttribute('role', 'status');
   const folder = document.createElement('div');
   folder.className = 'case-folder';
-  const tab = Object.assign(document.createElement('div'), { className: 'case-folder-tab', textContent: t('cutscene.file') });
-  const title = Object.assign(document.createElement('div'), { className: 'case-folder-title', textContent: room?.name || '' });
+  const tab = Object.assign(document.createElement('div'), { className: 'case-folder-tab', textContent: opts.title || t('cutscene.file') });
+  const title = Object.assign(document.createElement('div'), { className: 'case-folder-title', textContent: opts.title ? badge.name : room?.name || '' });
   const learned = Object.assign(document.createElement('p'), { className: 'case-folder-text', textContent: badge.learned });
-  const stamp = Object.assign(document.createElement('div'), { className: 'case-stamp', textContent: t(room?.boss ? 'cutscene.stampBoss' : 'cutscene.stamp') });
-  const img = Object.assign(document.createElement('img'), { className: 'case-badge', src: `assets/badges/${roomId}.png`, alt: '' });
-  const cap = Object.assign(document.createElement('div'), { className: 'case-cap', textContent: `${t('backpack.newBadge')}: ${badge.name}` });
+  const stamp = Object.assign(document.createElement('div'), { className: 'case-stamp', textContent: opts.stamp || t(room?.boss ? 'cutscene.stampBoss' : 'cutscene.stamp') });
+  const img = Object.assign(document.createElement('img'), { className: 'case-badge', src: opts.img || `assets/badges/${roomId}.png`, alt: '' });
+  const cap = Object.assign(document.createElement('div'), { className: 'case-cap', textContent: opts.cap || `${t('backpack.newBadge')}: ${badge.name}` });
   folder.append(tab, title, learned, stamp);
   wrap.append(folder, img, cap, Object.assign(document.createElement('div'), { className: 'case-skip', textContent: t('cutscene.skip') }));
   document.body.append(wrap);
@@ -1049,6 +1055,8 @@ export function skipToBoss() {
   }
   setFlag('boss_announced');
   setFlag('skipped_to_boss');
+  // đang ở phần mở đầu (TP.HCM): coi như đã nhận việc và tới Hạ Long
+  if (['home', 'seen', 'called', 'briefed'].includes(journeyStage())) { state.progress.journey = 'halong'; setFlag('press_card'); setFlag('jr_wake'); setFlag('jr_arrived'); }
   saveProgress();
   track('boss', true);
   onChange();
@@ -1179,7 +1187,8 @@ export async function runBoss() {
   shares.stop(true);
   bossBar(null);
   world?.refresh();
-  if (won) onEnding();
+  // thắng: chú Quốc Trung gọi về TP.HCM báo cáo (màn kết quả hiện sau khi nhận danh hiệu)
+  if (won && !(await afterBoss())) onEnding();
 }
 
 /** Bộ đếm lượt chia sẻ của bài sai (nổi trên màn hình): tăng đều theo thời gian, bump(n) khi người chơi sai. */

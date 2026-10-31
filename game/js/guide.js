@@ -3,6 +3,8 @@
 import { data, t, npcById } from './data.js';
 import { trackTarget, trackedRoom } from './story.js';
 import { setTrack } from './hud.js';
+import { state } from './state.js';
+import { journeyGoal } from './journey.js';
 
 const propOf = (o, name) => (o.properties || []).find(p => p.name === name)?.value;
 
@@ -25,6 +27,13 @@ export function buildGraph(scene, maps) {
         if (f.map !== key && maps.includes(f.map)) graph.edges[key].push({ to: f.map, x: o.x + o.width / 2, y: o.y + o.height / 2, elevator: true });
       }
     }
+    // điểm hành động của hành trình; trạm xe khách nối hai thành phố
+    objs.filter(o => o.type === 'spot').forEach(o => {
+      const at = { map: key, x: o.x + o.width / 2, y: o.y + o.height + 8 };
+      graph.where[`spot:${o.name}`] = at;
+      const to = propOf(o, 'to');
+      if (propOf(o, 'act') === 'bus' && maps.includes(to)) graph.edges[key].push({ to, x: at.x, y: at.y, bus: true });
+    });
     objs.filter(o => o.type === 'device').forEach(o => {
       graph.where[`device:${propOf(o, 'device')}`] = { map: key, x: o.x + o.width / 2, y: o.y + o.height + 8 };
     });
@@ -54,7 +63,7 @@ export function guideTarget(scene) {
   if (floorMap) at = { map: floorMap };
   if (!at) return null;
   if (at.map === scene.mapKey) {
-    if (tg.kind === 'device') return { x: at.x, y: at.y, here: true };
+    if (tg.kind === 'device' || tg.kind === 'spot') return { x: at.x, y: at.y, here: true };
     const s = scene.npcs.get(tg.id)?.sprite;
     return s ? { x: s.x, y: s.y - 20, here: true } : null;
   }
@@ -73,6 +82,8 @@ export function targetMap(scene) {
 /** Cập nhật dòng "đang theo dõi" trên thanh trên. */
 export function updateTrackLine() {
   const tg = trackTarget();
+  const jg = state.progress && journeyGoal();
+  if (jg) { setTrack(jg, true); return; }
   if (!tg) { setTrack(t('hud.trackNone'), false); return; }
   if (tg.kind === 'device') { setTrack(t('hud.track', { npc: t(`devices.${tg.id}.name`), place: t('devices.place') }), true); return; }
   const room = data.quests.rooms.find(r => r.id === trackedRoom());
