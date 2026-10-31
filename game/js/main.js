@@ -1,5 +1,5 @@
 // Khởi động: tải dữ liệu, màn hình chính, Phaser, thanh trên, balo, cài đặt, nguồn.
-import { data, loadAll, t, citeLine } from './data.js';
+import { data, loadAll, t } from './data.js';
 import { Bay } from './bay.js';
 import { playMusic, unlockMusic, refreshMusic, musicSupported } from './music.js';
 import { stopAmbience } from './audio.js';
@@ -7,14 +7,15 @@ import { state, loadState, saveSettings, startNewProgress, hasFlag } from './sta
 import { initInput, on, releaseAll, lockLandscape } from './input.js';
 import * as dlg from './dialogue.js';
 import * as backpack from './backpack.js';
-import { setOnChange, setOnEnding, track, skipToBoss } from './story.js';
-import { nextQuestIn, earnedBadges, caseProgress } from './grading.js';
+import { setOnChange, setOnEnding, skipToBoss } from './story.js';
+import { earnedBadges, caseProgress } from './grading.js';
 import { updateScore } from './hud.js';
 import { WorldScene } from './world.js';
 import { reader } from './tools.js';
 import { randomWeather, dayPhase } from './weather.js';
 import { showClock } from './hud.js';
 import { exportReport } from './report.js';
+import * as journey from './journey.js';
 import { feedTick } from './feed.js';
 import { applyUiText, toast, openModal, closeModal, confirmBox } from './ui.js';
 
@@ -35,7 +36,6 @@ const introOpen = () => !$('intro').hidden;
 const resultsOpen = () => !$('results').hidden;
 let heroLook = 'm';
 let bay = null;
-let introIdx = 0;
 
 // Bản đồ dừng người chơi khi đang ở màn hình chính, intro hoặc hộp thoại phụ.
 window.uiBlocked = () => titleOpen() || introOpen() || resultsOpen() || modalOpen() || dlg.blocksWorld();
@@ -72,78 +72,12 @@ function showTitle() {
   (has ? $('title-continue') : $('title-start')).focus();
 }
 
-// ---------------------------------------------------------------- intro: bối cảnh vụ án
+// ---------------------------------------------------------------- chọn nhân vật + tên (lượt mới)
 
-/** Điện thoại mô phỏng bài đăng lan truyền; fake = đã lộ là ảnh giả / video cũ. */
-function renderPhone(fake) {
-  const phone = $('intro-phone');
-  phone.innerHTML = '';
-  phone.className = `phone${fake ? ' is-fake' : ''}`;
-  phone.setAttribute('role', 'img');
-  phone.setAttribute('aria-label', t('intro.phoneAlt'));
-  phone.append(el('div', 'phone-head', t('intro.feed')));
-  [['post1', '', t('intro.fake')], ['post2', ' video', t('intro.old')]].forEach(([key, kind, label]) => {
-    const post = el('div', 'post');
-    // Nhãn nằm ngoài phần bị làm mờ để "Ẩn hình ảnh nhạy cảm" không che mất nhãn ẢNH GIẢ.
-    const img = el('div', `post-img${kind}`);
-    const pic = el('div', 'sensitive');
-    pic.append(el('div', 'post-pic'));
-    img.append(pic, el('span', 'tag', label));
-    post.append(el('div', 'post-who', t('intro.page')), img, el('div', null, t(`intro.${key}`)), el('span', 'post-share', t('intro.share')), el('span', 'post-hearts', '♥'));
-    phone.append(post);
-  });
-}
-
-/** Hiện một thẻ hồ sơ của intro. */
-function renderIntroCard() {
-  const intro = data.quests.intro;
-  const card = intro.cards[introIdx];
-  const box = document.querySelector('.intro-box');
-  box.classList.remove('is-new');
-  void box.offsetWidth; // chạy lại hiệu ứng hiện chữ
-  box.classList.add('is-new');
-  bay.setScene(card.scene);
-  $('intro-step').textContent = t('intro.step', { n: introIdx + 1, total: intro.cards.length });
-  $('intro-title').textContent = card.title + (card.simulated ? ` · ${t('simulated')}` : '');
-  $('intro-text').textContent = card.text;
-  $('intro-cite').textContent = card.cite && citeLine(card.cite) ? t('intro.sources', { list: citeLine(card.cite) }) : '';
-  $('intro-phone').hidden = !card.overlay;
-  if (card.overlay) renderPhone(card.overlay === 'phone-fake');
-  $('intro-next').focus();
-}
-
-/** Bắt đầu intro cho lượt chơi mới. */
+/** Bắt đầu lượt mới: chọn mẫu nhân vật và nhập tên, rồi vào cảnh mở đầu ở phòng riêng. */
 function startIntro() {
-  const intro = data.quests.intro;
   $('title').hidden = true;
   $('intro').hidden = false;
-  $('intro-final').hidden = true;
-  $('intro-actions').hidden = false;
-  $('intro-next').textContent = intro.next;
-  $('intro-skip').textContent = intro.skip;
-  introIdx = 0;
-  renderIntroCard();
-}
-
-/** Sang thẻ tiếp theo, hoặc tới bước cuối (câu hỏi xác minh + đặt tên). */
-function nextIntro() {
-  if (introIdx < data.quests.intro.cards.length - 1) { introIdx++; renderIntroCard(); }
-  else finishIntro();
-}
-
-/** Bước cuối intro: ba câu hỏi xác minh và ô đặt tên nhân vật. */
-function finishIntro() {
-  const intro = data.quests.intro;
-  introIdx = intro.cards.length - 1;
-  renderIntroCard();
-  $('intro-phone').hidden = true;
-  $('intro-actions').hidden = true;
-  $('intro-final').hidden = false;
-  $('intro-questions-title').textContent = intro.questionsTitle;
-  const ol = $('intro-questions');
-  ol.innerHTML = '';
-  data.quests.verificationQuestions.forEach(q => ol.append(el('li', null, q)));
-  $('intro-start').textContent = intro.start;
   $('intro-name-input').value = '';
   $('intro-name-input').placeholder = t('title.namePlaceholder');
   $('intro-name-input').focus();
@@ -155,6 +89,9 @@ function startGame(isNew) {
   $('intro').hidden = true;
   bay.stop();
   $('hud').hidden = false;
+  // Lượt mới: bắt đầu ở phòng trọ TP.HCM (js/journey.js); lượt cũ đã thắng trận cuối thì chuyển sang chặng về báo cáo
+  if (isNew) journey.startJourney();
+  else journey.migrate();
   updateScore();
   if (!game) {
     game = new Phaser.Game({
@@ -171,14 +108,6 @@ function startGame(isNew) {
     });
     // Chỉ dùng khi kiểm thử: ?debug cho phép công cụ test truy cập game.
     if (new URLSearchParams(location.search).has('debug')) window.__game = game;
-  }
-  if (isNew) {
-    // Lượt mới: bắt đầu bằng cảnh đi xe buýt tới trạm trước Trụ sở Báo Thanh Niên (js/world.js → busIntro)
-    state.progress.pos = { map: 'street', spawnName: 'spawn_bus' };
-    state.progress.introBus = true;
-    // Lượt mới: theo dõi sẵn hồ sơ đầu tiên để mũi tên chỉ đường ngay.
-    track(nextQuestIn(data.quests.rooms[0].id)?.id || null, true);
-    toast(t('title.firstHint'), 6000);
   }
 }
 
@@ -264,6 +193,16 @@ function openSettings() {
     skipToBoss();
   });
   actions.append(toBoss);
+  // Bỏ qua phần mở đầu ở TP.HCM (chỉ hiện khi đang ở phần mở đầu)
+  const skipIntro = el('button', 'btn', t('journey.skipPrologue'));
+  skipIntro.type = 'button';
+  skipIntro.hidden = !game || !['home', 'seen', 'called', 'briefed'].includes(journey.stage());
+  skipIntro.addEventListener('click', async () => {
+    if (!(await confirmBox(t('journey.skipPrologue'), t('journey.skipPrologueConfirm')))) return;
+    closeModal();
+    journey.skipPrologue();
+  });
+  actions.append(skipIntro);
   const home = el('button', 'btn', t('settingsPanel.home'));
   home.type = 'button';
   home.addEventListener('click', () => { closeModal(); showTitle(); });
@@ -288,6 +227,11 @@ function showResults() {
     stats.append(span);
   });
   // Bộ huy hiệu kỹ năng (thay cho điểm và danh hiệu)
+  if (p.title) {
+    const span = el('span', null, `${t('journey.resultsTitle')}: `);
+    span.append(el('strong', null, p.title.name));
+    stats.append(span);
+  }
   const shelf = el('div', 'badge-shelf');
   earnedBadges(p.flags).forEach(room => shelf.append(backpack.badgeCard(room, true)));
   stats.append(el('h2', null, r.badges), shelf);
@@ -320,8 +264,7 @@ function bindEvents() {
   // điện thoại: bấm nút ở màn hình chính thì vào toàn màn hình, khóa ngang
   ['title-start', 'title-continue', 'title-restart'].forEach(id => $(id).addEventListener('click', lockLandscape));
   $('title-start').addEventListener('click', startIntro);
-  $('intro-next').addEventListener('click', nextIntro);
-  $('intro-skip').addEventListener('click', finishIntro);
+  $('intro-back').addEventListener('click', showTitle);
   $('intro-name').addEventListener('submit', e => {
     e.preventDefault();
     const name = $('intro-name-input').value.replace(/\s+/g, ' ').trim().slice(0, 20);
@@ -355,7 +298,7 @@ function bindEvents() {
 
   on('action', () => {
     if (titleOpen() || modalOpen() || resultsOpen()) return;
-    if (introOpen()) { if ($('intro-final').hidden) nextIntro(); return; }
+    if (introOpen()) return;
     if (dlg.isMinimized()) { dlg.restore(); return; }
     if (dlg.isOpen()) { dlg.advance(); return; }
     game?.scene.getScene('world')?.interact();
@@ -385,7 +328,7 @@ function bindEvents() {
   $('hud-track').addEventListener('click', openCases);
   on('escape', () => {
     if (modalOpen()) return;
-    if (introOpen() && $('intro-final').hidden) finishIntro();
+    if (introOpen()) showTitle();
     else if (backpack.isOpen()) backpack.close();
   });
 }
@@ -404,8 +347,7 @@ async function boot() {
   loadState();
   applySettings();
   applyUiText();
-  document.title = `${t('gameTitle')} · ${data.quests.caseTitle}`;
-  $('title-case').textContent = data.quests.caseTitle.replace(/^Vụ án\s+/i, ''); // nhãn "HỒ SƠ VỤ ÁN" đã đứng trên
+  document.title = t('gameTitle');
   bay = new Bay($('bay'));
   $('bay').setAttribute('aria-label', t('title.bayAlt'));
   initInput();
@@ -415,6 +357,7 @@ async function boot() {
   backpack.initBackpack(() => game?.scene.getScene('world') || null);
   setOnChange(refreshUi);
   setOnEnding(showResults);
+  journey.setOnEnding(showResults);
   bindEvents();
   showTitle();
   if (state.lostSave) toast(t('lostSave'));

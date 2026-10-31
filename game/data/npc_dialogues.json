@@ -148,6 +148,21 @@
       "isFictional": true
     },
     {
+      "id": "npc10",
+      "name": "Chú Quốc Trung",
+      "role": "Thư ký tòa soạn",
+      "room": "Báo Thanh Niên: tòa soạn TP.HCM",
+      "age": 52,
+      "job": "Điều phối phóng viên, cộng tác viên; giao việc và nhận báo cáo",
+      "personality": "Điềm đạm, nói ngắn, tin tưởng người trẻ",
+      "voice": "Ấm, dứt khoát",
+      "catchphrase": "Bằng chứng, không phải cảm giác.",
+      "goal": "Mở đầu: nhận cuộc gọi, giao ba câu hỏi xác minh; kết thúc: nghe báo cáo, trao danh hiệu",
+      "mustNot": "Không nói đáp án, không kết luận động cơ / danh tính",
+      "sprite": "npc10",
+      "isFictional": true
+    },
+    {
       "id": "boss",
       "name": "Kẻ Dệt Chuyện",
       "role": "Quản trị ẩn danh của chuỗi fanpage lan tin sai",
@@ -324,6 +339,38 @@
       "sprite": "amb_rumor2",
       "isFictional": true,
       "rumor": true
+    },
+    {
+      "id": "amb_hcm_vendor",
+      "name": "Cô bán bánh mì",
+      "role": "Người bán hàng rong",
+      "sprite": "amb_hcm_vendor",
+      "isFictional": true,
+      "ambient": true
+    },
+    {
+      "id": "amb_hcm_student",
+      "name": "Sinh viên",
+      "role": "Người qua đường",
+      "sprite": "amb_hcm_student",
+      "isFictional": true,
+      "ambient": true
+    },
+    {
+      "id": "amb_hcm_elder",
+      "name": "Bác đi dạo",
+      "role": "Người qua đường",
+      "sprite": "amb_hcm_elder",
+      "isFictional": true,
+      "ambient": true
+    },
+    {
+      "id": "amb_hcm_reporter",
+      "name": "Phóng viên trẻ",
+      "role": "Phóng viên tòa soạn TP.HCM",
+      "sprite": "amb_hcm_reporter",
+      "isFictional": true,
+      "ambient": true
     }
   ],
   "dialogues": {
@@ -387,13 +434,13 @@
       "lines": [
         {
           "id": "s1_intro_l1",
-          "text": "Chào em! Em là {hero}, sinh viên Văn Lang đã gọi tới tòa soạn hôm qua phải không?",
+          "text": "Chào em! Em là {hero}, cộng tác viên chú Quốc Trung ở tòa soạn TP.HCM cử ra phải không?",
           "mood": "happy"
         },
         {
           "id": "s1_intro_l1b",
           "npc": "hero",
-          "text": "Dạ đúng ạ. Em đọc thấy mấy bài đăng về vụ lật tàu lan khắp nơi, nên muốn tới tận nơi xem cái nào là thật."
+          "text": "Dạ đúng ạ. Em vừa xuống xe khách. Em thấy mấy bài đăng về vụ lật tàu lan khắp nơi, nên muốn tới tận nơi xem cái nào là thật."
         },
         {
           "id": "s1_intro_l1c",
@@ -1523,6 +1570,18 @@
     ],
     "inspect_ticket": [
       "Quầy vé tàu tham quan: \"Mỗi hành khách một áo phao. Tàu chỉ rời bến khi thời tiết cho phép.\""
+    ],
+    "inspect_btn_hcm_sign": [
+      "Biển hiệu: \"Báo Thanh Niên — Tòa soạn TP.HCM\"."
+    ],
+    "inspect_coach_sign": [
+      "Bảng giờ xe: \"TP.HCM ⇄ Hạ Long — xe khách giường nằm. Chuyến chạy liên tục, đứng ở trạm và vẫy xe.\""
+    ],
+    "inspect_banhmi": [
+      "Xe bánh mì thơm phức. Tờ báo lót bánh có dòng tít: \"Dừng lại trước khi chia sẻ\"."
+    ],
+    "inspect_hcm_board": [
+      "Bảng phân công: \"Nhóm kiểm chứng — Hạ Long: thêm 1 cộng tác viên (sinh viên Văn Lang)\"."
     ]
   },
   "inspectSources": {
@@ -1626,6 +1685,22 @@
     "amb_patron": [
       "Mình đang đọc lại bài báo gốc thay vì chỉ đọc tiêu đề. Khác nhau nhiều đấy.",
       "Tiêu đề viết hoa với ba dấu chấm than là mình dừng lại đọc kỹ ngay."
+    ],
+    "amb_hcm_vendor": [
+      "Bánh mì nóng đây em! Mà hôm qua cô thấy trên mạng cái ảnh gì buồn lắm, chưa biết thật giả sao.",
+      "Con gái cô dặn: thấy tin lạ thì hỏi nguồn trước, đừng chia sẻ vội."
+    ],
+    "amb_hcm_student": [
+      "Nhóm lớp mình đang chuyền nhau mấy ảnh về vụ lật tàu... ai cũng thả tim, chẳng ai hỏi ảnh ở đâu ra.",
+      "Thầy dạy môn Thẩm định tin tức bảo: chưa rõ nguồn thì cứ coi là chưa xác minh."
+    ],
+    "amb_hcm_elder": [
+      "Bác già rồi, đọc tin là tin ngay. Cháu nhà bác phải chỉ cho cách tìm lại ảnh gốc đấy.",
+      "Thời buổi này ảnh cũng làm giả được, cháu nhỉ?"
+    ],
+    "amb_hcm_reporter": [
+      "Chú Trung giao việc nhanh lắm, nhưng dặn kỹ lắm. Nghe chú ấy là không sai.",
+      "Đăng chậm mà đúng vẫn hơn đăng nhanh mà phải gỡ."
     ]
   },
   "rumors": [

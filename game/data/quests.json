@@ -2153,77 +2153,14 @@
     "coast": "Đường ven vịnh",
     "office2": "Cao ốc văn phòng",
     "clinic": "Trung tâm y tế",
-    "cafe2": "Cà phê Sương Sớm"
+    "cafe2": "Cà phê Sương Sớm",
+    "home": "Phòng trọ",
+    "hcm_street": "Phố trung tâm TP.HCM",
+    "hcm_park": "Quảng trường cây xanh",
+    "tn_hcm": "Tòa soạn TP.HCM"
   },
   "intro": {
-    "skip": "Bỏ qua",
-    "next": "Tiếp ▸",
-    "start": "Lên đường",
-    "questionsTitle": "Ba câu hỏi xác minh của vụ án",
-    "cards": [
-      {
-        "id": "i1",
-        "title": "Vịnh Hạ Long, Quảng Ninh",
-        "text": "Những đảo đá vôi nhô lên giữa mặt nước xanh. Mỗi ngày, tàu du lịch đưa du khách đi tham quan vịnh.",
-        "scene": "calm"
-      },
-      {
-        "id": "i2",
-        "title": "Chiều 19/7/2025",
-        "text": "Dông lốc rất lớn bất ngờ ập đến. Tàu du lịch Vịnh Xanh 58 (QN⁠-⁠7105) bị lật trên vịnh. Đây là một thảm kịch có thật, gây mất mát lớn cho nhiều gia đình.",
-        "facts": [
-          "F1",
-          "F2"
-        ],
-        "cite": [
-          "thuthao2025",
-          "minhkhang2025"
-        ],
-        "scene": "dusk"
-      },
-      {
-        "id": "i3",
-        "title": "Ngay chiều hôm đó",
-        "text": "Trên mạng xã hội bắt đầu xuất hiện những bức ảnh xúc động và câu chuyện về \"nạn nhân\". Từ 20 đến 22/7, chúng lan rộng qua Facebook, TikTok, các hội nhóm và video ngắn.",
-        "facts": [
-          "F3"
-        ],
-        "cite": [
-          "baocao"
-        ],
-        "scene": "night",
-        "overlay": "phone"
-      },
-      {
-        "id": "i4",
-        "title": "Nhưng nhiều thứ không có thật",
-        "text": "Có những bộ ảnh do AI dựng nên, có video cũ từ nơi khác bị gắn nhãn là vụ 19/7. Nhiều người để lại lời chia buồn vì tưởng nhân vật trong ảnh là nạn nhân thật.",
-        "facts": [
-          "F4",
-          "F9",
-          "F10"
-        ],
-        "cite": [
-          "thuthao2025",
-          "hoaianh2025"
-        ],
-        "scene": "night",
-        "overlay": "phone-fake"
-      },
-      {
-        "id": "i5",
-        "title": "Cuộc gọi tới tòa soạn",
-        "text": "Bạn là sinh viên ngành Quan hệ công chúng – Truyền thông, Trường Đại học Văn Lang. Lướt mạng xã hội, bạn đọc được những bài đăng ấy và muốn biết chúng có đúng sự thật không. Bạn gọi tới Báo Thanh Niên, xin đến tận nơi để cùng kiểm chứng. Chị Tuệ Lâm, phụ trách nhóm kiểm chứng, hẹn bạn tới trụ sở.",
-        "scene": "dawn"
-      },
-      {
-        "id": "i6",
-        "title": "Trước khi bắt đầu",
-        "text": "Vụ tai nạn và các dữ kiện về nó là có thật, lấy từ báo chí. Mọi nhân vật, cuộc trò chuyện, tổ chức và công cụ trong game là GIẢ LẬP. Tòa nhà mang tên Báo Thanh Niên chỉ là bối cảnh; nhân vật và sự việc bên trong không đại diện cho Báo Thanh Niên. Game không có hình ảnh nạn nhân.",
-        "scene": "dawn",
-        "simulated": true
-      }
-    ]
+    "note": "Mở đầu cũ (thẻ trên nền vịnh) đã thay bằng cảnh ở TP.HCM: quests.json → journey. Màn hình chính chỉ còn chọn nhân vật + tên."
   },
   "exhibits": {
     "note": "Lưới ảnh là MÔ PHỎNG trừu tượng (khối hình, không có người/mặt người), không phải ảnh gốc. Bảng kết quả công cụ là bản ghi lại theo báo cáo của nhóm, giao diện MÔ PHỎNG.",
@@ -2565,5 +2502,383 @@
         ]
       }
     ]
+  },
+  "journey": {
+    "note": "Hành trình (js/journey.js): progress.journey = home → seen → called → briefed → halong → return → done. Nhân vật, cuộc gọi, tòa soạn TP.HCM là GIẢ LẬP; dữ kiện vụ việc chỉ lấy từ F1–F16 (facts / cite).",
+    "disclaimer": "Vụ tai nạn và các dữ kiện về nó là có thật, lấy từ báo chí. Mọi nhân vật, cuộc trò chuyện, tổ chức và công cụ trong game là GIẢ LẬP. Tòa nhà mang tên Báo Thanh Niên chỉ là bối cảnh; nhân vật và sự việc bên trong không đại diện cho Báo Thanh Niên. Game không có hình ảnh nạn nhân.",
+    "wake": [
+      {
+        "npc": "hero",
+        "text": "Tối rồi... Phải xong bài tập môn Thẩm định tin tức đã. Mà mở máy tính lướt tin một chút xem sao.",
+        "mood": "thinking"
+      }
+    ],
+    "skipAsk": "Em muốn xem phần mở đầu ở TP.HCM, hay tới thẳng Hạ Long?",
+    "skipStory": "Xem phần mở đầu",
+    "skipJump": "Bỏ qua, tới thẳng Hạ Long",
+    "pc": {
+      "title": "Bảng tin tối nay",
+      "posts": [
+        {
+          "kind": "news",
+          "who": "Bản tin báo chí",
+          "text": "Dông lốc rất lớn bất ngờ ập đến. Tàu du lịch Vịnh Xanh 58 (QN⁠-⁠7105) bị lật trên vịnh. Đây là một thảm kịch có thật, gây mất mát lớn cho nhiều gia đình.",
+          "facts": [
+            "F1",
+            "F2"
+          ],
+          "cite": [
+            "thuthao2025",
+            "minhkhang2025"
+          ]
+        },
+        {
+          "kind": "viral",
+          "who": "Trang ẩn danh",
+          "text": "Câu chuyện xúc động về \"nạn nhân\"... Xem tiếp ở bình luận! Chia sẻ ngay!!!",
+          "pic": "photo",
+          "stat": "♥ 9,8 N · ↗ 4,1 N lượt chia sẻ"
+        },
+        {
+          "kind": "viral",
+          "who": "Kênh video ngắn",
+          "text": "\"Cận cảnh vụ lật tàu 19/7\"",
+          "pic": "video",
+          "stat": "▶ 120 N lượt xem"
+        }
+      ],
+      "note": "Số lượt chỉ để minh họa.",
+      "lines": [
+        {
+          "npc": "system",
+          "text": "Trên mạng xã hội bắt đầu xuất hiện những bức ảnh xúc động và câu chuyện về \"nạn nhân\". Từ 20 đến 22/7, chúng lan rộng qua Facebook, TikTok, các hội nhóm và video ngắn.",
+          "facts": [
+            "F3"
+          ],
+          "cite": [
+            "baocao"
+          ]
+        },
+        {
+          "npc": "hero",
+          "text": "Ảnh này lạ thật... Ai chụp? Đăng ở đâu đầu tiên? Sao trang nào cũng giục \"chia sẻ ngay\"?",
+          "mood": "thinking"
+        }
+      ],
+      "ask": "Em sẽ làm gì với những bài đăng này?",
+      "choices": [
+        {
+          "id": "share",
+          "text": "Bấm chia sẻ ngay cho bạn bè cùng biết.",
+          "reply": "Khoan đã... Nếu nó sai thì mình đang góp tay cho tin sai lan nhanh hơn. Chưa biết nguồn thì chưa chia sẻ."
+        },
+        {
+          "id": "skip",
+          "text": "Lướt qua, chắc ai đó sẽ kiểm tra.",
+          "reply": "Nhưng nếu ai cũng nghĩ vậy thì chẳng ai kiểm tra cả, còn người đọc vẫn tin."
+        },
+        {
+          "id": "go",
+          "text": "Mình phải tìm hiểu xem cái nào là thật."
+        }
+      ],
+      "decide": [
+        {
+          "npc": "system",
+          "text": "Có những bộ ảnh do AI dựng nên, có video cũ từ nơi khác bị gắn nhãn là vụ 19/7. Nhiều người để lại lời chia buồn vì tưởng nhân vật trong ảnh là nạn nhân thật.",
+          "facts": [
+            "F4",
+            "F9",
+            "F10"
+          ],
+          "cite": [
+            "thuthao2025",
+            "hoaianh2025"
+          ]
+        },
+        {
+          "npc": "hero",
+          "text": "Ngồi đây đoán thì không ra. Mình phải tới tận nơi, xem bằng chứng tận mắt.",
+          "mood": "happy"
+        },
+        {
+          "npc": "hero",
+          "text": "Báo Thanh Niên có nhóm kiểm chứng. Gọi cho tòa soạn ở TP.HCM, xin đi cùng thử xem! Điện thoại để trên bàn đầu giường."
+        }
+      ]
+    },
+    "call": {
+      "ringing": "Đang gọi tòa soạn Báo Thanh Niên TP.HCM…",
+      "lines": [
+        {
+          "npc": "npc10",
+          "text": "Tòa soạn Báo Thanh Niên nghe. Chú là Quốc Trung, thư ký tòa soạn. Em cần gì nào?"
+        },
+        {
+          "npc": "hero",
+          "text": "Dạ, em là {hero}, sinh viên Quan hệ công chúng – Truyền thông, Trường Đại học Văn Lang. Em thấy nhiều ảnh và câu chuyện về vụ lật tàu Vịnh Xanh 58 lan trên mạng, mà không rõ nguồn."
+        },
+        {
+          "npc": "hero",
+          "text": "Em muốn xin đi cùng nhóm kiểm chứng để tìm hiểu cái nào là thật ạ."
+        },
+        {
+          "npc": "npc10",
+          "text": "Chú đang cần đúng người chịu khó như vậy. Nhóm kiểm chứng ở Hạ Long thiếu người.",
+          "mood": "happy"
+        },
+        {
+          "npc": "npc10",
+          "text": "Sáng mai em lên tòa soạn gặp chú nhé, ngay trên phố trung tâm, cách hẻm nhà em vài bước. Chú giao việc rồi em ra bến xe khách cuối phố."
+        }
+      ],
+      "after": {
+        "npc": "hero",
+        "text": "Được rồi! Ra phố, tới tòa soạn Báo Thanh Niên thôi.",
+        "mood": "happy"
+      }
+    },
+    "brief": [
+      {
+        "npc": "npc10",
+        "text": "Em tới rồi đấy à. Ngồi đi, chú nói ngắn gọn.",
+        "mood": "happy"
+      },
+      {
+        "npc": "npc10",
+        "text": "Vụ tai nạn là có thật, đau lòng thật. Nhưng quanh nó đang có rất nhiều thứ không thật: ảnh dựng, câu chuyện dựng, video cũ gắn nhầm."
+      },
+      {
+        "npc": "npc10",
+        "text": "Việc của em ở Hạ Long là trả lời được ba câu hỏi này, bằng bằng chứng chứ không phải bằng cảm giác:",
+        "mood": "serious",
+        "questions": true
+      },
+      {
+        "npc": "npc10",
+        "text": "Chú cấp cho em thẻ cộng tác viên. Ra Hạ Long, em tìm chị Tuệ Lâm ở trụ sở bên đó, chị ấy phụ trách nhóm kiểm chứng."
+      },
+      {
+        "npc": "npc10",
+        "text": "Xong việc thì bắt xe về đây báo cáo cho chú. Bến xe khách ở cuối phố, tới trạm thì vẫy xe nhé."
+      },
+      {
+        "npc": "hero",
+        "text": "Dạ, em đi ngay ạ!",
+        "mood": "happy"
+      }
+    ],
+    "cardItem": "Thẻ cộng tác viên",
+    "cardToast": "Nhận thẻ cộng tác viên của tòa soạn",
+    "editorIdle": {
+      "home": [
+        {
+          "npc": "npc10",
+          "text": "Chào em! Có việc gì cần thì gọi tòa soạn nhé."
+        }
+      ],
+      "briefed": [
+        {
+          "npc": "npc10",
+          "text": "Bến xe khách ở cuối phố, phía đông. Tới trạm thì vẫy xe là được."
+        }
+      ],
+      "halong": [
+        {
+          "npc": "npc10",
+          "text": "Về thăm tòa soạn à? Vụ ở Hạ Long còn dang dở thì quay lại bến xe nhé, chú chờ báo cáo của em."
+        }
+      ],
+      "done": [
+        {
+          "npc": "npc10",
+          "text": "Danh hiệu là của em rồi. Nhớ thói quen dừng lại – kiểm tra – rồi mới chia sẻ nhé.",
+          "mood": "happy"
+        }
+      ]
+    },
+    "bus": {
+      "ask": "Xe khách liên tỉnh. Em muốn đi đâu?",
+      "to": {
+        "street": "Đi Hạ Long (Quảng Ninh)",
+        "hcm": "Về TP.HCM"
+      },
+      "cancel": "Thôi, chưa đi",
+      "locked": "Chưa có việc ở Hạ Long. Em lên tòa soạn Báo Thanh Niên nhận việc trước đã.",
+      "busy": "Trận đính chính đang diễn ra, chưa rời đi được.",
+      "wait": "Đứng ở trạm, chờ xe khách tới…",
+      "now": "Xe tới rồi! Bấm E / A hoặc chạm để vẫy xe",
+      "early": "Xe còn xa, chờ chút đã…",
+      "missed": "Lỡ chuyến rồi! Chờ chuyến sau nhé…",
+      "stop": "Xe dừng lại. Lên xe thôi!",
+      "travelTitle": "Trên xe khách",
+      "route": {
+        "street": [
+          "TP.HCM",
+          "Nha Trang",
+          "Đà Nẵng",
+          "Vinh",
+          "Hà Nội",
+          "Hạ Long"
+        ],
+        "hcm": [
+          "Hạ Long",
+          "Hà Nội",
+          "Vinh",
+          "Đà Nẵng",
+          "Nha Trang",
+          "TP.HCM"
+        ]
+      },
+      "travelText": {
+        "street": "Xe chạy suốt đêm qua nhiều tỉnh thành. Sáng hôm sau, vịnh Hạ Long hiện ra.",
+        "hcm": "Chuyến về dài, đủ để em sắp xếp lại các bằng chứng trong đầu."
+      },
+      "arrive": {
+        "street": "Thành phố Hạ Long · trạm xe trước Trụ sở Báo Thanh Niên\nBấm phím bất kỳ để bỏ qua",
+        "hcm": "TP.HCM · bến xe khách khu phố trung tâm\nBấm phím bất kỳ để bỏ qua"
+      }
+    },
+    "goal": {
+      "home": "Xem tin trên máy tính · Phòng trọ",
+      "seen": "Gọi cho tòa soạn · điện thoại đầu giường",
+      "called": "Chú Quốc Trung · Tòa soạn TP.HCM",
+      "briefed": "Bắt xe khách đi Hạ Long · bến xe cuối phố",
+      "return": "Về TP.HCM báo cáo · Chú Quốc Trung"
+    },
+    "returnCall": [
+      {
+        "npc": "system",
+        "text": "Điện thoại rung: tòa soạn Báo Thanh Niên TP.HCM."
+      },
+      {
+        "npc": "npc10",
+        "text": "Chú nghe chị Tuệ Lâm kể rồi. Em làm tốt lắm! Bắt xe về tòa soạn báo cáo cho chú nhé, có thứ chờ em đấy.",
+        "mood": "happy"
+      }
+    ],
+    "report": {
+      "intro": [
+        {
+          "npc": "npc10",
+          "text": "Về rồi đấy à! Kể chú nghe: ba câu hỏi chú giao, em trả lời được thế nào?",
+          "mood": "happy"
+        }
+      ],
+      "questions": [
+        {
+          "ask": "Các bức ảnh là ảnh thật hay do AI tạo?",
+          "facts": [
+            "F4",
+            "F5",
+            "F6",
+            "F8",
+            "F9"
+          ],
+          "options": [
+            {
+              "text": "Do AI dựng: không tìm thấy nguồn gốc, có lỗi thị giác, ảnh bị dùng lại, VTV đã xác nhận.",
+              "ok": true
+            },
+            {
+              "text": "Ảnh thật, vì được rất nhiều người chia sẻ."
+            },
+            {
+              "text": "Máy phát hiện AI báo cao, thế là đủ kết luận."
+            }
+          ],
+          "right": "Đúng. Nhiều bằng chứng độc lập cùng chỉ một hướng, máy phát hiện chỉ là phần bổ trợ.",
+          "wrong": "Lượt chia sẻ hay một con số từ máy không chứng minh được gì. Em nhớ lại các bằng chứng đã đối chiếu xem."
+        },
+        {
+          "ask": "Nhân vật trong các câu chuyện có phải nạn nhân thật không?",
+          "facts": [
+            "F9",
+            "F13"
+          ],
+          "options": [
+            {
+              "text": "Không có căn cứ: ảnh và truyện do AI dựng; tên trong truyện chưa đối chiếu được với danh sách chính thức nên em không kết luận thêm.",
+              "ok": true
+            },
+            {
+              "text": "Đúng là nạn nhân, vì có rất nhiều lời chia buồn."
+            },
+            {
+              "text": "Họ là người thật bị lấy ảnh, cần công bố danh tính để mọi người biết."
+            }
+          ],
+          "right": "Chuẩn. Nói đúng đến đâu biết đến đó, và không đem danh tính ai ra bàn khi chưa có dữ liệu.",
+          "wrong": "Cảm xúc của người xem không phải bằng chứng, còn công bố danh tính thì có thể làm tổn thương người vô can. Em thử lại nhé."
+        },
+        {
+          "ask": "Cách trình bày có khiến người xem hiểu nhầm không?",
+          "facts": [
+            "F10",
+            "F12",
+            "F13",
+            "F16"
+          ],
+          "options": [
+            {
+              "text": "Có: video cũ gắn sai bối cảnh 19/7, link \"đọc tiếp\" câu tương tác, dòng \"tình tiết hư cấu\" để chữ rất nhỏ.",
+              "ok": true
+            },
+            {
+              "text": "Không, người đăng chỉ chia sẻ cảm xúc."
+            },
+            {
+              "text": "Có, và chắc chắn người đăng làm vậy để kiếm tiền."
+            }
+          ],
+          "right": "Đúng vậy, và em dừng đúng chỗ: còn động cơ thì chưa có dữ liệu nên chưa kết luận.",
+          "wrong": "Nhớ lại các thủ đoạn em đã thấy, và đừng khẳng định điều chưa có dữ liệu như chuyện tiền bạc. Thử lại nhé."
+        }
+      ],
+      "sum": "Em khép {done}/{total} hồ sơ, nhận {badges} huy hiệu, uy tín trung bình {cred}/100.",
+      "award": [
+        {
+          "npc": "npc10",
+          "text": "Tòa soạn ghi nhận đóng góp của em. Đây là danh hiệu dành cho em:",
+          "mood": "happy"
+        }
+      ],
+      "outro": [
+        {
+          "npc": "npc10",
+          "text": "Danh hiệu chỉ là kỷ niệm thôi. Thứ quý nhất em mang về là thói quen: dừng lại, kiểm tra, rồi mới chia sẻ.",
+          "mood": "happy"
+        },
+        {
+          "npc": "hero",
+          "text": "Dạ, em cảm ơn chú. Em sẽ nhớ ạ!",
+          "mood": "happy"
+        }
+      ]
+    },
+    "titles": [
+      {
+        "id": "gold",
+        "name": "Thẩm định viên xuất sắc",
+        "text": "Khép mọi hồ sơ bắt buộc, giữ uy tín cao và không đi tắt.",
+        "minDone": "all",
+        "minCred": 80,
+        "noSkip": true
+      },
+      {
+        "id": "silver",
+        "name": "Thẩm định viên",
+        "text": "Chặn được tin sai bằng bằng chứng, giữ vững các bước kiểm chứng.",
+        "minCred": 50,
+        "noSkip": true
+      },
+      {
+        "id": "bronze",
+        "name": "Thẩm định viên tập sự",
+        "text": "Đã đi hết hành trình. Lần sau thử khép đủ các hồ sơ để rèn thêm kỹ năng nhé."
+      }
+    ],
+    "phoneEarly": "Gọi ai bây giờ nhỉ? Xem tin trên máy tính trước đã.",
+    "phoneLater": "Chú Quốc Trung đang chờ ở tòa soạn trên phố trung tâm. Đi thôi!"
   }
 }

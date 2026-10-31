@@ -914,7 +914,7 @@ ${roomName.toUpperCase()}`, { size: 16, color: '#e8ecf2', plate: true }),
 // Sảnh gọn 22x14: thang máy giữa tường bắc, quầy lễ tân trước thang máy, chờ bên trái, bảo vệ bên phải cửa
 const tnLobby = buildMap('tn_lobby', {
   rows: floorRows(22, 14, (g, put) => { g[13][10] = g[13][11] = 'E'; }),
-  legend: TN_LEGEND, label: 'Trụ sở Báo Thanh Niên — sảnh', music: 'office',
+  legend: TN_LEGEND, label: 'Báo Thanh Niên · Trụ sở Hạ Long', music: 'office',
   ground: (ch, x, y) => (ch === 'E' ? 'exit_mat' : 'floor_lobby'),
   objects: () => [
     point('spawn', 'spawn_start', 11, 11.4),
@@ -924,7 +924,7 @@ const tnLobby = buildMap('tn_lobby', {
     rectT('exit', 'exit_street', 10, 12.6, 2, 1.4, { target: 'street', spawn: 'spawn_from_office' }),
     rectT('elevator', 'elevator', 10, 2, 2, 1, { group: 'tn' }),
     pp('elevator', 11, 3),
-    label('lobby_name', 4.8, 1.6, 'BÁO THANH NIÊN — TRỤ SỞ', { size: 20, color: '#e8ecf2', plate: true }),
+    label('lobby_name', 4.8, 1.6, 'BÁO THANH NIÊN — HẠ LONG', { size: 20, color: '#e8ecf2', plate: true }),
     pp('tv_wall', 15, 2.6), pp('cork_board', 18.6, 2.9), pp('wall_clock', 13.4, 1.6),
     pp('reception', 11, 7.4),
     pp('rug_lobby', 11, 12),
@@ -1052,24 +1052,24 @@ const street = buildMap('street', {
   objects: () => [
     // --- lớp nhà phía sau (trang trí, nhô lên sau mái)
     bld('bld_apartment', 9, 9, 11),
-    bld('bld_tenement', 25, 6, 11),
-    bld('bld_hotel', 49, 10, 10),
-    bld('bld_apartment', 76, 9, 11),
+    bld('bld_tube2', 25, 3, 11), bld('bld_tube4', 28, 3, 11),
+    bld('bld_hotel_gable', 49, 10, 10),
+    bld('bld_tower', 76, 10, 11),
     // --- dãy nhà phía bắc, quay mặt ra phố chính
     bld('bld_office', 2, 7, N_BOTTOM, 'CAO ỐC VĂN PHÒNG'),
     bld('bld_thanhnien', 11, 12, N_BOTTOM, 'BÁO THANH NIÊN', 'Trụ sở'),
     bld('bld_tinvinh', 25, 9, N_BOTTOM, 'TIN VỊNH', 'trang tin'),
     bld('bld_pharmacy', 36, 5, N_BOTTOM),
     bld('bld_xacminh', 41, 8, N_BOTTOM, 'PHÒNG XÁC MINH', 'thiết bị thẩm định'),
-    bld('bld_hotel', 51, 10, N_BOTTOM, null, null, { flip: true }),
+    bld('bld_hotel_gable', 51, 10, N_BOTTOM),
     bld('bld_cafe', 63, 8, N_BOTTOM, 'CÀ PHÊ GIÓ BIỂN', 'mở cửa đến khuya'),
     bld('bld_books', 71, 5, N_BOTTOM),
-    bld('bld_tenement', 78, 6, N_BOTTOM),
-    bld('bld_store', 84, 6, N_BOTTOM),
+    bld('bld_tube1', 78, 3, N_BOTTOM), bld('bld_tube5', 81, 4, N_BOTTOM),
+    bld('bld_tube3', 85, 4, N_BOTTOM), bld('bld_tube2', 89, 3, N_BOTTOM),
     // --- dãy nhà thấp giữa hai con đường, quay mặt ra đường ven vịnh
     // --- ngoài rìa bản đồ: một vòng nhà phía bắc, tây, đông để khung hình không lộ khoảng trống
-    ...[[-12, 'bld_warehouse', 12], [1, 'bld_hotel', 10], [13, 'bld_apartment', 9], [24, 'bld_tenement', 6], [32, 'bld_warehouse', 12],
-      [46, 'bld_apartment2', 7], [55, 'bld_hotel', 10], [67, 'bld_apartment', 9], [78, 'bld_tenement', 6], [86, 'bld_warehouse', 12], [100, 'bld_hotel', 10]]
+    ...[[-12, 'bld_warehouse', 12], [1, 'bld_hotel_gable', 10], [13, 'bld_tower2', 8], [24, 'bld_tenement', 6], [32, 'bld_villa', 8],
+      [42, 'bld_apartment2', 7], [55, 'bld_hotel', 10], [67, 'bld_tower', 10], [78, 'bld_villa', 8], [86, 'bld_warehouse', 12], [100, 'bld_hotel_gable', 10]]
       .map(([x, k, c]) => bld(k, x, c, 3)),
     bld('bld_apartment', -11, 9, 11), bld('bld_store', -8, 6, N_BOTTOM), bld('bld_closed', -16, 6, N_BOTTOM),
     bld('bld_warehouse', -14, 12, C_BOTTOM), bld('bld_books', -6, 5, C_BOTTOM),
@@ -1077,7 +1077,7 @@ const street = buildMap('street', {
     bld('bld_warehouse', 96, 12, C_BOTTOM),
     pp('karst_big', 40, 72), pp('karst', 62, 69), pp('karst_big', -8, 60), pp('karst', 104, 62),
     bld('bld_clinic', 50, 6, C_BOTTOM, 'TRUNG TÂM Y TẾ'),
-    bld('bld_warehouse', 57, 12, C_BOTTOM),
+    bld('bld_market', 58, 10, C_BOTTOM, 'CHỢ ĐÊM', 'đặc sản vùng biển'),
     bld('bld_cafe2', 70, 6, C_BOTTOM, 'CÀ PHÊ SƯƠNG SỚM'),
     bld('bld_media', 77, 6, C_BOTTOM, 'TRUYỀN THÔNG', 'trung tâm cộng đồng'),
     bld('bld_pharmacy', 83, 5, C_BOTTOM, null, null, { flip: true }),
@@ -1104,6 +1104,7 @@ const street = buildMap('street', {
     pp('tree', 9.6, 20.6), pp('tree', 34.5, 20.6), pp('tree', 61.5, 20.6), pp('tree', 89, 20.6),
     // trạm xe buýt trước Trụ sở Báo Thanh Niên (intro: nhân vật xuống xe buýt ở đây)
     pp('bus_stop', 13.8, 20.9), point('spawn', 'spawn_bus', 15.4, 21.3),
+    rectT('spot', 'bus_halong', 12, 19.6, 4, 1.8, { act: 'bus', to: 'hcm' }),
     pp('hydrant', 23, 20.5), pp('street_bin', 49.8, 20.5), pp('street_bin', 75.6, 20.5), pp('kiosk', 31.5, 20.8),
     pp('bus_stop', 10, 29.8), pp('bollard', 19.3, 28.8), pp('bollard', 22.7, 28.8), pp('bollard', 59.3, 28.8), pp('bollard', 62.7, 28.8),
     ...[30, 52, 66, 86].map(x => pp('street_lamp', x, 29.6)),
@@ -1344,6 +1345,134 @@ const boss = buildMap('boss', {
   ]
 });
 
+// ---------------- TP.HCM (mở đầu và kết thúc): phòng trọ của nhân vật, phố trung tâm, tòa soạn Báo Thanh Niên TP.HCM
+// Nhân vật, sự việc trong các bản đồ này là hư cấu (GIẢ LẬP); disclaimer ở màn hình chính và đầu cảnh mở đầu.
+
+// Phòng trọ 12x9: giường, bàn học có máy tính, điện thoại trên bàn đầu giường; cửa ra hẻm ở giữa cạnh nam
+const home = buildMap('home', {
+  rows: floorRows(12, 9, g => { g[8][5] = g[8][6] = 'E'; }), legend: TN_LEGEND, label: 'Phòng trọ · TP.HCM', music: 'cafe',
+  ground: ch => (ch === 'E' ? 'exit_mat' : 'floor_wood'),
+  objects: () => [
+    point('spawn', 'spawn_start', 7.6, 5.6),
+    point('spawn', 'spawn_from_street', 6, 6.6),
+    rectT('zone', 'zone_home', 1, 3, 10, 5, { area: 'home' }),
+    rectT('exit', 'exit_street', 5, 7.6, 2, 1.4, { target: 'hcm', spawn: 'spawn_from_home' }),
+    pp('blinds_window', 3.4, 2.9), pp('poster_a', 7.6, 2.4), pp('wall_clock', 9.6, 1.4),
+    pp('bed', 2.6, 6.2), pp('cafe_table', 4.6, 4.4),
+    pp('bookshelf', 6, 3.7), pp('desk_pc', 9, 4.2), pp('chair', 9, 5.3),
+    pp('plant_small', 10.4, 7.4), pp('rug_room', 6.4, 7.2), pp('trash', 10.6, 4.2),
+    rectT('spot', 'pc_home', 7.8, 3.4, 2.4, 1.2, { act: 'pc_home' }),
+    rectT('spot', 'phone_home', 3.8, 3.6, 1.6, 1.2, { act: 'phone_home' })
+  ]
+});
+
+// Phố trung tâm TP.HCM 60x40: dãy nhà ống, tòa kiểu Pháp, cao ốc; một con đường hai chiều; bến xe khách liên tỉnh; quảng trường cây xanh
+const HW = 60, HH = 40, H_BOTTOM = 16;
+const HCM = (() => {
+  const { g, put, rows } = grid(HW, HH, 'y');
+  const fill = (x0, y0, w, h, ch) => { for (let y = y0; y < y0 + h; y++) for (let x = x0; x < x0 + w; x++) g[y][x] = ch; };
+  fill(0, 16, HW, 2, '_');
+  put(0, 18, '^'.repeat(HW));
+  for (const y of [19, 20, 22, 23]) put(0, y, '='.repeat(HW));
+  put(0, 21, '-'.repeat(HW));
+  put(0, 24, 'v'.repeat(HW));
+  for (const cx of [12, 40]) for (let y = 19; y <= 23; y++) g[y][cx] = g[y][cx + 1] = '%';
+  fill(0, 25, HW, 2, '_');
+  fill(0, 27, HW, 9, ',');
+  fill(4, 28, 22, 7, 'g'); fill(34, 28, 22, 7, 'g');
+  for (let y = 28; y < 35; y++) g[y][14] = g[y][15] = ':';
+  fill(0, 36, HW, 4, '_');
+  return rows();
+})();
+const hcm = buildMap('hcm', {
+  rows: HCM, label: 'Phố trung tâm · TP.HCM', music: 'street',
+  legend: {},
+  ground: (ch, x) => {
+    if (ch === '=') return 'road';
+    if (ch === '-') return x % 3 === 0 ? 'road' : 'road_line';
+    if (ch === '%') return 'crosswalk';
+    if (ch === '^') return 'curb';
+    if (ch === 'v') return 'curb_low';
+    if (ch === 'g') return 'grass';
+    if (ch === ':' || ch === 'y') return 'gravel';
+    if (ch === ',') return 'promenade';
+    return 'sidewalk';
+  },
+  objects: () => [
+    // --- lớp nhà phía sau
+    bld('bld_tower', 1, 10, 8), bld('bld_apartment', 13, 9, 8), bld('bld_hotel_gable', 25, 10, 8), bld('bld_tower2', 38, 8, 8), bld('bld_apartment2', 49, 7, 8),
+    // --- dãy nhà quay mặt ra phố
+    bld('bld_tube1', 1, 3, H_BOTTOM), bld('bld_tube2', 4, 3, H_BOTTOM),
+    bld('bld_home', 7, 4, H_BOTTOM, 'NHÀ TRỌ', 'hẻm 58'),
+    bld('bld_tube3', 11, 4, H_BOTTOM),
+    bld('bld_btn_hcm', 15, 12, H_BOTTOM, 'BÁO THANH NIÊN', 'Tòa soạn TP.HCM'),
+    bld('bld_colonial', 27, 12, H_BOTTOM, 'THƯ VIỆN', 'khu phố trung tâm'),
+    bld('bld_tube4', 39, 3, H_BOTTOM), bld('bld_tube5', 42, 4, H_BOTTOM),
+    bld('bld_coach', 46, 10, H_BOTTOM, 'BẾN XE KHÁCH', 'TP.HCM ⇄ Hạ Long'),
+    bld('bld_tube1', 56, 3, H_BOTTOM), bld('bld_tube2', 59, 3, H_BOTTOM),
+    // --- vòng nhà ngoài rìa
+    ...[[-12, 'bld_villa', 8], [-4, 'bld_tube4', 3], [62, 'bld_tube5', 4], [66, 'bld_villa', 8]].map(([x, k, c]) => bld(k, x, c, H_BOTTOM)),
+    ...[[-10, 'bld_hotel', 10], [12, 'bld_colonial', 12], [36, 'bld_market', 10], [62, 'bld_tower', 10]].map(([x, k, c]) => bld(k, x, c, 0)),
+    ...[[-8, 'bld_tube3', 4], [-4, 'bld_tube1', 3], [2, 'bld_villa', 8], [12, 'bld_tube2', 3], [15, 'bld_tube5', 4], [22, 'bld_hotel_gable', 10],
+      [34, 'bld_tube4', 3], [37, 'bld_tube3', 4], [44, 'bld_tower2', 8], [54, 'bld_villa', 8], [62, 'bld_tube1', 3]].map(([x, k, c]) => bld(k, x, c, 46)),
+    // --- cửa vào
+    doorExit('door_home', 8.5, H_BOTTOM, 'home'),
+    doorExit('door_btn_hcm', 20.5, H_BOTTOM, 'tn_hcm'),
+    point('spawn', 'spawn_from_home', 9.5, 17.4),
+    point('spawn', 'spawn_from_btn', 21.5, 17.4),
+    // --- bến xe khách: trạm đón ngay trước bến (người chơi vẫy xe ở đây)
+    pp('bus_stop', 49.8, 17.9), point('spawn', 'spawn_bus', 51.4, 18.3),
+    rectT('spot', 'bus_hcm', 48, 16.6, 4, 1.8, { act: 'bus', to: 'street' }),
+    // --- vỉa hè bắc
+    ...[3, 14, 26, 38, 55].map((x, i) => pp('street_lamp', x, 17.2, i % 2 ? { flip: true } : {})),
+    pp('tree_big', 6, 17.6), pp('tree_big', 33, 17.6), pp('tree', 44.6, 17.6), pp('street_bin', 25, 17.4), pp('hydrant', 37, 17.5),
+    pp('kiosk', 29.5, 17.8),
+    // --- vỉa hè nam + quảng trường
+    ...[8, 22, 36, 50].map(x => pp('street_lamp', x, 26.6)),
+    pp('market_stall', 18.5, 26.9), pp('bollard', 11.3, 25.8), pp('bollard', 14.7, 25.8), pp('bollard', 39.3, 25.8), pp('bollard', 42.7, 25.8),
+    pp('tree_big', 7, 30.6), pp('tree_big', 12, 33.6), pp('tree_big', 20, 30.4), pp('tree_big', 24.4, 34.2),
+    pp('tree_big', 37, 31), pp('tree_big', 45, 34), pp('tree_big', 53, 30.6),
+    pp('fountain', 29.5, 33.4), pp('flowerbed', 41, 30.6), pp('flowerbed', 49, 33.2), pp('hedge', 6.5, 28.7), pp('hedge', 50.5, 28.7),
+    pp('bench', 9.5, 31.4), pp('bench', 18.2, 33.4), pp('bench', 44.2, 31.4), pp('bench', 52.6, 34.4),
+    pp('kiosk', 34, 35.6), pp('planter', 26, 36.8), pp('planter', 33, 36.8),
+    // --- vùng, làn xe, vạch qua đường
+    rectT('zone', 'zone_hcm_street', 0, 16, HW, 11, { area: 'hcm_street' }),
+    rectT('zone', 'zone_hcm_park', 0, 27, HW, 13, { area: 'hcm_park' }),
+    rectT('lane', 'lane_w', 0, 19, HW, 2, { dir: -1, kind: 'mixed' }),
+    rectT('lane', 'lane_e', 0, 22, HW, 2, { dir: 1, kind: 'mixed' }),
+    ...[12, 40].map((x, i) => rectT('crosswalk', `cross_${i}`, x, 19, 2, 5)),
+    // --- người qua đường
+    point('npc', 'amb_hcm_vendor', 18.5, 27.9),
+    point('npc', 'amb_hcm_student', 30, 17, { patrol: 'patrol_hcm_student' }),
+    path_('patrol_hcm_student', [[24, 17], [44, 17]]),
+    point('npc', 'amb_hcm_elder', 10, 31.6),
+    // --- đồ vật xem được
+    rectT('inspect', 'inspect_btn_hcm_sign', 18, 15.3, 6, 0.7, { text: 'inspect_btn_hcm_sign' }),
+    rectT('inspect', 'inspect_coach_sign', 49, 15.3, 4, 0.7, { text: 'inspect_coach_sign' }),
+    rectT('inspect', 'inspect_banhmi', 17.2, 26.2, 2.6, 0.8, { text: 'inspect_banhmi' })
+  ]
+});
+
+// Tòa soạn Báo Thanh Niên TP.HCM 20x13: phòng biên tập mở, bàn thư ký tòa soạn, kệ khen thưởng
+const tnHcm = buildMap('tn_hcm', {
+  rows: floorRows(20, 13, g => { g[12][9] = g[12][10] = 'E'; }), legend: TN_LEGEND, label: 'Báo Thanh Niên · Tòa soạn TP.HCM', music: 'office',
+  ground: (ch, x, y) => (ch === 'E' ? 'exit_mat' : y >= 9 ? 'carpet' : 'floor_lobby'),
+  objects: () => [
+    point('spawn', 'spawn_from_street', 10, 10.6),
+    rectT('zone', 'zone_tn_hcm', 1, 3, 18, 9, { area: 'tn_hcm' }),
+    rectT('exit', 'exit_street', 9, 11.6, 2, 1.4, { target: 'hcm', spawn: 'spawn_from_btn' }),
+    label('hcm_name', 4.6, 1.5, 'BÁO THANH NIÊN\nTÒA SOẠN TP.HCM', { size: 16, color: '#e8ecf2', plate: true }),
+    pp('tv_wall', 11.2, 2.6), pp('whiteboard', 14.2, 2.75), pp('cork_board', 17, 2.9), pp('wall_clock', 8.6, 1.4),
+    pp('archive_shelf', 1.8, 6.2, { face: 'e' }), pp('plant_big', 18.4, 4.4), pp('water_cooler', 16.4, 4.2),
+    pp('desk_pc', 5, 6.6), pp('chair', 5, 7.7), pp('desk_pc', 9, 6.6), pp('chair', 9, 7.7),
+    pp('desk_papers', 14.6, 6.6), pp('chair', 14.6, 5.4),
+    pp('sofa', 4, 10.8), pp('coffee_table', 4, 9.6), pp('printer', 16.6, 10.6), pp('floor_lamp', 18.4, 8.6), pp('plant_small', 1.6, 10.6),
+    point('npc', 'npc10', 14.6, 8.2),
+    point('npc', 'amb_hcm_reporter', 7, 4.4, { patrol: 'patrol_hcm_reporter' }), path_('patrol_hcm_reporter', [[5, 4.4], [10.5, 4.4]]),
+    rectT('inspect', 'inspect_hcm_board', 16, 2, 2, 1, { text: 'inspect_hcm_board' })
+  ]
+});
+
 /** Xe cộ đúng tỉ lệ (tools/props.mjs → vehicles), nhìn ngang hướng sang phải; game lật khi chạy sang trái. */
 function buildVehicles() {
   for (const [id, img] of Object.entries(vehicles())) img.save(path.join(ROOT, `assets/sprites/${id}.png`));
@@ -1356,7 +1485,7 @@ function buildVehicles() {
 function buildProps() {
   const props = allProps();
   const list = Object.entries(props).sort((a, b) => b[1].img.h - a[1].img.h);
-  const MAXW = 2048, PAD = 2;
+  const MAXW = 4096, PAD = 2;
   let x = 0, y = 0, rowH = 0;
   const pos = {};
   for (const [k, { img }] of list) {
@@ -1384,4 +1513,4 @@ const badgesInfo = buildBadges(ROOT);
 buildVehicles();
 for (const [id, spec] of Object.entries(CHARACTERS)) buildCharacter(id, spec);
 buildBoss();
-console.log(['ok:', `tileset ${TILES.length} ô`, tnLobby, tnF2, tnF3, tnF4, tnF5, street, newsroom, cafe, agency, office2, clinic, cafe2, boss, propsInfo, badgesInfo].join('\n  '));
+console.log(['ok:', `tileset ${TILES.length} ô`, tnLobby, tnF2, tnF3, tnF4, tnF5, street, newsroom, cafe, agency, office2, clinic, cafe2, boss, home, hcm, tnHcm, propsInfo, badgesInfo].join('\n  '));

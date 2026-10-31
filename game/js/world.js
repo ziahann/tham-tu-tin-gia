@@ -6,6 +6,7 @@ import { direction } from './input.js';
 import { makeAnims, feetBody, dirFrom, idleFrame, Npc, showEmote } from './actors.js';
 import { roomStatus } from './grading.js';
 import * as story from './story.js';
+import * as journey from './journey.js';
 import * as dlg from './dialogue.js';
 import { setPlace, updateMeters } from './hud.js';
 import { tickPressure, isLight, caseOpen } from './obstacles.js';
@@ -18,9 +19,10 @@ import { Traffic, VEHICLE_SPRITES } from './traffic.js';
 import { sfx, footstep, setAmbience } from './audio.js';
 import { iso, setupIso, buildGround, buildWalls, ViewLayer, fadeOccluders, shearedText, WALL_H } from './iso.js';
 
-const MAPS = ['tn_lobby', 'tn_f2', 'tn_f3', 'tn_f4', 'tn_f5', 'street', 'newsroom', 'cafe', 'agency', 'office2', 'clinic', 'cafe2', 'boss'];
+const MAPS = ['tn_lobby', 'tn_f2', 'tn_f3', 'tn_f4', 'tn_f5', 'street', 'newsroom', 'cafe', 'agency', 'office2', 'clinic', 'cafe2', 'boss', 'home', 'hcm', 'tn_hcm'];
+const CITY_MAPS = new Set(['street', 'hcm']); // phố ngoài trời: nền kéo dài ra ngoài bản đồ, ra khỏi nhà nhìn xuống
 const SPEED = 120;
-const MAP_VERSION = 7; // tăng khi sửa bố cục bản đồ: vị trí đã lưu theo bản cũ bị bỏ qua
+const MAP_VERSION = 8; // tăng khi sửa bố cục bản đồ: vị trí đã lưu theo bản cũ bị bỏ qua
 
 /** Sprite của mọi nhân vật trong npc_dialogues.json (NPC chính, người qua đường, boss) + boss đã gỡ mặt nạ. */
 const spriteIds = () => [...new Set([...data.npcs.npcs.map(n => n.sprite || n.id), 'boss', 'boss_blank'])];
@@ -74,7 +76,7 @@ export class WorldScene extends Phaser.Scene {
     // Hiển thị isometric: lớp tilemap chỉ để va chạm / tra cứu; nền và tường vẽ lại theo phép chiếu
     this.isoSize = setupIso(map.widthInPixels, map.heightInPixels);
     [this.ground, this.walls, this.doors].forEach(l => l.setVisible(false));
-    this.groundRTs = buildGround(this, map, this.ground, this.walls, this.mapKey === 'street');
+    this.groundRTs = buildGround(this, map, this.ground, this.walls, CITY_MAPS.has(this.mapKey));
     this.wallImgs = buildWalls(this, map, this.walls);
     this.views = new ViewLayer(this);
 
@@ -90,6 +92,8 @@ export class WorldScene extends Phaser.Scene {
     this.portals = objs.filter(o => o.type === 'portal');
     this.inspects = objs.filter(o => o.type === 'inspect');
     this.elevators = objs.filter(o => o.type === 'elevator');
+    // điểm hành động của hành trình: máy tính, điện thoại ở phòng trọ, trạm xe khách (journey.js)
+    this.spots = objs.filter(o => o.type === 'spot');
     // Manh mối đánh lừa: dấu "?" nổi trên tờ giấy khi hồ sơ của nó còn đang làm
     this.decoys = objs.filter(o => o.type === 'decoy').map(o => ({
       obj: o,
@@ -186,7 +190,8 @@ export class WorldScene extends Phaser.Scene {
     this.reduceMotion = state.settings.reduceMotion;
     story.setWorld(this);
     this.refresh();
-    if (state.progress.introBus && this.mapKey === 'street') this.busIntro();
+    if (state.progress.introBus && this.points.spawn_bus) this.busIntro();
+    else if (this.mapKey === 'home') this.time.delayedCall(500, () => journey.wakeUp());
   }
 
   /**
@@ -208,11 +213,12 @@ export class WorldScene extends Phaser.Scene {
       delete state.progress.introBus;
       this.savePos();
       window.removeEventListener('keydown', skip);
+      journey.onArrive(this.mapKey);
     };
     let leaving = false;
     const skip = () => done();
     const spawn = this.points.spawn_bus || { x: this.player.x, y: this.player.y };
-    if (this.reduceMotion) { delete state.progress.introBus; saveProgress(); return; }
+    if (this.reduceMotion) { delete state.progress.introBus; saveProgress(); journey.onArrive(this.mapKey); return; }
     this.cutscene = true;
     // xe buýt diễn: ảnh isometric hướng tây, chạy trong làn sát vỉa hè bắc rồi dừng ngay trạm
     const lane = this.traffic?.lanes.find(l => l.dir < 0 && Math.abs(l.bottom - spawn.y) < 100);
@@ -232,7 +238,7 @@ export class WorldScene extends Phaser.Scene {
     const { width: w, height: h } = this.scale;
     const bars = [this.add.rectangle(0, 0, w, 54, 0x05060a).setOrigin(0), this.add.rectangle(0, h - 54, w, 54, 0x05060a).setOrigin(0)];
     bars.forEach(b => b.setScrollFactor(0).setDepth(200000));
-    const cap = this.add.text(w / 2, h - 27, t('intro.busCaption'), { fontFamily: 'VT323', fontSize: '22px', color: '#e8ecf2', align: 'center' })
+    const cap = this.add.text(w / 2, h - 27, data.quests.journey.bus.arrive[this.mapKey] || '', { fontFamily: 'VT323', fontSize: '22px', color: '#e8ecf2', align: 'center' })
       .setOrigin(0.5).setScrollFactor(0).setDepth(200001);
     this.time.delayedCall(400, () => window.addEventListener('keydown', skip, { once: true }));
     this.input.once('pointerdown', skip);
@@ -261,6 +267,95 @@ export class WorldScene extends Phaser.Scene {
     });
   }
 
+  /**
+   * Cảnh đón xe khách ở trạm: xe chạy tới, khi xe vào gần thì bấm E / A (hoặc chạm) để vẫy. Vẫy kịp: xe dừng, nhân vật lên xe,
+   * xe chạy đi rồi gọi onBoard(). Lỡ nhịp: xe chạy qua, chuyến sau tới (không phạt). Giảm chuyển động: lên xe luôn.
+   */
+  hailBus(onBoard) {
+    const spawn = this.points.spawn_bus;
+    if (!spawn || this.cutscene) return;
+    if (this.reduceMotion) { onBoard(); return; }
+    const J = data.quests.journey.bus;
+    this.cutscene = true;
+    this.walkPath = null;
+    this.player.setVelocity(0, 0);
+    this.player.body.reset(spawn.x, spawn.y);
+    this.facing = 'down';
+    this.player.anims.stop();
+    this.player.setFrame(idleFrame('down'));
+    const lane = this.traffic?.lanes.find(l => l.dir < 0 && Math.abs(l.bottom - spawn.y) < 100);
+    const by = lane ? lane.bottom - 4 : spawn.y + 70;
+    const stopX = spawn.x + 40;
+    if (lane) { this.traffic.cars.filter(c => c.lane === lane).forEach(c => c.sprite.destroy()); this.traffic.cars = this.traffic.cars.filter(c => c.lane !== lane); }
+    const { width: w, height: h } = this.scale;
+    const bars = [this.add.rectangle(0, 0, w, 54, 0x05060a).setOrigin(0), this.add.rectangle(0, h - 54, w, 54, 0x05060a).setOrigin(0)];
+    bars.forEach(b => b.setScrollFactor(0).setDepth(200000));
+    const cap = this.add.text(w / 2, h - 27, J.wait, { fontFamily: 'VT323', fontSize: '22px', color: '#e8ecf2', align: 'center' })
+      .setOrigin(0.5).setScrollFactor(0).setDepth(200001);
+    const say = (text, color = '#e8ecf2') => cap.setText(text).setColor(color);
+    const tex = this.textures.get('bus_w').getSourceImage();
+    let bus = null, near = false, hailed = false, tw = null;
+    const tap = () => this.hailFn?.();
+    this.input.on('pointerdown', tap);
+    const cleanup = () => {
+      this.hailFn = null;
+      this.input.off('pointerdown', tap);
+      bars.forEach(b => b.destroy());
+      cap.destroy();
+    };
+    const board = () => {
+      say(J.stop, '#7fe3ff');
+      this.player.anims.play('hero-walk-down', true);
+      this.tweens.add({
+        targets: this.player, x: stopX - 30, y: by - 24, duration: 700, delay: 300,
+        onComplete: () => {
+          this.player.anims.stop();
+          this.player.view.setAlpha(0);
+          sfx('door');
+          this.cameras.main.startFollow(bus.view, true, 0.08, 0.08);
+          this.tweens.add({ targets: bus, x: stopX - 900, duration: 3000, delay: 400, ease: 'Sine.easeIn' });
+          // fade(..., force): camera còn giữ trạng thái "đã xong" của lần sáng dần lúc vào bản đồ, fadeOut thường sẽ bị bỏ qua
+          let left = false;
+          const leave = () => { if (left) return; left = true; cleanup(); this.cutscene = false; onBoard(); };
+          this.time.delayedCall(1800, () => {
+            this.cameras.main.fade(500, 5, 6, 10, true);
+            this.time.delayedCall(650, leave);
+          });
+        }
+      });
+    };
+    this.hailFn = () => {
+      if (hailed || !bus) return;
+      if (!near) { say(J.early, '#a3adbf'); return; }
+      hailed = true;
+      sfx('ding');
+      this.emote?.('hero', '!');
+      tw?.stop();
+      this.tweens.add({ targets: bus, x: stopX, duration: Math.max(500, (bus.x - stopX) * 2.2), ease: 'Sine.easeOut', onComplete: board });
+    };
+    const run = () => {
+      near = false;
+      bus = this.add.sprite(stopX + 1000, by, 'bus').setOrigin(0.5, 1);
+      this.views.add(bus, { isoTex: { key: 'bus_w', fw: 240, ay: 28 + 84, h: tex.height, d: 56 } });
+      say(J.wait);
+      tw = this.tweens.add({
+        targets: bus, x: stopX - 900, duration: 6200,
+        onUpdate: () => {
+          const n = bus.x < stopX + 460 && bus.x > stopX + 30;
+          if (n !== near) { near = n; say(n ? J.now : J.wait, n ? '#ffc857' : '#e8ecf2'); }
+        },
+        onComplete: () => {
+          if (hailed) return;
+          say(J.missed, '#ff8a8a');
+          bus.destroy();
+          bus = null;
+          this.time.delayedCall(1400, run);
+        }
+      });
+    };
+    this.time.delayedCall(600, run);
+  }
+
   /** Lưu vị trí hiện tại (bản đồ, toạ độ, hướng nhìn). */
   savePos() {
     state.progress.pos = { map: this.mapKey, x: Math.round(this.player.x), y: Math.round(this.player.y), dir: this.facing, v: MAP_VERSION };
@@ -275,7 +370,7 @@ export class WorldScene extends Phaser.Scene {
     sfx('door');
     state.progress.pos = { map: target, spawnName: spawn };
     saveProgress();
-    const go = () => this.scene.restart({ map: target, spawn, dir: dir || (target === 'street' ? 'down' : 'up') });
+    const go = () => this.scene.restart({ map: target, spawn, dir: dir || (CITY_MAPS.has(target) ? 'down' : 'up') });
     if (state.settings.reduceMotion) { go(); return; }
     this.cameras.main.fadeOut(250, 15, 14, 23);
     this.cameras.main.once('camerafadeoutcomplete', go);
@@ -338,7 +433,11 @@ export class WorldScene extends Phaser.Scene {
     const cam = this.cameras.main;
     // ô thoi rộng 64 px: zoom theo bước 0,5 để vẫn nét
     cam.setZoom(Math.max(1, Math.floor(Math.min(width / 900, height / 500) * 2) / 2));
-    cam.setBounds(0, -480, this.isoSize.width, this.isoSize.height + 560);
+    // phòng nhỏ hơn khung hình: nới biên đều hai phía để phòng nằm giữa màn hình (không dồn sang trái / lên trên)
+    const vw = width / cam.zoom, vh = height / cam.zoom;
+    const bw = this.isoSize.width, bh = this.isoSize.height + 560;
+    const bx = Math.min(0, (bw - vw) / 2), by = Math.min(-480, -480 + (bh - vh) / 2);
+    cam.setBounds(bx, by, Math.max(bw, vw), Math.max(bh, vh));
   }
 
   /** Các ô của lớp cửa nằm trong một object (để gỡ / đặt lại khi khóa mở). */
@@ -498,6 +597,8 @@ export class WorldScene extends Phaser.Scene {
     if (dev) return at(dev.obj, { kind: 'device', id: dev.id });
     const dc = this.decoys.find(d => inRect(d.obj, lx, ly, PAD));
     if (dc) return at(dc.obj, { kind: 'decoy', id: dc.id });
+    const spot = this.spots.find(o => inRect(o, lx, ly, PAD));
+    if (spot) return at(spot, { kind: 'spot', obj: spot });
     const ins = this.inspects.find(o => inRect(o, lx, ly, 4));
     if (ins) return at(ins, { kind: 'inspect', key: propOf(ins, 'text') });
     const portal = this.portals.find(o => inRect(o, lx, ly, PAD));
@@ -637,6 +738,8 @@ export class WorldScene extends Phaser.Scene {
     if (dev) return { kind: 'device', id: dev.id, x: dev.obj.x + dev.obj.width / 2, y: dev.obj.y + dev.obj.height, lift: 50 };
     const dc = this.decoys.find(d => inRect(d.obj, fx, fy, PAD));
     if (dc) return { kind: 'decoy', id: dc.id, x: dc.obj.x + dc.obj.width / 2, y: dc.obj.y + dc.obj.height, lift: 36 };
+    const spot = this.spots.find(o => inRect(o, fx, fy, PAD));
+    if (spot) return { kind: 'spot', obj: spot, x: spot.x + spot.width / 2, y: spot.y + spot.height, lift: 50 };
     const ins = this.inspects.find(o => inRect(o, fx, fy, PAD));
     if (ins) return { kind: 'inspect', key: propOf(ins, 'text'), x: ins.x + ins.width / 2, y: ins.y + ins.height, lift: 40 };
     const door = this.doorObjs.find(d => inRect(d.obj, fx, fy, PAD) && d.status !== 'open' && d.status !== 'done');
@@ -648,9 +751,12 @@ export class WorldScene extends Phaser.Scene {
 
   /** Người chơi bấm E / Space / A. */
   interact() {
+    if (this.hailFn) { this.hailFn(); return; }
     const tg = this.target;
     if (!tg) return;
-    if (tg.kind === 'npc' && tg.id === 'boss') story.runBoss();
+    if (tg.kind === 'spot') journey.spotAct(propOf(tg.obj, 'act'), tg.obj);
+    else if (tg.kind === 'npc' && tg.id === 'npc10') journey.talkEditor();
+    else if (tg.kind === 'npc' && tg.id === 'boss') story.runBoss();
     else if (tg.kind === 'npc' && this.npcs.get(tg.id)?.chaser) story.rumorEncounter(tg.id);
     else if (tg.kind === 'npc') story.talkTo(tg.id);
     else if (tg.kind === 'decoy') story.inspectDecoy(tg.id);
