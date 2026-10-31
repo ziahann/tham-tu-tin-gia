@@ -4,7 +4,7 @@ import { Bay } from './bay.js';
 import { playMusic, unlockMusic, refreshMusic, musicSupported } from './music.js';
 import { stopAmbience } from './audio.js';
 import { state, loadState, saveSettings, startNewProgress, hasFlag } from './state.js';
-import { initInput, on, releaseAll } from './input.js';
+import { initInput, on, releaseAll, lockLandscape } from './input.js';
 import * as dlg from './dialogue.js';
 import * as backpack from './backpack.js';
 import { setOnChange, setOnEnding, track, skipToBoss } from './story.js';
@@ -317,6 +317,8 @@ function showResults() {
 
 /** Gắn sự kiện cho nút và phím. */
 function bindEvents() {
+  // điện thoại: bấm nút ở màn hình chính thì vào toàn màn hình, khóa ngang
+  ['title-start', 'title-continue', 'title-restart'].forEach(id => $(id).addEventListener('click', lockLandscape));
   $('title-start').addEventListener('click', startIntro);
   $('intro-next').addEventListener('click', nextIntro);
   $('intro-skip').addEventListener('click', finishIntro);

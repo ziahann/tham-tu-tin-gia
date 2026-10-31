@@ -243,3 +243,11 @@
 | Nội dung bài | 10 bài (5 bài sai, 5 bài chính thống). Bài sai: chuyện "người cha" đăng nhiều kỳ, có link "đọc tiếp" và dòng "tình tiết hư cấu" chữ rất nhỏ; lưới ảnh AI; người dùng Hoa Biển chia sẻ lại vì thương cảm; video bão Yagi; video chìm tàu ở Congo; trang mạo danh quỹ (sau trận cuối). Bình luận có gợi ý điều tra (chữ vàng). Trang và người dùng đều hư cấu, nội dung ghi chú chỉ dùng dữ kiện đã kiểm chứng |
 | Xử lý bài | Báo cáo (bài nào cũng bấm được; báo cáo nhầm bài đúng bị nhắc); viết ghi chú cộng đồng = chọn 1 trong 3 bản nháp (đúng có nguồn / vượt bằng chứng / chung chung); trả lời người chia sẻ vô tình (nhắc nhẹ kèm nguồn / công kích / cụt lủn); "Điều tra" để theo dõi hồ sơ liên quan. Phân loại Dis / Mis theo từng nhóm hiện sau khi khép S8 |
 | Ảnh hưởng | Độ lan truyền (bài sai chưa xử lý) làm hạn chót nhanh tới ×1,5 và tăng lượt chia sẻ đầu trận cuối; xử lý đúng giảm hạn chót; xử lý sai, báo cáo nhầm, bấm link câu tương tác trừ độ tin cậy hồ sơ đang theo dõi; lượt chia sẻ bài sai tăng theo giờ trong game tới khi có ghi chú; bài mới báo bằng thông báo và chấm đỏ trên nút balo |
+
+## Chốt ngày 31/10/2026 (đợt 18: điện thoại chơi ngang, đi 8 hướng)
+
+| Mục | Cách làm |
+|---|---|
+| Hướng màn hình | Điện thoại chơi ngang. Cầm dọc: màn che "Xoay ngang điện thoại". Bấm nút ở màn hình chính: vào toàn màn hình và khóa ngang (Android Chrome); iOS không cho khóa nên chỉ có lời nhắc |
+| Di chuyển | Cần điều khiển ảo tròn bên trái, 8 hướng (bắt về bội số 45°, giữa vòng là vùng chết); nút A bên phải. Bàn phím đi chéo bằng hai phím cùng lúc. Sprite vẫn 4 hướng nhìn (hướng chéo lấy hướng trội) |
+| Bố cục màn thấp | Cao ≤ 500 px: thanh trên, chân dung, nút nhỏ lại; balo rộng tối đa 52% màn hình; khung thoại chừa chỗ cho balo |

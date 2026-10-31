@@ -85,14 +85,12 @@
 
   <!-- Phím ảo cho điện thoại -->
   <div id="touch" class="touch" hidden>
-    <div class="dpad">
-      <button type="button" data-dir="up" aria-label="Lên">▲</button>
-      <button type="button" data-dir="left" aria-label="Trái">◀</button>
-      <button type="button" data-dir="right" aria-label="Phải">▶</button>
-      <button type="button" data-dir="down" aria-label="Xuống">▼</button>
-    </div>
+    <div id="stick" class="stick" role="application" aria-label="Cần điều khiển 8 hướng"><i class="stick-knob"></i></div>
     <button type="button" id="touch-a" class="touch-a" aria-label="Hành động">A</button>
   </div>
+
+  <!-- Điện thoại cầm dọc: nhắc xoay ngang -->
+  <div id="rotate" class="rotate" aria-live="polite"><div class="rotate-phone"></div><p data-ui="rotate.text"></p></div>
 
   <!-- Nền chuyển động vịnh Hạ Long (màn hình chính + intro) -->
   <canvas id="bay" class="bay" hidden role="img"></canvas>

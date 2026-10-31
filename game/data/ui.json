@@ -19,6 +19,7 @@
     "cases": "Hồ sơ vụ án (J)",
     "weather": "Thời tiết (T)"
   },
+  "rotate": { "text": "Xoay ngang điện thoại để chơi nhé. Kéo cần điều khiển bên trái để đi theo 8 hướng." },
   "title": {
     "warningTitle": "Cảnh báo nội dung",
     "warning": "Game dựa trên một vụ tai nạn có thật. Nội dung nhắc đến thiệt hại về người. Game không hiển thị hình ảnh nạn nhân; ảnh giả chỉ là mô phỏng pixel trừu tượng có nhãn ẢNH GIẢ. Bạn có thể thoát bất cứ lúc nào.",
