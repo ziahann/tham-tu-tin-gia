@@ -1145,7 +1145,7 @@ const street = buildMap('street', {
     pp('flowerbed', 24.2, 32.4), pp('flowerbed', 33, 32.4), pp('flowerbed', 24.2, 37.4), pp('flowerbed', 33, 37.4),
     pp('hedge', 2.5, 30.7), pp('hedge', 8.5, 30.7), pp('hedge', 35.5, 30.7), pp('hedge', 41.5, 30.7),
     pp('tree_big', 4, 34.4), pp('tree_big', 14, 34.2), pp('tree', 9, 37.6), pp('tree_big', 40, 35.2), pp('tree', 17.6, 31.6),
-    pp('bench', 11, 32.6), pp('bench', 28.5, 31.4), pp('bench', 38, 37.6), pp('bench', 18.5, 37.6),
+    pp('bench', 11, 32.6), pp('bench', 28.5, 31.4), pp('bench', 38, 37.6),
     pp('kiosk', 12.4, 37.6), pp('street_lamp', 22.2, 34.4), pp('street_lamp', 35.4, 34.4), pp('street_lamp', 3, 37.4),
     // --- phố đi bộ (chợ)
     pp('market_stall', 45.5, 31.4), pp('market_stall', 45.5, 35.4), pp('street_bin', 48.6, 37.2),
@@ -1196,7 +1196,7 @@ const street = buildMap('street', {
     // vỉa hè bắc đang thi công: rào kín vỉa hè và mép đường, phải sang đường ở vạch kẻ
     pp('barrier_ns', 36.5, 22.05), pp('barrier', 35.4, 19.3), pp('barrier', 35.4, 22.2),
     rectT('inspect', 'inspect_barrier', 35, 18.8, 3.2, 3.2, { text: 'inspect_barrier' }),
-    ...decoyAt('decoy_S4', 13.4, 33.2, 'news_rack'), ...decoyAt('decoy_S7', 29.2, 20.6, 'bench_paper'), ...decoyAt('decoy_S8', 40.2, 33.6, 'news_rack'),
+    ...decoyAt('decoy_S4', 13.4, 33.2, 'news_rack'), ...decoyAt('decoy_S7', 18.5, 37.15, 'bench_paper'), ...decoyAt('decoy_S8', 40.2, 33.6, 'news_rack'),
     path_('patrol_jogger', [[2, 47.6], [94, 47.6]]),
     // --- đồ vật xem được
     rectT('inspect', 'inspect_office_sign', 13, 18.3, 3, 0.7, { text: 'inspect_office_sign' }),
