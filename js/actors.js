@@ -5,6 +5,8 @@ import { iso } from './iso.js';
 // Sprite sheet: 3 cột (đứng, bước 1, bước 2) x 4 hàng (xuống, trái, phải, lên), mỗi khung 32x48.
 export const DIRS = ['down', 'left', 'right', 'up'];
 export const idleFrame = dir => DIRS.indexOf(dir) * 3;
+// Tư thế ngồi (hai hàng cuối sprite sheet, tools/gen-assets.mjs → buildCharacter)
+const SIT_FRAME = { down: 12, right: 13, left: 14, up: 15 };
 
 /** Tạo hoạt ảnh đi 4 hướng cho một sprite sheet. */
 export function makeAnims(scene, key) {
@@ -27,15 +29,25 @@ export function feetBody(sprite) {
   sprite.body.setOffset(8, 37);
 }
 
-/** Bong bóng biểu cảm (! ? … ♪) nổi trên đầu một sprite trong ms mili giây. */
-export function showEmote(scene, sprite, ch, ms = 1500) {
-  const t = scene.add.text(sprite.x, sprite.y - 56, ch, {
-    fontFamily: 'VT323', fontSize: '22px', color: '#0a0e18', backgroundColor: '#e8ecf2', padding: { x: 5, y: 0 }
+/** Bong bóng biểu cảm (! ? … ♪) hoặc câu nói ngắn (small) nổi trên đầu một sprite (phía trên nhãn tên) trong ms mili giây. */
+export function showEmote(scene, sprite, ch, ms = 1500, small = false) {
+  const t = scene.add.text(sprite.x, sprite.y - 66, ch, {
+    fontFamily: 'VT323', fontSize: small ? '16px' : '22px', color: '#0a0e18', backgroundColor: '#e8ecf2', padding: { x: 5, y: 0 }
   }).setOrigin(0.5, 1).setDepth(100002);
-  const follow = () => t.setPosition(sprite.x, sprite.y - 56);
+  const follow = () => { if (t.active) t.setPosition(sprite.x, sprite.y - 66); };
   scene.events.on('update', follow);
   scene.tweens.add({ targets: t, y: '-=4', duration: 200, yoyo: true });
   scene.time.delayedCall(ms, () => { scene.events.off('update', follow); t.destroy(); });
+}
+
+/**
+ * Nhãn tên nổi trên đầu (người chơi, NPC). kind: 'hero' (xanh ngọc), 'story' (vàng: người giao hồ sơ),
+ * 'rumor' (đỏ: kẻ tung tin), mặc định trắng xám (người qua đường).
+ */
+export function nameTag(scene, text, kind) {
+  const color = { hero: '#7fe3ff', story: '#f2d36b', rumor: '#ff8a8a' }[kind] || '#d6dbe4';
+  return scene.add.text(0, 0, text, { fontFamily: 'VT323', fontSize: '15px', color, stroke: '#0f0e17', strokeThickness: 3 })
+    .setOrigin(0.5, 1).setDepth(99990).setResolution(2);
 }
 
 const EMOTES = ['…', '♪', '?', '!'];
@@ -98,18 +110,34 @@ export class Npc {
     this.stand();
   }
 
-  /** Đứng yên theo hướng hiện tại. */
+  /** Đứng yên (hoặc ngồi, nếu NPC có tư thế ngồi) theo hướng hiện tại. */
   stand() {
     this.sprite.body.setVelocity(0, 0);
     this.sprite.anims.stop();
-    this.sprite.setFrame(idleFrame(this.facing));
+    this.sprite.setFrame(this.pose === 'sit' ? SIT_FRAME[this.facing] : idleFrame(this.facing));
+  }
+
+  /** Quay về hướng mặc định của NPC đứng yên (ngồi trên ghế, hoặc nhìn người cùng trò chuyện). */
+  rest() {
+    if (this.restAt) this.face(this.restAt.x, this.restAt.y);
+    else if (this.restDir) { this.facing = this.restDir; this.stand(); }
+  }
+
+  /** Đặt nhãn tên và dấu ! theo hình hiển thị (gọi sau khi đồng bộ hình isometric). */
+  syncTag(player) {
+    const v = this.sprite.view || this.sprite;
+    const top = v.y - 50 * (v.scaleY || 1);
+    // chỉ hiện tên người ở gần (đỡ rối, không lộ tên người đứng khuất sau nhà ở xa)
+    const near = !player || Phaser.Math.Distance.Between(this.sprite.x, this.sprite.y, player.x, player.y) < 380;
+    if (this.tag) this.tag.setPosition(v.x, top).setVisible(near && v.visible && v.alpha > 0.5);
+    this.marker.setPosition(v.x, top - (this.tag ? 14 : 0) + Math.round(Math.sin(this.scene.time.now / 250) * 2)).setDepth(100000);
   }
 
   /** Cập nhật mỗi khung hình. */
   update(delta, frozen, player) {
     const s = this.sprite;
     const v = s.view || s;
-    this.marker.setPosition(v.x, v.y - 50 * (v.scaleY || 1) + Math.round(Math.sin(this.scene.time.now / 250) * 2)).setDepth(100000);
+    this.marker.setPosition(v.x, v.y - 50 * (v.scaleY || 1) - (this.tag ? 14 : 0) + Math.round(Math.sin(this.scene.time.now / 250) * 2)).setDepth(100000);
     if (this.ambient && !frozen && !this.talking) {
       this.emoteIn -= delta;
       if (this.emoteIn <= 0) { this.emoteIn = 7000 + Math.random() * 9000; showEmote(this.scene, s.view || s, Phaser.Utils.Array.GetRandom(EMOTES)); }

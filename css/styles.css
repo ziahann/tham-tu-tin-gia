@@ -727,3 +727,10 @@ button.frame:hover { border-color: var(--grey); }
 .trip-bus { position: absolute; bottom: 4px; width: 56px; height: 26px; margin-left: -28px; background: var(--teal); border: 3px solid var(--ink); box-shadow: inset 0 -6px 0 #24706d; transition: left 0.8s steps(8); }
 .trip-bus::before { content: ""; position: absolute; left: 6px; right: 14px; top: 4px; height: 7px; background: repeating-linear-gradient(90deg, #9cc4dc 0 8px, transparent 8px 11px); }
 @media (max-width: 760px), (max-height: 500px) { .trip-stop { font-size: 0.65em; } .trip-stop:nth-child(even) { bottom: auto; top: -28px; } }
+
+/* Góc máy điện ảnh (world.js → shot): hai dải đen trên / dưới khi máy quay lia, cận nhân vật */
+body::before, body::after { content: ""; position: fixed; left: 0; right: 0; height: 0; background: #05060a; z-index: 19; pointer-events: none; transition: height 0.5s ease; }
+body::before { top: 0; }
+body::after { bottom: 0; }
+body.is-cine::before, body.is-cine::after { height: 9vh; }
+@media (prefers-reduced-motion: reduce) { body::before, body::after { transition: none; } }
