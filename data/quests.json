@@ -8,10 +8,10 @@
     "titleFormat": "{name}",
     "playerCanRename": true,
     "age": 19,
-    "look": "Sinh viên ngành Quan hệ công chúng – Truyền thông, Trường Đại học Văn Lang: áo khoác dù, balo, thẻ sinh viên, sổ tay và bút gài sau tai. Người chơi chọn mẫu nam hoặc nữ.",
+    "look": "Sinh viên Trường Đại học Văn Lang: áo khoác dù, balo, thẻ sinh viên, sổ tay và bút gài sau tai. Người chơi chọn mẫu nam hoặc nữ.",
     "catchphrase": "Chưa có bằng chứng thì chưa kết luận.",
     "note": "Nhân vật ORIGINAL. Không dùng tên/câu nói/hình ảnh của nhân vật có bản quyền. displayName là tên mặc định; người chơi tự đặt tên ở cuối intro.",
-    "role": "Sinh viên Quan hệ công chúng – Truyền thông, Trường Đại học Văn Lang"
+    "role": "Sinh viên Trường Đại học Văn Lang"
   },
   "settings": {
     "minCardsForBoss": 8,
@@ -1594,7 +1594,7 @@
         {
           "id": "s1",
           "type": "interview",
-          "ask": "Em muốn hỏi gì?",
+          "ask": "Cháu muốn hỏi gì?",
           "questions": [
             {
               "id": "n1",
@@ -2612,15 +2612,15 @@
       "lines": [
         {
           "npc": "npc10",
-          "text": "Tòa soạn Báo Thanh Niên nghe. Chú là Quốc Trung, thư ký tòa soạn. Em cần gì nào?"
+          "text": "Tòa soạn Báo Thanh Niên nghe. Chú là Quốc Trung, thư ký tòa soạn. Cháu cần gì nào?"
         },
         {
           "npc": "hero",
-          "text": "Dạ, em là {hero}, sinh viên Quan hệ công chúng – Truyền thông, Trường Đại học Văn Lang. Em thấy nhiều ảnh và câu chuyện về vụ lật tàu Vịnh Xanh 58 lan trên mạng, mà không rõ nguồn."
+          "text": "Dạ, cháu là {hero}, sinh viên Trường Đại học Văn Lang. Cháu thấy nhiều ảnh và câu chuyện về vụ lật tàu Vịnh Xanh 58 lan trên mạng, mà không rõ nguồn."
         },
         {
           "npc": "hero",
-          "text": "Em muốn xin đi cùng nhóm kiểm chứng để tìm hiểu cái nào là thật ạ."
+          "text": "Cháu muốn xin đi cùng nhóm kiểm chứng để tìm hiểu cái nào là thật ạ."
         },
         {
           "npc": "npc10",
@@ -2629,7 +2629,7 @@
         },
         {
           "npc": "npc10",
-          "text": "Sáng mai em lên tòa soạn gặp chú nhé, ngay trên phố trung tâm, cách hẻm nhà em vài bước. Chú giao việc rồi em ra bến xe khách cuối phố."
+          "text": "Sáng mai cháu lên tòa soạn gặp chú nhé, ngay trên phố trung tâm, cách hẻm nhà cháu vài bước. Chú giao việc rồi cháu ra bến xe khách cuối phố."
         }
       ],
       "after": {
@@ -2641,7 +2641,7 @@
     "brief": [
       {
         "npc": "npc10",
-        "text": "Em tới rồi đấy à. Ngồi đi, chú nói ngắn gọn.",
+        "text": "Cháu tới rồi đấy à. Ngồi đi, chú nói ngắn gọn.",
         "mood": "happy"
       },
       {
@@ -2650,13 +2650,13 @@
       },
       {
         "npc": "npc10",
-        "text": "Việc của em ở Hạ Long là trả lời được ba câu hỏi này, bằng bằng chứng chứ không phải bằng cảm giác:",
+        "text": "Việc của cháu ở Hạ Long là trả lời được ba câu hỏi này, bằng bằng chứng chứ không phải bằng cảm giác:",
         "mood": "serious",
         "questions": true
       },
       {
         "npc": "npc10",
-        "text": "Chú cấp cho em thẻ cộng tác viên. Ra Hạ Long, em tìm chị Tuệ Lâm ở trụ sở bên đó, chị ấy phụ trách nhóm kiểm chứng."
+        "text": "Chú cấp cho cháu thẻ cộng tác viên. Ra Hạ Long, cháu tìm chị Tuệ Lâm ở trụ sở bên đó, chị ấy phụ trách nhóm kiểm chứng."
       },
       {
         "npc": "npc10",
@@ -2664,7 +2664,7 @@
       },
       {
         "npc": "hero",
-        "text": "Dạ, em đi ngay ạ!",
+        "text": "Dạ, cháu đi ngay ạ!",
         "mood": "happy"
       }
     ],
@@ -2674,7 +2674,7 @@
       "home": [
         {
           "npc": "npc10",
-          "text": "Chào em! Có việc gì cần thì gọi tòa soạn nhé."
+          "text": "Chào cháu! Có việc gì cần thì gọi tòa soạn nhé."
         }
       ],
       "briefed": [
@@ -2686,13 +2686,13 @@
       "halong": [
         {
           "npc": "npc10",
-          "text": "Về thăm tòa soạn à? Vụ ở Hạ Long còn dang dở thì quay lại bến xe nhé, chú chờ báo cáo của em."
+          "text": "Về thăm tòa soạn à? Vụ ở Hạ Long còn dang dở thì quay lại bến xe nhé, chú chờ báo cáo của cháu."
         }
       ],
       "done": [
         {
           "npc": "npc10",
-          "text": "Danh hiệu là của em rồi. Nhớ thói quen dừng lại – kiểm tra – rồi mới chia sẻ nhé.",
+          "text": "Danh hiệu là của cháu rồi. Nhớ thói quen dừng lại – kiểm tra – rồi mới chia sẻ nhé.",
           "mood": "happy"
         }
       ]
@@ -2753,7 +2753,7 @@
       },
       {
         "npc": "npc10",
-        "text": "Chú nghe chị Tuệ Lâm kể rồi. Em làm tốt lắm! Bắt xe về tòa soạn báo cáo cho chú nhé, có thứ chờ em đấy.",
+        "text": "Chú nghe chị Tuệ Lâm kể rồi. Cháu làm tốt lắm! Bắt xe về tòa soạn báo cáo cho chú nhé, có thứ chờ cháu đấy.",
         "mood": "happy"
       }
     ],
@@ -2761,7 +2761,7 @@
       "intro": [
         {
           "npc": "npc10",
-          "text": "Về rồi đấy à! Kể chú nghe: ba câu hỏi chú giao, em trả lời được thế nào?",
+          "text": "Về rồi đấy à! Kể chú nghe: ba câu hỏi chú giao, cháu trả lời được thế nào?",
           "mood": "happy"
         }
       ],
@@ -2788,7 +2788,7 @@
             }
           ],
           "right": "Đúng. Nhiều bằng chứng độc lập cùng chỉ một hướng, máy phát hiện chỉ là phần bổ trợ.",
-          "wrong": "Lượt chia sẻ hay một con số từ máy không chứng minh được gì. Em nhớ lại các bằng chứng đã đối chiếu xem."
+          "wrong": "Lượt chia sẻ hay một con số từ máy không chứng minh được gì. Cháu nhớ lại các bằng chứng đã đối chiếu xem."
         },
         {
           "ask": "Nhân vật trong các câu chuyện có phải nạn nhân thật không?",
@@ -2798,7 +2798,7 @@
           ],
           "options": [
             {
-              "text": "Không có căn cứ: ảnh và truyện do AI dựng; tên trong truyện chưa đối chiếu được với danh sách chính thức nên em không kết luận thêm.",
+              "text": "Không có căn cứ: ảnh và truyện do AI dựng; tên trong truyện chưa đối chiếu được với danh sách chính thức nên cháu không kết luận thêm.",
               "ok": true
             },
             {
@@ -2809,7 +2809,7 @@
             }
           ],
           "right": "Chuẩn. Nói đúng đến đâu biết đến đó, và không đem danh tính ai ra bàn khi chưa có dữ liệu.",
-          "wrong": "Cảm xúc của người xem không phải bằng chứng, còn công bố danh tính thì có thể làm tổn thương người vô can. Em thử lại nhé."
+          "wrong": "Cảm xúc của người xem không phải bằng chứng, còn công bố danh tính thì có thể làm tổn thương người vô can. Cháu thử lại nhé."
         },
         {
           "ask": "Cách trình bày có khiến người xem hiểu nhầm không?",
@@ -2831,27 +2831,27 @@
               "text": "Có, và chắc chắn người đăng làm vậy để kiếm tiền."
             }
           ],
-          "right": "Đúng vậy, và em dừng đúng chỗ: còn động cơ thì chưa có dữ liệu nên chưa kết luận.",
-          "wrong": "Nhớ lại các thủ đoạn em đã thấy, và đừng khẳng định điều chưa có dữ liệu như chuyện tiền bạc. Thử lại nhé."
+          "right": "Đúng vậy, và cháu dừng đúng chỗ: còn động cơ thì chưa có dữ liệu nên chưa kết luận.",
+          "wrong": "Nhớ lại các thủ đoạn cháu đã thấy, và đừng khẳng định điều chưa có dữ liệu như chuyện tiền bạc. Thử lại nhé."
         }
       ],
-      "sum": "Em khép {done}/{total} hồ sơ, nhận {badges} huy hiệu, uy tín trung bình {cred}/100.",
+      "sum": "Cháu khép {done}/{total} hồ sơ, nhận {badges} huy hiệu, uy tín trung bình {cred}/100.",
       "award": [
         {
           "npc": "npc10",
-          "text": "Tòa soạn ghi nhận đóng góp của em. Đây là danh hiệu dành cho em:",
+          "text": "Tòa soạn ghi nhận đóng góp của cháu. Đây là danh hiệu dành cho cháu:",
           "mood": "happy"
         }
       ],
       "outro": [
         {
           "npc": "npc10",
-          "text": "Danh hiệu chỉ là kỷ niệm thôi. Thứ quý nhất em mang về là thói quen: dừng lại, kiểm tra, rồi mới chia sẻ.",
+          "text": "Danh hiệu chỉ là kỷ niệm thôi. Thứ quý nhất cháu mang về là thói quen: dừng lại, kiểm tra, rồi mới chia sẻ.",
           "mood": "happy"
         },
         {
           "npc": "hero",
-          "text": "Dạ, em cảm ơn chú. Em sẽ nhớ ạ!",
+          "text": "Dạ, cháu cảm ơn chú. Cháu sẽ nhớ ạ!",
           "mood": "happy"
         }
       ]

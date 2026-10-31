@@ -68,7 +68,7 @@ export function reportHtml() {
   <div><h1>${esc(t('report.title'))}</h1><div class="muted">${esc(t('title.course'))}</div></div>
   <div class="muted" style="text-align:right">${esc(t('report.date'))}: ${now.toLocaleDateString('vi-VN')} ${now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}</div>
 </header>
-<p><b>${esc(t('report.player'))}:</b> ${esc(p.heroName)} · ${esc(t('card.faculty'))}, Trường Đại học Văn Lang</p>
+<p><b>${esc(t('report.player'))}:</b> ${esc(p.heroName)} · ${esc(t('card.faculty'))}</p>
 <div class="card">
   <div>${esc(t('report.casesClosed'))}<b>${cp.done}/${cp.total}</b></div>
   <div>${esc(t('report.badges'))}<b>${badges.length}</b></div>
