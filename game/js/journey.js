@@ -4,7 +4,7 @@
 import { data, t, fill } from './data.js';
 import { state, saveProgress, setFlag, hasFlag } from './state.js';
 import * as dlg from './dialogue.js';
-import { conversation, track, caseCutscene, getWorld, isBusy } from './story.js';
+import { conversation, track, caseCutscene, getWorld, isBusy, withShot } from './story.js';
 import { nextQuestIn, earnedBadges, caseProgress } from './grading.js';
 import { trustScore } from './backpack.js';
 import { sfx } from './audio.js';
@@ -65,7 +65,8 @@ export async function wakeUp() {
     await dlg.say('system', J().disclaimer);
     const c = await dlg.choose([{ id: 'story', text: J().skipStory }, { id: 'skip', text: J().skipJump }], { speaker: 'system', text: J().skipAsk });
     if (c.id === 'skip') { skip = true; return; }
-    await lines(J().wake);
+    // cận cảnh nhân vật trong phòng trọ, rồi lùi ra toàn cảnh căn phòng
+    await withShot(['hero'], { zoom: 1.8, dur: 900 }, () => lines(J().wake));
   });
   if (skip) skipPrologue();
 }
@@ -126,7 +127,7 @@ async function usePhone() {
 export async function talkEditor() {
   const s = stage();
   if (s === 'called') {
-    await conversation('npc10', async () => {
+    await withShot(['npc10', 'hero'], { zoom: 1.6, dur: 800 }, () => conversation('npc10', async () => {
       for (const l of J().brief) {
         await line(l);
         if (l.questions) for (const [i, q] of data.quests.verificationQuestions.entries()) await dlg.say('npc10', `${i + 1}. ${q}`);
@@ -134,7 +135,7 @@ export async function talkEditor() {
       setFlag('press_card');
       sfx('unlock');
       toast(J().cardToast);
-    });
+    }));
     setStage('briefed');
     return;
   }
@@ -283,11 +284,14 @@ async function report() {
     const flags = state.progress.flags;
     const prog = caseProgress(flags);
     await dlg.say('npc10', fill(r.sum, { done: prog.done, total: prog.total, badges: earnedBadges(flags).length, cred: trustScore() }));
-    await lines(r.award);
     const title = titleFor();
-    state.progress.title = { id: title.id, name: title.name };
-    saveProgress();
-    await caseCutscene('S9', { name: title.name, learned: title.text }, { title: t('journey.titleFile'), stamp: t('journey.titleStamp'), img: `assets/badges/TITLE_${title.id}.png`, cap: t('journey.titleCap', { name: title.name }) });
+    // góc máy cận chú Quốc Trung và nhân vật chính lúc trao danh hiệu
+    await withShot(['npc10', 'hero'], { zoom: 1.7, dur: 900 }, async () => {
+      await lines(r.award);
+      state.progress.title = { id: title.id, name: title.name };
+      saveProgress();
+      await caseCutscene('S9', { name: title.name, learned: title.text }, { title: t('journey.titleFile'), stamp: t('journey.titleStamp'), img: `assets/badges/TITLE_${title.id}.png`, cap: t('journey.titleCap', { name: title.name }) });
+    });
     await dlg.say('system', t('journey.titleCap', { name: title.name }));
     await lines(r.outro);
     ok = true;

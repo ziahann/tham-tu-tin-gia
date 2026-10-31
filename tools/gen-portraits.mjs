@@ -14,6 +14,7 @@ const OUTLINE = '#10141f';
 // Chi tiết chỉ có ở chân dung (mắt, mi, ria, kẹp tóc...). Ghép thêm vào thông số dùng chung.
 const EXTRA = {
   amb_nurse: { lashes: true }, amb_clerk2: { lashes: true }, amb_hcm_reporter: { lashes: true }, amb_hcm_vendor: { lashes: true }, amb_hcm_elder: { wrinkles: true }, npc10: { wrinkles: true }, amb_patron: { lashes: true }, amb_patient: { wrinkles: true },
+  amb_auntie: { lashes: true }, amb_cafe_b: { lashes: true }, amb_hcm_student2: { lashes: true }, amb_cafe_a: { stubble: true },
   amb_barista: { lashes: true }, amb_vendor: { lashes: true }, amb_jogger: { lashes: true }, amb_elder: { wrinkles: true }, amb_fisher: { stubble: true },
   hero_m: { iris: '#3a2a20' },
   hero_f: { iris: '#5a3020', lashes: true, earrings: '#f2d36b', blush: true },
