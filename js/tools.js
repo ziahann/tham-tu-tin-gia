@@ -1,7 +1,7 @@
 // Phòng xác minh: khung cửa sổ công cụ MÔ PHỎNG bọc quanh tư liệu, trình đọc báo trong game, chế độ xem thử.
 // Kết quả trong công cụ lấy từ bản ghi của nhóm (quests.json → exhibits) và tóm tắt nguồn đã kiểm tra (sources.json).
 import { investigationBoard } from './board.js';
-import { data, t, sourceById, shortCite } from './data.js';
+import { data, t, sourceById } from './data.js';
 import { state, saveProgress, markSourceOpened } from './state.js';
 import { sfx } from './audio.js';
 import { toast } from './ui.js';
@@ -81,11 +81,10 @@ export function reader(sourceIds) {
     const kind = src.urlStatus === 'tool' ? t('reader.tool') : src.urlStatus === 'missing' ? t('reader.report') : src.outlet;
     page.append(el('div', 'paper-mast', kind));
     const date = apaDate(src.apa);
-    page.append(el('div', 'paper-date', [date, shortCite(src)].filter(Boolean).join(' · ')));
+    if (date) page.append(el('div', 'paper-date', date));
     page.append(el('h3', 'paper-title', apaTitle(src)));
     const lines = factLines(src);
     if (lines.length) {
-      page.append(el('p', 'paper-note', t('reader.summary', { date: (src.checked || '').split('-').reverse().join('/') })));
       const ul = el('ul', 'paper-facts');
       for (const line of lines) {
         const li = el('li');
@@ -104,7 +103,6 @@ export function reader(sourceIds) {
     } else {
       page.append(el('p', 'muted', t('reader.noSummary')));
     }
-    page.append(el('p', 'paper-apa', src.apa));
     markSourceOpened(id);
   };
   for (const id of ids) {
