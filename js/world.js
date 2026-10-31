@@ -22,7 +22,7 @@ import { iso, setupIso, buildGround, buildWalls, ViewLayer, fadeOccluders, shear
 const MAPS = ['tn_lobby', 'tn_f2', 'tn_f3', 'tn_f4', 'tn_f5', 'street', 'newsroom', 'cafe', 'agency', 'office2', 'clinic', 'cafe2', 'boss', 'home', 'hcm', 'tn_hcm'];
 const CITY_MAPS = new Set(['street', 'hcm']); // phố ngoài trời: nền kéo dài ra ngoài bản đồ, ra khỏi nhà nhìn xuống
 const SPEED = 120;
-const MAP_VERSION = 8; // tăng khi sửa bố cục bản đồ: vị trí đã lưu theo bản cũ bị bỏ qua
+const MAP_VERSION = 9; // tăng khi sửa bố cục bản đồ: vị trí đã lưu theo bản cũ bị bỏ qua
 
 /** Sprite của mọi nhân vật trong npc_dialogues.json (NPC chính, người qua đường, boss) + boss đã gỡ mặt nạ. */
 const spriteIds = () => [...new Set([...data.npcs.npcs.map(n => n.sprite || n.id), 'boss', 'boss_blank'])];
@@ -98,7 +98,8 @@ export class WorldScene extends Phaser.Scene {
     this.decoys = objs.filter(o => o.type === 'decoy').map(o => ({
       obj: o,
       id: propOf(o, 'decoy'),
-      marker: this.add.text(iso.P(o.x + o.width / 2, o.y + o.height / 2).x, iso.P(o.x + o.width / 2, o.y + o.height / 2).y - 22, '?', { fontFamily: 'VT323', fontSize: '24px', color: '#e8ecf2', stroke: '#0f0e17', strokeThickness: 4 })
+      lift: propOf(o, 'lift') || 22,
+      marker: this.add.text(iso.P(o.x + o.width / 2, o.y + o.height / 2).x, iso.P(o.x + o.width / 2, o.y + o.height / 2).y - (propOf(o, 'lift') || 22), '?', { fontFamily: 'VT323', fontSize: '24px', color: '#e8ecf2', stroke: '#0f0e17', strokeThickness: 4 })
         .setOrigin(0.5, 1).setDepth(100000).setVisible(false)
     }));
     // Chữ trên tường / sàn (biển tầng, tên tòa nhà)
@@ -962,7 +963,7 @@ export class WorldScene extends Phaser.Scene {
     if (this.mapKey === 'boss' && this.weather.liveLight) this.weather.liveLight.setIntensity(0.6 + 0.9 * (Math.sin(time / 280) > 0 ? 1 : 0.25));
     this.ambIn -= delta;
     if (this.ambIn <= 0) { this.updateAmbience(250 - this.ambIn); this.ambIn = 250; updateMeters(); }
-    if (!this.reduceMotion) this.decoys.forEach((d, i) => d.marker.setY(iso.P(d.obj.x + d.obj.width / 2, d.obj.y + d.obj.height / 2).y - 22 + Math.round(Math.sin(time / 300 + i) * 2)));
+    if (!this.reduceMotion) this.decoys.forEach((d, i) => d.marker.setY(iso.P(d.obj.x + d.obj.width / 2, d.obj.y + d.obj.height / 2).y - d.lift + Math.round(Math.sin(time / 300 + i) * 2)));
     const gt = frozen ? null : guideTarget(this);
     this.guide.draw(this.player.view, gt && { ...iso.P(gt.x, gt.y), here: gt.here }, time);
     if (frozen) { this.prompt.setVisible(false); return; }
