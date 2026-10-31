@@ -1,5 +1,5 @@
 // Balo: khung dọc bên phải với Sổ tay, Nhiệm vụ + bản đồ nhỏ, Bảng ghim, Lịch sử trò chuyện theo NPC.
-import { data, t, evidenceById, sourceById, shortCite, citeLine, npcById, questById } from './data.js';
+import { data, t, evidenceById, npcById, questById } from './data.js';
 import { state, clearAllStorage, isQuestDone } from './state.js';
 import { questStatus, nextQuestIn, isUnlocked, bossStatus, earnedBadges, caseProgress } from './grading.js';
 import { credOf, CRED_MAX } from './obstacles.js';
@@ -82,14 +82,12 @@ export function badgeCard(room, got) {
   return d;
 }
 
-/** Thẻ evidence có dẫn nguồn. */
+/** Thẻ evidence (nguồn chỉ liệt kê ở tab Nguồn tham khảo, không ghi trên thẻ). */
 export function evidenceCard(ev) {
   const card = el('div', 'ev-card');
   const h = el('h3');
   h.append(document.createTextNode(ev.title));
-  const cite = citeLine(ev.sources);
   card.append(h, el('p', null, ev.text));
-  if (cite) card.append(el('p', 'cite', `Nguồn: ${cite}`));
   return card;
 }
 
@@ -154,10 +152,7 @@ function notebook() {
   const notes = state.progress?.notes || [];
   if (!notes.length) els.body.append(el('p', 'muted', t('backpack.noNotes')));
   notes.forEach(n => {
-    const p = el('p', 'note-line', n.text);
-    const src = sourceById(n.source);
-    if (src) p.append(el('span', 'cite', shortCite(src)));
-    els.body.append(p);
+    els.body.append(el('p', 'note-line', n.text));
   });
 }
 

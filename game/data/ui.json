@@ -189,7 +189,6 @@
     "insufficient": "? Chưa đủ căn cứ."
   },
   "intro": {
-    "sources": "Nguồn: {list}",
     "step": "Hồ sơ {n}/{total}",
     "feed": "Bảng tin · mô phỏng",
     "page": "Trang ẩn danh",
@@ -320,7 +319,6 @@
     "tutorialAgain": "Xem hướng dẫn"
   },
   "reader": {
-    "summary": "Tóm tắt nội dung đã kiểm tra ngày {date} (không phải bản sao bài báo).",
     "noSummary": "Chưa có tóm tắt đã kiểm tra cho nguồn này. Xem danh mục Nguồn để biết thêm.",
     "note": "Bấm một dòng để ghi vào sổ tay.",
     "noted": "Đã ghi vào sổ tay.",
@@ -491,7 +489,6 @@
     "resultsTitle": "Danh hiệu",
     "skipPrologue": "Bỏ qua phần mở đầu",
     "skipPrologueConfirm": "Tới thẳng Hạ Long? Em vẫn nhận thẻ cộng tác viên và ba câu hỏi xác minh.",
-    "pcSource": "Nguồn: {list}",
     "shared": "lượt chia sẻ"
   }
 }

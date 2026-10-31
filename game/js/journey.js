@@ -1,7 +1,7 @@
 // Hành trình: mở đầu ở TP.HCM (phòng trọ → máy tính → điện thoại → tòa soạn), xe khách liên tỉnh TP.HCM ⇄ Hạ Long,
 // kết thúc về tòa soạn TP.HCM báo cáo, nhận danh hiệu. Dữ liệu: quests.json → journey. Tiến độ: progress.journey
 // (home → seen → called → briefed → halong → return → done; lượt chơi cũ không có trường này = đang ở Hạ Long).
-import { data, t, fill, citeLine } from './data.js';
+import { data, t, fill } from './data.js';
 import { state, saveProgress, setFlag, hasFlag } from './state.js';
 import * as dlg from './dialogue.js';
 import { conversation, track, caseCutscene, getWorld, isBusy } from './story.js';
@@ -49,9 +49,7 @@ export const editorWaiting = () => stage() === 'called' || stage() === 'return';
 
 /** Câu nói của một dòng dữ liệu: điền tên nhân vật, nguồn (nếu có). */
 async function line(l) {
-  const list = l.cite?.length ? citeLine(l.cite) : '';
-  const src = list ? `\n${t('journey.pcSource', { list })}` : '';
-  await dlg.say(l.npc || 'system', fill(l.text, { hero: state.progress.heroName }) + src, { mood: l.mood });
+  await dlg.say(l.npc || 'system', fill(l.text, { hero: state.progress.heroName }), { mood: l.mood });
 }
 const lines = async list => { for (const l of list || []) await line(l); };
 
@@ -89,7 +87,6 @@ function feedBoard() {
       card.append(pic);
     }
     card.append(Object.assign(document.createElement('p'), { textContent: p.text }));
-    if (p.cite?.length && citeLine(p.cite)) card.append(Object.assign(document.createElement('p'), { className: 'cite', textContent: t('journey.pcSource', { list: citeLine(p.cite) }) }));
     if (p.stat) card.append(Object.assign(document.createElement('div'), { className: 'pc-stat', textContent: p.stat }));
     box.append(card);
   }
