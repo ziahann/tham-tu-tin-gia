@@ -38,16 +38,3 @@ export const npcById = id => data.npcs.npcs.find(n => n.id === id);
 
 /** Tìm cảnh hội thoại theo id. */
 export const sceneById = id => (data.npcs.scenes || []).find(s => s.id === id);
-
-/** Nguồn được hiển thị trong game (bỏ tài liệu nội bộ `internal`, ví dụ báo cáo của nhóm). */
-export const visibleSources = (ids = []) => ids.map(sourceById).filter(s => s && !s.internal);
-
-/** Dòng trích nguồn ngắn ("Thu Thảo (2025); ..."); rỗng nếu không có nguồn hiển thị. */
-export const citeLine = ids => visibleSources(ids).map(shortCite).join('; ');
-
-/** Trích ngắn tác giả + năm từ chuỗi APA, ví dụ "Thu Thảo (2025)". */
-export function shortCite(src) {
-  if (src.short) return src.short;
-  const m = src.apa.match(/^(.+?)\.\s*\((\d{4}|n\.d\.)/);
-  return m ? `${m[1].replace(/,? &/, ' &')} (${m[2]})` : src.outlet;
-}

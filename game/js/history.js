@@ -1,7 +1,9 @@
-// Lịch sử trò chuyện (localStorage: tfd_chat_log), lưu mọi lượt chơi, chia theo NPC.
+// Lịch sử trò chuyện (localStorage: tfd_chat_log), lưu vài lượt chơi gần nhất, chia theo NPC.
 import { state } from './state.js';
 
 const LOG_KEY = 'tfd_chat_log';
+// Chỉ giữ vài lượt gần nhất: lịch sử dùng chung 5 MB localStorage với tiến trình, đầy thì không lưu được tiến trình.
+const KEEP_RUNS = 5;
 
 /** Đọc toàn bộ lịch sử. */
 export function readLog() {
@@ -12,9 +14,13 @@ export function readLog() {
   return { schema: 1, runs: [] };
 }
 
-/** Ghi lịch sử. */
+/** Ghi lịch sử; hết dung lượng thì bỏ dần lượt cũ rồi ghi lại. */
 function writeLog(log) {
-  try { localStorage.setItem(LOG_KEY, JSON.stringify(log)); } catch { /* bỏ qua */ }
+  for (;;) {
+    try { localStorage.setItem(LOG_KEY, JSON.stringify(log)); return; } catch { /* hết chỗ */ }
+    if (log.runs.length <= 1) return;
+    log.runs.shift();
+  }
 }
 
 /** Thêm một câu thoại vào lượt chơi hiện tại. msg: { npc (người cùng trò chuyện), from, text, ...id }. */
@@ -26,6 +32,7 @@ export function appendMessage(msg) {
   if (!run) {
     run = { runId: p.runId, startedAt: p.startedAt, heroName: p.heroName, messages: [] };
     log.runs.push(run);
+    log.runs = log.runs.slice(-KEEP_RUNS);
   }
   run.messages.push({ t: new Date().toISOString(), ...msg });
   writeLog(log);
