@@ -29,9 +29,12 @@ function readJson(key) {
   }
 }
 
-/** Ghi JSON vào localStorage, bỏ qua lỗi (chế độ riêng tư, hết dung lượng). */
+/** Ghi JSON vào localStorage. Hết dung lượng thì xóa lịch sử trò chuyện (ít quan trọng hơn tiến trình) rồi ghi lại;
+ *  vẫn lỗi (chế độ riêng tư) thì bỏ qua để chơi tiếp. */
 function writeJson(key, value) {
-  try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* không lưu được thì vẫn chơi tiếp */ }
+  const raw = JSON.stringify(value);
+  try { localStorage.setItem(key, raw); return; } catch { /* thử giải phóng chỗ */ }
+  try { localStorage.removeItem('tfd_chat_log'); localStorage.setItem(key, raw); } catch { /* không lưu được thì vẫn chơi tiếp */ }
 }
 
 /** Tạo mã lượt chơi theo thời gian + chuỗi ngẫu nhiên. */

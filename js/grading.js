@@ -1,23 +1,13 @@
 // Chấm đáp án, tính điểm, trạng thái mở khóa của nhiệm vụ và phòng.
 import { data, questById } from './data.js';
 import { state, isQuestDone, hasFlag } from './state.js';
-import { normalize, containsPhrase, levenshtein } from './text.js';
+export { matchField } from './text.js';
 
 // Kiểu chơi đã dựng trong hội thoại. Phòng có kiểu khác hiện "Đang xây dựng".
 export const SUPPORTED_MODES = new Set(['G1', 'G2']);
 
 /** Nhiệm vụ đã dựng được trong hội thoại chưa (kiểu chơi cũ G1/G2, hoặc dạng nhiều bước). */
 export const isPlayable = q => !!q && (Array.isArray(q.steps) || (SUPPORTED_MODES.has(q.mode) && !q.options));
-
-/** So một câu trả lời với danh sách đáp án: 'right' | 'almost' | 'wrong'. */
-export function matchField(value, accepts, fuzzy = true) {
-  const norm = normalize(value);
-  if (!norm) return 'wrong';
-  const accs = accepts.map(normalize);
-  if (accs.some(a => containsPhrase(norm, a))) return 'right';
-  if (fuzzy && accs.some(a => a.length >= 4 && levenshtein(norm, a) <= (a.length >= 8 ? 2 : 1))) return 'almost';
-  return 'wrong';
-}
 
 /** Chấm G2 (chọn thẻ): trả về trạng thái, thẻ chọn sai, số thẻ đúng còn thiếu. */
 export function checkCards(quest, picked) {

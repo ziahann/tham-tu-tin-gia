@@ -3,6 +3,38 @@
 
 const C = 16;
 
+/** Hàng đợi ưu tiên nhị phân theo phần tử đầu ([f, ...]), lấy f nhỏ nhất. */
+class Heap {
+  constructor() { this.a = []; }
+  get size() { return this.a.length; }
+  push(v) {
+    const a = this.a;
+    let i = a.push(v) - 1;
+    while (i > 0) {
+      const p = (i - 1) >> 1;
+      if (a[p][0] <= v[0]) break;
+      a[i] = a[p]; i = p;
+    }
+    a[i] = v;
+  }
+  pop() {
+    const a = this.a, top = a[0], last = a.pop();
+    if (a.length) {
+      let i = 0;
+      for (;;) {
+        const l = 2 * i + 1, r = l + 1;
+        let m = i, mv = last;
+        if (l < a.length && a[l][0] < mv[0]) { m = l; mv = a[l]; }
+        if (r < a.length && a[r][0] < mv[0]) { m = r; mv = a[r]; }
+        if (m === i) break;
+        a[i] = a[m]; i = m;
+      }
+      a[i] = last;
+    }
+    return top;
+  }
+}
+
 /** Dựng lưới chặn cho bản đồ hiện tại. layers: lớp ô có va chạm; bodies: thân tĩnh của đồ vật. */
 export function buildGrid(map, layers, bodies) {
   const W = Math.ceil(map.widthInPixels / C), H = Math.ceil(map.heightInPixels / C);
@@ -25,6 +57,26 @@ export function buildGrid(map, layers, bodies) {
     blocked[cy * W + cx] = hit ? 1 : 0;
   }
   return { W, H, blocked, free: (cx, cy) => cx >= 0 && cy >= 0 && cx < W && cy < H && !blocked[cy * W + cx] };
+}
+
+/** Nhãn vùng liền nhau của các ô trống (4 hướng, trùng với A* 8 hướng không cắt góc); tính một lần cho mỗi lưới. */
+function regions(g) {
+  if (g.comp) return g.comp;
+  const comp = new Int32Array(g.W * g.H).fill(-1), stack = [];
+  let label = 0;
+  for (let i = 0; i < comp.length; i++) {
+    if (comp[i] >= 0 || g.blocked[i]) continue;
+    comp[i] = label; stack.push(i);
+    while (stack.length) {
+      const k = stack.pop(), x = k % g.W, y = (k - x) / g.W;
+      for (const [nx, ny] of [[x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]]) {
+        const nk = ny * g.W + nx;
+        if (g.free(nx, ny) && comp[nk] < 0) { comp[nk] = label; stack.push(nk); }
+      }
+    }
+    label++;
+  }
+  return (g.comp = comp);
 }
 
 /** Ô trống gần nhất quanh (cx, cy) trong bán kính r (đích bấm trúng đồ vật / tường). */
@@ -61,18 +113,19 @@ export function findPath(g, sx, sy, tx, ty) {
   const e = nearestFree(g, Math.floor(tx / C), Math.floor(ty / C));
   if (!s || !e) return null;
   const key = (x, y) => y * g.W + x;
+  // đích ở vùng không liền với chỗ đứng (mái nhà, mặt nước…) thì trả về ngay, không cần A* duyệt hết bản đồ
+  const comp = regions(g);
+  if (comp[key(s[0], s[1])] !== comp[key(e[0], e[1])]) return null;
   const goal = key(e[0], e[1]);
-  const open = [[0, s[0], s[1]]];
+  const open = new Heap();
+  open.push([0, s[0], s[1]]);
   const cost = new Map([[key(s[0], s[1]), 0]]);
   const from = new Map();
   const h = (x, y) => Math.hypot(x - e[0], y - e[1]);
   let found = false, guard = 0;
-  while (open.length && guard++ < 60000) {
-    // hàng đợi đơn giản: lấy phần tử f nhỏ nhất (lưới nhỏ, đủ nhanh)
-    let bi = 0;
-    for (let i = 1; i < open.length; i++) if (open[i][0] < open[bi][0]) bi = i;
-    const [, x, y] = open[bi];
-    open[bi] = open[open.length - 1]; open.pop();
+  // đích không tới được thì A* phải duyệt hết vùng đi được: hàng đợi ưu tiên (heap) giữ việc này nhanh trên điện thoại
+  while (open.size && guard++ < 60000) {
+    const [, x, y] = open.pop();
     const k = key(x, y);
     if (k === goal) { found = true; break; }
     for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]]) {
