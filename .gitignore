@@ -1,1 +1,5 @@
 .obsidian/
+
+# Tài liệu thiết kế, ghi chú: chỉ giữ trên máy
+*.md
+!game/vendor/PHASER-LICENSE.md
