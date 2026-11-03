@@ -474,17 +474,12 @@
       "lines": [
         {
           "id": "s1_intro_l1",
-          "text": "Chào em! Em là {hero}, cộng tác viên chú Quốc Trung ở tòa soạn TP.HCM cử ra phải không?",
-          "mood": "happy"
-        },
-        {
-          "id": "s1_intro_l1b",
           "npc": "hero",
-          "text": "Dạ đúng ạ. Em vừa xuống xe khách. Em thấy mấy bài đăng về vụ lật tàu lan khắp nơi, nên muốn tới tận nơi xem cái nào là thật."
+          "text": "Chào chị ạ. Em là {hero}, cộng tác viên chú Quốc Trung ở tòa soạn TP.HCM cử ra. Em thấy mấy bài đăng về vụ lật tàu lan khắp nơi, nên muốn tới tận nơi xem cái nào là thật."
         },
         {
           "id": "s1_intro_l1c",
-          "text": "Chị là Tuệ Lâm, phụ trách nhóm kiểm chứng. Rất vui vì em tới. Bọn chị đang cần thêm người có con mắt tỉnh táo như vậy."
+          "text": "Chị là Tuệ Lâm, phụ trách nhóm kiểm chứng. Rất vui vì em tới. Bọn chị đang cần thêm người xác thực thông tin."
         },
         {
           "id": "s1_intro_l2",
@@ -547,7 +542,7 @@
       "lines": [
         {
           "id": "s1_reply_stop_l1",
-          "text": "Tốt. Dừng lại là bước đầu của SIFT: Stop (dừng lại), Investigate the source (xem nguồn), Find better coverage (tìm nguồn tốt hơn), Trace claims (truy về gốc)."
+          "text": "Tốt. Dừng lại là bước đầu của SIFT: Stop, Investigate the source, Find better coverage, Trace claims."
         },
         {
           "id": "s1_reply_stop_l2",
@@ -1949,7 +1944,7 @@
     ],
     "amb_guard": [
       {
-        "text": "Chào cháu. Chú là Tấn, bảo vệ tòa nhà. Có hẹn với ai trên tầng thì báo chú một tiếng nhé."
+        "text": "Chào cháu. Chú là Tấn, bảo vệ tòa nhà."
       }
     ],
     "amb_worker": [
