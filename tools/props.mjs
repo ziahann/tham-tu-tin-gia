@@ -785,7 +785,10 @@ function building(o) {
   const { img: front, meta } = buildingFront(o);
   const W = front.w, H = front.h, s = o.depth || 44;
   const img = new Img(W + s, H + s), { R } = brush(img);
-  const st = STYLE[o.style], rf = ROOF[o.style];
+  const st = { ...STYLE[o.style], ...(o.colors || {}) };
+  // kiểu mới (colonial, tube, modern) chưa có màu mái riêng; mái dốc / vòm dùng màu ngói làm màu mái phẳng
+  const rf0 = { ...(ROOF[o.style] || ROOF.concrete), ...(o.roofColors || {}) };
+  const rf = { ...rf0, roof: rf0.tile || rf0.dome || rf0.roof };
   // điểm trên mái: u dọc mặt tiền (0..W), v vào sâu (0..s) → toạ độ ảnh
   const P = (u, v) => [u + v, s - v];
   // mái
@@ -1274,6 +1277,15 @@ export function allProps() {
   // bản isometric của đồ dán tường (cắt xiên theo mặt tường)
   for (const [k, p] of Object.entries(P)) if (p.meta.wall) P[`${k}@iso`] = { img: shearIso(p.img), meta: { base: [0, 0], wall: true, isoOf: k, h0: p.img.h } };
   for (const [k, o] of Object.entries(B)) { const { img, meta } = buildingIso(o); P[k] = { img, meta }; }
+  // bản top-down (góc nhìn từ trên xuống): mặt tiền + mái nghiêng + mặt hông; chân đế giữ như bản isometric.
+  // Giữ hạt giống ngẫu nhiên để các đồ vật sinh sau không đổi hình.
+  const seed0 = seed;
+  for (const [k, o] of Object.entries(B)) {
+    const D = (o.deep || 6) * 32;
+    const { img, meta } = building({ ...o, depth: Math.round(D / 2) });
+    P[`${k}@top`] = { img, meta: { ...meta, base: P[k].meta.base, building: true } };
+  }
+  seed = seed0;
   // đồ vật thành khối isometric: [chiều sâu chân đế (px logic), hàng bắt đầu đẩy khối]
   const ISO = {
     desk_pc: [28, 22], desk_papers: [28, 22], desk_lab: [28, 22], cabinet: [20, 0], bookshelf: [22, 0], reception: [34, 16], printer: [26, 0],
