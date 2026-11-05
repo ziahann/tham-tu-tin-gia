@@ -46,6 +46,18 @@ const tmp = name => path.join(os.tmpdir(), `test-lpc-${process.pid}-${name}`);
     chunk('IDAT', zlib.deflateSync(raw)),
     chunk('IEND', Buffer.alloc(0))
   ]);
+  // bảng màu 4-bit (LPC có dùng): 3x1, chỉ số 1,0,1 → byte 0x10, 0x10
+  const ihdr4 = Buffer.from(ihdr); ihdr4.writeUInt32BE(3, 0); ihdr4.writeUInt32BE(1, 4); ihdr4[8] = 4;
+  const png4 = Buffer.concat([
+    Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
+    chunk('IHDR', ihdr4),
+    chunk('PLTE', Buffer.from([10, 20, 30, 200, 100, 50])),
+    chunk('IDAT', zlib.deflateSync(Buffer.from([0, 0x10, 0x10]))),
+    chunk('IEND', Buffer.alloc(0))
+  ]);
+  const img4 = decodePng(png4);
+  eq([img4.get(0, 0), img4.get(1, 0), img4.get(2, 0)], [[200, 100, 50, 255], [10, 20, 30, 255], [200, 100, 50, 255]], 'indexed 4-bit');
+
   const img = decodePng(png);
   eq(img.get(0, 0), [10, 20, 30, 0], 'indexed (0,0) trong suốt theo tRNS');
   eq(img.get(1, 0), [200, 100, 50, 255], 'indexed (1,0)');
@@ -103,6 +115,15 @@ const hex = c => '#' + c.slice(0, 3).map(v => v.toString(16).padStart(2, '0')).j
   eq(lpc.checkSheet('x', g).some(e => e.includes('walk right 3')), true, 'checkSheet báo ô trống walk right 3');
   eq(lpc.checkSheet('x', new Img(96, 288)).length > 0, true, 'checkSheet báo sai kích thước');
 }
+
+// --- cacheDir: đường dẫn thật (không còn %20 của URL)
+eq(lpc.cacheDir().includes('%'), false, 'cacheDir không chứa %');
+eq(fs.existsSync(path.dirname(lpc.cacheDir())), true, 'cacheDir nằm trong thư mục tools có thật');
+
+// --- resolveDir: chọn thư mục theo thân, thay biến ${head}
+eq(lpc.resolveDir({ male: 'head/faces/${head}/neutral/' }, 'male', {}), 'head/faces/male/neutral/', 'resolveDir ${head} mặc định = thân');
+eq(lpc.resolveDir({ male: 'head/faces/${head}/neutral/' }, 'male', { head: 'elderly' }), 'head/faces/elderly/neutral/', 'resolveDir ${head} tự đặt');
+eq(lpc.resolveDir({ male: 'a/' }, 'teen', {}), 'a/', 'resolveDir thiếu thân → male');
 
 // --- fetchLpc: cache trống + không tải được → lỗi nêu file thiếu
 {

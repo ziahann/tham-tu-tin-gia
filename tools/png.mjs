@@ -109,19 +109,19 @@ export class Img {
 
 /** Đọc file PNG 8-bit (RGB, RGBA hoặc bảng màu + tRNS, không interlace) thành Img. */
 export function decodePng(buf) {
-  let pos = 8, w = 0, h = 0, type = 0, plte = null, trns = null;
+  let pos = 8, w = 0, h = 0, type = 0, depth = 8, plte = null, trns = null;
   const idat = [];
   while (pos < buf.length) {
     const len = buf.readUInt32BE(pos), name = buf.toString('ascii', pos + 4, pos + 8), data = buf.subarray(pos + 8, pos + 8 + len);
     if (name === 'IHDR') {
-      w = data.readUInt32BE(0); h = data.readUInt32BE(4); type = data[9];
-      if (data[8] !== 8 || data[12] !== 0 || ![2, 3, 6].includes(type)) throw new Error(`PNG không hỗ trợ: bit ${data[8]}, kiểu ${type}, interlace ${data[12]}`);
+      w = data.readUInt32BE(0); h = data.readUInt32BE(4); depth = data[8]; type = data[9];
+      if ((depth !== 8 && !(type === 3 && [1, 2, 4].includes(depth))) || data[12] !== 0 || ![2, 3, 6].includes(type)) throw new Error(`PNG không hỗ trợ: bit ${depth}, kiểu ${type}, interlace ${data[12]}`);
     } else if (name === 'PLTE') plte = data;
     else if (name === 'tRNS') trns = data;
     else if (name === 'IDAT') idat.push(data);
     pos += 12 + len;
   }
-  const bpp = { 2: 3, 3: 1, 6: 4 }[type], stride = w * bpp;
+  const bpp = { 2: 3, 3: 1, 6: 4 }[type], stride = type === 3 ? Math.ceil((w * depth) / 8) : w * bpp;
   const raw = zlib.inflateSync(Buffer.concat(idat));
   const cur = Buffer.alloc(stride), prev = Buffer.alloc(stride);
   const img = new Img(w, h);
@@ -136,7 +136,7 @@ export function decodePng(buf) {
     for (let x = 0; x < w; x++) {
       const o = (y * w + x) * 4;
       if (type === 3) {
-        const k = cur[x];
+        const bit = x * depth, k = (cur[bit >> 3] >> (8 - depth - (bit & 7))) & ((1 << depth) - 1);
         img.px.set([plte[k * 3], plte[k * 3 + 1], plte[k * 3 + 2], trns && k < trns.length ? trns[k] : 255], o);
       } else {
         img.px.set([cur[x * bpp], cur[x * bpp + 1], cur[x * bpp + 2], type === 6 ? cur[x * bpp + 3] : 255], o);

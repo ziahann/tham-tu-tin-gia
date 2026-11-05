@@ -2,12 +2,13 @@
 // ghép theo zPos, xếp lại theo bố cục game và gom ghi công. Nguồn ghim một commit cố định.
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { Img, decodePng, rgba } from './png.mjs';
 import { shade } from './characters.mjs';
 
 const PIN = 'https://raw.githubusercontent.com/LiberatedPixelCup/Universal-LPC-Spritesheet-Character-Generator/86160e7507d6841259cff624a51a63c1d4847ee3/';
 const base = () => process.env.LPC_BASE || PIN;
-const cacheDir = () => process.env.LPC_CACHE || path.join(path.dirname(new URL(import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1')), '.lpc-cache');
+export const cacheDir = () => process.env.LPC_CACHE || path.join(path.dirname(fileURLToPath(import.meta.url)), '.lpc-cache');
 
 export const FRAME = 64;
 const COLS = 9;
@@ -92,6 +93,12 @@ export function checkSheet(id, img) {
   return errs;
 }
 
+/** Thư mục ảnh của lớp cho một thân; thay biến ${head} (mặc định = thân). Thân không có thì dùng male. */
+export function resolveDir(layerVal, body, vars) {
+  const dir = layerVal[body] || layerVal.male;
+  return dir && dir.replace(/\$\{head\}/g, vars.head || body);
+}
+
 /** Tải một ảnh hoạt ảnh của lớp; lớp không có hoạt ảnh đó thì trả null. */
 async function layerAnim(dir, anim, def) {
   if (def.animations && !def.animations.includes(anim)) return null;
@@ -111,7 +118,7 @@ export async function buildLpcCharacter(id, spec) {
     const material = layer.material || def.recolors?.material || (def.match_body_color ? 'body' : 'cloth');
     for (const [key, val] of Object.entries(def)) {
       if (!/^layer_\d+$/.test(key)) continue;
-      const dir = val[body] || val.male;
+      const dir = resolveDir(val, body, layer.vars || {});
       if (!dir) throw new Error(`${id}: lớp ${layer.def} không có thân ${body}`);
       parts.push({ z: val.zPos, dir, def, layer, material });
     }
