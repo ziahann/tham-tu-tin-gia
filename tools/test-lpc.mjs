@@ -210,6 +210,21 @@ if (fs.existsSync(new URL('./.lpc-cache/palette_definitions/eye/eye_ulpc.json', 
   eq([sprite.origin, body.size, body.off], [[0.5, 62 / 64], [16, 10], [24, 52]], 'feetBody theo bàn chân LPC');
 }
 
+// --- ảnh xem trước ở màn chọn nhân vật: theo đúng bề rộng sheet LPC (576 px)
+{
+  const css = fs.readFileSync(new URL('../game/css/styles.css', import.meta.url), 'utf8');
+  eq(/\.look-img\s*\{[^}]*background-size:\s*576px 384px/.test(css), true, '.look-img background-size 576px 384px');
+}
+
+// --- chạm vào nhân vật: chỉ tính quanh thân (không cả khung 64x64 trong suốt)
+{
+  const { hitsActor } = await import('../game/js/actors.js');
+  eq(hitsActor(100, 200, 100, 170), true, 'chạm giữa thân');
+  eq(hitsActor(100, 200, 100, 200 - 46), true, 'chạm đầu');
+  eq(hitsActor(100, 200, 100 - 28, 200 - 5), false, 'chạm sàn cạnh chân (trong khung 64 cũ)');
+  eq(hitsActor(100, 200, 100 + 25, 200 - 60), false, 'chạm góc khung trong suốt');
+}
+
 // --- hiện ghi công hình nhân vật: dòng ghi công + khóa chữ giao diện có trong ui.json
 {
   const { artCredit } = await import('../game/js/data.js');
