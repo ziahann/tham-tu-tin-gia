@@ -59,5 +59,60 @@ const tmp = name => path.join(os.tmpdir(), `test-lpc-${process.pid}-${name}`);
   if (fs.existsSync(f)) { const img = decodePng(fs.readFileSync(f)); eq([img.w, img.h], [192, 256], 'LPC sit.png kích thước'); }
 }
 
+const lpc = await import('./lpc.mjs');
+const hex = c => '#' + c.slice(0, 3).map(v => v.toString(16).padStart(2, '0')).join('');
+
+// --- recolor: thay màu trong dải gốc, giữ màu ngoài dải
+{
+  const img = new Img(2, 1);
+  img.set(0, 0, '#FFFFFF'); img.set(1, 0, '#123456');
+  const from = ['#281820', '#4D4A5D', '#958080', '#C4B59F', '#E5E6C7', '#ffffff'];
+  const to = ['#000001', '#000002', '#000003', '#000004', '#000005', '#000006'];
+  const out = lpc.recolor(img, from, to);
+  eq(hex(out.get(0, 0)), '#000006', 'recolor màu trong dải');
+  eq(hex(out.get(1, 0)), '#123456', 'recolor giữ màu ngoài dải');
+}
+
+// --- rampFor: 6 màu, màu thứ 4 là màu đích
+{
+  const r = lpc.rampFor('cloth', '#3d7fd1');
+  eq(r.length, 6, 'rampFor độ dài');
+  eq(r[3], '#3d7fd1', 'rampFor màu giữa');
+}
+
+// --- toGameSheet: hàng LPC (lên, trái, xuống, phải) → game (xuống, trái, phải, lên) + ngồi
+{
+  const C = { up: '#0000aa', left: '#00aa00', down: '#aa0000', right: '#aaaa00' };
+  const lpcRows = ['up', 'left', 'down', 'right'];
+  const walk = new Img(576, 256), sit = new Img(192, 256);
+  lpcRows.forEach((d, r) => { walk.rect(0, r * 64, 576, 64, C[d]); sit.rect(0, r * 64, 192, 64, C[d]); });
+  const g = lpc.toGameSheet(walk, sit);
+  eq([g.w, g.h], [576, 384], 'toGameSheet kích thước');
+  eq(['down', 'left', 'right', 'up'].map((d, r) => hex(g.get(5 * 64 + 10, r * 64 + 10))), [C.down, C.left, C.right, C.up], 'toGameSheet hàng đi');
+  eq([hex(g.get(10, 4 * 64 + 10)), hex(g.get(64 + 10, 4 * 64 + 10)), hex(g.get(128 + 10, 4 * 64 + 10)), hex(g.get(10, 5 * 64 + 10))],
+    [C.down, C.right, C.left, C.up], 'toGameSheet ngồi');
+}
+
+// --- checkSheet: báo ô trống
+{
+  const g = new Img(576, 384);
+  g.rect(0, 0, 576, 4 * 64, '#808080');
+  g.rect(0, 4 * 64, 192, 64, '#808080'); g.rect(0, 5 * 64, 64, 64, '#808080');
+  eq(lpc.checkSheet('x', g), [], 'checkSheet sheet đủ');
+  for (let y = 0; y < 64; y++) for (let x = 0; x < 64; x++) g.px[((2 * 64 + y) * 576 + 3 * 64 + x) * 4 + 3] = 0;
+  eq(lpc.checkSheet('x', g).some(e => e.includes('walk right 3')), true, 'checkSheet báo ô trống walk right 3');
+  eq(lpc.checkSheet('x', new Img(96, 288)).length > 0, true, 'checkSheet báo sai kích thước');
+}
+
+// --- fetchLpc: cache trống + không tải được → lỗi nêu file thiếu
+{
+  process.env.LPC_CACHE = tmp('cache');
+  process.env.LPC_BASE = 'http://127.0.0.1:9/';
+  let msg = '';
+  try { await lpc.fetchLpc('spritesheets/none.png'); } catch (e) { msg = e.message; }
+  eq(msg.includes('Thiếu spritesheets/none.png'), true, 'fetchLpc lỗi khi thiếu cache');
+  delete process.env.LPC_CACHE; delete process.env.LPC_BASE;
+}
+
 if (fails) { console.error(`test-lpc: ${fails} lỗi`); process.exit(1); }
 console.log('test-lpc: ok');
