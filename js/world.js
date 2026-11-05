@@ -22,10 +22,12 @@ import { iso, setupIso, buildGround, buildWalls, ViewLayer, fadeOccluders, shear
 const MAPS = ['tn_lobby', 'tn_f2', 'tn_f3', 'tn_f4', 'tn_f5', 'street', 'newsroom', 'cafe', 'agency', 'office2', 'clinic', 'cafe2', 'boss', 'home', 'hcm', 'tn_hcm'];
 const CITY_MAPS = new Set(['street', 'hcm']); // phố ngoài trời: nền kéo dài ra ngoài bản đồ, ra khỏi nhà nhìn xuống
 const SPEED = 120;
-const MAP_VERSION = 12;
+const MAP_VERSION = 13;
 // Xe buýt (tools/props.mjs → bus): mũi xe bên phải ảnh nhìn ngang 240 px; cửa lên ở đầu xe, cửa xuống ở giữa thân.
 // Xe chạy làn đông (bus_e) dọc vỉa hè nam nên mặt có cửa quay về phía người chơi. Toạ độ x cửa = bus.x − 120 + cột.
 const BUS_FRONT_DOOR = 216, BUS_MID_DOOR = 122;
+// top-down: xe buýt dùng ảnh nhìn ngang 'bus' (không có bản mở cửa); isometric: bus_e / bus_e_open
+const setBusTex = (bus, open) => { if (iso.mode !== 'top') bus.view?.setTexture(open ? 'bus_e_open' : 'bus_e'); };
 const busIso = scene => ({ fw: 240, ay: 28 + 84, h: scene.textures.get('bus_e').getSourceImage().height, d: 56 }); // tăng khi sửa bố cục bản đồ: vị trí đã lưu theo bản cũ bị bỏ qua
 
 /** Sprite của mọi nhân vật trong npc_dialogues.json (NPC chính, người qua đường, boss) + boss đã gỡ mặt nạ. */
@@ -254,7 +256,7 @@ export class WorldScene extends Phaser.Scene {
     const by = lane ? lane.bottom - 4 : spawn.y - 50;
     const stopX = spawn.x + 120 - BUS_MID_DOOR;
     const bus = this.add.sprite(stopX - 900, by, 'bus').setOrigin(0.5, 1);
-    this.views.add(bus, { isoTex: { key: 'bus_e', ...busIso(this) } });
+    this.views.add(bus, iso.mode === 'top' ? {} : { isoTex: { key: 'bus_e', ...busIso(this) } });
     // dọn xe cùng làn để không chồng lên xe buýt
     if (lane) this.traffic.cars.filter(c => c.lane === lane).forEach(c => { c.sprite.destroy(); });
     if (lane) this.traffic.cars = this.traffic.cars.filter(c => c.lane !== lane);
@@ -276,7 +278,7 @@ export class WorldScene extends Phaser.Scene {
         if (!this.cutscene) return;
         sfx('ding');
         // cửa giữa mở, nhân vật bước xuống vỉa hè, cửa đóng rồi xe chạy tiếp
-        bus.view.setTexture('bus_e_open');
+        setBusTex(bus, true);
         sfx('door');
         this.player.view.setAlpha(1);
         cam.startFollow(this.player.view, true, 0.1, 0.1);
@@ -289,7 +291,7 @@ export class WorldScene extends Phaser.Scene {
             this.facing = 'down';
             this.player.setFrame(idleFrame('down'));
             leaving = true;
-            this.time.delayedCall(400, () => bus.active && bus.view?.setTexture('bus_e'));
+            this.time.delayedCall(400, () => bus.active && setBusTex(bus, false));
             this.tweens.add({ targets: bus, x: this.map.widthInPixels + 400, duration: 5200, delay: 900, ease: 'Sine.easeIn', onComplete: () => bus.destroy() });
             this.time.delayedCall(1800, done);
           }
@@ -337,7 +339,7 @@ export class WorldScene extends Phaser.Scene {
     const board = () => {
       say(J.stop, '#7fe3ff');
       // cửa trước mở, nhân vật bước lên bậc cửa, cửa đóng, xe chạy về phía đông
-      bus.view.setTexture('bus_e_open');
+      setBusTex(bus, true);
       sfx('door');
       this.player.anims.play('hero-walk-up', true);
       this.tweens.add({
@@ -345,7 +347,7 @@ export class WorldScene extends Phaser.Scene {
         onComplete: () => {
           this.player.anims.stop();
           this.player.view.setAlpha(0);
-          this.time.delayedCall(350, () => { if (bus?.active) bus.view.setTexture('bus_e'); sfx('door'); });
+          this.time.delayedCall(350, () => { if (bus?.active) setBusTex(bus, false); sfx('door'); });
           this.cameras.main.startFollow(bus.view, true, 0.08, 0.08);
           this.tweens.add({ targets: bus, x: stopX + 900, duration: 3000, delay: 700, ease: 'Sine.easeIn' });
           // fade(..., force): camera còn giữ trạng thái "đã xong" của lần sáng dần lúc vào bản đồ, fadeOut thường sẽ bị bỏ qua
@@ -370,7 +372,7 @@ export class WorldScene extends Phaser.Scene {
     const run = () => {
       near = false;
       bus = this.add.sprite(stopX - 1000, by, 'bus').setOrigin(0.5, 1);
-      this.views.add(bus, { isoTex: { key: 'bus_e', ...busIso(this) } });
+      this.views.add(bus, iso.mode === 'top' ? {} : { isoTex: { key: 'bus_e', ...busIso(this) } });
       say(J.wait);
       tw = this.tweens.add({
         targets: bus, x: stopX + 900, duration: 6200,
@@ -694,6 +696,7 @@ export class WorldScene extends Phaser.Scene {
 
   /** Toạ độ màn hình (isometric) → toạ độ logic trên nền. */
   toLogical(X, Y) {
+    if (iso.mode === 'top') return { x: X, y: Y };
     const a = X - iso.ox;
     return { x: (a + 2 * Y) / 2, y: (2 * Y - a) / 2 };
   }
