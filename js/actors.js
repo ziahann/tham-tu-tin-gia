@@ -10,7 +10,6 @@ const COLS = 9;
 const FEET_Y = 62;
 // khoảng từ bàn chân tới đỉnh đầu (đo trên sprite LPC)
 export const HEAD_TOP = 48;
-export const HERO_HEAD_TOP = 38; // người chơi chibi tự vẽ thấp hơn nhân vật LPC
 export const idleFrame = dir => DIRS.indexOf(dir) * COLS;
 export const SIT_FRAME = { down: 36, right: 37, left: 38, up: 45 };
 
