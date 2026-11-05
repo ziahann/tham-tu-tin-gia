@@ -5,6 +5,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Img, decodePng, rgba } from './png.mjs';
 import { shade } from './characters.mjs';
+import { drawOwn } from './lpc-own.mjs';
 
 const PIN = 'https://raw.githubusercontent.com/LiberatedPixelCup/Universal-LPC-Spritesheet-Character-Generator/86160e7507d6841259cff624a51a63c1d4847ee3/';
 const base = () => process.env.LPC_BASE || PIN;
@@ -41,15 +42,57 @@ export async function loadDef(defPath) {
   return JSON.parse((await fetchLpc(`sheet_definitions/${defPath}`)).toString('utf8'));
 }
 
-const baseRamps = new Map();
-/** Dải màu gốc của vật liệu (khóa `base` trong meta, bảng ulpc). */
-async function baseRamp(material) {
-  if (!baseRamps.has(material)) {
-    const meta = JSON.parse((await fetchLpc(`palette_definitions/${material}/meta_${material}.json`)).toString('utf8'));
-    const pal = JSON.parse((await fetchLpc(`palette_definitions/${material}/${material}_ulpc.json`)).toString('utf8'));
-    baseRamps.set(material, pal[meta.base]);
+const rampSets = new Map();
+/** Dải màu ứng viên cho vật liệu: bảng ulpc của vật liệu (nếu có) + bảng chung all_lpcr; ownOnly = chỉ bảng riêng. */
+export async function rampsFor(material, ownOnly = false) {
+  const key = `${material}:${ownOnly}`;
+  if (!rampSets.has(key)) {
+    const out = {};
+    const files = [`palette_definitions/${material}/${material}_ulpc.json`];
+    if (!ownOnly) files.push('palette_definitions/all/all_lpcr.json');
+    for (const rel of files) {
+      try { Object.assign(out, JSON.parse((await fetchLpc(rel)).toString('utf8'))); } catch { /* vật liệu không có bảng riêng */ }
+    }
+    rampSets.set(key, Object.fromEntries(Object.entries(out).filter(([, v]) => Array.isArray(v) && typeof v[0] === 'string')));
   }
-  return baseRamps.get(material);
+  return rampSets.get(key);
+}
+
+const keyOf = (px, i) => '#' + [0, 1, 2].map(k => px[i + k].toString(16).padStart(2, '0')).join('');
+
+/** Dải gốc khớp nhiều pixel nhất: { name, ramp, share } (share = tỉ lệ pixel thấy được nằm trong dải). */
+export function pickRamp(img, ramps) {
+  const counts = new Map();
+  let total = 0;
+  for (let i = 0; i < img.px.length; i += 4) {
+    if (!img.px[i + 3]) continue;
+    total++;
+    const k = keyOf(img.px, i);
+    counts.set(k, (counts.get(k) || 0) + 1);
+  }
+  let best = { name: null, ramp: null, share: 0 };
+  for (const [name, ramp] of Object.entries(ramps)) {
+    const hits = new Set(ramp.map(c => c.toLowerCase().slice(0, 7)));
+    let n = 0;
+    for (const [k, v] of counts) if (hits.has(k)) n += v;
+    const share = total ? n / total : 0;
+    if (share > best.share) best = { name, ramp, share };
+  }
+  return best;
+}
+
+/** Đổi màu theo thứ tự độ sáng: các màu của lớp xếp tối → sáng rồi trải đều lên dải đích. */
+export function recolorByLuma(img, toRamp) {
+  const luma = k => { const [r, g, b] = rgba(k); return 0.299 * r + 0.587 * g + 0.114 * b; };
+  const keys = new Set();
+  for (let i = 0; i < img.px.length; i += 4) if (img.px[i + 3]) keys.add(keyOf(img.px, i));
+  const sorted = [...keys].sort((a, b) => luma(a) - luma(b));
+  const n = sorted.length;
+  const map = new Map(sorted.map((k, j) => [k, rgba(toRamp[n === 1 ? 3 : Math.round((j / (n - 1)) * (toRamp.length - 1))])]));
+  const out = new Img(img.w, img.h);
+  out.px.set(img.px);
+  for (let i = 0; i < out.px.length; i += 4) if (out.px[i + 3]) out.px.set(map.get(keyOf(out.px, i)).slice(0, 3), i);
+  return out;
 }
 
 /** Dải 6 màu tối → sáng quanh màu đích (màu đích ở vị trí 4). */
@@ -67,6 +110,18 @@ export function recolor(img, fromRamp, toRamp) {
     const key = '#' + [0, 1, 2].map(k => out.px[i + k].toString(16).padStart(2, '0')).join('');
     const to = map.get(key);
     if (to) out.px.set(to.slice(0, 3), i);
+  }
+  return out;
+}
+
+/** Nhiều lượt đổi màu chính xác trên một lớp (vd. mặt: da + mắt); pass = { material, to }. Dải đích được lấy mẫu lại theo độ dài dải gốc. */
+export function recolorParts(img, passes, rampsByMaterial) {
+  let out = img;
+  for (const { material, to } of passes) {
+    const best = pickRamp(out, rampsByMaterial[material] || {});
+    if (!best.share) continue;
+    const n = best.ramp.length;
+    out = recolor(out, best.ramp, best.ramp.map((_, i) => to[n === 1 ? 0 : Math.round((i * (to.length - 1)) / (n - 1))]));
   }
   return out;
 }
@@ -130,9 +185,19 @@ export async function buildLpcCharacter(id, spec) {
     for (const [anim, dest] of [['walk', walk], ['sit', sit]]) {
       let img = await layerAnim(p.dir, anim, p.def);
       if (!img) continue;
-      if (p.layer.color && spec[p.layer.color]) img = recolor(img, await baseRamp(p.material), rampFor(p.material, spec[p.layer.color]));
+      if (p.layer.parts) {
+        const passes = p.layer.parts.map(([key, material, fallback]) => ({ material, to: rampFor(material, spec[key] || fallback) }));
+        const ramps = Object.fromEntries(await Promise.all(p.layer.parts.map(async ([, m]) => [m, await rampsFor(m, true)])));
+        img = recolorParts(img, passes, ramps);
+      } else if (p.layer.color && spec[p.layer.color]) {
+        const to = rampFor(p.material, spec[p.layer.color]);
+        const best = pickRamp(img, await rampsFor(p.material));
+        img = best.share >= 0.5 ? recolor(img, best.ramp, to) : recolorByLuma(img, to);
+      }
       dest.blit(img, 0, 0, Math.min(img.w, dest.w), Math.min(img.h, dest.h), 0, 0);
     }
   }
-  return { img: toGameSheet(walk, sit), credits };
+  const img = toGameSheet(walk, sit);
+  if (spec.lpc.own?.length) drawOwn(img, spec.lpc.own, spec);
+  return { img, credits };
 }

@@ -85,6 +85,38 @@ const hex = c => '#' + c.slice(0, 3).map(v => v.toString(16).padStart(2, '0')).j
   eq(hex(out.get(1, 0)), '#123456', 'recolor giữ màu ngoài dải');
 }
 
+// --- pickRamp: chọn dải gốc khớp nhiều pixel nhất; recolorByLuma: đổi theo thứ tự độ sáng khi không dải nào khớp
+{
+  const img = new Img(3, 1);
+  img.set(0, 0, '#182611'); img.set(1, 0, '#203416'); img.set(2, 0, '#314f22');
+  const ramps = { white: ['#281820', '#4d4a5d', '#958080', '#c4b59f', '#e5e6c7', '#ffffff'], green: ['#000000', '#182611', '#203416', '#314f22', '#5a8a3a', '#9ad06a'] };
+  eq(lpc.pickRamp(img, ramps).name, 'green', 'pickRamp chọn dải khớp nhiều nhất');
+  eq(lpc.pickRamp(img, ramps).share, 1, 'pickRamp tỉ lệ khớp');
+  const to = ['#000001', '#000002', '#000003', '#000004', '#000005', '#000006'];
+  const out = lpc.recolorByLuma(img, to);
+  const got = [0, 1, 2].map(x => hex(out.get(x, 0)));
+  eq(got[0] < got[1] && got[1] < got[2], true, 'recolorByLuma giữ thứ tự sáng tối');
+  eq(got.every(c => to.includes(c)), true, 'recolorByLuma chỉ dùng màu của dải đích');
+}
+
+// --- recolorParts: nhiều lượt đổi màu trên một lớp (da + mắt), chỉ thay màu khớp dải, phần còn lại giữ
+{
+  const img = new Img(3, 1);
+  img.set(0, 0, '#cc8665'); img.set(1, 0, '#3355aa'); img.set(2, 0, '#ffffff');
+  const ramps = { body: { light: ['#271920', '#99423c', '#cc8665', '#e4a47c', '#f9d5ba', '#faece7'] }, eye: { blue: ['#112244', '#3355aa', '#6688dd'] } };
+  const out = lpc.recolorParts(img, [
+    { material: 'body', to: ['#000001', '#000002', '#000003', '#000004', '#000005', '#000006'] },
+    { material: 'eye', to: ['#100000', '#200000', '#300000'] }
+  ], ramps);
+  eq([0, 1, 2].map(x => hex(out.get(x, 0))), ['#000003', '#200000', '#ffffff'], 'recolorParts da + mắt, giữ màu khác');
+}
+
+// --- rampsFor(material, ownOnly): lượt đổi màu từng phần chỉ dùng bảng riêng của vật liệu (không lẫn dải da của all_lpcr)
+if (fs.existsSync(new URL('./.lpc-cache/palette_definitions/eye/eye_ulpc.json', import.meta.url))) {
+  const own = await lpc.rampsFor('eye', true);
+  eq(Object.keys(own).includes('blue') && !Object.keys(own).includes('ivory'), true, 'rampsFor eye ownOnly');
+}
+
 // --- rampFor: 6 màu, màu thứ 4 là màu đích
 {
   const r = lpc.rampFor('cloth', '#3d7fd1');
@@ -114,6 +146,25 @@ const hex = c => '#' + c.slice(0, 3).map(v => v.toString(16).padStart(2, '0')).j
   for (let y = 0; y < 64; y++) for (let x = 0; x < 64; x++) g.px[((2 * 64 + y) * 576 + 3 * 64 + x) * 4 + 3] = 0;
   eq(lpc.checkSheet('x', g).some(e => e.includes('walk right 3')), true, 'checkSheet báo ô trống walk right 3');
   eq(lpc.checkSheet('x', new Img(96, 288)).length > 0, true, 'checkSheet báo sai kích thước');
+}
+
+// --- drawOwn: đồ tự vẽ bám theo đỉnh đầu từng ô
+{
+  const own = await import('./lpc-own.mjs');
+  const sheet = new Img(576, 384);
+  const cells = [];
+  for (let r = 0; r < 4; r++) for (let c = 0; c < 9; c++) cells.push([c, r]);
+  cells.push([0, 4], [1, 4], [2, 4], [0, 5]);
+  // "người" giả: khối cao 44 px, đỉnh đầu lệch theo cột để đồ phải bám từng ô
+  for (const [c, r] of cells) sheet.rect(c * 64 + 24, r * 64 + 16 + (c % 2), 16, 44, '#808080');
+  own.drawOwn(sheet, ['conical_hat', 'vlu_backpack'], { hat: '#e3cf9a', backpack: '#b8223a' });
+  const has = (c, r, color, y0, y1) => {
+    for (let y = r * 64 + y0; y < r * 64 + y1; y++) for (let x = c * 64; x < c * 64 + 64; x++) if (hex(sheet.get(x, y)) === color) return true;
+    return false;
+  };
+  eq(cells.every(([c, r]) => has(c, r, '#e3cf9a', 16 + (c % 2) - 6, 16 + (c % 2) + 6)), true, 'nón lá nằm quanh đỉnh đầu mọi ô');
+  eq([0, 1, 2, 3, 4, 5, 6, 7, 8].every(c => has(c, 3, '#b8223a', 20, 60)), true, 'balo Văn Lang đỏ thấy được khi quay lưng');
+  eq(Object.keys(own.OWN_ITEMS).sort(), ['camera', 'cap', 'conical_hat', 'lanyard', 'press_card', 'vlu_backpack'], 'đủ 6 món tự vẽ');
 }
 
 // --- cacheDir: đường dẫn thật (không còn %20 của URL)
