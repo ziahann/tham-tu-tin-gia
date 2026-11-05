@@ -3,7 +3,7 @@
 import { data, t } from './data.js';
 import { state, saveProgress, hasFlag } from './state.js';
 import { direction } from './input.js';
-import { makeAnims, feetBody, dirFrom, idleFrame, Npc, showEmote, nameTag } from './actors.js';
+import { makeAnims, feetBody, dirFrom, idleFrame, Npc, showEmote, nameTag, FRAME, HEAD_TOP } from './actors.js';
 import { roomStatus } from './grading.js';
 import * as story from './story.js';
 import * as journey from './journey.js';
@@ -55,8 +55,8 @@ export class WorldScene extends Phaser.Scene {
     this.load.spritesheet('tilesheet', 'assets/tiles/tiles.png', { frameWidth: 32, frameHeight: 32 });
     this.load.spritesheet('isoground', 'assets/iso/ground.png', { frameWidth: 64, frameHeight: 32 });
     this.load.spritesheet('isowalls', 'assets/iso/walls.png', { frameWidth: 64, frameHeight: 32 + WALL_H });
-    this.load.spritesheet('hero', `assets/sprites/${heroSprite()}.png`, { frameWidth: 32, frameHeight: 48 });
-    spriteIds().forEach(id => this.load.spritesheet(id, `assets/sprites/${id}.png`, { frameWidth: 32, frameHeight: 48 }));
+    this.load.spritesheet('hero', `assets/sprites/${heroSprite()}.png`, { frameWidth: FRAME, frameHeight: FRAME });
+    spriteIds().forEach(id => this.load.spritesheet(id, `assets/sprites/${id}.png`, { frameWidth: FRAME, frameHeight: FRAME }));
     VEHICLE_SPRITES.forEach(id => this.load.image(id, `assets/sprites/${id}.png`));
   }
 
@@ -1068,7 +1068,7 @@ export class WorldScene extends Phaser.Scene {
     this.views.sync();
     this.npcs.forEach(n => n.syncTag(this.player));
     const pv = this.player.view;
-    if (this.player.tag) this.player.tag.setPosition(pv.x, pv.y - 50 * (pv.scaleY || 1)).setVisible(pv.visible && pv.alpha > 0.5);
+    if (this.player.tag) this.player.tag.setPosition(pv.x, pv.y - (HEAD_TOP + 4) * (pv.scaleY || 1)).setVisible(pv.visible && pv.alpha > 0.5);
     fadeOccluders(this.occluders, this.player.view);
     if (!this.reduceMotion) this.devices.forEach((d, i) => d.marker.setY(iso.P(d.obj.x + d.obj.width / 2, d.obj.y).y - 40 + Math.round(Math.sin(time / 250 + i) * 2)));
 

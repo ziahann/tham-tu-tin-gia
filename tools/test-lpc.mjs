@@ -195,6 +195,21 @@ if (fs.existsSync(new URL('./.lpc-cache/palette_definitions/eye/eye_ulpc.json', 
   eq(src.art?.own?.license, 'CC0 1.0', 'đồ tự vẽ ghi CC0');
 }
 
+// --- game/js/actors.js đọc bố cục sheet 9x6 ô 64 px
+{
+  const actors = await import('../game/js/actors.js');
+  eq(['down', 'left', 'right', 'up'].map(actors.idleFrame), [0, 9, 18, 27], 'idleFrame theo hàng 9 cột');
+  eq(actors.SIT_FRAME, { down: 36, right: 37, left: 38, up: 45 }, 'SIT_FRAME hàng ngồi');
+  eq([actors.FRAME, actors.HEAD_TOP], [64, 48], 'kích thước khung + đỉnh đầu');
+  const anims = [];
+  actors.makeAnims({ anims: { exists: () => false, create: a => anims.push(a) } }, 'k');
+  eq(anims.find(a => a.key === 'k-walk-right').frames.map(f => f.frame), [19, 20, 21, 22, 23, 24, 25, 26], 'hoạt ảnh đi 8 khung');
+  const body = { setSize: (...a) => (body.size = a), setOffset: (...a) => (body.off = a) };
+  const sprite = { body, setOrigin: (...a) => (sprite.origin = a) };
+  actors.feetBody(sprite);
+  eq([sprite.origin, body.size, body.off], [[0.5, 62 / 64], [16, 10], [24, 52]], 'feetBody theo bàn chân LPC');
+}
+
 // --- cacheDir: đường dẫn thật (không còn %20 của URL)
 eq(lpc.cacheDir().includes('%'), false, 'cacheDir không chứa %');
 eq(fs.existsSync(path.dirname(lpc.cacheDir())), true, 'cacheDir nằm trong thư mục tools có thật');
