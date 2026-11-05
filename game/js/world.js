@@ -79,9 +79,21 @@ export class WorldScene extends Phaser.Scene {
     ['hero', ...spriteIds()].forEach(id => makeAnims(this, id));
     // Hiển thị isometric: lớp tilemap chỉ để va chạm / tra cứu; nền và tường vẽ lại theo phép chiếu
     this.isoSize = setupIso(map.widthInPixels, map.heightInPixels);
-    [this.ground, this.walls, this.doors].forEach(l => l.setVisible(false));
-    this.groundRTs = buildGround(this, map, this.ground, this.walls, CITY_MAPS.has(this.mapKey));
-    this.wallImgs = buildWalls(this, map, this.walls);
+    if (iso.mode === 'top') {
+      // top-down: dùng thẳng các lớp tilemap; phố có nền lặp phủ ra ngoài mép bản đồ
+      this.ground.setDepth(-20); this.walls.setDepth(-10); this.doors.setDepth(-9);
+      this.groundRTs = [this.ground, this.walls, this.doors];
+      if (CITY_MAPS.has(this.mapKey)) {
+        const edge = this.ground.getTileAt(0, map.height - 1) || this.ground.getTileAt(0, 0);
+        const M = 20 * 32;
+        this.groundRTs.push(this.add.tileSprite(-M, -M, map.widthInPixels + 2 * M, map.heightInPixels + 2 * M, 'tilesheet', edge ? edge.index - 1 : 0).setOrigin(0).setDepth(-30));
+      }
+      this.wallImgs = [];
+    } else {
+      [this.ground, this.walls, this.doors].forEach(l => l.setVisible(false));
+      this.groundRTs = buildGround(this, map, this.ground, this.walls, CITY_MAPS.has(this.mapKey));
+      this.wallImgs = buildWalls(this, map, this.walls);
+    }
     this.views = new ViewLayer(this);
 
     const objs = map.getObjectLayer('objects').objects;
@@ -929,8 +941,16 @@ export class WorldScene extends Phaser.Scene {
       const east = propOf(o, 'face') === 'e' && meta[`${o.name}@isoE`];
       const isoName = east ? `${o.name}@isoE` : mirror && meta[`${o.name}@isoW`] ? `${o.name}@isoW` : meta[`${o.name}@iso`]?.iso ? `${o.name}@iso` : m.iso ? o.name : null;
       const im = isoName ? meta[isoName] : null;
-      let img, left, top, lights = m.lights, parts = null;
-      if (m.wall) {
+      let img, left, top, lights = m.lights, parts = null, signMeta = im?.sign || m.sign;
+      if (iso.mode === 'top') {
+        // top-down: ảnh nhìn thẳng (tòa nhà: <khóa>@top), gốc ở chân, độ sâu theo y chân
+        const name = meta[`${o.name}@top`] ? `${o.name}@top` : o.name, mt = meta[name];
+        const tox = mirror ? 1 - (mt.ox ?? 0.5) : mt.ox ?? 0.5;
+        img = this.add.image(o.x, o.y, 'props', name).setOrigin(tox, 1);
+        if (mirror) img.setFlipX(true);
+        img.setDepth(m.flat ? -5 : m.wall ? -8 : o.y);
+        left = o.x - mt.w * tox; top = o.y - mt.h; lights = m.wall ? [] : mt.lights; signMeta = mt.sign;
+      } else if (m.wall) {
         const parts = this.sliceOnWall(im2 ? makeWall : make, o.x, o.y, o.x - m.w * ox);
         img = parts[0]; this.propExtras.push(...parts.slice(1));
         left = img.x; top = img.y - img.height * img.originY; lights = [];
@@ -965,7 +985,7 @@ export class WorldScene extends Phaser.Scene {
       (lights || []).forEach(([lx, ly, c, r, i]) => this.propLights.push([left + lx, top + ly, c, r, i]));
       // biển hiệu tòa nhà: chữ cắt xiên nằm đúng trên mặt tiền
       const text = propOf(o, 'sign');
-      const sg = im?.sign || m.sign;
+      const sg = signMeta;
       if (text && sg) {
         const tx = shearedText(this, [text], { size: 20, color: propOf(o, 'signColor') || '#e8ecf2', sub: propOf(o, 'sub'), fixed: { w: sg.w, h: sg.h } });
         this.add.image(left + sg.x, top + sg.y, tx.key).setOrigin(0).setDepth(Math.max(...(parts || [img]).map(p => p.depth)) + 1);
