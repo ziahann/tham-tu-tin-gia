@@ -28,6 +28,29 @@ export function setupIso(wPx, hPx) {
   return { width: wPx + hPx, height: (wPx + hPx) / 2 };
 }
 
+/**
+ * Biên camera top-down: bản đồ mapW x mapH (cộng lề margin mỗi phía, vd. nền mở rộng ở phố); khung nhìn vw x vh
+ * lớn hơn thì nới đều hai phía để bản đồ nằm giữa.
+ */
+export function cameraBounds(mapW, mapH, vw, vh, margin = 0) {
+  const fit = (lo, len, view) => (view > len ? { o: lo - (view - len) / 2, l: view } : { o: lo, l: len });
+  const X = fit(-margin, mapW + 2 * margin, vw), Y = fit(-margin, mapH + 2 * margin, vh);
+  return { x: X.o, y: Y.o, w: X.l, h: Y.l };
+}
+
+/** Đồ quay mặt về đông ở top-down: ảnh đặt giữa chân đế (sâu bh theo x về tây, dài bw theo y quanh o.y). */
+export const eastPropPlacement = (o, bw, bh) => ({ x: o.x - bh / 2, y: o.y + bw / 2, depth: o.y + bw / 2 });
+
+/** Giá trị xuất hiện nhiều nhất (ô nền phổ biến nhất ở mép bản đồ). */
+export function commonTile(list) {
+  const n = new Map();
+  for (const v of list) n.set(v, (n.get(v) || 0) + 1);
+  return [...n].sort((a, b) => b[1] - a[1])[0]?.[0];
+}
+
+/** Bảng tên trên tường: isometric đẩy lên theo độ cắt xiên (w/4); top-down không đẩy. */
+export const wallLabelLift = w => (iso.mode === 'top' ? 0 : w / 4);
+
 /** Ô có phải tường (khối) không. */
 const isWall = t => !!t && WALL_NAMES.has(t.properties?.name);
 

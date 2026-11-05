@@ -17,12 +17,14 @@ import { buildGraph, guideTarget, updateTrackLine, GuideArrow } from './guide.js
 import { Weather, WEATHER_FX } from './weather.js';
 import { Traffic, VEHICLE_SPRITES } from './traffic.js';
 import { sfx, footstep, setAmbience } from './audio.js';
-import { iso, setupIso, buildGround, buildWalls, ViewLayer, fadeOccluders, shearedText, WALL_H } from './iso.js';
+import { iso, setupIso, buildGround, buildWalls, ViewLayer, fadeOccluders, shearedText, WALL_H, cameraBounds, eastPropPlacement, commonTile, wallLabelLift } from './iso.js';
 
 const MAPS = ['tn_lobby', 'tn_f2', 'tn_f3', 'tn_f4', 'tn_f5', 'street', 'newsroom', 'cafe', 'agency', 'office2', 'clinic', 'cafe2', 'boss', 'home', 'hcm', 'tn_hcm'];
 const CITY_MAPS = new Set(['street', 'hcm']); // phố ngoài trời: nền kéo dài ra ngoài bản đồ, ra khỏi nhà nhìn xuống
 const SPEED = 120;
 const MAP_VERSION = 13;
+// top-down: nền lặp phủ ra ngoài mép bản đồ phố (px mỗi phía), camera được đi tới đó
+const CITY_MARGIN = 20 * 32;
 // Xe buýt (tools/props.mjs → bus): mũi xe bên phải ảnh nhìn ngang 240 px; cửa lên ở đầu xe, cửa xuống ở giữa thân.
 // Xe chạy làn đông (bus_e) dọc vỉa hè nam nên mặt có cửa quay về phía người chơi. Toạ độ x cửa = bus.x − 120 + cột.
 const BUS_FRONT_DOOR = 216, BUS_MID_DOOR = 122;
@@ -86,9 +88,13 @@ export class WorldScene extends Phaser.Scene {
       this.ground.setDepth(-20); this.walls.setDepth(-10); this.doors.setDepth(-9);
       this.groundRTs = [this.ground, this.walls, this.doors];
       if (CITY_MAPS.has(this.mapKey)) {
-        const edge = this.ground.getTileAt(0, map.height - 1) || this.ground.getTileAt(0, 0);
-        const M = 20 * 32;
-        this.groundRTs.push(this.add.tileSprite(-M, -M, map.widthInPixels + 2 * M, map.heightInPixels + 2 * M, 'tilesheet', edge ? edge.index - 1 : 0).setOrigin(0).setDepth(-30));
+        // ô nền phổ biến nhất dọc bốn mép bản đồ
+        const edge = [];
+        for (let x = 0; x < map.width; x++) edge.push(this.ground.getTileAt(x, 0)?.index, this.ground.getTileAt(x, map.height - 1)?.index);
+        for (let y = 0; y < map.height; y++) edge.push(this.ground.getTileAt(0, y)?.index, this.ground.getTileAt(map.width - 1, y)?.index);
+        const idx = commonTile(edge.filter(Boolean)) || 1;
+        const M = CITY_MARGIN;
+        this.groundRTs.push(this.add.tileSprite(-M, -M, map.widthInPixels + 2 * M, map.heightInPixels + 2 * M, 'tilesheet', idx - 1).setOrigin(0).setDepth(-30));
       }
       this.wallImgs = [];
     } else {
@@ -124,7 +130,7 @@ export class WorldScene extends Phaser.Scene {
     for (const o of objs.filter(o => o.type === 'label')) {
       // chữ vẽ cắt xiên nằm trên mặt tường (bảng tên tầng: nền tối)
       const tx = shearedText(this, String(propOf(o, 'text')).split('\n'), { size: propOf(o, 'size') || 16, color: propOf(o, 'color') || '#e8ecf2', plate: !!propOf(o, 'plate') });
-      const make = (x, y) => this.add.image(x - tx.w / 2, y - tx.w / 4, tx.key).setOrigin(0, (tx.h0 / 2) / tx.h);
+      const make = (x, y) => this.add.image(x - tx.w / 2, y - wallLabelLift(tx.w), tx.key).setOrigin(0, (tx.h0 / 2) / tx.h);
       this.sliceOnWall(make, o.x, o.y, o.x - tx.w / 2);
     }
     // Thiết bị ở Phòng xác minh: có dấu "!" khi hồ sơ đang chờ thiết bị đó.
@@ -471,6 +477,11 @@ export class WorldScene extends Phaser.Scene {
     cam.setZoom(Math.max(1, Math.floor(Math.min(width / 900, height / 500) * 2) / 2));
     // phòng nhỏ hơn khung hình: nới biên đều hai phía để phòng nằm giữa màn hình (không dồn sang trái / lên trên)
     const vw = width / cam.zoom, vh = height / cam.zoom;
+    if (iso.mode === 'top') {
+      const b = cameraBounds(this.isoSize.width, this.isoSize.height, vw, vh, CITY_MAPS.has(this.mapKey) ? CITY_MARGIN : 0);
+      cam.setBounds(b.x, b.y, b.w, b.h);
+      return;
+    }
     const bw = this.isoSize.width, bh = this.isoSize.height + 560;
     const bx = Math.min(0, (bw - vw) / 2), by = Math.min(-480, -480 + (bh - vh) / 2);
     cam.setBounds(bx, by, Math.max(bw, vw), Math.max(bh, vh));
@@ -949,10 +960,11 @@ export class WorldScene extends Phaser.Scene {
         // top-down: ảnh nhìn thẳng (tòa nhà: <khóa>@top), gốc ở chân, độ sâu theo y chân
         const name = meta[`${o.name}@top`] ? `${o.name}@top` : o.name, mt = meta[name];
         const tox = mirror ? 1 - (mt.ox ?? 0.5) : mt.ox ?? 0.5;
-        img = this.add.image(o.x, o.y, 'props', name).setOrigin(tox, 1);
+        const at = east ? eastPropPlacement(o, bw, bh) : { x: o.x, y: o.y, depth: o.y };
+        img = this.add.image(at.x, at.y, 'props', name).setOrigin(tox, 1);
         if (mirror) img.setFlipX(true);
-        img.setDepth(m.flat ? -5 : m.wall ? -8 : o.y);
-        left = o.x - mt.w * tox; top = o.y - mt.h; lights = m.wall ? [] : mt.lights; signMeta = mt.sign;
+        img.setDepth(m.flat ? -5 : m.wall ? -8 : at.depth);
+        left = at.x - mt.w * tox; top = at.y - mt.h; lights = m.wall ? [] : mt.lights; signMeta = mt.sign;
       } else if (m.wall) {
         const parts = this.sliceOnWall(im2 ? makeWall : make, o.x, o.y, o.x - m.w * ox);
         img = parts[0]; this.propExtras.push(...parts.slice(1));
