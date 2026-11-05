@@ -10,15 +10,17 @@ const COLS = 9;
 const FEET_Y = 62;
 // khoảng từ bàn chân tới đỉnh đầu (đo trên sprite LPC)
 export const HEAD_TOP = 48;
+export const HERO_HEAD_TOP = 60; // người chơi (bộ Thám Tử VLU) cao gần hết khung 64
 export const idleFrame = dir => DIRS.indexOf(dir) * COLS;
 export const SIT_FRAME = { down: 36, right: 37, left: 38, up: 45 };
 
 /** Tạo hoạt ảnh đi 4 hướng cho một sprite sheet. */
-export function makeAnims(scene, key) {
+/** Hoạt cảnh đi 4 hướng: cột 1..steps của mỗi hàng. */
+export function makeAnims(scene, key, steps = 8, frameRate = 12) {
   DIRS.forEach((dir, row) => {
     const k = `${key}-walk-${dir}`;
     if (scene.anims.exists(k)) return;
-    scene.anims.create({ key: k, frames: [1, 2, 3, 4, 5, 6, 7, 8].map(c => ({ key, frame: row * COLS + c })), frameRate: 12, repeat: -1 });
+    scene.anims.create({ key: k, frames: Array.from({ length: steps }, (_, i) => ({ key, frame: row * COLS + i + 1 })), frameRate, repeat: -1 });
   });
 }
 
