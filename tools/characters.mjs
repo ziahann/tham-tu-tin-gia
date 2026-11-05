@@ -8,11 +8,11 @@ export function shade(hex, k) {
   return `#${[f(r), f(g), f(b)].map(v => v.toString(16).padStart(2, '0')).join('')}`;
 }
 
-// Thông số từng nhân vật (thiết kế gốc). skirt: váy; hair: short | long | spiky | grey | bob.
+// Thông số từng nhân vật. skirt: váy; shorts; hairStyle: short | long | spiky | grey | bob | pony.
 export const CHARACTERS = {
-  // Nhân vật chính: sinh viên Quan hệ công chúng – Truyền thông, ĐH Văn Lang — áo khoác dù, balo, thẻ sinh viên, bút gài tai. Hai mẫu nam / nữ.
-  hero_m: { skin: '#f1c7a0', hair: '#2b1d1a', hairStyle: 'short', top: '#3d7fd1', inner: '#f4eedc', bottom: '#2d3a5a', shoes: '#3b2418', backpack: '#b8223a', vlu: true, press: true, pen: true },
-  hero_f: { skin: '#f6d3b8', hair: '#4a2418', hairStyle: 'long', top: '#e8889e', inner: '#ffffff', bottom: '#2e3170', skirt: true, shoes: '#f4f4f4', backpack: '#b8223a', vlu: true, press: true, ribbon: '#d8283f', highlight: '#9a5a36' },
+  // Nhân vật chính theo bộ thiết kế "Thám Tử VLU": sinh viên ĐH Văn Lang, áo thun trắng, ba lô đỏ (khóa ngực vàng), thẻ dây đỏ sẫm, kính lúp. Nam tóc đen dựng gai, jeans; nữ tóc nâu đuôi ngựa, short + tất trắng.
+  hero_m: { skin: '#f4be9c', hair: '#2a2234', hairStyle: 'spiky', eyes: '#7a4a24', top: '#f2efea', bottom: '#466ca8', shoes: '#ecebef', toe: '#d62630', backpack: '#d62630', lanyardColor: '#921624', vlu: true, magnifier: true },
+  hero_f: { skin: '#f4be9c', hair: '#744236', hairStyle: 'pony', eyes: '#2f8a5a', top: '#f2efea', bottom: '#466ca8', shorts: true, socks: '#ecebef', shoes: '#ecebef', toe: '#d62630', backpack: '#d62630', lanyardColor: '#921624', vlu: true, magnifier: true, ribbon: '#d62630' },
   npc1: { skin: '#f0c4a4', hair: '#1b1418', hairStyle: 'long', top: '#3d5a98', inner: '#f4eedc', bottom: '#4a4e5c', skirt: true, shoes: '#1d1d24', glasses: true, lanyard: true },
   npc2: { skin: '#e6b48f', hair: '#3a2a20', hairStyle: 'spiky', top: '#5f8a6b', bottom: '#2f2f38', shoes: '#22222a', glasses: true, camera: true },
   npc7: { skin: '#eac1a0', hair: '#22181a', hairStyle: 'short', top: '#4a6a8a', inner: '#e8ecf2', bottom: '#2f3440', shoes: '#1d1d24', glasses: true, lanyard: true },
@@ -56,45 +56,23 @@ export const CHARACTERS = {
 };
 
 
-// ---------------------------------------------------------------- sprite bản đồ: công thức ghép lớp LPC (tools/lpc.mjs)
-// [thân, áo, đồ tự vẽ]; thân 'm' | 'f' | 't' (thiếu niên), thêm 'old' cho người lớn tuổi. Quần / váy, tóc, kính suy ra từ thông số cũ.
-// Chỉ dùng lớp có khung ngồi (sit) để NPC ngồi vẫn đủ quần áo.
-const TOP = {
-  tee: 'torso/shirts/shortsleeve/torso_clothes_tshirt.json',
-  polo: 'torso/shirts/shortsleeve/torso_clothes_shortsleeve_polo.json',
-  shirt: 'torso/shirts/longsleeve/torso_clothes_longsleeve2_buttoned.json',
-  long: 'torso/shirts/longsleeve/torso_clothes_longsleeve2.json',
-  cardigan: 'torso/shirts/longsleeve/torso_clothes_longsleeve2_cardigan.json'
-};
-const HAIR = {
-  short: 'hair/short/hair_parted.json', long: 'hair/long/hair_long_straight.json', spiky: 'hair/short/hair_messy2.json',
-  bob: 'hair/bob/hair_bob.json', grey: 'hair/bald/hair_balding.json'
-};
+// ---------------------------------------------------------------- sprite bản đồ (tools/chibi.mjs)
+// [thân, áo, đồ mang theo]; thân 'm' | 'f' | 't' (thiếu niên), thêm 'old' cho người lớn tuổi; áo tee / polo = tay ngắn, còn lại tay dài.
 const RECIPES = {
-  hero_m: ['m', 'long', ['vlu_backpack', 'lanyard']], hero_f: ['f', 'long', ['vlu_backpack', 'lanyard']],
-  npc1: ['f', 'shirt', ['lanyard']], npc2: ['m', 'polo', ['camera']], npc7: ['m', 'shirt', ['lanyard']], npc8: ['f', 'cardigan', ['lanyard']],
-  npc9: ['m', 'shirt', ['lanyard']], npc3: ['m old', 'cardigan'], npc4: ['m', 'tee'], npc5: ['f', 'long'], npc6: ['m', 'polo', ['cap']],
-  amb_guard: ['m', 'shirt', ['cap', 'press_card']], amb_worker: ['m', 'shirt', ['lanyard']], amb_barista: ['f', 'tee'],
-  amb_vendor: ['f', 'long', ['conical_hat']], amb_tourist: ['m', 'tee', ['cap', 'camera']], amb_fisher: ['m old', 'long', ['conical_hat']],
-  amb_student: ['t', 'tee', ['press_card']], amb_elder: ['m old', 'cardigan'], amb_jogger: ['f', 'tee'], amb_doctor: ['m', 'shirt', ['lanyard']],
-  amb_nurse: ['f', 'polo'], amb_patient: ['m old', 'long'], amb_clerk: ['m', 'shirt', ['lanyard']], amb_clerk2: ['f', 'long'],
-  amb_barista2: ['m', 'tee'], amb_patron: ['f', 'long'], amb_rumor: ['m', 'tee'], npc10: ['m', 'shirt', ['lanyard']],
-  amb_hcm_vendor: ['f', 'long', ['conical_hat']], amb_hcm_student: ['m', 'tee'], amb_hcm_elder: ['m old', 'long'],
-  amb_hcm_reporter: ['f', 'shirt', ['lanyard', 'camera']], amb_auntie: ['f', 'tee'], amb_cafe_a: ['m', 'shirt'], amb_cafe_b: ['f', 'long'],
-  amb_intern: ['m', 'shirt', ['lanyard']], amb_hcm_student2: ['f', 'tee'], amb_rumor2: ['f', 'long']
+  hero_m: ['m', 'tee'], hero_f: ['f', 'tee'],
+  npc1: ['f', 'shirt'], npc2: ['m', 'polo'], npc7: ['m', 'shirt'], npc8: ['f', 'cardigan'],
+  npc9: ['m', 'shirt'], npc3: ['m old', 'cardigan'], npc4: ['m', 'tee'], npc5: ['f', 'long'], npc6: ['m', 'polo'],
+  amb_guard: ['m', 'shirt', ['press_card']], amb_worker: ['m', 'shirt'], amb_barista: ['f', 'tee'],
+  amb_vendor: ['f', 'long'], amb_tourist: ['m', 'tee'], amb_fisher: ['m old', 'long'],
+  amb_student: ['t', 'tee', ['press_card']], amb_elder: ['m old', 'cardigan'], amb_jogger: ['f', 'tee'], amb_doctor: ['m', 'shirt'],
+  amb_nurse: ['f', 'polo'], amb_patient: ['m old', 'long'], amb_clerk: ['m', 'shirt'], amb_clerk2: ['f', 'long'],
+  amb_barista2: ['m', 'tee'], amb_patron: ['f', 'long'], amb_rumor: ['m', 'tee'], npc10: ['m', 'shirt'],
+  amb_hcm_vendor: ['f', 'long'], amb_hcm_student: ['m', 'tee'], amb_hcm_elder: ['m old', 'long'],
+  amb_hcm_reporter: ['f', 'shirt'], amb_auntie: ['f', 'tee'], amb_cafe_a: ['m', 'shirt'], amb_cafe_b: ['f', 'long'],
+  amb_intern: ['m', 'shirt'], amb_hcm_student2: ['f', 'tee'], amb_rumor2: ['f', 'long']
 };
 for (const [id, [kind, top, own = []]] of Object.entries(RECIPES)) {
   const s = CHARACTERS[id], [sex, old] = kind.split(' ');
-  const body = { m: 'male', f: 'female', t: 'teen' }[sex];
-  const head = `head/heads/human/heads_human_${sex === 'f' ? 'female' : 'male'}${old ? '_elderly' : ''}.json`;
-  const layers = [
-    { def: 'body/body.json', color: 'skin', material: 'body' },
-    { def: head, parts: [['skin', 'body'], ['eyes', 'eye', '#2b1d1a']] },
-    { def: s.skirt ? 'legs/skirts/legs_skirts_plain.json' : 'legs/pants/legs_pants.json', color: 'bottom' },
-    { def: 'feet/shoes/feet_shoes_basic.json', color: 'shoes' },
-    { def: TOP[top], color: 'top' },
-    { def: HAIR[s.hairStyle] || HAIR.short, color: 'hair', material: 'hair' }
-  ];
-  if (s.glasses) layers.push({ def: 'headwear/accessories/glasses/facial_glasses.json' });
-  s.lpc = { body, layers, own };
+  s.sex = sex; s.old = !!old; s.sleeve = top === 'tee' || top === 'polo' ? 'short' : 'long';
+  for (const item of own) if (item === 'press_card') s.press = true;
 }

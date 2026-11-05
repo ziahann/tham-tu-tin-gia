@@ -3,7 +3,7 @@
 import { data, t } from './data.js';
 import { state, saveProgress, hasFlag } from './state.js';
 import { direction } from './input.js';
-import { makeAnims, feetBody, dirFrom, idleFrame, Npc, showEmote, nameTag, FRAME, HEAD_TOP, HERO_HEAD_TOP, hitsActor } from './actors.js';
+import { makeAnims, feetBody, dirFrom, idleFrame, Npc, showEmote, nameTag, FRAME, HEAD_TOP, hitsActor } from './actors.js';
 import { roomStatus } from './grading.js';
 import * as story from './story.js';
 import * as journey from './journey.js';
@@ -80,8 +80,7 @@ export class WorldScene extends Phaser.Scene {
     this.doors = map.createLayer('doors', tiles);
     this.walls.setCollisionByProperty({ collides: true });
     this.doors.setCollisionByProperty({ collides: true });
-    makeAnims(this, 'hero', 6, 10); // người chơi: 6 khung đi, 10 fps
-    spriteIds().forEach(id => makeAnims(this, id));
+    ['hero', ...spriteIds()].forEach(id => makeAnims(this, id));
     // Hiển thị isometric: lớp tilemap chỉ để va chạm / tra cứu; nền và tường vẽ lại theo phép chiếu
     this.isoSize = setupIso(map.widthInPixels, map.heightInPixels);
     if (iso.mode === 'top') {
@@ -1104,7 +1103,7 @@ export class WorldScene extends Phaser.Scene {
     this.views.sync();
     this.npcs.forEach(n => n.syncTag(this.player));
     const pv = this.player.view;
-    if (this.player.tag) this.player.tag.setPosition(pv.x, pv.y - (HERO_HEAD_TOP + 4) * (pv.scaleY || 1)).setVisible(pv.visible && pv.alpha > 0.5);
+    if (this.player.tag) this.player.tag.setPosition(pv.x, pv.y - (HEAD_TOP + 4) * (pv.scaleY || 1)).setVisible(pv.visible && pv.alpha > 0.5);
     fadeOccluders(this.occluders, this.player.view);
     if (!this.reduceMotion) this.devices.forEach((d, i) => d.marker.setY(iso.P(d.obj.x + d.obj.width / 2, d.obj.y).y - 40 + Math.round(Math.sin(time / 250 + i) * 2)));
 

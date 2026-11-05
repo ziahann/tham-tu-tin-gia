@@ -170,9 +170,8 @@
     "authors": "Tác giả game",
     "authorsList": "Trần Huỳnh Gia Hân và Đào Thị Mai Chi",
     "art": "Hình nhân vật",
-    "artNote": "Sprite NPC ghép từ các lớp Liberated Pixel Cup (LPC), đổi màu và thêm đồ tự vẽ. Vì có lớp CC-BY-SA 3.0 / GPL 3.0, sprite nhân vật được chia sẻ theo CC-BY-SA 3.0.",
-    "artHero": "Nhân vật người chơi (hai mẫu thám tử): thiết kế riêng của nhóm dự án trong bộ thiết kế \"Thám Tử VLU\" (CC0 1.0).",
-    "artOwn": "Nón lá, mũ lưỡi trai, dây thẻ, thẻ báo chí, máy ảnh, balo Văn Lang: nhóm dự án tự vẽ (CC0 1.0)."
+    "artNote": "Mọi nhân vật trong game được nhóm dự án tự thiết kế theo bộ thiết kế \"Thám Tử VLU\" và vẽ bằng code.",
+    "artOwn": "Sprite nhân vật (người chơi, NPC, người qua đường): nhóm dự án tự vẽ, CC0 1.0."
   },
   "settingsPanel": {
     "title": "Cài đặt",

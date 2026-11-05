@@ -24,9 +24,6 @@ export function t(path, vars) {
   return val == null ? path : fill(val, vars);
 }
 
-/** Một dòng ghi công lớp LPC (sources.json → art.lpc). */
-export const artCredit = a => `"${a.file}" — ${a.authors.join(', ')} (${a.licenses.join(' / ')})`;
-
 /** Tìm nhiệm vụ theo id. */
 export const questById = id => data.quests.quests.find(q => q.id === id);
 
