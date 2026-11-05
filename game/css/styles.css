@@ -440,7 +440,7 @@ button.frame:hover { border-color: var(--grey); }
 .look-pick { display: flex; justify-content: center; gap: 10px; margin-bottom: 8px; }
 .look { display: flex; flex-direction: column; align-items: center; gap: 2px; background: var(--plum); color: var(--paper); border: var(--px) solid var(--ink); padding: 6px 14px; min-width: 88px; }
 .look[aria-pressed="true"] { background: var(--teal); color: var(--ink); box-shadow: 0 0 0 3px var(--straw); }
-.look-img { width: 64px; height: 64px; background-repeat: no-repeat; background-size: 192px 384px; background-position: 0 -4px; image-rendering: pixelated; }
+.look-img { width: 64px; height: 64px; background-repeat: no-repeat; background-size: 576px 384px; background-position: 0 0; image-rendering: pixelated; }
 .look[data-look="m"] .look-img { background-image: url(../assets/sprites/hero_m.png); }
 .look[data-look="f"] .look-img { background-image: url(../assets/sprites/hero_f.png); }
 

@@ -2,39 +2,47 @@
 // Vị trí logic trên lưới vuông; hướng nhìn tính theo hướng trên màn hình isometric (js/iso.js).
 import { iso } from './iso.js';
 
-// Sprite sheet: 3 cột (đứng, bước 1, bước 2) x 4 hàng (xuống, trái, phải, lên), mỗi khung 32x48.
+// Sprite sheet LPC (tools/lpc.mjs): 9 cột (đứng + 8 bước) x 4 hàng (xuống, trái, phải, lên), mỗi khung 64x64,
+// bàn chân ở y = 62; hàng 5 = ngồi xuống / phải / trái, hàng 6 cột 0 = ngồi quay lưng.
 export const DIRS = ['down', 'left', 'right', 'up'];
-export const idleFrame = dir => DIRS.indexOf(dir) * 3;
-// Tư thế ngồi (hai hàng cuối sprite sheet, tools/gen-assets.mjs → buildCharacter)
-const SIT_FRAME = { down: 12, right: 13, left: 14, up: 15 };
+export const FRAME = 64;
+const COLS = 9;
+const FEET_Y = 62;
+// khoảng từ bàn chân tới đỉnh đầu (đo trên sprite LPC)
+export const HEAD_TOP = 48;
+export const idleFrame = dir => DIRS.indexOf(dir) * COLS;
+export const SIT_FRAME = { down: 36, right: 37, left: 38, up: 45 };
 
 /** Tạo hoạt ảnh đi 4 hướng cho một sprite sheet. */
 export function makeAnims(scene, key) {
   DIRS.forEach((dir, row) => {
     const k = `${key}-walk-${dir}`;
     if (scene.anims.exists(k)) return;
-    scene.anims.create({ key: k, frames: [1, 0, 2, 0].map(c => ({ key, frame: row * 3 + c })), frameRate: 8, repeat: -1 });
+    scene.anims.create({ key: k, frames: [1, 2, 3, 4, 5, 6, 7, 8].map(c => ({ key, frame: row * COLS + c })), frameRate: 12, repeat: -1 });
   });
 }
+
+/** Điểm (X, Y) trên màn hình có trúng thân nhân vật đứng ở (vx, vy) — gốc ở bàn chân, hộp 28 x (HEAD_TOP + 2), bỏ phần khung trong suốt. */
+export const hitsActor = (vx, vy, X, Y, scale = 1) => Math.abs(X - vx) <= 14 * scale && Y <= vy && Y >= vy - (HEAD_TOP + 2) * scale;
 
 /** Hướng nhìn theo vectơ (dx, dy). */
 export function dirFrom(dx, dy) {
   return Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up');
 }
 
-/** Gắn thân va chạm ở bàn chân (16x10) cho sprite 32x48 gốc ở chân. */
+/** Gắn thân va chạm ở bàn chân (16x10) cho sprite LPC 64x64, gốc ở bàn chân. */
 export function feetBody(sprite) {
-  sprite.setOrigin(0.5, 1);
+  sprite.setOrigin(0.5, FEET_Y / FRAME);
   sprite.body.setSize(16, 10);
-  sprite.body.setOffset(8, 37);
+  sprite.body.setOffset(24, FEET_Y - 10);
 }
 
 /** Bong bóng biểu cảm (! ? … ♪) hoặc câu nói ngắn (small) nổi trên đầu một sprite (phía trên nhãn tên) trong ms mili giây. */
 export function showEmote(scene, sprite, ch, ms = 1500, small = false) {
-  const t = scene.add.text(sprite.x, sprite.y - 66, ch, {
+  const t = scene.add.text(sprite.x, sprite.y - HEAD_TOP - 16, ch, {
     fontFamily: 'VT323', fontSize: small ? '16px' : '22px', color: '#0a0e18', backgroundColor: '#e8ecf2', padding: { x: 5, y: 0 }
   }).setOrigin(0.5, 1).setDepth(100002);
-  const follow = () => { if (t.active) t.setPosition(sprite.x, sprite.y - 66); };
+  const follow = () => { if (t.active) t.setPosition(sprite.x, sprite.y - HEAD_TOP - 16); };
   scene.events.on('update', follow);
   scene.tweens.add({ targets: t, y: '-=4', duration: 200, yoyo: true });
   scene.time.delayedCall(ms, () => { scene.events.off('update', follow); t.destroy(); });
@@ -76,7 +84,7 @@ export class Npc {
     this.talking = false;
     this.ambient = false;
     this.emoteIn = 4000 + Math.random() * 8000; // người qua đường thỉnh thoảng hiện biểu cảm
-    this.marker = scene.add.text(x, y - 52, '!', { fontFamily: 'VT323', fontSize: '28px', color: '#f2d36b', stroke: '#0f0e17', strokeThickness: 4 })
+    this.marker = scene.add.text(x, y - HEAD_TOP - 6, '!', { fontFamily: 'VT323', fontSize: '28px', color: '#f2d36b', stroke: '#0f0e17', strokeThickness: 4 })
       .setOrigin(0.5, 1).setVisible(false);
   }
 
@@ -126,7 +134,7 @@ export class Npc {
   /** Đặt nhãn tên và dấu ! theo hình hiển thị (gọi sau khi đồng bộ hình isometric). */
   syncTag(player) {
     const v = this.sprite.view || this.sprite;
-    const top = v.y - 50 * (v.scaleY || 1);
+    const top = v.y - (HEAD_TOP + 4) * (v.scaleY || 1);
     // chỉ hiện tên người ở gần (đỡ rối, không lộ tên người đứng khuất sau nhà ở xa)
     const near = !player || Phaser.Math.Distance.Between(this.sprite.x, this.sprite.y, player.x, player.y) < 380;
     if (this.tag) this.tag.setPosition(v.x, top).setVisible(near && v.visible && v.alpha > 0.5);
@@ -137,7 +145,7 @@ export class Npc {
   update(delta, frozen, player) {
     const s = this.sprite;
     const v = s.view || s;
-    this.marker.setPosition(v.x, v.y - 50 * (v.scaleY || 1) - (this.tag ? 14 : 0) + Math.round(Math.sin(this.scene.time.now / 250) * 2)).setDepth(100000);
+    this.marker.setPosition(v.x, v.y - (HEAD_TOP + 4) * (v.scaleY || 1) - (this.tag ? 14 : 0) + Math.round(Math.sin(this.scene.time.now / 250) * 2)).setDepth(100000);
     if (this.ambient && !frozen && !this.talking) {
       this.emoteIn -= delta;
       if (this.emoteIn <= 0) { this.emoteIn = 7000 + Math.random() * 9000; showEmote(this.scene, s.view || s, Phaser.Utils.Array.GetRandom(EMOTES)); }

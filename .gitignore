@@ -3,3 +3,8 @@
 # Tài liệu thiết kế, ghi chú: chỉ giữ trên máy
 *.md
 !game/vendor/PHASER-LICENSE.md
+
+# Bản build đồng bộ Claude Design
+ds-bundle/
+graphify-out/
+tools/.lpc-cache/

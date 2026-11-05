@@ -55,3 +55,46 @@ export const CHARACTERS = {
   amb_rumor2: { skin: '#f1c7a0', hair: '#2b1d1a', hairStyle: 'bob', top: '#4a2f6a', inner: '#c8a24a', bottom: '#2a2a33', shoes: '#14161c' }
 };
 
+
+// ---------------------------------------------------------------- sprite bản đồ: công thức ghép lớp LPC (tools/lpc.mjs)
+// [thân, áo, đồ tự vẽ]; thân 'm' | 'f' | 't' (thiếu niên), thêm 'old' cho người lớn tuổi. Quần / váy, tóc, kính suy ra từ thông số cũ.
+// Chỉ dùng lớp có khung ngồi (sit) để NPC ngồi vẫn đủ quần áo.
+const TOP = {
+  tee: 'torso/shirts/shortsleeve/torso_clothes_tshirt.json',
+  polo: 'torso/shirts/shortsleeve/torso_clothes_shortsleeve_polo.json',
+  shirt: 'torso/shirts/longsleeve/torso_clothes_longsleeve2_buttoned.json',
+  long: 'torso/shirts/longsleeve/torso_clothes_longsleeve2.json',
+  cardigan: 'torso/shirts/longsleeve/torso_clothes_longsleeve2_cardigan.json'
+};
+const HAIR = {
+  short: 'hair/short/hair_parted.json', long: 'hair/long/hair_long_straight.json', spiky: 'hair/short/hair_messy2.json',
+  bob: 'hair/bob/hair_bob.json', grey: 'hair/bald/hair_balding.json'
+};
+const RECIPES = {
+  hero_m: ['m', 'long', ['vlu_backpack', 'lanyard']], hero_f: ['f', 'long', ['vlu_backpack', 'lanyard']],
+  npc1: ['f', 'shirt', ['lanyard']], npc2: ['m', 'polo', ['camera']], npc7: ['m', 'shirt', ['lanyard']], npc8: ['f', 'cardigan', ['lanyard']],
+  npc9: ['m', 'shirt', ['lanyard']], npc3: ['m old', 'cardigan'], npc4: ['m', 'tee'], npc5: ['f', 'long'], npc6: ['m', 'polo', ['cap']],
+  amb_guard: ['m', 'shirt', ['cap', 'press_card']], amb_worker: ['m', 'shirt', ['lanyard']], amb_barista: ['f', 'tee'],
+  amb_vendor: ['f', 'long', ['conical_hat']], amb_tourist: ['m', 'tee', ['cap', 'camera']], amb_fisher: ['m old', 'long', ['conical_hat']],
+  amb_student: ['t', 'tee', ['press_card']], amb_elder: ['m old', 'cardigan'], amb_jogger: ['f', 'tee'], amb_doctor: ['m', 'shirt', ['lanyard']],
+  amb_nurse: ['f', 'polo'], amb_patient: ['m old', 'long'], amb_clerk: ['m', 'shirt', ['lanyard']], amb_clerk2: ['f', 'long'],
+  amb_barista2: ['m', 'tee'], amb_patron: ['f', 'long'], amb_rumor: ['m', 'tee'], npc10: ['m', 'shirt', ['lanyard']],
+  amb_hcm_vendor: ['f', 'long', ['conical_hat']], amb_hcm_student: ['m', 'tee'], amb_hcm_elder: ['m old', 'long'],
+  amb_hcm_reporter: ['f', 'shirt', ['lanyard', 'camera']], amb_auntie: ['f', 'tee'], amb_cafe_a: ['m', 'shirt'], amb_cafe_b: ['f', 'long'],
+  amb_intern: ['m', 'shirt', ['lanyard']], amb_hcm_student2: ['f', 'tee'], amb_rumor2: ['f', 'long']
+};
+for (const [id, [kind, top, own = []]] of Object.entries(RECIPES)) {
+  const s = CHARACTERS[id], [sex, old] = kind.split(' ');
+  const body = { m: 'male', f: 'female', t: 'teen' }[sex];
+  const head = `head/heads/human/heads_human_${sex === 'f' ? 'female' : 'male'}${old ? '_elderly' : ''}.json`;
+  const layers = [
+    { def: 'body/body.json', color: 'skin', material: 'body' },
+    { def: head, parts: [['skin', 'body'], ['eyes', 'eye', '#2b1d1a']] },
+    { def: s.skirt ? 'legs/skirts/legs_skirts_plain.json' : 'legs/pants/legs_pants.json', color: 'bottom' },
+    { def: 'feet/shoes/feet_shoes_basic.json', color: 'shoes' },
+    { def: TOP[top], color: 'top' },
+    { def: HAIR[s.hairStyle] || HAIR.short, color: 'hair', material: 'hair' }
+  ];
+  if (s.glasses) layers.push({ def: 'headwear/accessories/glasses/facial_glasses.json' });
+  s.lpc = { body, layers, own };
+}
