@@ -210,6 +210,17 @@ if (fs.existsSync(new URL('./.lpc-cache/palette_definitions/eye/eye_ulpc.json', 
   eq([sprite.origin, body.size, body.off], [[0.5, 62 / 64], [16, 10], [24, 52]], 'feetBody theo bàn chân LPC');
 }
 
+// --- hiện ghi công hình nhân vật: dòng ghi công + khóa chữ giao diện có trong ui.json
+{
+  const { artCredit } = await import('../game/js/data.js');
+  eq(artCredit({ file: 'hair/bob', authors: ['A', 'B'], licenses: ['OGA-BY 3.0', 'CC-BY-SA 3.0'] }), '"hair/bob" — A, B (OGA-BY 3.0 / CC-BY-SA 3.0)', 'artCredit định dạng');
+  const ui = JSON.parse(fs.readFileSync(new URL('../game/data/ui.json', import.meta.url), 'utf8'));
+  const get = k => k.split('.').reduce((o, p) => o?.[p], ui);
+  const keys = ['main.js', 'report.js'].flatMap(f => [...fs.readFileSync(new URL(`../game/js/${f}`, import.meta.url), 'utf8').matchAll(/t\('((?:sourcesPanel|report)\.art[A-Za-z]*)'/g)].map(m => m[1]));
+  eq(keys.length >= 3, true, 'main.js + report.js dùng khóa ghi công hình');
+  eq(keys.filter(k => typeof get(k) !== 'string'), [], 'khóa ghi công hình có trong ui.json');
+}
+
 // --- cacheDir: đường dẫn thật (không còn %20 của URL)
 eq(lpc.cacheDir().includes('%'), false, 'cacheDir không chứa %');
 eq(fs.existsSync(path.dirname(lpc.cacheDir())), true, 'cacheDir nằm trong thư mục tools có thật');

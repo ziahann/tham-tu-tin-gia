@@ -168,7 +168,10 @@
     "missing": "chưa có link",
     "music": "Nhạc nền",
     "authors": "Tác giả game",
-    "authorsList": "Trần Huỳnh Gia Hân và Đào Thị Mai Chi"
+    "authorsList": "Trần Huỳnh Gia Hân và Đào Thị Mai Chi",
+    "art": "Hình nhân vật",
+    "artNote": "Sprite nhân vật ghép từ các lớp Liberated Pixel Cup (LPC), đổi màu và thêm đồ tự vẽ. Vì có lớp CC-BY-SA 3.0 / GPL 3.0, sprite nhân vật được chia sẻ theo CC-BY-SA 3.0.",
+    "artOwn": "Nón lá, mũ lưỡi trai, dây thẻ, thẻ báo chí, máy ảnh, balo Văn Lang: nhóm dự án tự vẽ (CC0 1.0)."
   },
   "settingsPanel": {
     "title": "Cài đặt",
@@ -478,7 +481,8 @@
     "takeaway": "Điều rút ra",
     "sources": "Nguồn đã dùng (APA)",
     "disclaimer": "Huy hiệu và chỉ số trong báo cáo chỉ để chơi, không phải bằng chứng cho tin thật hay giả.",
-    "titleLine": "Danh hiệu: {name}"
+    "titleLine": "Danh hiệu: {name}",
+    "art": "Ghi công hình nhân vật"
   },
   "journey": {
     "calling": "Đang gọi…",
