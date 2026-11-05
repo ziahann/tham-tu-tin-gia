@@ -167,6 +167,34 @@ if (fs.existsSync(new URL('./.lpc-cache/palette_definitions/eye/eye_ulpc.json', 
   eq(Object.keys(own.OWN_ITEMS).sort(), ['camera', 'cap', 'conical_hat', 'lanyard', 'press_card', 'vlu_backpack'], 'đủ 6 món tự vẽ');
 }
 
+// --- creditsFor: chỉ ghi công mục ứng với thư mục thật sự dùng; không mục nào khớp thì giữ cả
+{
+  const def = { credits: [{ file: 'body/bodies/male', authors: ['a'] }, { file: 'body/bodies/child', authors: ['b'] }, { file: 'body/bodies/female', authors: ['c'] }] };
+  eq(lpc.creditsFor(def, ['body/bodies/male/']).map(c => c.file), ['body/bodies/male'], 'creditsFor lọc theo thư mục dùng');
+  eq(lpc.creditsFor({ credits: [{ file: 'x/y' }] }, ['a/b/']).map(c => c.file), ['x/y'], 'creditsFor không khớp thì giữ cả');
+}
+
+// --- công thức nhân vật: mọi mục có lpc hợp lệ, đồ tự vẽ có thật
+{
+  const { CHARACTERS } = await import('./characters.mjs');
+  const { OWN_ITEMS } = await import('./lpc-own.mjs');
+  const bad = Object.entries(CHARACTERS).filter(([, s]) => !s.lpc || !['male', 'female', 'teen'].includes(s.lpc.body) || !s.lpc.layers?.length
+    || (s.lpc.own || []).some(i => !OWN_ITEMS[i]) || s.lpc.layers.some(l => !l.def));
+  eq(bad.map(([k]) => k), [], 'mọi nhân vật có công thức lpc hợp lệ');
+}
+
+// --- ghi công trong sources.json (sau khi chạy gen-assets)
+{
+  const src = JSON.parse(fs.readFileSync(new URL('../game/data/sources.json', import.meta.url), 'utf8'));
+  const { CHARACTERS } = await import('./characters.mjs');
+  const art = src.art?.lpc || [];
+  eq(art.length > 0, true, 'sources.json có art.lpc');
+  eq(art.filter(a => !a.authors?.length || !a.licenses?.length).map(a => a.file), [], 'mỗi lớp LPC có tác giả + giấy phép');
+  eq(art.flatMap(a => a.usedBy).filter(id => !CHARACTERS[id]).length, 0, 'usedBy là nhân vật có thật');
+  eq(new Set(art.map(a => a.file)).size, art.length, 'mỗi file ghi công một lần');
+  eq(src.art?.own?.license, 'CC0 1.0', 'đồ tự vẽ ghi CC0');
+}
+
 // --- cacheDir: đường dẫn thật (không còn %20 của URL)
 eq(lpc.cacheDir().includes('%'), false, 'cacheDir không chứa %');
 eq(fs.existsSync(path.dirname(lpc.cacheDir())), true, 'cacheDir nằm trong thư mục tools có thật');

@@ -8,6 +8,7 @@ import { CHARACTERS, shade } from './characters.mjs';
 import { allProps, vehicles } from './props.mjs';
 import { isoGround, isoWalls } from './iso.mjs';
 import { buildBadges } from './badges.mjs';
+import { buildLpcCharacter, checkSheet } from './lpc.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', 'game');
 const T = 32; // cỡ ô
@@ -582,193 +583,6 @@ function shade3d(f, w, h) {
   for (const [x, y, c] of marks) f.set(x, y, c);
 }
 
-/** Vẽ một khung nhân vật 32x48. dir: down | up | right. frame: 0 đứng, 1/2 bước chân. */
-function drawCharFrame(spec, dir, frame, sit = false) {
-  let f = new Img(32, 48);
-  const R = (x, y, w, h, c) => f.rect(x, y, w, h, c);
-  const step = frame === 0 ? 0 : frame === 1 ? 1 : -1;
-  const bob = frame === 0 ? 0 : 1;
-  const top = shade(spec.top, 0), topDark = shade(spec.top, -0.25), topLight = shade(spec.top, 0.18);
-  const hair = spec.hair, hairDark = shade(spec.hair, -0.25), hairLight = shade(spec.hair, 0.2);
-  const skin = spec.skin, skinDark = shade(spec.skin, -0.15);
-  const y0 = bob; // nhún khi bước
-
-  // Chân (tư thế ngồi: vẽ sau, khi đã hạ thân xuống)
-  const legTop = 34;
-  if (sit) { /* chân ngồi vẽ ở dưới */ } else if (dir === 'right') {
-    R(13 + step * 2, legTop, 4, 10, spec.skirt ? skin : spec.bottom);
-    R(16 - step * 2, legTop, 4, 10, spec.skirt ? skinDark : shade(spec.bottom, -0.2));
-    R(13 + step * 2, 42, 5, 2, spec.shoes); R(16 - step * 2, 42, 5, 2, spec.shoes);
-  } else {
-    R(11, legTop + (step > 0 ? -1 : 0), 4, 10 - (step > 0 ? 1 : 0), spec.skirt ? skin : spec.bottom);
-    R(17, legTop + (step < 0 ? -1 : 0), 4, 10 - (step < 0 ? 1 : 0), spec.skirt ? skin : shade(spec.bottom, -0.15));
-    R(11, 42 + (step > 0 ? -1 : 0), 4, 2, spec.shoes); R(17, 42 + (step < 0 ? -1 : 0), 4, 2, spec.shoes);
-  }
-
-  // Thân
-  const bx = dir === 'right' ? 11 : 9, bw = dir === 'right' ? 10 : 14;
-  R(bx, 20 + y0, bw, 15, top);
-  R(bx, 20 + y0, bw, 2, topLight);
-  R(bx + bw - 2, 22 + y0, 2, 13, topDark);
-  if (spec.skirt) { R(bx - 1, 30 + y0, bw + 2, 6, spec.bottom); R(bx - 1, 35 + y0, bw + 2, 1, shade(spec.bottom, -0.25)); }
-  else { R(bx, 32 + y0, bw, 3, spec.bottom); }
-  if (spec.inner && dir === 'down') { R(14, 20 + y0, 4, 9, spec.inner); R(15, 21 + y0, 2, 6, shade(spec.inner, -0.08)); }
-  if (spec.lanyard && dir === 'down') { R(13, 21 + y0, 1, 7, '#c8323c'); R(18, 21 + y0, 1, 7, '#c8323c'); R(14, 28 + y0, 4, 4, '#f2d36b'); }
-  if (spec.badge && dir !== 'up') R(dir === 'right' ? 18 : 19, 25 + y0, 2, 2, '#c9d1dc');
-  if (spec.camera && dir === 'down') { R(13, 27 + y0, 6, 4, '#2b2f3a'); R(15, 28 + y0, 2, 2, '#5fb3d9'); }
-
-  // Thẻ sinh viên Văn Lang (dây xanh ngọc, thẻ đỏ, ô ảnh)
-  if (spec.press && dir === 'down') { R(13, 21 + y0, 1, 6, '#1fa39a'); R(18, 21 + y0, 1, 6, '#1fa39a'); R(13, 27 + y0, 6, 5, '#d8283f'); R(13, 27 + y0, 6, 1, '#ffffff'); R(14, 29 + y0, 2, 2, '#1fa39a'); }
-  if (spec.press && dir === 'right') { R(19, 26 + y0, 2, 4, '#d8283f'); }
-  // Balo: quai đeo phía trước, thân balo phía sau / bên hông
-  if (spec.backpack) {
-    const bp = spec.backpack, bpD = shade(bp, -0.3);
-    if (spec.vlu) {
-      // balo Văn Lang: thân đỏ, viền xanh than trên / dưới, khiên trắng có chữ V đỏ ở mặt sau
-      const navy = '#2e3170', navyL = '#3d4290';
-      if (dir === 'down') { R(10, 20 + y0, 2, 9, navy); R(20, 20 + y0, 2, 9, navy); R(10, 20 + y0, 2, 1, bp); R(20, 20 + y0, 2, 1, bp); }
-      if (dir === 'up') {
-        R(9, 20 + y0, 14, 14, bp); R(9, 20 + y0, 14, 2, navyL); R(9, 32 + y0, 14, 2, navy); R(21, 22 + y0, 2, 10, shade(bp, -0.2));
-        R(11, 23 + y0, 1, 7, shade(bp, 0.15));
-        R(14, 24 + y0, 5, 4, '#ffffff'); R(15, 28 + y0, 3, 1, '#ffffff'); R(16, 29 + y0, 1, 1, '#ffffff');
-        R(15, 25 + y0, 1, 1, bp); R(17, 25 + y0, 1, 1, bp); R(16, 26 + y0, 1, 1, bp);
-      }
-      if (dir === 'right') { R(7, 21 + y0, 5, 12, bp); R(7, 21 + y0, 5, 2, navyL); R(7, 31 + y0, 5, 2, navy); R(12, 20 + y0, 1, 8, navy); R(8, 25 + y0, 2, 2, '#ffffff'); }
-    } else {
-      if (dir === 'down') { R(10, 20 + y0, 2, 9, bpD); R(20, 20 + y0, 2, 9, bpD); }
-      if (dir === 'up') { R(10, 21 + y0, 12, 12, bp); R(10, 21 + y0, 12, 3, shade(bp, 0.15)); R(13, 26 + y0, 6, 4, bpD); }
-      if (dir === 'right') { R(8, 21 + y0, 4, 11, bp); R(8, 21 + y0, 4, 2, shade(bp, 0.15)); R(12, 20 + y0, 1, 8, bpD); }
-    }
-  }
-
-  // Tay (đung đưa ngược chân)
-  if (dir === 'right') {
-    R(14 - step * 2, 21 + y0, 4, 10, topDark);
-    R(14 - step * 2, 30 + y0, 4, 2, skin);
-    if (spec.phone) R(17 - step * 2, 28 + y0, 3, 4, '#222');
-  } else {
-    R(7, 21 + y0 + (step < 0 ? 1 : 0), 2, 10, topDark); R(7, 31 + y0 + (step < 0 ? 1 : 0), 2, 2, skin);
-    R(23, 21 + y0 + (step > 0 ? 1 : 0), 2, 10, topDark); R(23, 31 + y0 + (step > 0 ? 1 : 0), 2, 2, skin);
-    if (spec.phone && dir === 'down') R(23, 29 + y0, 3, 4, '#222');
-  }
-
-  // Khăn quàng
-  if (spec.scarf) {
-    const sc = spec.scarf, scD = shade(sc, -0.25);
-    if (dir === 'right') { R(12, 18 + y0, 10, 3, sc); R(11, 21 + y0, 2, 5, scD); }
-    else { R(10, 18 + y0, 12, 3, sc); if (dir === 'down') { R(18, 21 + y0, 3, 6, scD); } else { R(11, 21 + y0, 3, 5, scD); } }
-  }
-
-  // Tóc dài phía sau (vẽ trước đầu)
-  if (spec.hairStyle === 'long') {
-    if (dir === 'up') R(9, 8 + y0, 14, 18, hairDark);
-    else if (dir === 'right') R(10, 8 + y0, 6, 18, hairDark);
-    else { R(8, 9 + y0, 3, 16, hairDark); R(21, 9 + y0, 3, 16, hairDark); }
-  }
-
-  // Đầu
-  const hx = dir === 'right' ? 11 : 10, hw = dir === 'right' ? 11 : 12;
-  R(hx, 6 + y0, hw, 13, skin);
-  R(hx + 1, 5 + y0, hw - 2, 1, skin);
-  R(hx + 1, 19 + y0, hw - 2, 1, skinDark);
-  if (dir === 'down') {
-    R(13, 12 + y0, 2, 3, '#2b1d1a'); R(18, 12 + y0, 2, 3, '#2b1d1a');
-    R(13, 12 + y0, 1, 1, '#ffffff'); R(18, 12 + y0, 1, 1, '#ffffff');
-    R(11, 15 + y0, 2, 1, '#e79aa0'); R(20, 15 + y0, 2, 1, '#e79aa0');
-    R(15, 16 + y0, 3, 1, '#a0524a');
-    if (spec.glasses) { f.frame(12, 11 + y0, 4, 5, '#2b2f3a'); f.frame(17, 11 + y0, 4, 5, '#2b2f3a'); R(16, 12 + y0, 1, 1, '#2b2f3a'); }
-  } else if (dir === 'right') {
-    R(18, 12 + y0, 2, 3, '#2b1d1a'); R(18, 12 + y0, 1, 1, '#ffffff');
-    R(22, 14 + y0, 1, 2, skinDark);
-    R(19, 16 + y0, 2, 1, '#a0524a');
-    if (spec.glasses) { f.frame(17, 11 + y0, 4, 5, '#2b2f3a'); R(13, 12 + y0, 4, 1, '#2b2f3a'); }
-  }
-
-  // Tóc
-  const hs = spec.hairStyle;
-  if (dir === 'up') {
-    R(9, 4 + y0, 14, 15, hair); R(10, 4 + y0, 12, 2, hairLight); R(9, 15 + y0, 14, 4, hairDark);
-  } else if (dir === 'right') {
-    R(10, 4 + y0, 13, 6, hair); R(10, 4 + y0, 5, 15, hair); R(11, 4 + y0, 10, 1, hairLight);
-    if (hs === 'spiky') { R(12, 2 + y0, 2, 2, hair); R(16, 2 + y0, 2, 2, hair); R(20, 3 + y0, 2, 2, hair); }
-  } else {
-    R(9, 4 + y0, 14, 6, hair); R(10, 3 + y0, 12, 1, hair); R(11, 4 + y0, 10, 1, hairLight);
-    R(9, 8 + y0, 2, 7, hair); R(21, 8 + y0, 2, 7, hair);
-    R(11, 10 + y0, 4, 1, hairDark); R(17, 10 + y0, 4, 1, hairDark);
-    if (hs === 'spiky') { R(10, 1 + y0, 2, 3, hair); R(15, 1 + y0, 2, 3, hair); R(20, 1 + y0, 2, 3, hair); }
-    if (hs === 'grey') R(9, 4 + y0, 14, 1, '#ffffff');
-    if (hs === 'bob') { R(8, 8 + y0, 3, 10, hair); R(21, 8 + y0, 3, 10, hair); R(8, 17 + y0, 3, 1, hairDark); R(21, 17 + y0, 3, 1, hairDark); }
-  }
-  if (hs === 'bob' && dir === 'up') R(8, 15 + y0, 16, 4, hairDark);
-  if (hs === 'bob' && dir === 'right') { R(9, 8 + y0, 6, 10, hair); R(9, 17 + y0, 6, 1, hairDark); }
-  // Ánh tóc và nơ cài tóc
-  if (spec.highlight && hs === 'long') {
-    if (dir === 'down') { R(12, 5 + y0, 3, 1, spec.highlight); R(9, 10 + y0, 1, 4, spec.highlight); R(22, 10 + y0, 1, 4, spec.highlight); }
-    if (dir === 'up') { R(12, 6 + y0, 1, 12, spec.highlight); R(18, 6 + y0, 1, 12, spec.highlight); }
-    if (dir === 'right') { R(11, 8 + y0, 1, 10, spec.highlight); R(13, 5 + y0, 4, 1, spec.highlight); }
-  }
-  if (spec.ribbon) {
-    const rb = spec.ribbon, rbD = shade(rb, -0.3);
-    if (dir === 'down') { R(19, 3 + y0, 2, 2, rb); R(22, 3 + y0, 2, 2, rb); R(21, 3 + y0, 1, 2, rbD); }
-    if (dir === 'up') { R(13, 8 + y0, 2, 3, rb); R(17, 8 + y0, 2, 3, rb); R(15, 8 + y0, 2, 2, rbD); R(15, 10 + y0, 1, 3, rb); R(16, 10 + y0, 1, 3, rbD); }
-    if (dir === 'right') { R(10, 5 + y0, 2, 2, rb); R(13, 5 + y0, 2, 2, rb); R(12, 5 + y0, 1, 2, rbD); }
-  }
-  // Bút gài sau tai
-  if (spec.pen) {
-    if (dir === 'down') { R(22, 7 + y0, 1, 6, '#f2d36b'); R(22, 6 + y0, 1, 1, '#c8323c'); }
-    if (dir === 'right') { R(15, 7 + y0, 1, 6, '#f2d36b'); R(15, 6 + y0, 1, 1, '#c8323c'); }
-  }
-
-  // Mũ cói / mũ lưỡi trai
-  if (spec.hat) {
-    const h = spec.hat, hD = shade(h, -0.3);
-    R(11, 0 + y0, 10, 6, h); R(11, 4 + y0, 10, 2, hD);
-    if (dir === 'right') R(7, 6 + y0, 19, 2, h); else R(6, 6 + y0, 20, 2, h);
-    R(dir === 'right' ? 7 : 6, 8 + y0, dir === 'right' ? 19 : 20, 1, hD);
-    for (let x = 12; x < 20; x += 3) R(x, 1 + y0, 1, 3, shade(h, 0.2));
-  }
-  if (spec.cap) {
-    const c = spec.cap;
-    R(9, 2 + y0, 14, 6, c); R(10, 2 + y0, 12, 1, shade(c, 0.2));
-    if (dir === 'down') R(9, 8 + y0, 14, 2, shade(c, -0.3));
-    if (dir === 'right') R(20, 7 + y0, 6, 2, shade(c, -0.3));
-  }
-
-  // Ngồi: hạ thân 6 px, đùi gập về phía trước, cẳng chân thả xuống
-  if (sit) {
-    const g = new Img(32, 48);
-    g.blit(f, 0, 0, 32, 40, 0, 6);
-    f = g;
-    const lg = spec.skirt ? spec.bottom : spec.bottom, lgD = shade(spec.bottom, -0.2), sk = spec.skirt ? skin : null;
-    const Rf = (x, y, w, h, c) => f.rect(x, y, w, h, c);
-    if (dir === 'down') {
-      Rf(10, 39, 12, 3, lg); Rf(10, 41, 12, 1, lgD);
-      Rf(11, 42, 4, 3, sk || lg); Rf(17, 42, 4, 3, sk || lgD);
-      Rf(10, 45, 5, 2, spec.shoes); Rf(17, 45, 5, 2, spec.shoes);
-    } else if (dir === 'right') {
-      Rf(12, 38, 11, 4, lg); Rf(12, 41, 11, 1, lgD);
-      Rf(19, 42, 4, 3, sk || lg); Rf(19, 45, 6, 2, spec.shoes);
-    } else {
-      Rf(10, 39, 12, 3, lgD); Rf(11, 42, 4, 3, lgD); Rf(17, 42, 4, 3, lgD); Rf(11, 45, 4, 1, spec.shoes); Rf(17, 45, 4, 1, spec.shoes);
-    }
-  }
-  // Khối giả 3D (nắng từ trên trái): mép trên sáng lên, mép phải tối đi; bóng đổ chéo sang phải
-  shade3d(f, 32, 48);
-  // Viền ngoài tự động
-  const out = new Img(32, 48);
-  out.ellipse(18, 45, 10, 2, '#00000050'); out.ellipse(21, 45, 6, 1, '#00000030');
-  for (let y = 0; y < 48; y++) for (let x = 0; x < 32; x++) {
-    if (f.get(x, y)[3] > 200) continue;
-    const near = [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([dx, dy]) => {
-      const nx = x + dx, ny = y + dy;
-      return nx >= 0 && ny >= 0 && nx < 32 && ny < 48 && f.get(nx, ny)[3] > 200;
-    });
-    if (near) out.set(x, y, OUTLINE);
-  }
-  out.blit(f, 0, 0, 32, 48, 0, 0);
-  return out;
-}
-
 /** Boss "Kẻ Dệt Chuyện": áo choàng ghép từ khung ảnh trống, mặt nạ gương nứt. blank = đã gỡ mặt nạ (khung trống). */
 function drawBossFrame(blank) {
   const f = new Img(32, 48);
@@ -797,33 +611,38 @@ function drawBossFrame(blank) {
   return out;
 }
 
-/** Sprite sheet của boss (cùng bố cục 3x4 với nhân vật để dùng chung code) + bản đã gỡ mặt nạ. */
+/** Sprite sheet của boss (cùng bố cục 9x6 ô 64 px với nhân vật LPC để dùng chung code) + bản đã gỡ mặt nạ. */
 function buildBoss() {
   for (const [id, blank] of [['boss', false], ['boss_blank', true]]) {
-    const sheet = new Img(96, 192);
+    const sheet = new Img(9 * 64, 6 * 64);
     const frame = drawBossFrame(blank);
-    for (let row = 0; row < 4; row++) for (let c = 0; c < 3; c++) sheet.blit(frame, 0, 0, 32, 48, c * 32, row * 48);
+    for (let row = 0; row < 6; row++) for (let c = 0; c < 9; c++) sheet.blit(frame, 0, 0, 32, 48, c * 64 + 16, row * 64 + 14);
     sheet.save(path.join(ROOT, `assets/sprites/${id}.png`));
   }
 }
 
-/**
- * Sprite sheet 3 cột (đứng, bước 1, bước 2) x 4 hàng (xuống, trái, phải, lên) + hai hàng tư thế ngồi:
- * hàng 5 = ngồi nhìn xuống / phải / trái (khung 12, 13, 14), hàng 6 = ngồi quay lưng (khung 15).
- */
-function buildCharacter(id, spec) {
-  const sheet = new Img(96, 288);
-  ['down', 'left', 'right', 'up'].forEach((dir, row) => {
-    for (let fr = 0; fr < 3; fr++) {
-      const frame = drawCharFrame(spec, dir === 'left' ? 'right' : dir, fr);
-      sheet.blit(frame, 0, 0, 32, 48, fr * 32, row * 48, dir === 'left');
+/** Sprite nhân vật ghép từ lớp LPC + ghi công vào data/sources.json → art. Lỗi tự kiểm thì dừng. */
+async function buildCharacters() {
+  const credits = new Map();
+  const errs = [];
+  for (const [id, spec] of Object.entries(CHARACTERS)) {
+    const { img, credits: cr } = await buildLpcCharacter(id, spec);
+    errs.push(...checkSheet(id, img));
+    img.save(path.join(ROOT, `assets/sprites/${id}.png`));
+    for (const c of cr) {
+      const prev = credits.get(c.file);
+      if (prev) { if (!prev.usedBy.includes(id)) prev.usedBy.push(id); } else credits.set(c.file, { file: c.file, authors: c.authors, licenses: c.licenses, urls: c.urls, notes: c.notes, usedBy: [id] });
     }
-  });
-  [['down', 0, 4], ['right', 1, 4], ['left', 2, 4], ['up', 0, 5]].forEach(([dir, col, row]) => {
-    const frame = drawCharFrame(spec, dir === 'left' ? 'right' : dir, 0, true);
-    sheet.blit(frame, 0, 0, 32, 48, col * 32, row * 48, dir === 'left');
-  });
-  sheet.save(path.join(ROOT, `assets/sprites/${id}.png`));
+  }
+  if (errs.length) { console.error(errs.join('\n')); process.exit(1); }
+  const file = path.join(ROOT, 'data/sources.json');
+  const src = JSON.parse(fs.readFileSync(file, 'utf8'));
+  src.art = {
+    lpc: [...credits.values()].sort((a, b) => a.file.localeCompare(b.file)),
+    own: { title: 'Đồ tự vẽ trên sprite nhân vật (nón lá, mũ lưỡi trai, dây thẻ, thẻ báo chí, máy ảnh, balo Văn Lang)', license: 'CC0 1.0', author: 'Nhóm dự án' }
+  };
+  fs.writeFileSync(file, JSON.stringify(src, null, 2) + '\n');
+  return `nhân vật ${Object.keys(CHARACTERS).length} (LPC, ${credits.size} lớp ghi công)`;
 }
 
 // ---------------------------------------------------------------- bản đồ
@@ -1560,6 +1379,6 @@ buildTileset();
 const propsInfo = buildProps();
 const badgesInfo = buildBadges(ROOT);
 buildVehicles();
-for (const [id, spec] of Object.entries(CHARACTERS)) buildCharacter(id, spec);
+const charsInfo = await buildCharacters();
 buildBoss();
-console.log(['ok:', `tileset ${TILES.length} ô`, tnLobby, tnF2, tnF3, tnF4, tnF5, street, newsroom, cafe, agency, office2, clinic, cafe2, boss, home, hcm, tnHcm, propsInfo, badgesInfo].join('\n  '));
+console.log(['ok:', `tileset ${TILES.length} ô`, tnLobby, tnF2, tnF3, tnF4, tnF5, street, newsroom, cafe, agency, office2, clinic, cafe2, boss, home, hcm, tnHcm, propsInfo, badgesInfo, charsInfo].join('\n  '));

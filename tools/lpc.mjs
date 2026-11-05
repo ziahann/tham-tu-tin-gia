@@ -154,6 +154,13 @@ export function resolveDir(layerVal, body, vars) {
   return dir && dir.replace(/\$\{head\}/g, vars.head || body);
 }
 
+/** Mục credits của định nghĩa ứng với các thư mục ảnh đã dùng (file là tiền tố của thư mục); không mục nào khớp thì giữ cả. */
+export function creditsFor(def, dirs) {
+  const all = def.credits || [];
+  const hit = all.filter(c => dirs.some(d => d.startsWith(c.file.replace(/\/?$/, '/'))));
+  return hit.length ? hit : all;
+}
+
 /** Tải một ảnh hoạt ảnh của lớp; lớp không có hoạt ảnh đó thì trả null. */
 async function layerAnim(dir, anim, def) {
   if (def.animations && !def.animations.includes(anim)) return null;
@@ -177,7 +184,8 @@ export async function buildLpcCharacter(id, spec) {
       if (!dir) throw new Error(`${id}: lớp ${layer.def} không có thân ${body}`);
       parts.push({ z: val.zPos, dir, def, layer, material });
     }
-    for (const c of def.credits || []) credits.push({ ...c, usedBy: [id] });
+    const dirs = Object.entries(def).filter(([k]) => /^layer_\d+$/.test(k)).map(([, v]) => resolveDir(v, body, layer.vars || {}));
+    for (const c of creditsFor(def, dirs)) credits.push({ ...c, usedBy: [id] });
   }
   parts.sort((a, b) => a.z - b.z);
   const walk = new Img(COLS * FRAME, 4 * FRAME), sit = new Img(3 * FRAME, 4 * FRAME);
