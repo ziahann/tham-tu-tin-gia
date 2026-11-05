@@ -22,6 +22,9 @@ export function makeAnims(scene, key) {
   });
 }
 
+/** Điểm (X, Y) trên màn hình có trúng thân nhân vật đứng ở (vx, vy) — gốc ở bàn chân, hộp 28 x (HEAD_TOP + 2), bỏ phần khung trong suốt. */
+export const hitsActor = (vx, vy, X, Y, scale = 1) => Math.abs(X - vx) <= 14 * scale && Y <= vy && Y >= vy - (HEAD_TOP + 2) * scale;
+
 /** Hướng nhìn theo vectơ (dx, dy). */
 export function dirFrom(dx, dy) {
   return Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up');

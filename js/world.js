@@ -3,7 +3,7 @@
 import { data, t } from './data.js';
 import { state, saveProgress, hasFlag } from './state.js';
 import { direction } from './input.js';
-import { makeAnims, feetBody, dirFrom, idleFrame, Npc, showEmote, nameTag, FRAME, HEAD_TOP } from './actors.js';
+import { makeAnims, feetBody, dirFrom, idleFrame, Npc, showEmote, nameTag, FRAME, HEAD_TOP, hitsActor } from './actors.js';
 import { roomStatus } from './grading.js';
 import * as story from './story.js';
 import * as journey from './journey.js';
@@ -691,7 +691,7 @@ export class WorldScene extends Phaser.Scene {
     let hit = null;
     this.npcs.forEach((npc, id) => {
       const v = npc.sprite.view;
-      if (!hit && v?.visible && v.getBounds().contains(X, Y)) hit = { kind: 'npc', id, x: npc.sprite.x, y: npc.sprite.y };
+      if (!hit && v?.visible && hitsActor(v.x, v.y, X, Y, v.scaleY || 1)) hit = { kind: 'npc', id, x: npc.sprite.x, y: npc.sprite.y };
     });
     if (hit) return hit;
     const PAD = 14;
