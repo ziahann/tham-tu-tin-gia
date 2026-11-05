@@ -2,6 +2,7 @@
 // Xe dừng trước vạch qua đường khi có người đang băng qua và dừng khi gặp xe phía trước. Người chơi đi giữa làn
 // ngoài vạch kẻ thì xe không dừng: chạm xe sẽ bị hất về mép đường (chế độ Nhẹ: xe vẫn dừng cho người chơi).
 import { isLight } from './obstacles.js';
+import { iso } from './iso.js';
 
 const propOf = (o, name) => (o.properties || []).find(p => p.name === name)?.value;
 
@@ -52,7 +53,7 @@ export class Traffic {
     const [fw, fh, d] = ISO_SIZE[key === 'bus' ? 'bus' : key.startsWith('bike') ? 'bike' : 'car'];
     const isoKey = `${key}_${lane.dir > 0 ? 'e' : 'w'}`;
     const tex = this.scene.textures.get(isoKey).getSourceImage();
-    this.scene.views?.add(s, { isoTex: { key: isoKey, fw, ay: Math.ceil(d / 2) + fh, h: tex.height, d } });
+    this.scene.views?.add(s, iso.mode === 'top' ? {} : { isoTex: { key: isoKey, fw, ay: Math.ceil(d / 2) + fh, h: tex.height, d } });
     const car = { sprite: s, lane, max: speed * (0.9 + Math.random() * 0.2), v: speed, half: w / 2 };
     // không đè lên xe khác lúc rải sẵn
     if (this.cars.some(c => c.lane === lane && Math.abs(c.sprite.x - sx) < c.half + car.half + GAP)) { s.view?.destroy(); s.destroy(); return; }

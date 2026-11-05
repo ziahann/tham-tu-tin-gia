@@ -8,22 +8,48 @@ export const WALL_H = 56;
 const WALL_NAMES = new Set(['wall_top', 'wall_upper', 'wall_lower', 'wall_face', 'door_closed', 'window', 'pinboard']);
 
 /** Phép chiếu dùng chung cho cảnh hiện tại. */
+// mode 'top': góc nhìn từ trên xuống (mặc định) — phép chiếu đồng nhất, độ sâu = y; 'iso': phép chiếu thoi cũ.
 export const iso = {
+  mode: 'top',
   ox: 0,
-  P(x, y) { return { x: x - y + this.ox, y: (x + y) / 2 }; },
-  depth(x, y) { return x + y; },
+  P(x, y) { return this.mode === 'top' ? { x, y } : { x: x - y + this.ox, y: (x + y) / 2 }; },
+  depth(x, y) { return this.mode === 'top' ? y : x + y; },
   /** Hướng trên màn hình (sx, sy) → hướng logic. */
-  toLogicalDir(sx, sy) { return { x: sy + sx / 2, y: sy - sx / 2 }; },
+  toLogicalDir(sx, sy) { return this.mode === 'top' ? { x: sx, y: sy } : { x: sy + sx / 2, y: sy - sx / 2 }; },
   /** Hướng logic → hướng trên màn hình. */
-  toScreenDir(dx, dy) { return { x: dx - dy, y: (dx + dy) / 2 }; }
+  toScreenDir(dx, dy) { return this.mode === 'top' ? { x: dx, y: dy } : { x: dx - dy, y: (dx + dy) / 2 }; }
 };
 
 /** Đặt gốc chiếu theo kích thước bản đồ (pixel logic) để toạ độ màn hình luôn dương. */
 export function setupIso(wPx, hPx) {
-  iso.ox = hPx;
   iso.w = wPx; iso.h = hPx;
+  if (iso.mode === 'top') { iso.ox = 0; return { width: wPx, height: hPx }; }
+  iso.ox = hPx;
   return { width: wPx + hPx, height: (wPx + hPx) / 2 };
 }
+
+/**
+ * Biên camera top-down: bản đồ mapW x mapH (cộng lề margin mỗi phía, vd. nền mở rộng ở phố); khung nhìn vw x vh
+ * lớn hơn thì nới đều hai phía để bản đồ nằm giữa.
+ */
+export function cameraBounds(mapW, mapH, vw, vh, margin = 0) {
+  const fit = (lo, len, view) => (view > len ? { o: lo - (view - len) / 2, l: view } : { o: lo, l: len });
+  const X = fit(-margin, mapW + 2 * margin, vw), Y = fit(-margin, mapH + 2 * margin, vh);
+  return { x: X.o, y: Y.o, w: X.l, h: Y.l };
+}
+
+/** Đồ quay mặt về đông ở top-down: ảnh đặt giữa chân đế (sâu bh theo x về tây, dài bw theo y quanh o.y). */
+export const eastPropPlacement = (o, bw, bh) => ({ x: o.x - bh / 2, y: o.y + bw / 2, depth: o.y + bw / 2 });
+
+/** Giá trị xuất hiện nhiều nhất (ô nền phổ biến nhất ở mép bản đồ). */
+export function commonTile(list) {
+  const n = new Map();
+  for (const v of list) n.set(v, (n.get(v) || 0) + 1);
+  return [...n].sort((a, b) => b[1] - a[1])[0]?.[0];
+}
+
+/** Bảng tên trên tường: isometric đẩy lên theo độ cắt xiên (w/4); top-down không đẩy. */
+export const wallLabelLift = w => (iso.mode === 'top' ? 0 : w / 4);
 
 /** Ô có phải tường (khối) không. */
 const isWall = t => !!t && WALL_NAMES.has(t.properties?.name);
@@ -155,7 +181,9 @@ export class ViewLayer {
  * lines: các dòng chữ; size, color; plate: nền tối; fixed: { w, h } khung cố định (biển hiệu). Trả về { key, w, h0, h }.
  */
 export function shearedText(scene, lines, { size = 16, color = '#e8ecf2', plate = false, sub = null, fixed = null } = {}) {
-  const key = `txt:${lines.join('|')}:${sub || ''}:${size}:${fixed ? `${fixed.w}x${fixed.h}` : ''}`;
+  // top-down: chữ thẳng (không cắt xiên)
+  const shear = iso.mode === 'top' ? 0 : 0.5;
+  const key = `txt:${lines.join('|')}:${sub || ''}:${size}:${fixed ? `${fixed.w}x${fixed.h}` : ''}:${shear}`;
   const font = n => `${n}px VT323`;
   const probe = document.createElement('canvas').getContext('2d');
   probe.font = font(size);
@@ -164,10 +192,10 @@ export function shearedText(scene, lines, { size = 16, color = '#e8ecf2', plate 
   const h0 = fixed ? fixed.h : lines.length * size + (plate ? 6 : 0);
   if (!scene.textures.exists(key)) {
     const c = document.createElement('canvas');
-    c.width = w; c.height = h0 + Math.ceil(w / 2) + 1;
+    c.width = w; c.height = h0 + Math.ceil(w * shear) + 1;
     const ctx = c.getContext('2d');
     ctx.imageSmoothingEnabled = false;
-    ctx.setTransform(1, 0.5, 0, 1, 0, 0);
+    ctx.setTransform(1, shear, 0, 1, 0, 0);
     if (plate) { ctx.fillStyle = '#0e1015'; ctx.fillRect(0, 0, w, h0); }
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = color;
     ctx.font = font(size);
@@ -177,7 +205,7 @@ export function shearedText(scene, lines, { size = 16, color = '#e8ecf2', plate 
     if (sub) { ctx.font = font(Math.round(size * 0.55)); ctx.fillStyle = '#a3adbf'; ctx.fillText(sub, w / 2, y - size * 0.2); }
     scene.textures.addCanvas(key, c);
   }
-  return { key, w, h0, h: h0 + Math.ceil(w / 2) + 1 };
+  return { key, w, h0, h: h0 + Math.ceil(w * shear) + 1 };
 }
 
 /** Làm mờ tường / đồ vật / tòa nhà đang che người chơi (vẽ sau người chơi và chồng lên ảnh của họ). */
