@@ -158,7 +158,9 @@ export class ViewLayer {
  * lines: các dòng chữ; size, color; plate: nền tối; fixed: { w, h } khung cố định (biển hiệu). Trả về { key, w, h0, h }.
  */
 export function shearedText(scene, lines, { size = 16, color = '#e8ecf2', plate = false, sub = null, fixed = null } = {}) {
-  const key = `txt:${lines.join('|')}:${sub || ''}:${size}:${fixed ? `${fixed.w}x${fixed.h}` : ''}`;
+  // top-down: chữ thẳng (không cắt xiên)
+  const shear = iso.mode === 'top' ? 0 : 0.5;
+  const key = `txt:${lines.join('|')}:${sub || ''}:${size}:${fixed ? `${fixed.w}x${fixed.h}` : ''}:${shear}`;
   const font = n => `${n}px VT323`;
   const probe = document.createElement('canvas').getContext('2d');
   probe.font = font(size);
@@ -167,10 +169,10 @@ export function shearedText(scene, lines, { size = 16, color = '#e8ecf2', plate 
   const h0 = fixed ? fixed.h : lines.length * size + (plate ? 6 : 0);
   if (!scene.textures.exists(key)) {
     const c = document.createElement('canvas');
-    c.width = w; c.height = h0 + Math.ceil(w / 2) + 1;
+    c.width = w; c.height = h0 + Math.ceil(w * shear) + 1;
     const ctx = c.getContext('2d');
     ctx.imageSmoothingEnabled = false;
-    ctx.setTransform(1, 0.5, 0, 1, 0, 0);
+    ctx.setTransform(1, shear, 0, 1, 0, 0);
     if (plate) { ctx.fillStyle = '#0e1015'; ctx.fillRect(0, 0, w, h0); }
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = color;
     ctx.font = font(size);
@@ -180,7 +182,7 @@ export function shearedText(scene, lines, { size = 16, color = '#e8ecf2', plate 
     if (sub) { ctx.font = font(Math.round(size * 0.55)); ctx.fillStyle = '#a3adbf'; ctx.fillText(sub, w / 2, y - size * 0.2); }
     scene.textures.addCanvas(key, c);
   }
-  return { key, w, h0, h: h0 + Math.ceil(w / 2) + 1 };
+  return { key, w, h0, h: h0 + Math.ceil(w * shear) + 1 };
 }
 
 /** Làm mờ tường / đồ vật / tòa nhà đang che người chơi (vẽ sau người chơi và chồng lên ảnh của họ). */
