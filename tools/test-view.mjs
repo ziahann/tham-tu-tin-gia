@@ -9,8 +9,9 @@ const eq = (got, want, label) => {
   if (g !== w) { fails++; console.error(`✗ ${label}: được ${g}, cần ${w}`); }
 };
 
-// --- top-down (mặc định)
-eq(iso.mode, 'top', 'mặc định top-down');
+// --- isometric là mặc định; top-down vẫn dùng được qua iso.mode = 'top'
+eq(iso.mode, 'iso', 'mặc định isometric');
+iso.mode = 'top';
 eq(setupIso(100, 50), { width: 100, height: 50 }, 'top: setupIso');
 eq(iso.P(10, 20), { x: 10, y: 20 }, 'top: P');
 eq(iso.depth(10, 20), 20, 'top: depth theo y');

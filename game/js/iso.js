@@ -8,9 +8,9 @@ export const WALL_H = 56;
 const WALL_NAMES = new Set(['wall_top', 'wall_upper', 'wall_lower', 'wall_face', 'door_closed', 'window', 'pinboard']);
 
 /** Phép chiếu dùng chung cho cảnh hiện tại. */
-// mode 'top': góc nhìn từ trên xuống (mặc định) — phép chiếu đồng nhất, độ sâu = y; 'iso': phép chiếu thoi cũ.
+// mode 'top': góc nhìn từ trên xuống — phép chiếu đồng nhất, độ sâu = y; 'iso' (mặc định): phép chiếu thoi.
 export const iso = {
-  mode: 'top',
+  mode: 'iso',
   ox: 0,
   P(x, y) { return this.mode === 'top' ? { x, y } : { x: x - y + this.ox, y: (x + y) / 2 }; },
   depth(x, y) { return this.mode === 'top' ? y : x + y; },
