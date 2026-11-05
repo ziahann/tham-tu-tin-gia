@@ -231,5 +231,764 @@
       "site": "incompetech.com",
       "file": "assets/audio/ending.mp3"
     }
-  ]
+  ],
+  "art": {
+    "lpc": [
+      {
+        "file": "body/bodies/female",
+        "authors": [
+          "Benjamin K. Smith (BenCreating)",
+          "bluecarrot16",
+          "TheraHedwig",
+          "Evert",
+          "MuffinElZangano",
+          "Durrani",
+          "Pierre Vigier (pvigier)",
+          "ElizaWy",
+          "Matthew Krohn (makrohn)",
+          "Johannes Sjölund (wulax)",
+          "Stephen Challener (Redshrike)"
+        ],
+        "licenses": [
+          "OGA-BY 3.0",
+          "CC-BY-SA 3.0",
+          "GPL 3.0"
+        ],
+        "urls": [
+          "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+          "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+          "https://opengameart.org/content/lpc-ladies",
+          "https://opengameart.org/content/lpc-7-womens-shirts",
+          "https://opengameart.org/content/lpc-jump-expanded",
+          "https://opengameart.org/content/lpc-be-seated",
+          "https://opengameart.org/content/lpc-revised-character-basics",
+          "https://gitlab.com/vagabondgame/lpc-characters",
+          "https://opengameart.org/content/lpc-male-jumping-animation-by-durrani",
+          "https://opengameart.org/content/lpc-runcycle-and-diagonal-walkcycle"
+        ],
+        "notes": "see details at https://opengameart.org/content/lpc-character-bases",
+        "usedBy": [
+          "hero_f",
+          "npc1",
+          "npc8",
+          "npc5",
+          "amb_barista",
+          "amb_vendor",
+          "amb_jogger",
+          "amb_nurse",
+          "amb_clerk2",
+          "amb_patron",
+          "amb_hcm_vendor",
+          "amb_hcm_reporter",
+          "amb_auntie",
+          "amb_cafe_b",
+          "amb_hcm_student2",
+          "amb_rumor2"
+        ]
+      },
+      {
+        "file": "body/bodies/male",
+        "authors": [
+          "bluecarrot16",
+          "JaidynReiman",
+          "Benjamin K. Smith (BenCreating)",
+          "Evert",
+          "Eliza Wyatt (ElizaWy)",
+          "TheraHedwig",
+          "MuffinElZangano",
+          "Durrani",
+          "Johannes Sjölund (wulax)",
+          "Stephen Challener (Redshrike)"
+        ],
+        "licenses": [
+          "OGA-BY 3.0",
+          "CC-BY-SA 3.0",
+          "GPL 3.0"
+        ],
+        "urls": [
+          "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+          "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+          "https://opengameart.org/content/lpc-male-jumping-animation-by-durrani",
+          "https://opengameart.org/content/lpc-runcycle-and-diagonal-walkcycle",
+          "https://opengameart.org/content/lpc-revised-character-basics",
+          "https://opengameart.org/content/lpc-be-seated",
+          "https://opengameart.org/content/lpc-runcycle-for-male-muscular-and-pregnant-character-bases-with-modular-heads",
+          "https://opengameart.org/content/lpc-jump-expanded",
+          "https://opengameart.org/content/lpc-character-bases"
+        ],
+        "notes": "see details at https://opengameart.org/content/lpc-character-bases; 'Thick' Male Revised Run/Climb by JaidynReiman (based on ElizaWy's LPC Revised)",
+        "usedBy": [
+          "hero_m",
+          "npc2",
+          "npc7",
+          "npc9",
+          "npc3",
+          "npc4",
+          "npc6",
+          "amb_guard",
+          "amb_worker",
+          "amb_tourist",
+          "amb_fisher",
+          "amb_elder",
+          "amb_doctor",
+          "amb_patient",
+          "amb_clerk",
+          "amb_barista2",
+          "amb_rumor",
+          "npc10",
+          "amb_hcm_student",
+          "amb_hcm_elder",
+          "amb_cafe_a",
+          "amb_intern"
+        ]
+      },
+      {
+        "file": "body/bodies/teen",
+        "authors": [
+          "bluecarrot16",
+          "Evert",
+          "TheraHedwig",
+          "Benjamin K. Smith (BenCreating)",
+          "MuffinElZangano",
+          "Durrani",
+          "Pierre Vigier (pvigier)",
+          "Eliza Wyatt (ElizaWy)",
+          "Matthew Krohn (makrohn)",
+          "Johannes Sjölund (wulax)",
+          "Stephen Challener (Redshrike)"
+        ],
+        "licenses": [
+          "OGA-BY 3.0",
+          "CC-BY-SA 3.0",
+          "GPL 3.0"
+        ],
+        "urls": [
+          "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+          "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+          "https://opengameart.org/content/lpc-ladies",
+          "https://opengameart.org/content/lpc-teen-unisex-base-clothes",
+          "https://opengameart.org/content/lpc-jump-expanded",
+          "https://opengameart.org/content/lpc-revised-character-basics",
+          "https://opengameart.org/content/lpc-be-seated",
+          "https://gitlab.com/vagabondgame/lpc-characters",
+          "https://opengameart.org/content/lpc-male-jumping-animation-by-durrani",
+          "https://opengameart.org/content/lpc-jump-expanded"
+        ],
+        "notes": "",
+        "usedBy": [
+          "amb_student"
+        ]
+      },
+      {
+        "file": "facial/glasses/glasses",
+        "authors": [
+          "ElizaWy"
+        ],
+        "licenses": [
+          "OGA-BY 3.0"
+        ],
+        "urls": [
+          "https://github.com/ElizaWy/LPC/tree/main/Characters/Head%20Accessories",
+          "https://opengameart.org/content/lpc-expanded-sit-run-jump-more"
+        ],
+        "notes": "",
+        "usedBy": [
+          "npc1",
+          "npc2",
+          "npc7",
+          "npc3",
+          "amb_elder",
+          "amb_doctor",
+          "amb_clerk2",
+          "npc10",
+          "amb_cafe_b"
+        ]
+      },
+      {
+        "file": "feet/shoes",
+        "authors": [
+          "JaidynReiman",
+          "bluecarrot16",
+          "Johannes Sjölund (wulax)"
+        ],
+        "licenses": [
+          "OGA-BY 3.0",
+          "CC-BY-SA 3.0",
+          "GPL 3.0"
+        ],
+        "urls": [
+          "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+          "http://opengameart.org/content/lpc-clothing-updates",
+          "https://opengameart.org/content/lpc-expanded-socks-shoes"
+        ],
+        "notes": "original by wulax, edited for v3 base by bluecarrot16, Jump/Sit/Emote/Run/Revised Combat by JaidynReiman",
+        "usedBy": [
+          "hero_m",
+          "hero_f",
+          "npc1",
+          "npc2",
+          "npc7",
+          "npc8",
+          "npc9",
+          "npc3",
+          "npc4",
+          "npc5",
+          "npc6",
+          "amb_guard",
+          "amb_worker",
+          "amb_barista",
+          "amb_vendor",
+          "amb_tourist",
+          "amb_fisher",
+          "amb_student",
+          "amb_elder",
+          "amb_jogger",
+          "amb_doctor",
+          "amb_nurse",
+          "amb_patient",
+          "amb_clerk",
+          "amb_clerk2",
+          "amb_barista2",
+          "amb_patron",
+          "amb_rumor",
+          "npc10",
+          "amb_hcm_vendor",
+          "amb_hcm_student",
+          "amb_hcm_elder",
+          "amb_hcm_reporter",
+          "amb_auntie",
+          "amb_cafe_a",
+          "amb_cafe_b",
+          "amb_intern",
+          "amb_hcm_student2",
+          "amb_rumor2"
+        ]
+      },
+      {
+        "file": "feet/shoes/basic/thin",
+        "authors": [
+          "JaidynReiman",
+          "Joe White",
+          "Johannes Sjölund (wulax)"
+        ],
+        "licenses": [
+          "OGA-BY 3.0",
+          "CC-BY-SA 3.0",
+          "GPL 3.0"
+        ],
+        "urls": [
+          "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+          "http://opengameart.org/content/lpc-clothing-updates",
+          "https://opengameart.org/content/lpc-expanded-socks-shoes"
+        ],
+        "notes": "original by wulax, edited for female base by Joe White, edited for v3 base by bluecarrot16, Jump/Sit/Emote/Run/Revised Combat by JaidynReiman",
+        "usedBy": [
+          "hero_f",
+          "npc1",
+          "npc8",
+          "npc5",
+          "amb_barista",
+          "amb_vendor",
+          "amb_student",
+          "amb_jogger",
+          "amb_nurse",
+          "amb_clerk2",
+          "amb_patron",
+          "amb_hcm_vendor",
+          "amb_hcm_reporter",
+          "amb_auntie",
+          "amb_cafe_b",
+          "amb_hcm_student2",
+          "amb_rumor2"
+        ]
+      },
+      {
+        "file": "hair/balding",
+        "authors": [
+          "ElizaWy"
+        ],
+        "licenses": [
+          "OGA-BY 3.0"
+        ],
+        "urls": [
+          "https://opengameart.org/content/lpc-hair"
+        ],
+        "notes": "",
+        "usedBy": [
+          "npc3",
+          "amb_elder",
+          "amb_patient",
+          "amb_hcm_elder"
+        ]
+      },
+      {
+        "file": "hair/bob",
+        "authors": [
+          "ElizaWy",
+          "bluecarrot16"
+        ],
+        "licenses": [
+          "CC0"
+        ],
+        "urls": [
+          "https://opengameart.org/content/lpc-hair",
+          "https://github.com/ElizaWy/LPC/blob/main/Characters/Hair",
+          "https://opengameart.org/content/lpc-expanded-sit-run-jump-more"
+        ],
+        "notes": "Original by bluecarrot16. Edited and animated by ElizaWy.",
+        "usedBy": [
+          "npc8",
+          "amb_barista",
+          "amb_jogger",
+          "amb_nurse",
+          "amb_patron",
+          "amb_hcm_vendor",
+          "amb_auntie",
+          "amb_rumor2"
+        ]
+      },
+      {
+        "file": "hair/long_straight",
+        "authors": [
+          "JaidynReiman",
+          "thecilekli",
+          "bluecarrot16"
+        ],
+        "licenses": [
+          "CC0"
+        ],
+        "urls": [
+          "https://opengameart.org/content/lpc-long-straight-hair-with-12-colors",
+          "https://opengameart.org/content/lpc-hair",
+          "https://opengameart.org/content/lpc-expanded-hair"
+        ],
+        "notes": "",
+        "usedBy": [
+          "hero_f",
+          "npc1",
+          "npc5",
+          "amb_vendor",
+          "amb_clerk2",
+          "amb_hcm_reporter",
+          "amb_cafe_b",
+          "amb_hcm_student2"
+        ]
+      },
+      {
+        "file": "hair/messy2",
+        "authors": [
+          "JaidynReiman",
+          "Manuel Riecke (MrBeast)"
+        ],
+        "licenses": [
+          "CC-BY-SA 3.0",
+          "GPL 3.0"
+        ],
+        "urls": [
+          "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+          "https://opengameart.org/content/lpc-expanded-hair"
+        ],
+        "notes": "",
+        "usedBy": [
+          "npc2",
+          "npc9",
+          "npc4",
+          "amb_student",
+          "amb_barista2",
+          "amb_rumor",
+          "amb_intern"
+        ]
+      },
+      {
+        "file": "hair/parted",
+        "authors": [
+          "JaidynReiman",
+          "Joe White",
+          "Manuel Riecke (MrBeast)"
+        ],
+        "licenses": [
+          "CC-BY-SA 3.0",
+          "GPL 3.0"
+        ],
+        "urls": [
+          "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+          "https://github.com/jrconway3/Universal-LPC-spritesheet/commit/46ddcf05a0e43e7aa6ffd47d350eef0eb529ac24",
+          "https://opengameart.org/content/lpc-expanded-hair"
+        ],
+        "notes": "down 4 and 5 added by JaidynReiman; recolors by Joe White; original by Manuel Riecke (MrBeast)",
+        "usedBy": [
+          "hero_m",
+          "npc7",
+          "npc6",
+          "amb_guard",
+          "amb_worker",
+          "amb_tourist",
+          "amb_fisher",
+          "amb_doctor",
+          "amb_clerk",
+          "npc10",
+          "amb_hcm_student",
+          "amb_cafe_a"
+        ]
+      },
+      {
+        "file": "head/heads/human/female",
+        "authors": [
+          "bluecarrot16",
+          "Benjamin K. Smith (BenCreating)",
+          "Stephen Challener (Redshrike)"
+        ],
+        "licenses": [
+          "OGA-BY 3.0",
+          "CC-BY-SA 3.0",
+          "GPL 3.0"
+        ],
+        "urls": [
+          "https://opengameart.org/content/",
+          "https://opengameart.org/content/lpc-character-bases"
+        ],
+        "notes": "original head by Redshrike, tweaks by BenCreating, modular version by bluecarrot16",
+        "usedBy": [
+          "hero_f",
+          "npc1",
+          "npc8",
+          "npc5",
+          "amb_barista",
+          "amb_vendor",
+          "amb_jogger",
+          "amb_nurse",
+          "amb_clerk2",
+          "amb_patron",
+          "amb_hcm_vendor",
+          "amb_hcm_reporter",
+          "amb_auntie",
+          "amb_cafe_b",
+          "amb_hcm_student2",
+          "amb_rumor2"
+        ]
+      },
+      {
+        "file": "head/heads/human/male",
+        "authors": [
+          "bluecarrot16",
+          "Benjamin K. Smith (BenCreating)",
+          "Stephen Challener (Redshrike)"
+        ],
+        "licenses": [
+          "OGA-BY 3.0",
+          "CC-BY-SA 3.0",
+          "GPL 3.0"
+        ],
+        "urls": [
+          "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+          "https://opengameart.org/content/lpc-character-bases"
+        ],
+        "notes": "original head by Redshrike, tweaks by BenCreating, modular version by bluecarrot16",
+        "usedBy": [
+          "hero_m",
+          "npc2",
+          "npc7",
+          "npc9",
+          "npc4",
+          "npc6",
+          "amb_guard",
+          "amb_worker",
+          "amb_tourist",
+          "amb_student",
+          "amb_doctor",
+          "amb_clerk",
+          "amb_barista2",
+          "amb_rumor",
+          "npc10",
+          "amb_hcm_student",
+          "amb_cafe_a",
+          "amb_intern"
+        ]
+      },
+      {
+        "file": "head/heads/human/male_elderly",
+        "authors": [
+          "Benjamin K. Smith (BenCreating)",
+          "Eliza Wyatt (ElizaWy)",
+          "Stephen Challener (Redshrike)"
+        ],
+        "licenses": [
+          "OGA-BY 3.0",
+          "CC-BY 3.0"
+        ],
+        "urls": [
+          "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+          "https://opengameart.org/content/lpc-revised-elders",
+          "https://opengameart.org/content/lpc-character-bases"
+        ],
+        "notes": "",
+        "usedBy": [
+          "npc3",
+          "amb_fisher",
+          "amb_elder",
+          "amb_patient",
+          "amb_hcm_elder"
+        ]
+      },
+      {
+        "file": "legs/pants/male",
+        "authors": [
+          "bluecarrot16",
+          "JaidynReiman",
+          "ElizaWy",
+          "Matthew Krohn (makrohn)",
+          "Johannes Sjölund (wulax)",
+          "Stephen Challener (Redshrike)"
+        ],
+        "licenses": [
+          "OGA-BY 3.0",
+          "GPL 3.0",
+          "CC-BY-SA 3.0"
+        ],
+        "urls": [
+          "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+          "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+          "https://opengameart.org/content/lpc-expanded-pants"
+        ],
+        "notes": "original male pants by wulax, recolors and edits to v3 base by bluecarrot16, climb/jump/run/sit/emotes/revised combat by JaidynReiman based on ElizaWy's LPC Revised",
+        "usedBy": [
+          "hero_m",
+          "npc2",
+          "npc7",
+          "npc9",
+          "npc3",
+          "npc4",
+          "npc6",
+          "amb_guard",
+          "amb_worker",
+          "amb_tourist",
+          "amb_fisher",
+          "amb_elder",
+          "amb_doctor",
+          "amb_patient",
+          "amb_clerk",
+          "amb_barista2",
+          "amb_rumor",
+          "npc10",
+          "amb_hcm_student",
+          "amb_hcm_elder",
+          "amb_cafe_a",
+          "amb_intern"
+        ]
+      },
+      {
+        "file": "legs/pants/thin",
+        "authors": [
+          "bluecarrot16",
+          "JaidynReiman",
+          "ElizaWy",
+          "Joe White",
+          "Matthew Krohn (makrohn)",
+          "Johannes Sjölund (wulax)",
+          "Stephen Challener (Redshrike)"
+        ],
+        "licenses": [
+          "OGA-BY 3.0",
+          "GPL 3.0",
+          "CC-BY-SA 3.0"
+        ],
+        "urls": [
+          "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+          "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+          "http://opengameart.org/content/lpc-clothing-updates",
+          "https://opengameart.org/content/lpc-expanded-pants"
+        ],
+        "notes": "original male pants by wulax, edited for female by Joe White, recolors and edits to v3 base by bluecarrot16, teen legs by ElizaWy derived from base, climb/jump/run/sit/emotes/revised combat by JaidynReiman based on ElizaWy's LPC Revised",
+        "usedBy": [
+          "amb_barista",
+          "amb_vendor",
+          "amb_student",
+          "amb_jogger",
+          "amb_nurse",
+          "amb_patron",
+          "amb_hcm_vendor",
+          "amb_auntie",
+          "amb_hcm_student2",
+          "amb_rumor2"
+        ]
+      },
+      {
+        "file": "legs/skirts/plain",
+        "authors": [
+          "bluecarrot16",
+          "Pierre Vigier (pvigier)",
+          "Johannes Sjölund (wulax)",
+          "Ahmad3366",
+          "JaidynReiman"
+        ],
+        "licenses": [
+          "OGA-BY 3.0",
+          "CC-BY-SA 3.0",
+          "GPL 3.0"
+        ],
+        "urls": [
+          "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites"
+        ],
+        "notes": "original by wulax, edited for female base by pvigier, edited for v3 base by bluecarrot16, idle & sit by Ahmad3366, color reduced & female sit/emote by JaidynReiman",
+        "usedBy": [
+          "hero_f",
+          "npc1",
+          "npc8",
+          "npc5",
+          "amb_clerk2",
+          "amb_hcm_reporter",
+          "amb_cafe_b"
+        ]
+      },
+      {
+        "file": "torso/clothes/longsleeve/longsleeve2",
+        "authors": [
+          "ElizaWy",
+          "JaidynReiman",
+          "Stephen Challener (Redshrike)",
+          "Johannes Sjölund (wulax)"
+        ],
+        "licenses": [
+          "OGA-BY 3.0"
+        ],
+        "urls": [
+          "https://opengameart.org/content/lpc-revised-character-basics",
+          "https://github.com/ElizaWy/LPC/tree/main/Characters/Clothing",
+          "https://opengameart.org/content/lpc-expanded-sit-run-jump-more",
+          "https://opengameart.org/content/lpc-expanded-simple-shirts"
+        ],
+        "notes": "original by ElizaWy; spellcast/thrust/shoot/hurt/male adapted from original by JaidynReiman",
+        "usedBy": [
+          "hero_m",
+          "hero_f",
+          "npc5",
+          "amb_vendor",
+          "amb_fisher",
+          "amb_patient",
+          "amb_clerk2",
+          "amb_patron",
+          "amb_hcm_vendor",
+          "amb_hcm_elder",
+          "amb_cafe_b",
+          "amb_rumor2"
+        ]
+      },
+      {
+        "file": "torso/clothes/longsleeve/longsleeve2_buttoned",
+        "authors": [
+          "ElizaWy",
+          "JaidynReiman",
+          "Stephen Challener (Redshrike)",
+          "Johannes Sjölund (wulax)"
+        ],
+        "licenses": [
+          "OGA-BY 3.0"
+        ],
+        "urls": [
+          "http://opengameart.org/content/lpc-revised-character-basics",
+          "https://github.com/ElizaWy/LPC/tree/main/Characters/Clothing",
+          "https://opengameart.org/content/lpc-expanded-sit-run-jump-more",
+          "https://opengameart.org/content/lpc-expanded-simple-shirts"
+        ],
+        "notes": "original by ElizaWy; spellcast/thrust/shoot/hurt/male adapted from original by JaidynReiman",
+        "usedBy": [
+          "npc1",
+          "npc7",
+          "npc9",
+          "amb_guard",
+          "amb_worker",
+          "amb_doctor",
+          "amb_clerk",
+          "npc10",
+          "amb_hcm_reporter",
+          "amb_cafe_a",
+          "amb_intern"
+        ]
+      },
+      {
+        "file": "torso/clothes/longsleeve/longsleeve2_cardigan",
+        "authors": [
+          "ElizaWy",
+          "JaidynReiman",
+          "Stephen Challener (Redshrike)",
+          "Johannes Sjölund (wulax)"
+        ],
+        "licenses": [
+          "OGA-BY 3.0"
+        ],
+        "urls": [
+          "http://opengameart.org/content/lpc-revised-character-basics",
+          "https://github.com/ElizaWy/LPC/tree/main/Characters/Clothing",
+          "https://opengameart.org/content/lpc-expanded-sit-run-jump-more",
+          "https://opengameart.org/content/lpc-expanded-simple-shirts"
+        ],
+        "notes": "original by ElizaWy; spellcast/thrust/shoot/hurt/male adapted from original by JaidynReiman",
+        "usedBy": [
+          "npc8",
+          "npc3",
+          "amb_elder"
+        ]
+      },
+      {
+        "file": "torso/clothes/shortsleeve/shortsleeve_polo",
+        "authors": [
+          "ElizaWy",
+          "JaidynReiman",
+          "Stephen Challener (Redshrike)",
+          "Johannes Sjölund (wulax)"
+        ],
+        "licenses": [
+          "OGA-BY 3.0"
+        ],
+        "urls": [
+          "http://opengameart.org/content/lpc-revised-character-basics",
+          "https://github.com/ElizaWy/LPC/tree/main/Characters/Clothing",
+          "https://opengameart.org/content/lpc-expanded-sit-run-jump-more",
+          "https://opengameart.org/content/lpc-expanded-simple-shirts"
+        ],
+        "notes": "original by ElizaWy; spellcast/thrust/shoot/hurt/male adapted from original by JaidynReiman",
+        "usedBy": [
+          "npc2",
+          "npc6",
+          "amb_nurse"
+        ]
+      },
+      {
+        "file": "torso/clothes/shortsleeve/tshirt",
+        "authors": [
+          "ElizaWy",
+          "JaidynReiman",
+          "Stephen Challener (Redshrike)",
+          "Johannes Sjölund (wulax)"
+        ],
+        "licenses": [
+          "OGA-BY 3.0"
+        ],
+        "urls": [
+          "https://opengameart.org/content/lpc-revised-character-basics",
+          "https://github.com/ElizaWy/LPC/tree/main/Characters/Clothing",
+          "https://opengameart.org/content/lpc-expanded-sit-run-jump-more",
+          "https://opengameart.org/content/lpc-expanded-simple-shirts"
+        ],
+        "notes": "original by ElizaWy; spellcast/thrust/shoot/hurt/male adapted from original by JaidynReiman",
+        "usedBy": [
+          "npc4",
+          "amb_barista",
+          "amb_tourist",
+          "amb_student",
+          "amb_jogger",
+          "amb_barista2",
+          "amb_rumor",
+          "amb_hcm_student",
+          "amb_auntie",
+          "amb_hcm_student2"
+        ]
+      }
+    ],
+    "own": {
+      "title": "Đồ tự vẽ trên sprite nhân vật (nón lá, mũ lưỡi trai, dây thẻ, thẻ báo chí, máy ảnh, balo Văn Lang)",
+      "license": "CC0 1.0",
+      "author": "Nhóm dự án"
+    }
+  }
 }
