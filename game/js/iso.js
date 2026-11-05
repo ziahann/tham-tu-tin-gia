@@ -8,20 +8,23 @@ export const WALL_H = 56;
 const WALL_NAMES = new Set(['wall_top', 'wall_upper', 'wall_lower', 'wall_face', 'door_closed', 'window', 'pinboard']);
 
 /** Phép chiếu dùng chung cho cảnh hiện tại. */
+// mode 'top': góc nhìn từ trên xuống (mặc định) — phép chiếu đồng nhất, độ sâu = y; 'iso': phép chiếu thoi cũ.
 export const iso = {
+  mode: 'top',
   ox: 0,
-  P(x, y) { return { x: x - y + this.ox, y: (x + y) / 2 }; },
-  depth(x, y) { return x + y; },
+  P(x, y) { return this.mode === 'top' ? { x, y } : { x: x - y + this.ox, y: (x + y) / 2 }; },
+  depth(x, y) { return this.mode === 'top' ? y : x + y; },
   /** Hướng trên màn hình (sx, sy) → hướng logic. */
-  toLogicalDir(sx, sy) { return { x: sy + sx / 2, y: sy - sx / 2 }; },
+  toLogicalDir(sx, sy) { return this.mode === 'top' ? { x: sx, y: sy } : { x: sy + sx / 2, y: sy - sx / 2 }; },
   /** Hướng logic → hướng trên màn hình. */
-  toScreenDir(dx, dy) { return { x: dx - dy, y: (dx + dy) / 2 }; }
+  toScreenDir(dx, dy) { return this.mode === 'top' ? { x: dx, y: dy } : { x: dx - dy, y: (dx + dy) / 2 }; }
 };
 
 /** Đặt gốc chiếu theo kích thước bản đồ (pixel logic) để toạ độ màn hình luôn dương. */
 export function setupIso(wPx, hPx) {
-  iso.ox = hPx;
   iso.w = wPx; iso.h = hPx;
+  if (iso.mode === 'top') { iso.ox = 0; return { width: wPx, height: hPx }; }
+  iso.ox = hPx;
   return { width: wPx + hPx, height: (wPx + hPx) / 2 };
 }
 
