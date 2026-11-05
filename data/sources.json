@@ -268,7 +268,6 @@
         ],
         "notes": "see details at https://opengameart.org/content/lpc-character-bases",
         "usedBy": [
-          "hero_f",
           "npc1",
           "npc8",
           "npc5",
@@ -318,7 +317,6 @@
         ],
         "notes": "see details at https://opengameart.org/content/lpc-character-bases; 'Thick' Male Revised Run/Climb by JaidynReiman (based on ElizaWy's LPC Revised)",
         "usedBy": [
-          "hero_m",
           "npc2",
           "npc7",
           "npc9",
@@ -423,8 +421,6 @@
         ],
         "notes": "original by wulax, edited for v3 base by bluecarrot16, Jump/Sit/Emote/Run/Revised Combat by JaidynReiman",
         "usedBy": [
-          "hero_m",
-          "hero_f",
           "npc1",
           "npc2",
           "npc7",
@@ -483,7 +479,6 @@
         ],
         "notes": "original by wulax, edited for female base by Joe White, edited for v3 base by bluecarrot16, Jump/Sit/Emote/Run/Revised Combat by JaidynReiman",
         "usedBy": [
-          "hero_f",
           "npc1",
           "npc8",
           "npc5",
@@ -564,7 +559,6 @@
         ],
         "notes": "",
         "usedBy": [
-          "hero_f",
           "npc1",
           "npc5",
           "amb_vendor",
@@ -617,7 +611,6 @@
         ],
         "notes": "down 4 and 5 added by JaidynReiman; recolors by Joe White; original by Manuel Riecke (MrBeast)",
         "usedBy": [
-          "hero_m",
           "npc7",
           "npc6",
           "amb_guard",
@@ -649,7 +642,6 @@
         ],
         "notes": "original head by Redshrike, tweaks by BenCreating, modular version by bluecarrot16",
         "usedBy": [
-          "hero_f",
           "npc1",
           "npc8",
           "npc5",
@@ -685,7 +677,6 @@
         ],
         "notes": "original head by Redshrike, tweaks by BenCreating, modular version by bluecarrot16",
         "usedBy": [
-          "hero_m",
           "npc2",
           "npc7",
           "npc9",
@@ -752,7 +743,6 @@
         ],
         "notes": "original male pants by wulax, recolors and edits to v3 base by bluecarrot16, climb/jump/run/sit/emotes/revised combat by JaidynReiman based on ElizaWy's LPC Revised",
         "usedBy": [
-          "hero_m",
           "npc2",
           "npc7",
           "npc9",
@@ -831,7 +821,6 @@
         ],
         "notes": "original by wulax, edited for female base by pvigier, edited for v3 base by bluecarrot16, idle & sit by Ahmad3366, color reduced & female sit/emote by JaidynReiman",
         "usedBy": [
-          "hero_f",
           "npc1",
           "npc8",
           "npc5",
@@ -859,8 +848,6 @@
         ],
         "notes": "original by ElizaWy; spellcast/thrust/shoot/hurt/male adapted from original by JaidynReiman",
         "usedBy": [
-          "hero_m",
-          "hero_f",
           "npc5",
           "amb_vendor",
           "amb_fisher",
@@ -986,7 +973,7 @@
       }
     ],
     "own": {
-      "title": "Đồ tự vẽ trên sprite nhân vật (nón lá, mũ lưỡi trai, dây thẻ, thẻ báo chí, máy ảnh, balo Văn Lang)",
+      "title": "Nhân vật người chơi (hero_m, hero_f, phong cách chibi tham khảo Ozzbit Games) và đồ tự vẽ trên sprite nhân vật (nón lá, mũ lưỡi trai, dây thẻ, thẻ báo chí, máy ảnh, balo Văn Lang)",
       "license": "CC0 1.0",
       "author": "Nhóm dự án"
     }

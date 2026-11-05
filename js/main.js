@@ -148,7 +148,7 @@ function openSources() {
     box.append(a);
     wrap.append(box);
   }
-  // Ghi công hình nhân vật (LPC + đồ tự vẽ)
+  // Ghi công hình nhân vật (LPC, người chơi và đồ tự vẽ)
   const art = data.sources.art;
   if (art) {
     wrap.append(el('h3', null, t('sourcesPanel.art')), el('p', 'muted small', t('sourcesPanel.artNote')));
@@ -158,6 +158,7 @@ function openSources() {
       if (a.urls?.[0]) { const l = el('a', 'muted small', a.urls[0]); l.href = a.urls[0]; l.target = '_blank'; l.rel = 'noopener noreferrer'; box.append(l); }
       wrap.append(box);
     }
+    wrap.append(el('div', 'resource', t('sourcesPanel.artHero')));
     wrap.append(el('div', 'resource', t('sourcesPanel.artOwn')));
   }
   openModal(t('sourcesPanel.title'), wrap);

@@ -170,7 +170,8 @@
     "authors": "Tác giả game",
     "authorsList": "Trần Huỳnh Gia Hân và Đào Thị Mai Chi",
     "art": "Hình nhân vật",
-    "artNote": "Sprite nhân vật ghép từ các lớp Liberated Pixel Cup (LPC), đổi màu và thêm đồ tự vẽ. Vì có lớp CC-BY-SA 3.0 / GPL 3.0, sprite nhân vật được chia sẻ theo CC-BY-SA 3.0.",
+    "artNote": "Sprite NPC ghép từ các lớp Liberated Pixel Cup (LPC), đổi màu và thêm đồ tự vẽ. Vì có lớp CC-BY-SA 3.0 / GPL 3.0, sprite nhân vật được chia sẻ theo CC-BY-SA 3.0.",
+    "artHero": "Nhân vật người chơi (hai mẫu thám tử): nhóm dự án tự vẽ bằng code (CC0 1.0), phong cách chibi tham khảo nhân vật của Ozzbit Games.",
     "artOwn": "Nón lá, mũ lưỡi trai, dây thẻ, thẻ báo chí, máy ảnh, balo Văn Lang: nhóm dự án tự vẽ (CC0 1.0)."
   },
   "settingsPanel": {
