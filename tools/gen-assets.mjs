@@ -9,6 +9,7 @@ import { allProps, vehicles } from './props.mjs';
 import { isoGround, isoWalls } from './iso.mjs';
 import { buildBadges } from './badges.mjs';
 import { buildLpcCharacter, checkSheet } from './lpc.mjs';
+import { buildHero } from './hero.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', 'game');
 const T = 32; // cỡ ô
@@ -626,6 +627,7 @@ async function buildCharacters() {
   const credits = new Map();
   const errs = [];
   for (const [id, spec] of Object.entries(CHARACTERS)) {
+    if (id === 'hero_m' || id === 'hero_f') { buildHero(id).save(path.join(ROOT, `assets/sprites/${id}.png`)); continue; }
     const { img, credits: cr } = await buildLpcCharacter(id, spec);
     errs.push(...checkSheet(id, img));
     img.save(path.join(ROOT, `assets/sprites/${id}.png`));
@@ -639,10 +641,10 @@ async function buildCharacters() {
   const src = JSON.parse(fs.readFileSync(file, 'utf8'));
   src.art = {
     lpc: [...credits.values()].sort((a, b) => a.file.localeCompare(b.file)),
-    own: { title: 'Đồ tự vẽ trên sprite nhân vật (nón lá, mũ lưỡi trai, dây thẻ, thẻ báo chí, máy ảnh, balo Văn Lang)', license: 'CC0 1.0', author: 'Nhóm dự án' }
+    own: { title: 'Nhân vật người chơi (hero_m, hero_f, phong cách chibi tham khảo Ozzbit Games) và đồ tự vẽ trên sprite nhân vật (nón lá, mũ lưỡi trai, dây thẻ, thẻ báo chí, máy ảnh, balo Văn Lang)', license: 'CC0 1.0', author: 'Nhóm dự án' }
   };
   fs.writeFileSync(file, JSON.stringify(src, null, 2) + '\n');
-  return `nhân vật ${Object.keys(CHARACTERS).length} (LPC, ${credits.size} lớp ghi công)`;
+  return `nhân vật ${Object.keys(CHARACTERS).length} (LPC ${credits.size} lớp ghi công; người chơi tự vẽ)`;
 }
 
 // ---------------------------------------------------------------- bản đồ

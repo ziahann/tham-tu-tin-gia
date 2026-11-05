@@ -104,7 +104,7 @@ ${cards.length ? `<ul>${cards.map(ev => `<li><b>${esc(ev.title)}</b> — ${esc(e
 
 <h2>${esc(t('report.art'))}</h2>
 <p>${esc(t('sourcesPanel.artNote'))}</p>
-<ul class="src">${(data.sources.art?.lpc || []).map(a => `<li>${esc(artCredit(a))}</li>`).join('')}<li>${esc(t('sourcesPanel.artOwn'))}</li></ul>
+<ul class="src">${(data.sources.art?.lpc || []).map(a => `<li>${esc(artCredit(a))}</li>`).join('')}<li>${esc(t('sourcesPanel.artHero'))}</li><li>${esc(t('sourcesPanel.artOwn'))}</li></ul>
 
 <footer>${esc(t('title.authors'))} · ${esc(t('title.simulatedNote'))} ${esc(t('report.disclaimer'))}</footer>
 </body></html>`;
