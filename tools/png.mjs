@@ -107,6 +107,46 @@ export class Img {
   }
 }
 
+/** Đọc file PNG 8-bit (RGB, RGBA hoặc bảng màu + tRNS, không interlace) thành Img. */
+export function decodePng(buf) {
+  let pos = 8, w = 0, h = 0, type = 0, plte = null, trns = null;
+  const idat = [];
+  while (pos < buf.length) {
+    const len = buf.readUInt32BE(pos), name = buf.toString('ascii', pos + 4, pos + 8), data = buf.subarray(pos + 8, pos + 8 + len);
+    if (name === 'IHDR') {
+      w = data.readUInt32BE(0); h = data.readUInt32BE(4); type = data[9];
+      if (data[8] !== 8 || data[12] !== 0 || ![2, 3, 6].includes(type)) throw new Error(`PNG không hỗ trợ: bit ${data[8]}, kiểu ${type}, interlace ${data[12]}`);
+    } else if (name === 'PLTE') plte = data;
+    else if (name === 'tRNS') trns = data;
+    else if (name === 'IDAT') idat.push(data);
+    pos += 12 + len;
+  }
+  const bpp = { 2: 3, 3: 1, 6: 4 }[type], stride = w * bpp;
+  const raw = zlib.inflateSync(Buffer.concat(idat));
+  const cur = Buffer.alloc(stride), prev = Buffer.alloc(stride);
+  const img = new Img(w, h);
+  for (let y = 0; y < h; y++) {
+    const f = raw[y * (stride + 1)], row = raw.subarray(y * (stride + 1) + 1, (y + 1) * (stride + 1));
+    for (let i = 0; i < stride; i++) {
+      const a = i >= bpp ? cur[i - bpp] : 0, b = prev[i], c = i >= bpp ? prev[i - bpp] : 0;
+      const p = a + b - c, pa = Math.abs(p - a), pb = Math.abs(p - b), pc = Math.abs(p - c);
+      const pred = [0, a, b, (a + b) >> 1, pa <= pb && pa <= pc ? a : pb <= pc ? b : c][f];
+      cur[i] = (row[i] + pred) & 255;
+    }
+    for (let x = 0; x < w; x++) {
+      const o = (y * w + x) * 4;
+      if (type === 3) {
+        const k = cur[x];
+        img.px.set([plte[k * 3], plte[k * 3 + 1], plte[k * 3 + 2], trns && k < trns.length ? trns[k] : 255], o);
+      } else {
+        img.px.set([cur[x * bpp], cur[x * bpp + 1], cur[x * bpp + 2], type === 6 ? cur[x * bpp + 3] : 255], o);
+      }
+    }
+    cur.copy(prev);
+  }
+  return img;
+}
+
 /** Số ngẫu nhiên có hạt giống (để ảnh sinh ra giống nhau mỗi lần chạy). */
 export function seeded(seed) {
   let s = seed >>> 0;

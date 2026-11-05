@@ -1,0 +1,63 @@
+// Kiểm tra bộ dựng nhân vật LPC (tools/lpc.mjs, tools/png.mjs) bằng node, không cần mạng.
+// Chạy ở thư mục gốc repo: node tools/test-lpc.mjs
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import zlib from 'node:zlib';
+import { Img, decodePng } from './png.mjs';
+
+let fails = 0;
+const eq = (got, want, label) => {
+  const g = JSON.stringify(got), w = JSON.stringify(want);
+  if (g !== w) { fails++; console.error(`✗ ${label}: được ${g}, cần ${w}`); }
+};
+const tmp = name => path.join(os.tmpdir(), `test-lpc-${process.pid}-${name}`);
+
+// --- decodePng: đọc lại đúng ảnh RGBA do Img.save ghi
+{
+  const img = new Img(3, 2);
+  img.set(0, 0, '#ff0000');
+  img.set(2, 0, '#00ff8080');
+  img.set(1, 1, '#123456');
+  const f = tmp('rgba.png');
+  img.save(f);
+  const back = decodePng(fs.readFileSync(f));
+  eq([back.w, back.h], [3, 2], 'decodePng kích thước');
+  eq([...back.px], [...img.px], 'decodePng pixel RGBA');
+}
+
+// --- decodePng: ảnh bảng màu (color type 3) có tRNS, bộ lọc Sub và Up
+{
+  const crc = buf => { let c = ~0; for (const b of buf) { c ^= b; for (let k = 0; k < 8; k++) c = (c >>> 1) ^ (0xedb88320 & -(c & 1)); } return ~c >>> 0; };
+  const chunk = (type, data) => {
+    const len = Buffer.alloc(4); len.writeUInt32BE(data.length);
+    const td = Buffer.concat([Buffer.from(type), data]);
+    const c = Buffer.alloc(4); c.writeUInt32BE(crc(td));
+    return Buffer.concat([len, td, c]);
+  };
+  const ihdr = Buffer.alloc(13); ihdr.writeUInt32BE(2, 0); ihdr.writeUInt32BE(2, 4); ihdr[8] = 8; ihdr[9] = 3;
+  // dòng 0: lọc Sub, chỉ số 0,1 → byte 0, 1; dòng 1: lọc Up, chỉ số 1,0 → 1, 255 (0 - 1)
+  const raw = Buffer.from([1, 0, 1, 2, 1, 255]);
+  const png = Buffer.concat([
+    Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
+    chunk('IHDR', ihdr),
+    chunk('PLTE', Buffer.from([10, 20, 30, 200, 100, 50])),
+    chunk('tRNS', Buffer.from([0])),
+    chunk('IDAT', zlib.deflateSync(raw)),
+    chunk('IEND', Buffer.alloc(0))
+  ]);
+  const img = decodePng(png);
+  eq(img.get(0, 0), [10, 20, 30, 0], 'indexed (0,0) trong suốt theo tRNS');
+  eq(img.get(1, 0), [200, 100, 50, 255], 'indexed (1,0)');
+  eq(img.get(0, 1), [200, 100, 50, 255], 'indexed lọc Up (0,1)');
+  eq(img.get(1, 1), [10, 20, 30, 0], 'indexed lọc Up (1,1)');
+}
+
+// --- decodePng trên file LPC thật (khi đã có cache)
+{
+  const f = new URL('./.lpc-cache/spritesheets/body/bodies/male/sit.png', import.meta.url);
+  if (fs.existsSync(f)) { const img = decodePng(fs.readFileSync(f)); eq([img.w, img.h], [192, 256], 'LPC sit.png kích thước'); }
+}
+
+if (fails) { console.error(`test-lpc: ${fails} lỗi`); process.exit(1); }
+console.log('test-lpc: ok');
