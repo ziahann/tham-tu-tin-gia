@@ -7,21 +7,23 @@ export const TIP_IDS = ['move', 'backpack', 'track', 'notebook', 'hint', 'minimi
 const SHOW_MS = 12000;
 const queue = [];
 let current = null; // { id, timer }
+let wait = null; // một vòng chờ duy nhất khi đang có cảnh cắt (không chồng nhiều vòng)
 
 function next() {
   const was = current?.id;
   current = null;
   const box = document.getElementById('tip');
   if (box) box.hidden = true;
-  if (was === 'move') showTip('backpack');
-  if (queue.length) setTimeout(show, 0);
+  // 'backpack' nối ngay sau 'move', trước các mẹo đã xếp hàng từ trước
+  if (was === 'move' && canQueue('backpack')) queue.unshift('backpack');
+  show();
 }
 
 function show() {
   const box = document.getElementById('tip');
   if (current || !queue.length || !box) return;
-  if (document.body.classList.contains('is-cine') || getWorld()?.cutscene || document.querySelector('.trip')) { setTimeout(show, 1000); return; }
-  // mẹo đầu tiên luôn là 'move': các mẹo khác chờ trong hàng đến khi 'move' đã hiện
+  if (document.body.classList.contains('is-cine') || getWorld()?.cutscene || document.querySelector('.trip')) { wait ||= setTimeout(() => { wait = null; show(); }, 1000); return; }
+  // mẹo đầu tiên luôn là 'move': các mẹo khác chờ trong hàng đến khi 'move' được gọi (mỗi lần vào bản đồ, hoặc khi bật lại mẹo)
   if (!(state.settings.tipsSeen || []).includes('move') && !queue.includes('move')) return;
   if (!(state.settings.tipsSeen || []).includes('move')) queue.splice(0, queue.length, 'move', ...queue.filter(q => q !== 'move'));
   const id = queue.shift();
@@ -42,10 +44,14 @@ function show() {
   saveSettings();
 }
 
+function canQueue(id) {
+  const s = state.settings;
+  return s.tips !== false && TIP_IDS.includes(id) && !(s.tipsSeen || []).includes(id) && !queue.includes(id) && current?.id !== id;
+}
+
 /** Hiện mẹo `id` một lần (bỏ qua nếu tắt mẹo, đã xem hoặc đã xếp hàng). */
 export function showTip(id) {
-  const s = state.settings;
-  if (s.tips === false || !TIP_IDS.includes(id) || (s.tipsSeen || []).includes(id) || queue.includes(id) || current?.id === id) return;
+  if (!canQueue(id)) return;
   queue.push(id);
   show();
 }

@@ -172,7 +172,7 @@ function openSettings() {
     const box = el('input');
     box.type = 'checkbox';
     box.checked = !!state.settings[key];
-    box.addEventListener('change', () => { state.settings[key] = box.checked; saveSettings(); applySettings(); });
+    box.addEventListener('change', () => { state.settings[key] = box.checked; saveSettings(); applySettings(); if (key === 'tips' && box.checked) tips.showTip('move'); });
     row.append(box, el('span', null, t(`settingsPanel.${label}`)));
     wrap.append(row);
   });
