@@ -21,6 +21,9 @@ function show() {
   const box = document.getElementById('tip');
   if (current || !queue.length || !box) return;
   if (document.body.classList.contains('is-cine') || getWorld()?.cutscene || document.querySelector('.trip')) { setTimeout(show, 1000); return; }
+  // mẹo đầu tiên luôn là 'move': các mẹo khác chờ trong hàng đến khi 'move' đã hiện
+  if (!(state.settings.tipsSeen || []).includes('move') && !queue.includes('move')) return;
+  if (!(state.settings.tipsSeen || []).includes('move')) queue.splice(0, queue.length, 'move', ...queue.filter(q => q !== 'move'));
   const id = queue.shift();
   const tip = data.ui.tips[id]; // t() chỉ trả chuỗi
   if (!tip || state.settings.tips === false) { show(); return; }
