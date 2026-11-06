@@ -17,6 +17,7 @@ import { showClock } from './hud.js';
 import { exportReport } from './report.js';
 import * as journey from './journey.js';
 import { feedTick } from './feed.js';
+import * as tips from './tips.js';
 import { applyUiText, toast, openModal, closeModal, confirmBox } from './ui.js';
 
 const $ = id => document.getElementById(id);
@@ -107,7 +108,7 @@ function startGame(isNew) {
       scene: [WorldScene]
     });
     // Chỉ dùng khi kiểm thử: ?debug cho phép công cụ test truy cập game.
-    if (new URLSearchParams(location.search).has('debug')) window.__game = game;
+    if (new URLSearchParams(location.search).has('debug')) { window.__game = game; game.tips = tips; }
   }
 }
 
@@ -166,7 +167,7 @@ function openSources() {
 /** Cài đặt: âm thanh, ảnh nhạy cảm, giảm chuyển động, về màn hình chính. */
 function openSettings() {
   const wrap = el('div');
-  [['hideSensitiveImages', 'hideSensitive'], ['muted', 'mute'], ['ambience', 'ambience'], ['reduceMotion', 'reduceMotion'], ['clickMove', 'clickMove']].forEach(([key, label]) => {
+  [['hideSensitiveImages', 'hideSensitive'], ['muted', 'mute'], ['ambience', 'ambience'], ['reduceMotion', 'reduceMotion'], ['clickMove', 'clickMove'], ['tips', 'tips']].forEach(([key, label]) => {
     const row = el('label', 'setting');
     const box = el('input');
     box.type = 'checkbox';
