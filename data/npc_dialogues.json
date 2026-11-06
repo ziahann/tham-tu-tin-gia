@@ -521,7 +521,7 @@
         },
         {
           "id": "s1_reply_share_l2",
-          "text": "Cảm xúc mạnh là lý do để dừng lại, không phải để vội."
+          "text": "Bài càng đánh vào cảm xúc thì mình càng phải chậm lại."
         }
       ],
       "choices": [
@@ -956,7 +956,7 @@
       "lines": [
         {
           "id": "s8_done_l1",
-          "text": "Phân loại xong. Giờ em biết nên ứng xử thế nào khi gặp một bài đăng giả."
+          "text": "Phân loại xong rồi. Lần sau gặp bài đăng giả, em cứ làm như vừa rồi nhé."
         }
       ],
       "choices": [],

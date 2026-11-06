@@ -52,7 +52,7 @@
   "hud": {
     "musicUnsupported": "trình duyệt này không phát được nhạc MP3",
     "track": "{npc} · {place}",
-    "trackNone": "Chưa theo dõi hồ sơ nào — bấm J"
+    "trackNone": "Chưa theo dõi hồ sơ nào. Bấm J để chọn"
   },
   "dialog": {
     "continueHint": "E / Space ▸",
@@ -128,8 +128,8 @@
     "cards": "Thẻ bằng chứng",
     "noCards": "Chưa có thẻ nào.",
     "objective": "Mục tiêu hiện tại",
-    "objectiveMeetNpc1": "Chọn một hồ sơ bên dưới để theo dõi — mũi tên sẽ chỉ tới người giao việc.",
-    "objectiveQuest": "{title} — gặp {npc} ở {place}.",
+    "objectiveMeetNpc1": "Chọn một hồ sơ bên dưới để theo dõi, mũi tên sẽ chỉ tới người giao việc.",
+    "objectiveQuest": "{title}: gặp {npc} ở {place}.",
     "objectiveWait": "Đã xong mọi hồ sơ đang mở.",
     "questList": "Danh sách nhiệm vụ",
     "statusDone": "✓ Đã xong",
@@ -152,7 +152,7 @@
     "caseDone": "✓ Đã khép",
     "optional": "tùy chọn",
     "giver": "{npc} · {place}",
-    "bossCase": "Đính chính trực tiếp — Kẻ Dệt Chuyện",
+    "bossCase": "Đính chính trực tiếp với Kẻ Dệt Chuyện",
     "bossLocked": "Xuất hiện khi xong mọi hồ sơ bắt buộc ({done}/{total} nhiệm vụ, {cards}/{minCards} thẻ bằng chứng).",
     "bossOpen": "Phòng phát trực tiếp ở Trung tâm truyền thông cộng đồng đã mở.",
     "notes2": "Ghi chép từ báo",
@@ -240,7 +240,7 @@
     "submit": "Đính kèm bằng chứng",
     "guessNote": "Trong phần bình luận có hai lời đồn về \"chủ trang\". Chúng là thẻ suy đoán, đừng dùng làm bằng chứng.",
     "unmask": "Bạn mở trang thông tin của fanpage…",
-    "blank": "Không tên thật, không ảnh, không địa chỉ — chỉ một khung trống.",
+    "blank": "Trang không có tên thật, ảnh hay địa chỉ, chỉ để một khung trống.",
     "timer": "⏳ {s} giây",
     "shares": "↻ {n} lượt chia sẻ",
     "comment": "Bình luận {n}/{total} · Lượt chịu sai: {lives}",
@@ -365,7 +365,7 @@
     "deadlineRefuse": "Chưa kiểm chứng xong thì chưa đăng.",
     "deadlinePublish": "Ừ, đăng luôn cho kịp.",
     "deadlineRefuseLine": "…Thôi được, nhưng nhanh lên đấy!",
-    "deadlinePublishLine": "Đăng khi chưa kiểm chứng là đặt cược uy tín vào may rủi. Bài phải gỡ, hồ sơ mất độ tin cậy.",
+    "deadlinePublishLine": "Bài đăng vội phải gỡ xuống, hồ sơ mất độ tin cậy.",
     "rumorIntro": "Này! Xem cái này chưa? Chia sẻ ngay đi!",
     "rumorAsk": "Điều gì khiến em dừng lại trước tin này?",
     "rumorWin": "Kẻ tung tin lẩm bẩm rồi bỏ đi tìm người khác.",
@@ -410,7 +410,7 @@
     "right": "Thẻ \"{card}\" chứng minh: {claim}.",
     "wrong": "Thẻ \"{card}\" không chứng minh \"{claim}\". Thẻ này thuộc về: {right}.",
     "guess": "\"{card}\" chỉ là thẻ suy đoán, không phải bằng chứng. Không nối vào đâu cả.",
-    "complete": "Bảng điều tra đã nối đủ: mọi bằng chứng đều có chỗ đứng."
+    "complete": "Bảng điều tra đã nối đủ, thẻ bằng chứng nào cũng đã gắn với mệnh đề của nó."
   },
   "feed": {
     "empty": "Chưa có bài nào.",
@@ -450,7 +450,7 @@
   "report": {
     "button": "Xuất kết quả (PDF)",
     "hint": "Mở hộp thoại in: chọn \"Lưu dưới dạng PDF\".",
-    "docTitle": "Kết quả kiểm chứng — {name}",
+    "docTitle": "Kết quả kiểm chứng: {name}",
     "title": "Bảng kết quả: Thám tử tin giả",
     "date": "Ngày xuất",
     "player": "Người chơi",
