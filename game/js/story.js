@@ -1,4 +1,5 @@
 // Cốt truyện: chọn hội thoại khi nói chuyện với NPC, chạy nhiệm vụ trong hội thoại, xem đồ vật, cửa, khu vực.
+import { showTip } from './tips.js';
 import { data, t, fill, questById, evidenceById, sceneById, npcById, sourceById } from './data.js';
 import { state, questState, saveProgress, setFlag, hasFlag, addEvidence, isQuestDone } from './state.js';
 import * as dlg from './dialogue.js';
@@ -8,10 +9,10 @@ import { normalize, containsPhrase } from './text.js';
 import { sfx } from './audio.js';
 import { toast } from './ui.js';
 import { toolWindow, browseContent, deviceSpeaker } from './tools.js';
-import { targetMap } from './guide.js';
+import { targetMap, currentRoute } from './guide.js';
 import { loseCred, easePressure, isLight, roomName, caseOpen, PENALTY } from './obstacles.js';
 import { bossStartShares, feedAlerts } from './feed.js';
-import { journeyTarget, editorWaiting, afterBoss, stage as journeyStage } from './journey.js';
+import { journeyTarget, journeyGoal, editorWaiting, afterBoss, stage as journeyStage } from './journey.js';
 
 let world = null;
 let busy = false;
@@ -64,13 +65,17 @@ export function trackedRoom() {
 }
 
 /** Theo dõi một nhiệm vụ (id, 'boss' hoặc null): mũi tên chỉ tới người giao việc. */
+let lastTodo = null;
 export function track(id, quiet = false) {
   state.progress.tracked = id;
   saveProgress();
   if (id && !quiet) {
     sfx('track');
-    const title = id === 'boss' ? t('backpack.bossCase') : questById(id)?.title;
-    toast(t('dialog.tracking', { title }));
+    const todo = id === 'boss' ? null : questById(id)?.todo;
+    const again = lastTodo?.id === id && Date.now() - lastTodo.at < 60000;
+    if (todo && !again) toast(`${state.progress.heroName}: ${todo}`, 5000);
+    else toast(t('dialog.tracking', { title: id === 'boss' ? t('backpack.bossCase') : questById(id)?.title }));
+    lastTodo = { id, at: Date.now() };
   }
   onChange();
   world?.refresh();
@@ -195,6 +200,7 @@ export async function talkTo(npcId, room = null) {
 
 /** Chạy một nhiệm vụ; trả về true nếu hoàn thành. */
 async function runQuest(q, npc) {
+  showTip('minimize');
   const qs = questState(q.id);
   if (q.npcIntro && !hasFlag(`intro_${q.id}`)) {
     await playScene(q.npcIntro);
@@ -232,6 +238,7 @@ async function helpMenu(q, qs, npc, afterWrong, field = null) {
     ...(walkthrough ? [{ id: 'walk', text: t('dialog.cantFind') }] : []),
     { id: 'later', text: t('dialog.later') }
   ];
+  if (hints.length) showTip('hint');
   const c = await dlg.choose(options);
   if (c.id === 'hint') {
     if (used >= hints.length) {
@@ -478,7 +485,7 @@ export async function useDevice(device) {
 export async function useElevator() {
   const floors = data.quests.building?.floors || [];
   const here = world?.mapKey;
-  if (here === 'tn_lobby' && !hasFlag('visitor_card')) { await notice(t('obstacles.needCard')); return; }
+  if (here === 'tn_lobby' && !hasFlag('visitor_card')) { showTip('guestCard'); await notice(t('obstacles.needCard')); return; }
   const goal = world ? targetMap(world) : null;
   const bossOpen = ['open', 'done'].includes(bossStatus(state.progress.flags));
   let pick = null;
@@ -999,6 +1006,7 @@ const shuffle = list => list.map(v => [Math.random(), v]).sort((a, b) => a[0] - 
 export async function rumorEncounter(id) {
   const bank = data.npcs.rumors || [];
   if (!bank.length || busy) return;
+  showTip('rumor');
   const i = (state.progress.rumorIdx || 0) % bank.length;
   state.progress.rumorIdx = i + 1;
   const r = bank[i];
@@ -1036,6 +1044,7 @@ export function inspectDecoy(id) {
       await dlg.say('inspect', `${t('obstacles.decoyDone')} ${d.why}`);
       return;
     }
+    showTip('decoy');
     const c = await dlg.choose([
       { id: 'add', text: t('obstacles.decoyAdd', { room: roomName(d.room) }) },
       { id: 'check', text: t('obstacles.decoyCheck') }
@@ -1128,15 +1137,18 @@ async function roomIntro(npcId) {
 /** Mục tiêu hiện tại (hiện trong balo): nhiệm vụ đang theo dõi. */
 export function objective() {
   const id = state.progress?.tracked;
-  if (id === 'boss') return t('backpack.bossOpen');
+  const steps = (world && currentRoute(world)) || [];
+  const jg = state.progress && journeyTarget() && journeyGoal();
+  if (jg) return { text: jg, steps };
+  if (id === 'boss') return { text: t('backpack.bossOpen'), steps };
   const q = id && questById(id);
   if (q && !isQuestDone(q.id)) {
     const room = data.quests.rooms.find(r => r.id === q.room);
     const npc = giverOf(q.id);
-    return t('backpack.objectiveQuest', { title: q.title, npc: npcById(npc)?.name || npc, place: room?.name || '' });
+    return { text: q.todo || t('backpack.objectiveQuest', { title: q.title, npc: npcById(npc)?.name || npc, place: room?.name || '' }), steps };
   }
   const anyOpen = data.quests.rooms.some(r => nextQuestIn(r.id));
-  return anyOpen ? t('backpack.objectiveMeetNpc1') : t('backpack.objectiveWait');
+  return { text: anyOpen ? t('backpack.objectiveMeetNpc1') : t('backpack.objectiveWait'), steps };
 }
 
 // ---------------------------------------------------------------- boss

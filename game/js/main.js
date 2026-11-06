@@ -17,6 +17,7 @@ import { showClock } from './hud.js';
 import { exportReport } from './report.js';
 import * as journey from './journey.js';
 import { feedTick } from './feed.js';
+import * as tips from './tips.js';
 import { applyUiText, toast, openModal, closeModal, confirmBox } from './ui.js';
 
 const $ = id => document.getElementById(id);
@@ -107,7 +108,7 @@ function startGame(isNew) {
       scene: [WorldScene]
     });
     // Chỉ dùng khi kiểm thử: ?debug cho phép công cụ test truy cập game.
-    if (new URLSearchParams(location.search).has('debug')) window.__game = game;
+    if (new URLSearchParams(location.search).has('debug')) { window.__game = game; game.tips = tips; }
   }
 }
 
@@ -166,12 +167,12 @@ function openSources() {
 /** Cài đặt: âm thanh, ảnh nhạy cảm, giảm chuyển động, về màn hình chính. */
 function openSettings() {
   const wrap = el('div');
-  [['hideSensitiveImages', 'hideSensitive'], ['muted', 'mute'], ['ambience', 'ambience'], ['reduceMotion', 'reduceMotion'], ['clickMove', 'clickMove']].forEach(([key, label]) => {
+  [['hideSensitiveImages', 'hideSensitive'], ['muted', 'mute'], ['ambience', 'ambience'], ['reduceMotion', 'reduceMotion'], ['clickMove', 'clickMove'], ['tips', 'tips']].forEach(([key, label]) => {
     const row = el('label', 'setting');
     const box = el('input');
     box.type = 'checkbox';
     box.checked = !!state.settings[key];
-    box.addEventListener('change', () => { state.settings[key] = box.checked; saveSettings(); applySettings(); });
+    box.addEventListener('change', () => { state.settings[key] = box.checked; saveSettings(); applySettings(); if (key === 'tips' && box.checked) tips.showTip('move'); });
     row.append(box, el('span', null, t(`settingsPanel.${label}`)));
     wrap.append(row);
   });
@@ -334,6 +335,7 @@ function bindEvents() {
     if (!world?.weather || titleOpen() || introOpen()) return;
     const next = randomWeather(world.weather.global);
     world.weather.set(next);
+    if (next !== 'clear' && ['street', 'hcm'].includes(world.mapKey)) tips.showTip('weather');
     if (world.weather.outdoor) toast(`${t(`weather.${next}`)} · ${t(`weather.fx.${next}`)}`, 5000);
   }, 5 * 60 * 1000);
   $('btn-cases').addEventListener('click', openCases);
