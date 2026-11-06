@@ -426,8 +426,8 @@
     ],
     "boss_phase_claims": {
       "p1": "Ảnh này là thật, do người trên tàu chụp!",
-      "p2": "Tôi chỉ chia sẻ video có thật thôi!",
-      "p3": "Tôi chỉ muốn mọi người quan tâm. Ai nói tôi cố ý?"
+      "p2": "Ta chỉ chia sẻ video có thật thôi!",
+      "p3": "Ta chỉ muốn mọi người quan tâm. Ai bảo ta cố ý?"
     },
     "boss_phase_defeats": {
       "p1": "Không có nguồn gốc, lỗi hình ảnh, ảnh dùng lại ở hai bộ, VTV xác nhận AI… Ta không cãi được.",
@@ -437,8 +437,8 @@
     "boss_trap_b": [
       {
         "npc": "boss",
-        "text": "Ha! Ngươi bảo ta kiếm tiền, ngươi biết ta là ai? Bằng chứng đâu?",
-        "feedback": "Không có dữ liệu doanh thu hay danh tính. Kết luận vượt bằng chứng."
+        "text": "Ha! Ngươi bảo ta làm vì tiền? Ngươi biết ta là ai chắc? Bằng chứng đâu?",
+        "feedback": "Không có dữ liệu doanh thu hay danh tính. Kết luận như vậy là vượt quá bằng chứng."
       }
     ],
     "boss_endings": {
@@ -455,7 +455,7 @@
       "B": [
         {
           "npc": "npc1",
-          "text": "Em đã kết luận vượt bằng chứng. Thử lại: chỉ khẳng định điều dữ liệu cho phép."
+          "text": "Em kết luận quá những gì bằng chứng cho phép rồi. Thử lại nhé: chỉ khẳng định điều dữ liệu chứng minh được."
         }
       ]
     },
@@ -475,15 +475,15 @@
         {
           "id": "s1_intro_l1",
           "npc": "hero",
-          "text": "Chào chị ạ. Em là {hero}, cộng tác viên chú Quốc Trung ở tòa soạn TP.HCM cử ra. Em thấy mấy bài đăng về vụ lật tàu lan khắp nơi, nên muốn tới tận nơi xem cái nào là thật."
+          "text": "Chào chị ạ. Em là {hero}, cộng tác viên chú Quốc Trung ở tòa soạn TP.HCM cử ra. Em thấy mấy bài đăng về vụ lật tàu lan khắp nơi, nên em muốn tới tận nơi xem cái nào là thật."
         },
         {
-          "id": "s1_intro_l1c",
+          "id": "s1_intro_l1b",
           "text": "Chị là Tuệ Lâm, phụ trách nhóm kiểm chứng. Rất vui vì em tới. Bọn chị đang cần thêm người xác thực thông tin."
         },
         {
           "id": "s1_intro_l2",
-          "text": "Những bức ảnh và câu chuyện về \"nạn nhân\" đang lan khắp nơi, mà chưa ai chỉ ra được nguồn."
+          "text": "Những bức ảnh và câu chuyện về \"nạn nhân\" đang lan khắp nơi, mà chưa ai kiểm chứng."
         },
         {
           "id": "s1_intro_l3",
@@ -502,7 +502,7 @@
         },
         {
           "id": "s1_c2",
-          "text": "Chia sẻ trước đã, kiểm tra sau.",
+          "text": "Em chia sẻ trước đã, kiểm tra sau.",
           "next": "s1_reply_share",
           "setFlags": [
             "chose_share_first"
@@ -517,7 +517,7 @@
       "lines": [
         {
           "id": "s1_reply_share_l1",
-          "text": "Khoan. Tin sai lan nhanh hơn bản đính chính, và xóa sau không thu hồi được những gì đã lan."
+          "text": "Khoan đã. Tin sai lan nhanh hơn bản đính chính. Bài đã chia sẻ rồi thì có xóa đi cũng không thu hồi được."
         },
         {
           "id": "s1_reply_share_l2",
@@ -542,11 +542,11 @@
       "lines": [
         {
           "id": "s1_reply_stop_l1",
-          "text": "Tốt. Dừng lại là bước đầu của SIFT: Stop, Investigate the source, Find better coverage, Trace claims."
+          "text": "Tốt. Dừng lại là bước đầu của SIFT, gồm bốn bước: dừng lại (Stop), tra người đăng (Investigate the source), tìm nguồn khác đưa tin (Find better coverage), lần về gốc (Trace claims)."
         },
         {
           "id": "s1_reply_stop_l2",
-          "text": "Vụ án có ba câu hỏi xác minh, chị đã ghi vào sổ tay trong balo của em. Đi theo chị tới Phòng Hồ sơ nhé."
+          "text": "Ba câu hỏi xác minh chú Quốc Trung giao, em xem lại trong sổ tay ở balo nhé. Giờ em đi theo chị tới Phòng Hồ sơ."
         }
       ],
       "choices": [],
@@ -559,7 +559,7 @@
       "lines": [
         {
           "id": "s3_intro_l1",
-          "text": "Đây là Phòng Hồ sơ. Trước khi tìm cái giả, hãy xác lập cái thật và xác định cái gì cần thẩm định."
+          "text": "Đây là Phòng Hồ sơ. Trước khi đi tìm cái giả, mình phải nắm chắc cái thật, rồi mới khoanh vùng những gì cần thẩm định."
         }
       ],
       "choices": [],
@@ -585,7 +585,7 @@
       "lines": [
         {
           "id": "s3_q1_accident_denied_l1",
-          "text": "Tai nạn là có thật, báo chí chính thống đã đưa tin. Nói một thảm kịch \"không có thật\" gây tổn thương cho người trong cuộc. Hãy dựa vào nguồn."
+          "text": "Tai nạn là có thật, báo chí chính thống đã đưa tin. Bảo một thảm kịch là \"không có thật\" sẽ làm tổn thương người trong cuộc. Mình phải dựa vào nguồn."
         }
       ],
       "choices": [],
@@ -598,7 +598,7 @@
       "lines": [
         {
           "id": "s3_q2_intro_l1",
-          "text": "Giờ xác lập sự kiện thật: ngày, nơi, tàu, nguyên nhân theo nguồn. Đừng tự suy đoán."
+          "text": "Giờ mình ghi lại sự kiện thật theo nguồn: ngày, nơi, tên tàu, nguyên nhân. Chỗ nào chưa có nguồn thì đừng tự đoán."
         }
       ],
       "choices": [],
@@ -611,11 +611,11 @@
       "lines": [
         {
           "id": "s3_done_l1",
-          "text": "Hồ sơ đã có mốc sự thật. Từ đây ta có thể so các nội dung lan truyền với sự kiện thật."
+          "text": "Hồ sơ đã có mốc sự thật. Từ đây mình có thể so các nội dung lan truyền với sự kiện thật."
         },
         {
           "id": "s3_done_l2",
-          "text": "Hồ sơ tiếp theo là do em chọn. Mở balo (tab Hồ sơ vụ án) để theo dõi một hồ sơ, mũi tên sẽ chỉ đường."
+          "text": "Hồ sơ tiếp theo thì em tự chọn. Em mở balo, vào tab Hồ sơ vụ án để theo dõi một hồ sơ; mũi tên sẽ chỉ đường."
         }
       ],
       "choices": [],
@@ -658,7 +658,7 @@
       "lines": [
         {
           "id": "npc2_idle_after_l1",
-          "text": "Em đã xác lập xong sự kiện thật rồi à? Vào Phòng Phân tích ảnh đi, anh đợi trong đó."
+          "text": "Em ghi xong sự kiện thật rồi à? Vào Phòng Phân tích ảnh đi, anh đợi trong đó."
         }
       ],
       "choices": [],
@@ -675,7 +675,7 @@
         },
         {
           "id": "s4_intro_l2",
-          "text": "Ở đây ta soi ảnh, nhưng nhớ: các khung ảnh trong phòng này là MÔ PHỎNG trừu tượng, không phải ảnh gốc. Ta không đăng lại ảnh giả."
+          "text": "Ở đây mình soi ảnh, nhưng nhớ: các khung ảnh trong phòng này là MÔ PHỎNG trừu tượng, không phải ảnh gốc. Mình không đăng lại ảnh giả."
         }
       ],
       "choices": [],
@@ -740,7 +740,7 @@
       "lines": [
         {
           "id": "npc2_after_s4_l1",
-          "text": "Nhớ nhé: không dựa vào một bằng chứng duy nhất, nhất là một con số từ công cụ."
+          "text": "Nhớ nhé: đừng dựa vào một bằng chứng duy nhất, nhất là một con số từ công cụ."
         }
       ],
       "choices": [],
@@ -757,7 +757,7 @@
         },
         {
           "id": "s4_done_l2",
-          "text": "Nếu em chưa xem phần video cũ: bác Tín Thư ở Tòa soạn Tin Vịnh, bên kia phố ven vịnh, giữ kho lưu trữ báo chí."
+          "text": "Còn mấy đoạn video cũ thì em hỏi bác Tín Thư ở Tòa soạn Tin Vịnh, bên kia phố ven vịnh. Bác giữ kho lưu trữ báo chí."
         }
       ],
       "choices": [],
@@ -774,7 +774,7 @@
         },
         {
           "id": "s5_intro_l2",
-          "text": "Ngày tháng không nói dối, người gắn nhãn thì có thể. Ta cùng tra nhé."
+          "text": "Ngày tháng không nói dối, người gắn nhãn thì có thể. Hai bác cháu mình cùng tra nhé."
         }
       ],
       "choices": [],
@@ -787,7 +787,7 @@
       "lines": [
         {
           "id": "s5_q7_intro_l1",
-          "text": "Có mấy đoạn video người ta bảo là \"cận cảnh vụ 19/7\". Bác ngờ lắm. Cháu đọc báo xem chúng thật ra từ đâu."
+          "text": "Có mấy đoạn video người ta bảo là \"cận cảnh vụ 19/7\". Bác ngờ lắm. Cháu đọc báo xem chúng thật ra quay ở đâu, lúc nào."
         }
       ],
       "choices": [],
@@ -839,7 +839,7 @@
       "lines": [
         {
           "id": "s6_done_l1",
-          "text": "Dòng thời gian đã rõ. Hồ sơ nào còn dở thì cháu xem lại trong balo nhé."
+          "text": "Dòng thời gian đã rõ. Hồ sơ nào còn dở thì em xem lại trong balo nhé."
         }
       ],
       "choices": [],
@@ -852,7 +852,7 @@
       "lines": [
         {
           "id": "s7_intro_l1",
-          "text": "Đây là Phòng Tác động và chủ đích. Ở đây ta phải rất cẩn thận với lời nói của mình."
+          "text": "Đây là Phòng Tác động và chủ đích. Ở đây mình phải rất cẩn thận với từng lời nói."
         }
       ],
       "choices": [],
@@ -878,7 +878,7 @@
       "lines": [
         {
           "id": "s7_q10_intro_l1",
-          "text": "Câu hỏi khó nhất: người đăng có cố ý không? Nếu muốn luyện thêm, chú Sáu quản trị một nhóm mạng hay ngồi ở quán cà phê Gió Biển ngoài phố — em có thể hỏi chuyện chú ấy."
+          "text": "Câu hỏi khó nhất: người đăng có cố ý không? Nếu muốn luyện thêm, em ra quán cà phê Gió Biển ngoài phố hỏi chuyện chú Sáu. Chú quản trị một nhóm trên mạng, chiều nào cũng ngồi đó."
         }
       ],
       "choices": [],
@@ -904,7 +904,7 @@
       "lines": [
         {
           "id": "s8_intro_l1",
-          "text": "Đây là Phòng Phân loại và xử lý. Ta phân loại từng nhóm nội dung và quyết định cách ứng xử."
+          "text": "Đây là Phòng Phân loại và xử lý. Mình phân loại từng nhóm nội dung và quyết định cách ứng xử."
         }
       ],
       "choices": [],
@@ -969,7 +969,7 @@
       "lines": [
         {
           "id": "npc1_after_boss_l1",
-          "text": "Cảm ơn em. Nếu muốn, còn một hồ sơ nhỏ: có một trang mạo danh quỹ thiện nguyện đang kêu gọi quyên góp."
+          "text": "Cảm ơn em. Còn một hồ sơ nhỏ nữa, nếu em muốn làm thêm: có một trang mạo danh quỹ thiện nguyện đang kêu gọi quyên góp."
         }
       ],
       "choices": [],
@@ -1008,7 +1008,7 @@
       "lines": [
         {
           "id": "npc3_wait_l1",
-          "text": "Bác ở kho lưu trữ đây. Cháu cần gì ở kho lưu trữ thì ghé nhé."
+          "text": "Bác ở kho lưu trữ đây. Cháu cần tra báo cũ thì cứ ghé nhé."
         }
       ],
       "choices": [],
@@ -1027,12 +1027,12 @@
       "choices": [
         {
           "id": "npc4_c1",
-          "text": "Xóa sau không thu hồi được những gì đã lan.",
+          "text": "Xóa rồi thì những gì đã lan cũng không thu hồi được đâu anh.",
           "next": "npc4_reply"
         },
         {
           "id": "npc4_c2",
-          "text": "Anh kiểm tra nguồn chưa?",
+          "text": "Anh kiểm tra nguồn chưa ạ?",
           "next": "npc4_reply"
         }
       ],
@@ -1064,12 +1064,12 @@
       "choices": [
         {
           "id": "npc5_c1",
-          "text": "Thương cảm là thật, nhưng chia sẻ tin chưa kiểm chứng vẫn có thể lan tin sai.",
+          "text": "Chị thương nạn nhân là thật, nhưng chia sẻ tin chưa kiểm chứng thì vẫn có thể làm tin sai lan rộng hơn.",
           "next": "npc5_reply"
         },
         {
           "id": "npc5_c2",
-          "text": "Bạn biết ảnh đó lấy từ đâu không?",
+          "text": "Chị biết ảnh đó lấy từ đâu không ạ?",
           "next": "npc5_reply"
         }
       ],
@@ -1151,7 +1151,7 @@
       "lines": [
         {
           "id": "boss_locked_l1",
-          "text": "Cửa Phòng họp đang khóa. Hoàn thành các phòng điều tra và thu thập ít nhất 8 thẻ evidence."
+          "text": "Cửa Phòng phát trực tiếp đang khóa. Hãy hoàn thành các phòng điều tra và thu thập ít nhất 8 thẻ bằng chứng."
         }
       ],
       "choices": [],
@@ -1197,7 +1197,7 @@
             "dung lai",
             "buoc"
           ],
-          "text": "Bắt đầu bằng bước Stop của SIFT: dừng lại, lưu bài đăng, rồi kiểm tra nguồn trước khi kết luận."
+          "text": "Em bắt đầu bằng bước đầu tiên của SIFT là dừng lại: lưu bài đăng lại, rồi kiểm tra nguồn trước khi kết luận."
         },
         {
           "id": "fc1_real",
@@ -1244,7 +1244,7 @@
             "anh gia",
             "anh that"
           ],
-          "text": "Ảnh sẽ được phân tích kỹ ở Phòng Phân tích ảnh. Ở Phòng Hồ sơ, ta chỉ xác định trước cái gì cần thẩm định."
+          "text": "Ảnh sẽ được phân tích kỹ ở Phòng Phân tích ảnh. Ở Phòng Hồ sơ, mình chỉ xác định trước cái gì cần thẩm định."
         },
         {
           "id": "fc1_victims",
@@ -1256,7 +1256,7 @@
             "so nguoi",
             "cuu song"
           ],
-          "text": "Đây là nỗi đau có thật. Game không đưa số liệu thương vong; nếu cần, hãy đọc trực tiếp nguồn chính thức và giữ sự tôn trọng."
+          "text": "Đây là nỗi đau có thật. Chị không nhắc số liệu thương vong ở đây; em cần thì đọc thẳng thông báo chính thức, và giữ sự tôn trọng nhé."
         },
         {
           "id": "fc1_who",
@@ -1268,7 +1268,7 @@
             "ke dung sau",
             "chu trang"
           ],
-          "text": "Chưa có dữ liệu xác định cá nhân đứng sau các fanpage. Ta chỉ kết luận trong giới hạn bằng chứng, và không công khai thông tin cá nhân của ai."
+          "text": "Chưa có dữ liệu xác định cá nhân đứng sau các fanpage. Mình chỉ kết luận trong giới hạn bằng chứng, và không công khai thông tin cá nhân của ai."
         },
         {
           "id": "fc1_score",
@@ -1277,7 +1277,7 @@
             "score",
             "danh hieu"
           ],
-          "text": "Điểm chỉ để chơi, không phải bằng chứng cho thông tin thật hay giả."
+          "text": "Huy hiệu chỉ để chơi, không phải bằng chứng cho thông tin thật hay giả."
         },
         {
           "id": "fc1_thanks",
@@ -1288,7 +1288,7 @@
           "text": "Không có gì. Cứ dừng lại và kiểm tra nguồn nhé."
         }
       ],
-      "fallback": "Tôi chưa có thông tin cho câu hỏi này. Hãy hỏi về nguồn tin, quy trình kiểm tra hoặc nhiệm vụ hiện tại."
+      "fallback": "Câu này chị chưa trả lời được. Em hỏi chị về nguồn tin, cách kiểm tra hoặc nhiệm vụ đang làm nhé."
     }
   },
   "interactions": {
@@ -1530,10 +1530,10 @@
       "Bảng ghim của Phòng Hồ sơ. Các mảnh giấy được nối bằng dây đỏ, chờ thêm bằng chứng."
     ],
     "inspect_cabinet": [
-      "Tủ hồ sơ. Nhãn ghi: \"Ảnh chụp màn hình do báo chí đăng lại\". Hồ sơ kiểm chứng chỉ tiếp cận bài đăng qua các ảnh chụp này."
+      "Tủ hồ sơ. Nhãn ghi: \"Ảnh chụp màn hình do báo chí đăng lại\". Nhóm kiểm chứng chỉ xem được các bài đăng qua những ảnh chụp này."
     ],
     "inspect_bookshelf": [
-      "Kệ sách: sổ tay kiểm chứng, tài liệu về SIFT và khung Information Disorder."
+      "Kệ sách: sổ tay kiểm chứng, tài liệu về SIFT và khung Rối loạn thông tin (Information Disorder)."
     ],
     "inspect_lab": [
       "Hai màn hình lớn hiển thị bản ghi kết quả công cụ. Một tờ giấy dán: \"Không tải lại ảnh giả lên công cụ.\""
@@ -1580,7 +1580,7 @@
       "Bảng trắng ghi: \"Phân loại theo TỪNG nhóm nội dung — không gộp!\""
     ],
     "inspect_cooler": [
-      "Bình nước của hành lang. Có tờ giấy dán: \"Uống nước trước, chia sẻ sau.\""
+      "Bình nước ở hành lang. Có tờ giấy dán: \"Uống nước trước, chia sẻ sau.\""
     ],
     "inspect_kiosk": [
       "Sạp báo đầu phố, mấy tờ báo in kẹp ngay ngắn. Bạn đọc thử."
@@ -1665,7 +1665,7 @@
     ],
     "amb_worker": [
       "Máy in lại kẹt giấy rồi… Còn em thì sao, hồ sơ nào đang dở?",
-      "Chị biên tập dặn: tiêu đề càng giật gân thì càng phải đọc kỹ ngày đăng."
+      "Sáng nay anh vừa bị chị biên tập nhắc vì suýt dùng một clip không ghi ngày quay."
     ],
     "amb_barista": [
       "Cà phê nóng đây! Khách ở quán hay vừa uống vừa xem bản tin trên TV kia.",
@@ -1684,20 +1684,20 @@
       "Cá cắn câu thì giật, còn tin \"giật gân\" thì đừng vội cắn câu."
     ],
     "amb_student": [
-      "Cô giáo dạy em hỏi ba câu trước khi chia sẻ: Ai đăng? Đăng khi nào? Có nguồn khác xác nhận không?",
-      "Bạn em bảo ảnh nào có chữ \"SỐC\" là phải nghi ngay. Đúng không {anhchi}?"
+      "{anhchi} đeo thẻ gì vậy ạ? {anhchi} làm ở báo hả? Mấy hôm nay ở lớp em ai cũng bàn vụ lật tàu.",
+      "Nhóm lớp em đang chuyền cái ảnh em bé mặc áo phao, đứa nào cũng thả tim… Em suýt bấm chia sẻ rồi. Ảnh đó thật không {anhchi}?"
     ],
     "amb_elder": [
       "Hồi xưa tin đồn đi bằng miệng, giờ đi bằng điện thoại. Nhanh hơn, nên càng phải chậm lại.",
       "Ông không rành mạng, nhưng ông biết hỏi cháu ông: \"Báo nào đăng?\""
     ],
     "amb_jogger": [
-      "Chạy bộ thì cần nhịp đều; đọc tin cũng vậy, đừng chạy theo cảm xúc.",
+      "Hôm qua chị suýt chuyển tiền cho một trang \"quyên góp giúp nạn nhân\". May mà bạn chị gọi điện can kịp.",
       "Sáng nào chị cũng chạy dọc vịnh. Gặp tin lạ trên mạng, chị dừng lại thở đều rồi mới đọc kỹ."
     ],
     "amb_doctor": [
       "Anh hay gặp người mang theo \"bài thuốc\" đọc trên mạng. Anh luôn hỏi: nguồn nào, ai viết, có chuyên gia nào xác nhận không?",
-      "Thông tin sức khỏe sai có thể gây hại thật. Kiểm tra trước khi làm theo."
+      "Tuần trước có người uống theo một \"bài thuốc\" trên mạng, phải vào cấp cứu. Anh sợ nhất mấy bài kiểu đó."
     ],
     "amb_nurse": [
       "Mời em ngồi chờ một lát. Đọc được tin gì về sức khỏe thì hỏi nhân viên y tế trước nhé.",
@@ -1712,7 +1712,7 @@
     ],
     "amb_clerk2": [
       "Chị làm truyền thông nội bộ. Ảnh nào đưa lên bản tin cũng phải ghi nguồn và ngày chụp.",
-      "Sinh viên Văn Lang hả? Nhớ nhé: uy tín mất rất nhanh, gây dựng lại rất lâu."
+      "Sinh viên Văn Lang hả? Chị cũng học ở đó ra. Hồi đó tụi chị cũng phải làm bài thẩm định tin như em đấy."
     ],
     "amb_barista2": [
       "Quán mở từ sáng sớm. Khách hay hỏi \"tin này thật không\", anh chỉ họ cách tìm ngược ảnh."
@@ -1735,11 +1735,11 @@
     ],
     "amb_hcm_reporter": [
       "Chú Trung giao việc nhanh lắm, nhưng dặn kỹ lắm. Nghe chú ấy là không sai.",
-      "Đăng chậm mà đúng vẫn hơn đăng nhanh mà phải gỡ."
+      "Chị vừa phải gọi lại cho một nguồn tin lần thứ ba. Mệt, nhưng chưa chắc thì chưa viết."
     ],
     "amb_auntie": [
       "Cô tập dưỡng sinh mỗi sáng. Tập xong mới xem điện thoại, xem chậm thôi.",
-      "Tin nào làm mình xúc động quá thì càng phải hỏi: ai đăng, đăng khi nào?"
+      "Hôm qua cô định gửi tấm ảnh người cha cài áo phao vào nhóm gia đình. Ông cụ ngồi ghế đá cản, bảo chưa báo nào đăng."
     ],
     "amb_cafe_a": [
       "Anh chỉ ngồi uống cà phê thôi mà… Ừ, đang bàn mấy cái clip trên mạng.",
@@ -1755,7 +1755,7 @@
     ],
     "amb_hcm_student2": [
       "Nhóm lớp mình nhắn liên tục về vụ lật tàu ở Hạ Long, đọc mà rối cả lên.",
-      "Bạn học Thẩm định tin tức à? Chỉ mình cách kiểm tra một bức ảnh với!"
+      "Ảnh trong nhóm lớp nhìn thật lắm… mà sao mình thấy lạ lạ. Bạn có biết cách kiểm tra một bức ảnh không?"
     ]
   },
   "rumors": [
@@ -2182,7 +2182,7 @@
         "noteOptions": [
           {
             "text": "Máy phát hiện AI báo 99,9% nên chắc chắn là ảnh giả, khỏi cần kiểm tra gì thêm.",
-            "why": "Detector chỉ là bằng chứng bổ trợ. Kết luận phải dựa trên tìm ngược ảnh, lỗi hình ảnh và đối chiếu báo chí."
+            "why": "Máy phát hiện AI chỉ là bằng chứng bổ trợ. Kết luận phải dựa trên tìm ngược ảnh, lỗi hình ảnh và đối chiếu báo chí."
           },
           {
             "ok": true,
