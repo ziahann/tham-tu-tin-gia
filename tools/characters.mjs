@@ -11,8 +11,9 @@ export function shade(hex, k) {
 // Thông số từng nhân vật (thiết kế gốc). skirt: váy; hair: short | long | spiky | grey | bob.
 export const CHARACTERS = {
   // Nhân vật chính: sinh viên Quan hệ công chúng – Truyền thông, ĐH Văn Lang — áo khoác dù, balo, thẻ sinh viên, bút gài tai. Hai mẫu nam / nữ.
-  hero_m: { skin: '#f1c7a0', hair: '#2b1d1a', hairStyle: 'short', top: '#3d7fd1', inner: '#f4eedc', bottom: '#2d3a5a', shoes: '#3b2418', backpack: '#b8223a', vlu: true, press: true, pen: true },
-  hero_f: { skin: '#f6d3b8', hair: '#4a2418', hairStyle: 'long', top: '#e8889e', inner: '#ffffff', bottom: '#2e3170', skirt: true, shoes: '#f4f4f4', backpack: '#b8223a', vlu: true, press: true, ribbon: '#d8283f', highlight: '#9a5a36' },
+  // Bộ nhận diện nhân vật chính (khác hẳn NPC): áo khoác màu bò sữa nổi trên nền xanh than, khăn quàng đỏ, bốt nâu, balo đỏ Văn Lang.
+  hero_m: { skin: '#f1c7a0', hair: '#231816', hairStyle: 'spiky', top: '#b8742e', inner: '#f4eedc', bottom: '#26304c', shoes: '#4a2a1a', scarf: '#d0283f', backpack: '#b8223a', vlu: true, press: true, pen: true },
+  hero_f: { skin: '#f6d3b8', hair: '#3a1d14', hairStyle: 'long', top: '#b8742e', inner: '#f4eedc', bottom: '#26304c', shoes: '#4a2a1a', scarf: '#d0283f', backpack: '#b8223a', vlu: true, press: true, ribbon: '#d8283f', highlight: '#7a4a2e' },
   npc1: { skin: '#f0c4a4', hair: '#1b1418', hairStyle: 'long', top: '#3d5a98', inner: '#f4eedc', bottom: '#4a4e5c', skirt: true, shoes: '#1d1d24', glasses: true, lanyard: true },
   npc2: { skin: '#e6b48f', hair: '#3a2a20', hairStyle: 'spiky', top: '#5f8a6b', bottom: '#2f2f38', shoes: '#22222a', glasses: true, camera: true },
   npc7: { skin: '#eac1a0', hair: '#22181a', hairStyle: 'short', top: '#4a6a8a', inner: '#e8ecf2', bottom: '#2f3440', shoes: '#1d1d24', glasses: true, lanyard: true },
@@ -98,3 +99,25 @@ for (const [id, [kind, top, own = []]] of Object.entries(RECIPES)) {
   if (s.glasses) layers.push({ def: 'headwear/accessories/glasses/facial_glasses.json' });
   s.lpc = { body, layers, own };
 }
+
+// Nhân vật chính: bộ lớp riêng (áo khoác + khăn + bốt + tóc riêng), ghi đè công thức chung ở trên.
+// Áo khoác LPC không có khung ngồi — người chơi không bao giờ ngồi nên không sao.
+const heroLayers = (sex, extra) => [
+  { def: 'body/body.json', color: 'skin', material: 'body' },
+  { def: `head/heads/human/heads_human_${sex}.json`, parts: [['skin', 'body'], ['eyes', 'eye', '#2b1d1a']] },
+  { def: 'feet/boots/feet_boots_basic.json', color: 'shoes' },
+  ...extra,
+  { def: 'headwear/neck/neck_scarf.json', color: 'scarf' }
+];
+CHARACTERS.hero_m.lpc = { body: 'male', own: ['vlu_backpack'], layers: heroLayers('male', [
+  { def: 'legs/pants/legs_pants.json', color: 'bottom' },
+  { def: 'torso/shirts/longsleeve/torso_clothes_longsleeve2_buttoned.json', color: 'inner' },
+  { def: 'torso/jacket/torso_jacket_collared.json', color: 'top', variant: 'gray' },
+  { def: 'hair/spiky/hair_spiked2.json', color: 'hair', material: 'hair' }
+]) };
+CHARACTERS.hero_f.lpc = { body: 'female', own: ['vlu_backpack'], layers: heroLayers('female', [
+  { def: 'legs/shorts/legs_shorts.json', color: 'bottom' },
+  { def: 'torso/shirts/longsleeve/torso_clothes_longsleeve2_scoop.json', color: 'inner' },
+  { def: 'torso/shirts/sleeveless/torso_clothes_sleeveless2_cardigan.json', color: 'top' },
+  { def: 'hair/braids/hair_ponytail2.json', color: 'hair', material: 'hair' }
+]) };

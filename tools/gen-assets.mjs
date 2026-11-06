@@ -9,6 +9,7 @@ import { allProps, vehicles } from './props.mjs';
 import { isoGround, isoWalls } from './iso.mjs';
 import { buildBadges } from './badges.mjs';
 import { buildLpcCharacter, checkSheet } from './lpc.mjs';
+import { restyle } from './restyle.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', 'game');
 const T = 32; // cỡ ô
@@ -626,7 +627,8 @@ async function buildCharacters() {
   const credits = new Map();
   const errs = [];
   for (const [id, spec] of Object.entries(CHARACTERS)) {
-    const { img, credits: cr } = await buildLpcCharacter(id, spec);
+    const { img: raw, credits: cr } = await buildLpcCharacter(id, spec);
+    const img = restyle(raw); // hợp tông thế giới (tools/restyle.mjs)
     errs.push(...checkSheet(id, img));
     img.save(path.join(ROOT, `assets/sprites/${id}.png`));
     for (const c of cr) {

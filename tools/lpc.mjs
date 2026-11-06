@@ -162,8 +162,10 @@ export function creditsFor(def, dirs) {
 }
 
 /** Tải một ảnh hoạt ảnh của lớp; lớp không có hoạt ảnh đó thì trả null. */
-async function layerAnim(dir, anim, def) {
+async function layerAnim(dir, anim, def, variant) {
   if (def.animations && !def.animations.includes(anim)) return null;
+  // lớp có biến thể màu (vd. áo khoác) để ảnh ở <anim>/<variant>.png; lớp áo khoác không có sit → bỏ qua (chỉ người chơi dùng, không ngồi)
+  if (variant) return fetchLpc(`spritesheets/${dir}${anim}/${variant}.png`).then(decodePng, () => null);
   return decodePng(await fetchLpc(`spritesheets/${dir}${anim}.png`));
 }
 
@@ -191,7 +193,7 @@ export async function buildLpcCharacter(id, spec) {
   const walk = new Img(COLS * FRAME, 4 * FRAME), sit = new Img(3 * FRAME, 4 * FRAME);
   for (const p of parts) {
     for (const [anim, dest] of [['walk', walk], ['sit', sit]]) {
-      let img = await layerAnim(p.dir, anim, p.def);
+      let img = await layerAnim(p.dir, anim, p.def, p.layer.variant);
       if (!img) continue;
       if (p.layer.parts) {
         const passes = p.layer.parts.map(([key, material, fallback]) => ({ material, to: rampFor(material, spec[key] || fallback) }));

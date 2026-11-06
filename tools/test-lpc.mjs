@@ -255,5 +255,16 @@ eq(lpc.resolveDir({ male: 'a/' }, 'teen', {}), 'a/', 'resolveDir thiếu thân �
   delete process.env.LPC_CACHE; delete process.env.LPC_BASE;
 }
 
+// --- restyle: giữ alpha; viền đen ngoài → xanh than, nét đen trong → sắc tối của màu kề bên
+{
+  const { restyle } = await import('./restyle.mjs');
+  const s = new Img(5, 3);
+  s.rect(0, 0, 5, 3, '#000000'); s.rect(1, 1, 1, 1, '#000000'); s.rect(2, 1, 2, 1, '#e0a080');
+  const r = restyle(s);
+  eq([...r.px].filter((_, i) => i % 4 === 3).join(), [...s.px].filter((_, i) => i % 4 === 3).join(), 'restyle giữ alpha');
+  eq(r.get(0, 0)[2] > r.get(0, 0)[0], true, 'restyle viền ngoài ngả xanh than');
+  eq(r.get(1, 1)[0] > r.get(1, 1)[2], true, 'restyle nét trong lấy tông màu kề bên');
+}
+
 if (fails) { console.error(`test-lpc: ${fails} lỗi`); process.exit(1); }
 console.log('test-lpc: ok');

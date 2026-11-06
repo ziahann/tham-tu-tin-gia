@@ -64,7 +64,8 @@ export const OWN_ITEMS = {
     img.set(x + 3, y + 2, '#c9d1dc');
   },
   vlu_backpack(img, ox, oy, dir, m, spec) {
-    const red = spec.backpack || '#b8223a', y = oy + m.top + Math.round(m.h * 0.33), x = ox + m.cx;
+    // vai đo từ chân (thân LPC cố định), không từ đỉnh tóc: tóc cao / dựng sẽ kéo quai xuống mặt
+    const red = spec.backpack || '#b8223a', y = oy + m.bottom - 26, x = ox + m.cx;
     if (dir === 'down') { fill(img, x - 6, y, 2, 9, NAVY); fill(img, x + 4, y, 2, 9, NAVY); return; }
     if (dir === 'up') {
       fill(img, x - 7, y, 14, 15, NAVY);
