@@ -4,7 +4,7 @@ import { showTip } from './tips.js';
 import { data, t } from './data.js';
 import { state, saveProgress, hasFlag } from './state.js';
 import { direction } from './input.js';
-import { makeAnims, feetBody, dirFrom, idleFrame, Npc, showEmote, nameTag, FRAME, HEAD_TOP, hitsActor } from './actors.js';
+import { makeAnims, feetBody, dirFrom, idleFrame, Npc, showEmote, nameTag, declutterTags, FRAME, HEAD_TOP, hitsActor } from './actors.js';
 import { roomStatus } from './grading.js';
 import * as story from './story.js';
 import * as journey from './journey.js';
@@ -23,7 +23,7 @@ import { iso, setupIso, buildGround, buildWalls, ViewLayer, fadeOccluders, shear
 const MAPS = ['tn_lobby', 'tn_f2', 'tn_f3', 'tn_f4', 'tn_f5', 'street', 'newsroom', 'cafe', 'agency', 'office2', 'clinic', 'cafe2', 'boss', 'home', 'hcm', 'tn_hcm'];
 const CITY_MAPS = new Set(['street', 'hcm']); // phố ngoài trời: nền kéo dài ra ngoài bản đồ, ra khỏi nhà nhìn xuống
 const SPEED = 120;
-const MAP_VERSION = 13;
+const MAP_VERSION = 14;
 // top-down: nền lặp phủ ra ngoài mép bản đồ phố (px mỗi phía), camera được đi tới đó
 const CITY_MARGIN = 20 * 32;
 // Xe buýt (tools/props.mjs → bus): mũi xe bên phải ảnh nhìn ngang 240 px; cửa lên ở đầu xe, cửa xuống ở giữa thân.
@@ -174,7 +174,7 @@ export class WorldScene extends Phaser.Scene {
       if (!at || at === this.mapKey) {
         const npc = this.spawnNpc(o.name, o.x, o.y, propOf(o, 'patrol'));
         // tư thế: ngồi (ghế, bàn) và hướng nhìn mặc định; nhóm trò chuyện
-        if (propOf(o, 'pose') === 'sit') npc.pose = 'sit';
+        if (propOf(o, 'pose') === 'sit') { npc.pose = 'sit'; this.seatOver(npc); }
         if (propOf(o, 'face')) npc.restDir = propOf(o, 'face');
         npc.chat = propOf(o, 'chat') || null;
         npc.rest();
@@ -436,8 +436,8 @@ export class WorldScene extends Phaser.Scene {
 
   /** Bong bóng biểu cảm trên đầu nhân vật chính ('hero') hoặc một NPC. */
   emote(who, ch) {
-    if (who === 'hero') showEmote(this, this.player.view, ch);
-    else { const npc = this.npcs.get(who); if (npc) showEmote(this, npc.sprite.view || npc.sprite, ch); }
+    if (who === 'hero') showEmote(this, this.player.view, ch, 1500, false, this.player.tag);
+    else { const npc = this.npcs.get(who); if (npc) showEmote(this, npc.sprite.view || npc.sprite, ch, 1500, false, npc.tag); }
   }
 
   /**
@@ -527,7 +527,7 @@ export class WorldScene extends Phaser.Scene {
       });
       const info = data.npcs.chats?.[id] || {};
       const p = iso.P(cx, cy);
-      const mark = this.add.text(p.x, p.y - 84, '…', { fontFamily: 'VT323', fontSize: '28px', color: '#7fe3ff', stroke: '#0f0e17', strokeThickness: 4 })
+      const mark = this.add.text(p.x, p.y - 84, '...', { fontFamily: 'VT323', fontSize: '28px', color: '#7fe3ff', stroke: '#0f0e17', strokeThickness: 4 })
         .setOrigin(0.5, 1).setDepth(100000).setVisible(false);
       return { id, members, x: cx, y: cy, info, mark, bubbleIn: 1500 + Math.random() * 2000, turn: 0 };
     });
@@ -552,7 +552,9 @@ export class WorldScene extends Phaser.Scene {
       g.bubbleIn = 2600 + Math.random() * 1800;
       const who = this.npcs.get(g.members[g.turn++ % g.members.length]);
       const lines = g.info.bubbles || data.npcs.chatBubbles || ['…'];
-      if (who && !who.talking) showEmote(this, who.sprite.view || who.sprite, Phaser.Utils.Array.GetRandom(lines), 2000, true);
+      // bong bóng nằm trên nhãn cao nhất của nhóm, khỏi che nhãn người ngồi cạnh
+      const top = g.members.map(m => this.npcs.get(m)?.tag).filter(tg => tg?.visible).sort((a, b) => a.y - b.y)[0];
+      if (who && !who.talking) showEmote(this, who.sprite.view || who.sprite, Phaser.Utils.Array.GetRandom(lines), 2000, true, top || who.tag);
     }
   }
 
@@ -852,6 +854,21 @@ export class WorldScene extends Phaser.Scene {
     npc.lead(route, () => { this.placeNpc(id); this.refresh(); });
   }
 
+  /**
+   * Người ngồi phải vẽ trên chiếc ghế mình ngồi: ghế isometric bị cắt thành cột, cột giữa ghế sâu hơn chân người ngồi
+   * nên che mất thân. Nâng độ sâu người ngồi lên trên các cột ghế ngay dưới chỗ ngồi.
+   */
+  seatOver(npc) {
+    const s = npc.sprite, p = iso.P(s.x, s.y);
+    // chỉ đồ để ngồi: bàn đặt trước mặt người ngồi vẫn phải che chân họ
+    const under = this.props.filter(pr => /bench|sofa|stool|chair|seat/.test(pr.obj.name)).flatMap(pr => pr.parts || [pr.img])
+      .filter(part => part.cropBounds && Phaser.Geom.Rectangle.Overlaps(part.cropBounds, new Phaser.Geom.Rectangle(p.x - 14, p.y - 36, 28, 32)));
+    if (!under.length) return;
+    const bias = Math.max(...under.map(part => part.depth)) + 1 - iso.depth(s.x, s.y);
+    const item = this.views.items.find(i => i.s === s);
+    if (item && bias > 0) { item.depthBias = bias; this.views.syncOne(item); }
+  }
+
   /** Thứ người chơi đang nhìn vào (NPC, đồ vật, cửa). */
   findTarget() {
     // điểm phía trước theo hướng nhìn trên màn hình, đổi về toạ độ logic (đi chéo vẫn trúng)
@@ -1109,6 +1126,8 @@ export class WorldScene extends Phaser.Scene {
     this.npcs.forEach(n => n.syncTag(this.player));
     const pv = this.player.view;
     if (this.player.tag) this.player.tag.setPosition(pv.x, pv.y - (HEAD_TOP + 4) * (pv.scaleY || 1)).setVisible(pv.visible && pv.alpha > 0.5);
+    declutterTags([this.player.tag, ...[...this.npcs.values()].map(n => n.tag)]);
+    this.npcs.forEach(n => { if (n.tag?.visible) n.marker.setY(n.tag.y - 14 + Math.round(Math.sin(time / 250) * 2)); });
     fadeOccluders(this.occluders, this.player.view);
     if (!this.reduceMotion) this.devices.forEach((d, i) => d.marker.setY(iso.P(d.obj.x + d.obj.width / 2, d.obj.y).y - 40 + Math.round(Math.sin(time / 250 + i) * 2)));
 
@@ -1137,6 +1156,8 @@ export class WorldScene extends Phaser.Scene {
     }
     this.target = this.findTarget();
     this.prompt.setVisible(!!this.target);
-    if (this.target) { const p = iso.P(this.target.x, this.target.y); this.prompt.setPosition(p.x, p.y - (this.target.lift || 40)); }
+    const tag = this.target?.kind === 'npc' && this.npcs.get(this.target.id)?.tag;
+    if (tag?.visible) this.prompt.setPosition(tag.x - tag.width / 2 - 13, tag.y - tag.height / 2);
+    else if (this.target) { const p = iso.P(this.target.x, this.target.y); this.prompt.setPosition(p.x, p.y - (this.target.lift || 40)); }
   }
 }

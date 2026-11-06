@@ -1097,6 +1097,7 @@ const cafe = buildMap('cafe', {
     pp('plant_big', 14.4, 10.6), pp('plant_big', 1.6, 10.6), pp('floor_lamp', 14.4, 4.6),
     point('npc', 'npc6', 10.6, 8.6),
     // hai khách ngồi hai bên bàn, bàn tán về một đoạn clip (nghe lén được)
+    pp('chair', 11.9, 6.7), pp('chair', 14.1, 6.7),
     point('npc', 'amb_cafe_a', 11.9, 6.75, { pose: 'sit', face: 'right', chat: 'cafe' }),
     point('npc', 'amb_cafe_b', 14.1, 6.75, { pose: 'sit', face: 'left', chat: 'cafe' }),
     point('npc', 'amb_barista', 3, 3.9, { patrol: 'patrol_barista' }),
@@ -1165,7 +1166,7 @@ const clinic = decorRoom('clinic', {
     pp('plant_big', 14.4, 10.6), pp('floor_lamp', 1.6, 10.6),
     point('npc', 'amb_nurse', 4, 3.9, { patrol: 'patrol_nurse' }), path_('patrol_nurse', [[2.6, 3.9], [7.4, 3.9]]),
     point('npc', 'amb_doctor', 11, 6.6, { patrol: 'patrol_doctor' }), path_('patrol_doctor', [[9.6, 6.6], [13.2, 6.6]]),
-    point('npc', 'amb_patient', 12.2, 10, { pose: 'sit', face: 'down' })
+    point('npc', 'amb_patient', 12.6, 8.86, { pose: 'sit', face: 'down' })
   ]
 });
 const cafe2 = decorRoom('cafe2', {
@@ -1177,6 +1178,7 @@ const cafe2 = decorRoom('cafe2', {
     pp('cafe_table', 9.6, 6.2), pp('cafe_table', 13, 7.6), pp('cafe_table', 3.4, 8.6),
     pp('floor_lamp', 1.6, 6.6), pp('plant_big', 14.4, 9.6),
     point('npc', 'amb_barista2', 3, 3.9, { patrol: 'patrol_barista2' }), path_('patrol_barista2', [[1.8, 3.9], [6.4, 3.9]]),
+    pp('chair', 12.1, 7.5),
     point('npc', 'amb_patron', 12.1, 7.55, { pose: 'sit', face: 'right' })
   ]
 });
@@ -1315,7 +1317,7 @@ const hcm = buildMap('hcm', {
     // hai sinh viên ở ghế đá công viên bàn về ảnh trong nhóm lớp (nghe lén được, ngay cả trước khi nhận việc)
     point('npc', 'amb_hcm_student2', 18.2, 33.46, { pose: 'sit', face: 'down', chat: 'class' }),
     point('npc', 'amb_hcm_student', 19.6, 34.3, { chat: 'class' }),
-    point('npc', 'amb_hcm_elder', 9.5, 31.46, { pose: 'sit', face: 'down' }),
+    point('npc', 'amb_hcm_elder', 11, 35.66, { pose: 'sit', face: 'down' }),
     // --- đồ vật xem được
     rectT('inspect', 'inspect_btn_hcm_sign', 18, 15.3, 6, 0.7, { text: 'inspect_btn_hcm_sign' }),
     rectT('inspect', 'inspect_coach_sign', 49, 15.3, 4, 0.7, { text: 'inspect_coach_sign' }),
