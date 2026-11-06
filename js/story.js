@@ -200,6 +200,7 @@ export async function talkTo(npcId, room = null) {
 
 /** Chạy một nhiệm vụ; trả về true nếu hoàn thành. */
 async function runQuest(q, npc) {
+  showTip('minimize');
   const qs = questState(q.id);
   if (q.npcIntro && !hasFlag(`intro_${q.id}`)) {
     await playScene(q.npcIntro);

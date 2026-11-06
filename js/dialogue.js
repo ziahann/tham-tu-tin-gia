@@ -1,5 +1,4 @@
 // Khung thoại kiểu game cốt truyện ở cạnh dưới: NPC nói, người chơi chọn / gõ / chọn thẻ / mở nguồn.
-import { showTip } from './tips.js';
 import { data, t, fill, npcById } from './data.js';
 import { reader } from './tools.js';
 import { state } from './state.js';
@@ -91,7 +90,6 @@ export function restore() {
 /** Mở khung thoại; partnerId là NPC đang trò chuyện (dùng để chia lịch sử theo NPC); portrait: chân dung bên phải nếu khác. */
 export function begin(partnerId, portrait = null) {
   partner = partnerId;
-  showTip('minimize');
   rightId = portrait || (hasPortrait(partnerId) ? partnerId : null);
   open = true;
   duckMusic(true);

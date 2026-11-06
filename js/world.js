@@ -536,9 +536,7 @@ export class WorldScene extends Phaser.Scene {
   /** Nhóm còn chờ được nghe lén (chưa nghe, đủ điều kiện cờ). */
   canEavesdrop(g) {
     const e = g.info.eavesdrop;
-    const ok = !!e && !hasFlag(`heard_${g.id}`) && (e.requires || []).every(hasFlag) && g.members.every(m => !this.npcs.get(m)?.talking);
-    if (ok) showTip('eavesdrop');
-    return ok;
+    return !!e && !hasFlag(`heard_${g.id}`) && (e.requires || []).every(hasFlag) && g.members.every(m => !this.npcs.get(m)?.talking);
   }
 
   /** Câu nói ngắn luân phiên trong nhóm trò chuyện (chỉ khi người chơi ở gần). */
@@ -546,6 +544,7 @@ export class WorldScene extends Phaser.Scene {
     for (const g of this.chats || []) {
       const d = Phaser.Math.Distance.Between(this.player.x, this.player.y, g.x, g.y);
       g.mark.setVisible(!frozen && this.canEavesdrop(g) && d < 360);
+      if (g.mark.visible) showTip('eavesdrop');
       if (g.mark.visible && !this.reduceMotion) g.mark.setY(iso.P(g.x, g.y).y - 84 + Math.round(Math.sin(this.time.now / 260) * 2));
       if (frozen || d > 420) continue;
       g.bubbleIn -= delta;
