@@ -44,5 +44,19 @@ for (const from of MAPS.filter(m => m !== 'boss')) {
 ok(!bad.length, `không tới được: ${bad.join('; ')}`);
 
 for (const q of JSON.parse(rd('../game/data/quests.json')).quests) ok(typeof q.todo === 'string' && q.todo.length >= 10 && q.todo.length <= 160 && !/F\d|điểm|GIẢ LẬP/i.test(q.todo), `todo của ${q.id} thiếu hoặc không hợp lệ`);
+
+// Mẹo cho người mới (game/js/tips.js)
+const uiAll = JSON.parse(rd('../game/data/ui.json'));
+const TIP_IDS = 'move backpack track notebook hint minimize cred pressure rumor decoy feed board guestCard weather crossing eavesdrop'.split(' ');
+eq(Object.keys(uiAll.tips || {}), TIP_IDS, 'ui.tips đúng 16 id theo thứ tự');
+for (const id of TIP_IDS) {
+  const tp = uiAll.tips?.[id] || {};
+  ok(typeof tp.title === 'string' && tp.title, `mẹo ${id} thiếu title`);
+  ok(Array.isArray(tp.lines) && tp.lines.length >= 1 && tp.lines.length <= 2, `mẹo ${id}: lines phải 1-2 chuỗi`);
+  ok(![tp.title, ...(tp.lines || []), ...(tp.linesTouch || [])].some(x => /F\d|điểm|GIẢ LẬP|hư cấu/i.test(x)), `mẹo ${id} có chữ cấm`);
+}
+ok(uiAll.tips?.move?.linesTouch?.length, 'mẹo move thiếu linesTouch');
+for (const k of ['ok', 'tab', 'controls']) ok(uiAll.tipsUi?.[k], `tipsUi.${k} thiếu`);
+ok(uiAll.settingsPanel?.tips, 'settingsPanel.tips thiếu');
 if (fails) process.exit(1);
 console.log(`✓ route: ${n} ca`);

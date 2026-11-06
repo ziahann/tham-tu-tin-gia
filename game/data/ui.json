@@ -183,7 +183,8 @@
     "ambience": "Âm thanh môi trường (mưa, gió, sóng, xe cộ)",
     "clickMove": "Di chuyển bằng nháy chuột / chạm: bấm vào nền để đi tới, bấm vào người hoặc đồ vật để đi tới và tương tác",
     "skipBoss": "Tới thẳng phòng boss",
-    "skipBossConfirm": "Đi thẳng tới trận đối đầu Kẻ Dệt Chuyện? Các hồ sơ chưa làm sẽ được tính là đã khép (nhận thẻ evidence nhưng không nhận huy hiệu). Hợp khi trình chiếu hoặc ôn nhanh."
+    "skipBossConfirm": "Đi thẳng tới trận đối đầu Kẻ Dệt Chuyện? Các hồ sơ chưa làm sẽ được tính là đã khép (nhận thẻ evidence nhưng không nhận huy hiệu). Hợp khi trình chiếu hoặc ôn nhanh.",
+    "tips": "Hiện mẹo cho người mới"
   },
   "result": {
     "correct": "✓ Đúng.",
@@ -511,5 +512,121 @@
       "hcm": "TP.HCM",
       "street": "Hạ Long"
     }
+  },
+  "tips": {
+    "move": {
+      "title": "Di chuyển",
+      "lines": [
+        "Đi bằng phím mũi tên hoặc WASD; bấm E hoặc Space để nói chuyện, xem đồ vật.",
+        "Bạn cũng có thể nháy chuột vào nền để tự đi tới đó."
+      ],
+      "linesTouch": [
+        "Kéo cần điều khiển bên trái để đi, chạm nút A để tương tác.",
+        "Chạm vào nền, người hoặc đồ vật để tự đi tới."
+      ]
+    },
+    "backpack": {
+      "title": "Balo",
+      "lines": [
+        "Bấm nút balo trên thanh trên (hoặc phím B) để mở sổ tay, bằng chứng và nguồn tham khảo.",
+        "Phím J mở danh sách hồ sơ."
+      ]
+    },
+    "track": {
+      "title": "Theo dõi hồ sơ",
+      "lines": [
+        "Chọn một hồ sơ để theo dõi, mũi tên sẽ chỉ đường tới nơi cần đến."
+      ]
+    },
+    "notebook": {
+      "title": "Sổ tay",
+      "lines": [
+        "Sổ tay giữ ba câu hỏi xác minh mà chú Quốc Trung giao cho bạn.",
+        "Hãy mở ra mỗi khi cần nhớ mình đang kiểm chứng điều gì."
+      ]
+    },
+    "hint": {
+      "title": "Gợi ý",
+      "lines": [
+        "Bí câu hỏi? Bấm nút gợi ý để được chỉ hướng mà không lộ đáp án."
+      ]
+    },
+    "minimize": {
+      "title": "Thu nhỏ khung thoại",
+      "lines": [
+        "Bấm nút thu nhỏ ở góc khung thoại để đi lại tự do, rồi mở lại khi cần."
+      ]
+    },
+    "cred": {
+      "title": "Độ tin cậy",
+      "lines": [
+        "Mỗi hồ sơ có độ tin cậy riêng: trả lời sai trừ 15, trả lời một phần trừ 5, bị kẻ tung tin lừa trừ 10.",
+        "Về 0 thì hồ sơ phải làm lại từ đầu."
+      ]
+    },
+    "pressure": {
+      "title": "Hạn chót",
+      "lines": [
+        "Khi đang có hồ sơ mở, đi lại làm thanh hạn chót đầy dần.",
+        "Đầy thì Phát Vội sẽ gọi giục bạn đăng bài; đăng vội trừ 25 độ tin cậy."
+      ]
+    },
+    "rumor": {
+      "title": "Kẻ tung tin",
+      "lines": [
+        "Kẻ tung tin sẽ đuổi theo bạn trên phố và hỏi một câu.",
+        "Trả lời kỹ, đừng tin ngay điều nghe được."
+      ]
+    },
+    "decoy": {
+      "title": "Manh mối đánh lừa",
+      "lines": [
+        "Những tờ giấy có dấu \"?\" có thể là manh mối giả.",
+        "Kiểm tra trước khi đưa vào hồ sơ, vì đưa manh mối giả vào trừ 15 độ tin cậy."
+      ]
+    },
+    "feed": {
+      "title": "Vịnh Feed",
+      "lines": [
+        "Vịnh Feed ở balo hiện các bài đang lan truyền. Bài sai để lâu sẽ lan rộng và làm hạn chót đến nhanh hơn.",
+        "Ghi chú hoặc trả lời đúng sẽ giúp bạn kéo lại."
+      ]
+    },
+    "board": {
+      "title": "Bảng ghim",
+      "lines": [
+        "Bảng ghim là bảng điều tra dây đỏ: nối các nhận định với bằng chứng của chúng."
+      ]
+    },
+    "guestCard": {
+      "title": "Thẻ khách",
+      "lines": [
+        "Muốn đi thang máy ở sảnh tòa soạn, bạn cần thẻ khách từ chú bảo vệ."
+      ]
+    },
+    "weather": {
+      "title": "Thời tiết",
+      "lines": [
+        "Mưa làm bạn đi chậm, sương mù thu hẹp tầm nhìn.",
+        "Ban đêm, kẻ tung tin sẽ đuổi theo xa hơn."
+      ]
+    },
+    "crossing": {
+      "title": "Qua đường",
+      "lines": [
+        "Hãy qua đường ở vạch ngựa vằn. Đi giữa làn xe sẽ bị xe hất về vỉa hè."
+      ]
+    },
+    "eavesdrop": {
+      "title": "Nghe lén",
+      "lines": [
+        "Lại gần các nhóm người đang trò chuyện để nghe họ nói; điều nghe được sẽ ghi vào sổ tay."
+      ]
+    }
+  },
+  "tipsUi": {
+    "ok": "Đã hiểu",
+    "tab": "Hướng dẫn",
+    "controls": "Thiết bị ở Phòng xác minh"
   }
 }
