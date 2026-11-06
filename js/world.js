@@ -161,7 +161,7 @@ export class WorldScene extends Phaser.Scene {
     this.savePos();
     this.player.setFrame(idleFrame(this.facing));
     this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
-    showTip('move');
+    if (this.mapKey !== 'home') showTip('move'); // ở phòng trọ: sau cảnh mở đầu (wakeUp)
     this.physics.add.collider(this.player, this.walls);
     this.physics.add.collider(this.player, this.doors);
     this.buildProps(objs);
@@ -230,7 +230,7 @@ export class WorldScene extends Phaser.Scene {
     story.setWorld(this);
     this.refresh();
     if (state.progress.introBus && this.points.spawn_bus) this.busIntro();
-    else if (this.mapKey === 'home') this.time.delayedCall(500, () => journey.wakeUp());
+    else if (this.mapKey === 'home') this.time.delayedCall(500, async () => { await journey.wakeUp(); showTip('move'); });
   }
 
   /**
