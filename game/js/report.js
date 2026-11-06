@@ -1,6 +1,6 @@
 // Bảng kết quả xuất PDF: dựng một trang báo cáo in được (khổ A4) từ tiến độ lượt chơi, mở hộp thoại in của trình duyệt
 // để "Lưu dưới dạng PDF". Không cần thư viện, không gửi dữ liệu đi đâu.
-import { data, t, questById, evidenceById } from './data.js';
+import { data, t, questById, evidenceById, artCredit } from './data.js';
 import { state } from './state.js';
 import { earnedBadges, caseProgress } from './grading.js';
 import { credOf, CRED_MAX } from './obstacles.js';
@@ -104,7 +104,7 @@ ${cards.length ? `<ul>${cards.map(ev => `<li><b>${esc(ev.title)}</b> — ${esc(e
 
 <h2>${esc(t('report.art'))}</h2>
 <p>${esc(t('sourcesPanel.artNote'))}</p>
-<ul class="src"><li>${esc(t('sourcesPanel.artOwn'))}</li></ul>
+<ul class="src">${(data.sources.art?.lpc || []).map(a => `<li>${esc(artCredit(a))}</li>`).join('')}<li>${esc(t('sourcesPanel.artOwn'))}</li></ul>
 
 <footer>${esc(t('title.authors'))} · ${esc(t('title.simulatedNote'))} ${esc(t('report.disclaimer'))}</footer>
 </body></html>`;

@@ -8,7 +8,7 @@ import { CHARACTERS, shade } from './characters.mjs';
 import { allProps, vehicles } from './props.mjs';
 import { isoGround, isoWalls } from './iso.mjs';
 import { buildBadges } from './badges.mjs';
-import { buildChibi } from './chibi.mjs';
+import { buildLpcCharacter, checkSheet } from './lpc.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', 'game');
 const T = 32; // cỡ ô
@@ -611,7 +611,7 @@ function drawBossFrame(blank) {
   return out;
 }
 
-/** Sprite sheet của boss (cùng bố cục 9x6 ô 64 px với nhân vật để dùng chung code) + bản đã gỡ mặt nạ. */
+/** Sprite sheet của boss (cùng bố cục 9x6 ô 64 px với nhân vật LPC để dùng chung code) + bản đã gỡ mặt nạ. */
 function buildBoss() {
   for (const [id, blank] of [['boss', false], ['boss_blank', true]]) {
     const sheet = new Img(9 * 64, 6 * 64);
@@ -621,14 +621,28 @@ function buildBoss() {
   }
 }
 
-/** Sprite nhân vật: bộ vẽ chibi phong cách Thám Tử VLU (tools/chibi.mjs) + ghi công vào data/sources.json → art. */
-function buildCharacters() {
-  for (const [id, spec] of Object.entries(CHARACTERS)) buildChibi(spec).save(path.join(ROOT, `assets/sprites/${id}.png`));
+/** Sprite nhân vật ghép từ lớp LPC + ghi công vào data/sources.json → art. Lỗi tự kiểm thì dừng. */
+async function buildCharacters() {
+  const credits = new Map();
+  const errs = [];
+  for (const [id, spec] of Object.entries(CHARACTERS)) {
+    const { img, credits: cr } = await buildLpcCharacter(id, spec);
+    errs.push(...checkSheet(id, img));
+    img.save(path.join(ROOT, `assets/sprites/${id}.png`));
+    for (const c of cr) {
+      const prev = credits.get(c.file);
+      if (prev) { if (!prev.usedBy.includes(id)) prev.usedBy.push(id); } else credits.set(c.file, { file: c.file, authors: c.authors, licenses: c.licenses, urls: c.urls, notes: c.notes, usedBy: [id] });
+    }
+  }
+  if (errs.length) { console.error(errs.join('\n')); process.exit(1); }
   const file = path.join(ROOT, 'data/sources.json');
   const src = JSON.parse(fs.readFileSync(file, 'utf8'));
-  src.art = { own: { title: 'Toàn bộ sprite nhân vật (phong cách Thám Tử VLU, vẽ bằng tools/chibi.mjs)', license: 'CC0 1.0', author: 'Nhóm dự án' } };
+  src.art = {
+    lpc: [...credits.values()].sort((a, b) => a.file.localeCompare(b.file)),
+    own: { title: 'Đồ tự vẽ trên sprite nhân vật (nón lá, mũ lưỡi trai, dây thẻ, thẻ báo chí, máy ảnh, balo Văn Lang)', license: 'CC0 1.0', author: 'Nhóm dự án' }
+  };
   fs.writeFileSync(file, JSON.stringify(src, null, 2) + '\n');
-  return `nhân vật ${Object.keys(CHARACTERS).length} (chibi tự vẽ)`;
+  return `nhân vật ${Object.keys(CHARACTERS).length} (LPC, ${credits.size} lớp ghi công)`;
 }
 
 // ---------------------------------------------------------------- bản đồ
@@ -1365,6 +1379,6 @@ buildTileset();
 const propsInfo = buildProps();
 const badgesInfo = buildBadges(ROOT);
 buildVehicles();
-const charsInfo = buildCharacters();
+const charsInfo = await buildCharacters();
 buildBoss();
 console.log(['ok:', `tileset ${TILES.length} ô`, tnLobby, tnF2, tnF3, tnF4, tnF5, street, newsroom, cafe, agency, office2, clinic, cafe2, boss, home, hcm, tnHcm, propsInfo, badgesInfo, charsInfo].join('\n  '));
