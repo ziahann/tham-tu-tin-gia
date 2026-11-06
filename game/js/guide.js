@@ -5,53 +5,25 @@ import { trackTarget, trackedRoom } from './story.js';
 import { setTrack } from './hud.js';
 import { state } from './state.js';
 import { journeyGoal } from './journey.js';
+import { graphFromMaps, routeTo, routeText } from './route.js';
 
 const propOf = (o, name) => (o.properties || []).find(p => p.name === name)?.value;
 
 let graph = null; // { edges: { map: [{ to, x, y }] }, where: { 'npc:id' | 'device:id': { map, x, y } } }
+let names = null; // chữ cho lộ trình (route.js → routeText)
 
 /** Đọc mọi bản đồ đã tải: lối ra / cổng nối các bản đồ, NPC đứng ở bản đồ nào. */
 export function buildGraph(scene, maps) {
   if (graph) return;
-  graph = { edges: {}, where: {} };
-  for (const key of maps) {
-    const layer = scene.cache.tilemap.get(key)?.data.layers.find(l => l.name === 'objects');
-    const objs = layer?.objects || [];
-    graph.edges[key] = objs
-      .filter(o => (o.type === 'exit' || o.type === 'portal') && maps.includes(propOf(o, 'target')))
-      .map(o => ({ to: propOf(o, 'target'), x: o.x + o.width / 2, y: o.y + o.height / 2 }));
-    objs.filter(o => o.type === 'npc').forEach(o => { graph.where[`npc:${o.name}`] = { map: key }; });
-    // Thang máy: nối tới mọi tầng khác của tòa nhà (quests.json → building.floors)
-    for (const o of objs.filter(o => o.type === 'elevator')) {
-      for (const f of data.quests.building?.floors || []) {
-        if (f.map !== key && maps.includes(f.map)) graph.edges[key].push({ to: f.map, x: o.x + o.width / 2, y: o.y + o.height / 2, elevator: true });
-      }
-    }
-    // điểm hành động của hành trình; trạm xe khách nối hai thành phố
-    objs.filter(o => o.type === 'spot').forEach(o => {
-      const at = { map: key, x: o.x + o.width / 2, y: o.y + o.height + 8 };
-      graph.where[`spot:${o.name}`] = at;
-      const to = propOf(o, 'to');
-      if (propOf(o, 'act') === 'bus' && maps.includes(to)) graph.edges[key].push({ to, x: at.x, y: at.y, bus: true });
-    });
-    objs.filter(o => o.type === 'device').forEach(o => {
-      graph.where[`device:${propOf(o, 'device')}`] = { map: key, x: o.x + o.width / 2, y: o.y + o.height + 8 };
-    });
-  }
-}
-
-/** Lối ra đầu tiên trên đường ngắn nhất từ bản đồ from tới bản đồ to (BFS). */
-function firstHop(from, to) {
-  const seen = new Set([from]);
-  const queue = graph.edges[from].map(e => ({ map: e.to, first: e }));
-  while (queue.length) {
-    const { map, first } = queue.shift();
-    if (map === to) return first;
-    if (seen.has(map)) continue;
-    seen.add(map);
-    (graph.edges[map] || []).forEach(e => queue.push({ map: e.to, first }));
-  }
-  return null;
+  const tiled = Object.fromEntries(maps.map(k => [k, scene.cache.tilemap.get(k)?.data]).filter(([, d]) => d));
+  const floors = data.quests.building?.floors || [];
+  graph = graphFromMaps(tiled, floors);
+  const tpl = data.ui.route;
+  names = {
+    tpl, city: tpl.cities, outdoor: ['street', 'hcm'],
+    label: Object.fromEntries(Object.entries(tiled).map(([k, d]) => [k, propOf(d, 'label') || k])),
+    floor: Object.fromEntries(floors.map(f => [f.map, `${f.label} · ${f.name}`])),
+  };
 }
 
 /** Điểm mũi tên cần chỉ tới trên bản đồ hiện tại, hoặc null nếu không theo dõi gì. */
@@ -67,7 +39,7 @@ export function guideTarget(scene) {
     const s = scene.npcs.get(tg.id)?.sprite;
     return s ? { x: s.x, y: s.y - 20, here: true } : null;
   }
-  const hop = firstHop(scene.mapKey, at.map);
+  const hop = routeTo(graph, scene.mapKey, at.map)?.[0];
   return hop ? { x: hop.x, y: hop.y, here: false } : null;
 }
 
@@ -79,10 +51,23 @@ export function targetMap(scene) {
   return graph.where[`${tg.kind}:${tg.id}`]?.map || null;
 }
 
+/** Các bước chữ từ bản đồ hiện tại tới mục tiêu đang theo dõi; null nếu không theo dõi / không có đường. */
+export function currentRoute(scene) {
+  const tg = trackTarget(), to = tg && targetMap(scene);
+  if (!to || !graph) return null;
+  const arrive = tg.kind === 'npc' ? t('route.meet', { npc: npcById(tg.id)?.name || tg.id })
+    : tg.kind === 'device' ? t('route.device', { device: t(`devices.${tg.id}.name`), place: names.label[to] })
+    : journeyGoal();
+  const edges = routeTo(graph, scene.mapKey, to);
+  return edges && routeText(edges, arrive, names);
+}
+
 /** Cập nhật dòng "đang theo dõi" trên thanh trên. */
-export function updateTrackLine() {
+export function updateTrackLine(scene) {
   const tg = trackTarget();
   const jg = state.progress && journeyGoal();
+  const r = scene && currentRoute(scene);
+  if (r?.length) { setTrack(t('route.next', { step: r[0] }), true); return; }
   if (jg) { setTrack(jg, true); return; }
   if (!tg) { setTrack(t('hud.trackNone'), false); return; }
   if (tg.kind === 'device') { setTrack(t('hud.track', { npc: t(`devices.${tg.id}.name`), place: t('devices.place') }), true); return; }

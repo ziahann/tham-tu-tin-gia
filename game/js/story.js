@@ -8,7 +8,7 @@ import { normalize, containsPhrase } from './text.js';
 import { sfx } from './audio.js';
 import { toast } from './ui.js';
 import { toolWindow, browseContent, deviceSpeaker } from './tools.js';
-import { targetMap } from './guide.js';
+import { targetMap, currentRoute } from './guide.js';
 import { loseCred, easePressure, isLight, roomName, caseOpen, PENALTY } from './obstacles.js';
 import { bossStartShares, feedAlerts } from './feed.js';
 import { journeyTarget, editorWaiting, afterBoss, stage as journeyStage } from './journey.js';
@@ -1128,15 +1128,16 @@ async function roomIntro(npcId) {
 /** Mục tiêu hiện tại (hiện trong balo): nhiệm vụ đang theo dõi. */
 export function objective() {
   const id = state.progress?.tracked;
-  if (id === 'boss') return t('backpack.bossOpen');
+  const steps = (world && currentRoute(world)) || [];
+  if (id === 'boss') return { text: t('backpack.bossOpen'), steps };
   const q = id && questById(id);
   if (q && !isQuestDone(q.id)) {
     const room = data.quests.rooms.find(r => r.id === q.room);
     const npc = giverOf(q.id);
-    return t('backpack.objectiveQuest', { title: q.title, npc: npcById(npc)?.name || npc, place: room?.name || '' });
+    return { text: q.todo || t('backpack.objectiveQuest', { title: q.title, npc: npcById(npc)?.name || npc, place: room?.name || '' }), steps };
   }
   const anyOpen = data.quests.rooms.some(r => nextQuestIn(r.id));
-  return anyOpen ? t('backpack.objectiveMeetNpc1') : t('backpack.objectiveWait');
+  return { text: anyOpen ? t('backpack.objectiveMeetNpc1') : t('backpack.objectiveWait'), steps };
 }
 
 // ---------------------------------------------------------------- boss

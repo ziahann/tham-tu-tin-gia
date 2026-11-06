@@ -202,6 +202,8 @@ input:not([type]), input[type="text"] {
 .quest-row.done .st { color: var(--green); }
 .quest-row.active .st { color: var(--straw); }
 .objective { border-left: 6px solid var(--straw); padding-left: 10px; }
+.route { margin: 6px 0 0; padding-left: 22px; }
+.route li.is-now { font-weight: bold; }
 .case { border: 2px solid var(--grey-dark); padding: 6px 10px; margin: 8px 0; background: rgb(15 14 23 / 0.35); }
 .case.is-tracked { border-color: var(--straw); box-shadow: inset 4px 0 0 var(--straw); }
 .case.is-done { opacity: 0.7; }
