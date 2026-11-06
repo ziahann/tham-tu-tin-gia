@@ -1,5 +1,6 @@
 // Cản trở người chơi: độ tin cậy theo từng hồ sơ, áp lực hạn chót, chế độ thử thách (Đầy đủ / Nhẹ).
 // Độ tin cậy chỉ để chơi: về 0 thì hồ sơ đó làm lại từ bước đầu; hồ sơ khác không ảnh hưởng.
+import { showTip } from './tips.js';
 import { data, questById } from './data.js';
 import { state, saveProgress, hasFlag } from './state.js';
 
@@ -25,6 +26,7 @@ export function loseCred(room, n) {
   if (!state.progress || isLight() || !caseOpen(room)) return null;
   const cred = (state.progress.cred ||= {});
   cred[room] = Math.max(0, credOf(room) - n);
+  showTip('cred');
   if (cred[room] > 0) { saveProgress(); return 'lost'; }
   resetCase(room);
   return 'reset';

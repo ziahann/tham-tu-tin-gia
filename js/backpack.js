@@ -1,4 +1,5 @@
 // Balo: khung dọc bên phải với Sổ tay, Nhiệm vụ + bản đồ nhỏ, Bảng ghim, Lịch sử trò chuyện theo NPC.
+import { showTip, TIP_IDS } from './tips.js';
 import { data, t, evidenceById, npcById, questById } from './data.js';
 import { state, clearAllStorage, isQuestDone } from './state.js';
 import { questStatus, nextQuestIn, isUnlocked, bossStatus, earnedBadges, caseProgress } from './grading.js';
@@ -64,7 +65,7 @@ export function render() {
   if (!isOpen()) return;
   els.root.querySelectorAll('[data-tab]').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === tab)));
   els.body.innerHTML = '';
-  ({ notebook, quests, feed, pinboard, history })[tab]();
+  ({ notebook, quests, feed, pinboard, history, guide })[tab]();
   const alerts = feedAlerts();
   const ft = els.root.querySelector('[data-tab="feed"]');
   ft.dataset.alert = alerts ? String(alerts) : '';
@@ -160,8 +161,15 @@ const STATUS_LABEL = { done: 'statusDone', active: 'statusActive', locked: 'stat
 
 /** Hồ sơ vụ án: mục tiêu, các hồ sơ chọn làm theo thứ tự tùy ý (nút Theo dõi), Phòng họp, bản đồ nhỏ. */
 function quests() {
+  showTip('track');
   const obj = el('div', 'objective');
-  obj.append(el('h3', null, t('backpack.objective')), el('p', null, objective()));
+  const { text, steps } = objective();
+  obj.append(el('h3', null, t('backpack.objective')), el('p', null, text));
+  if (steps.length) {
+    const ol = el('ol', 'route');
+    steps.forEach((s, i) => ol.append(el('li', i ? null : 'is-now', s)));
+    obj.append(ol);
+  }
   els.body.append(obj, el('h3', null, t('backpack.cases')));
   const tracked = state.progress?.tracked;
   for (const room of data.quests.rooms) {
@@ -257,6 +265,7 @@ function feed() {
 }
 
 function pinboard() {
+  showTip('board');
   els.body.append(investigationBoard());
 }
 
@@ -269,6 +278,23 @@ function speakerName(id) {
 }
 
 /** Lịch sử: mỗi NPC một tab; xuất JSON; xóa dữ liệu. */
+/** Tab Hướng dẫn: mọi mẹo + hướng dẫn thiết bị ở Phòng xác minh. */
+function guide() {
+  const sec = (title, lines) => {
+    const s = el('section'); s.append(el('h3', null, title));
+    lines.forEach(l => s.append(el('p', null, l)));
+    els.body.append(s);
+  };
+  TIP_IDS.forEach(id => {
+    const tip = data.ui.tips[id];
+    if (tip) sec(tip.title, [...tip.lines, ...(tip.linesTouch || [])]);
+  });
+  els.body.append(el('h3', null, t('tipsUi.controls')));
+  Object.values(data.ui.devices).forEach(d => {
+    if (d && d.tutorial) sec(d.name, [].concat(d.tutorial));
+  });
+}
+
 function history() {
   const groups = currentRunByNpc();
   const ids = Object.keys(groups);

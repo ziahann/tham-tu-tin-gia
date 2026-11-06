@@ -1,5 +1,6 @@
 // Cảnh bản đồ Phaser: bản đồ Tiled, người chơi đi lại, NPC, cửa phòng, khu vực, gợi ý tương tác.
 // Logic chạy trên lưới vuông; hiển thị isometric qua js/iso.js (sprite vật lý ẩn, ảnh hiển thị đặt theo phép chiếu).
+import { showTip } from './tips.js';
 import { data, t } from './data.js';
 import { state, saveProgress, hasFlag } from './state.js';
 import { direction } from './input.js';
@@ -9,7 +10,7 @@ import * as story from './story.js';
 import * as journey from './journey.js';
 import * as dlg from './dialogue.js';
 import { setPlace, updateMeters } from './hud.js';
-import { tickPressure, isLight, caseOpen } from './obstacles.js';
+import { tickPressure, pressure, isLight, caseOpen } from './obstacles.js';
 import { feedPressureRate } from './feed.js';
 import { buildGrid, findPath } from './pathfind.js';
 import { playMusic } from './music.js';
@@ -160,6 +161,7 @@ export class WorldScene extends Phaser.Scene {
     this.savePos();
     this.player.setFrame(idleFrame(this.facing));
     this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+    if (this.mapKey !== 'home') showTip('move'); // ở phòng trọ: sau cảnh mở đầu (wakeUp)
     this.physics.add.collider(this.player, this.walls);
     this.physics.add.collider(this.player, this.doors);
     this.buildProps(objs);
@@ -228,7 +230,7 @@ export class WorldScene extends Phaser.Scene {
     story.setWorld(this);
     this.refresh();
     if (state.progress.introBus && this.points.spawn_bus) this.busIntro();
-    else if (this.mapKey === 'home') this.time.delayedCall(500, () => journey.wakeUp());
+    else if (this.mapKey === 'home') this.time.delayedCall(500, async () => { await journey.wakeUp(); showTip('move'); });
   }
 
   /**
@@ -542,6 +544,7 @@ export class WorldScene extends Phaser.Scene {
     for (const g of this.chats || []) {
       const d = Phaser.Math.Distance.Between(this.player.x, this.player.y, g.x, g.y);
       g.mark.setVisible(!frozen && this.canEavesdrop(g) && d < 360);
+      if (g.mark.visible) showTip('eavesdrop');
       if (g.mark.visible && !this.reduceMotion) g.mark.setY(iso.P(g.x, g.y).y - 84 + Math.round(Math.sin(this.time.now / 260) * 2));
       if (frozen || d > 420) continue;
       g.bubbleIn -= delta;
@@ -702,7 +705,7 @@ export class WorldScene extends Phaser.Scene {
     });
     this.decoys?.forEach(d => d.marker.setVisible(!hasFlag(`seen_${d.id}`) && caseOpen(data.npcs.decoys?.[d.id]?.room)));
     updateMeters();
-    updateTrackLine();
+    updateTrackLine(this);
   }
 
   /** Toạ độ màn hình (isometric) → toạ độ logic trên nền. */
@@ -818,6 +821,7 @@ export class WorldScene extends Phaser.Scene {
   knockback(toY) {
     if (this.time.now < (this.stunUntil || 0)) return;
     this.stunUntil = this.time.now + 700;
+    showTip('crossing');
     this.player.body.reset(this.player.x, toY);
     this.player.setVelocity(0, 0);
     this.cameras.main.shake(180, 0.006);
@@ -1087,6 +1091,7 @@ export class WorldScene extends Phaser.Scene {
       }
       const room = story.trackedRoom();
       if (tickPressure(delta * this.fx().pressure * feedPressureRate(), room)) story.deadlineCall(room);
+      if (pressure() > 10) showTip('pressure');
       if (time - this.lastSave > 1000) {
         this.lastSave = time;
         this.savePos();
