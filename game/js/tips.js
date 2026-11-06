@@ -8,9 +8,11 @@ const queue = [];
 let current = null; // { id, timer }
 
 function next() {
+  const was = current?.id;
   current = null;
   const box = document.getElementById('tip');
   if (box) box.hidden = true;
+  if (was === 'move') showTip('backpack');
   if (queue.length) setTimeout(show, 0);
 }
 

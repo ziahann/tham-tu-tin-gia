@@ -1,4 +1,5 @@
 // Cốt truyện: chọn hội thoại khi nói chuyện với NPC, chạy nhiệm vụ trong hội thoại, xem đồ vật, cửa, khu vực.
+import { showTip } from './tips.js';
 import { data, t, fill, questById, evidenceById, sceneById, npcById, sourceById } from './data.js';
 import { state, questState, saveProgress, setFlag, hasFlag, addEvidence, isQuestDone } from './state.js';
 import * as dlg from './dialogue.js';
@@ -236,6 +237,7 @@ async function helpMenu(q, qs, npc, afterWrong, field = null) {
     ...(walkthrough ? [{ id: 'walk', text: t('dialog.cantFind') }] : []),
     { id: 'later', text: t('dialog.later') }
   ];
+  if (hints.length) showTip('hint');
   const c = await dlg.choose(options);
   if (c.id === 'hint') {
     if (used >= hints.length) {
@@ -482,7 +484,7 @@ export async function useDevice(device) {
 export async function useElevator() {
   const floors = data.quests.building?.floors || [];
   const here = world?.mapKey;
-  if (here === 'tn_lobby' && !hasFlag('visitor_card')) { await notice(t('obstacles.needCard')); return; }
+  if (here === 'tn_lobby' && !hasFlag('visitor_card')) { showTip('guestCard'); await notice(t('obstacles.needCard')); return; }
   const goal = world ? targetMap(world) : null;
   const bossOpen = ['open', 'done'].includes(bossStatus(state.progress.flags));
   let pick = null;
@@ -1003,6 +1005,7 @@ const shuffle = list => list.map(v => [Math.random(), v]).sort((a, b) => a[0] - 
 export async function rumorEncounter(id) {
   const bank = data.npcs.rumors || [];
   if (!bank.length || busy) return;
+  showTip('rumor');
   const i = (state.progress.rumorIdx || 0) % bank.length;
   state.progress.rumorIdx = i + 1;
   const r = bank[i];
@@ -1040,6 +1043,7 @@ export function inspectDecoy(id) {
       await dlg.say('inspect', `${t('obstacles.decoyDone')} ${d.why}`);
       return;
     }
+    showTip('decoy');
     const c = await dlg.choose([
       { id: 'add', text: t('obstacles.decoyAdd', { room: roomName(d.room) }) },
       { id: 'check', text: t('obstacles.decoyCheck') }

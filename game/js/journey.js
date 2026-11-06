@@ -1,6 +1,7 @@
 // Hành trình: mở đầu ở TP.HCM (phòng trọ → máy tính → điện thoại → tòa soạn), xe khách liên tỉnh TP.HCM ⇄ Hạ Long,
 // kết thúc về tòa soạn TP.HCM báo cáo, nhận danh hiệu. Dữ liệu: quests.json → journey. Tiến độ: progress.journey
 // (home → seen → called → briefed → halong → return → done; lượt chơi cũ không có trường này = đang ở Hạ Long).
+import { showTip } from './tips.js';
 import { data, t, fill } from './data.js';
 import { state, saveProgress, setFlag, hasFlag } from './state.js';
 import * as dlg from './dialogue.js';
@@ -137,6 +138,7 @@ export async function talkEditor() {
       toast(J().cardToast);
     }));
     setStage('briefed');
+    showTip('notebook');
     return;
   }
   if (s === 'return') { await report(); return; }

@@ -335,6 +335,7 @@ function bindEvents() {
     if (!world?.weather || titleOpen() || introOpen()) return;
     const next = randomWeather(world.weather.global);
     world.weather.set(next);
+    if (next !== 'clear' && ['street', 'hcm'].includes(world.mapKey)) tips.showTip('weather');
     if (world.weather.outdoor) toast(`${t(`weather.${next}`)} · ${t(`weather.fx.${next}`)}`, 5000);
   }, 5 * 60 * 1000);
   $('btn-cases').addEventListener('click', openCases);
