@@ -498,7 +498,7 @@
                 9
               ],
               "min": 1,
-              "found": "Chữ trên áo ở khung 9 méo, không đọc được — lỗi thường gặp của ảnh AI.",
+              "found": "Chữ trên áo ở khung 9 méo, không đọc được, một lỗi thường gặp của ảnh AI.",
               "missing": "Còn một khung có chữ bất thường."
             }
           ],
@@ -618,7 +618,7 @@
             },
             {
               "id": "b",
-              "text": "Cùng một ảnh AI được nhiều trang dùng lại — thêm một dấu hiệu",
+              "text": "Cùng một ảnh AI được nhiều trang dùng lại, thêm một dấu hiệu nữa",
               "correct": true,
               "feedback": "Đúng. Đây là dấu hiệu bổ sung, kết hợp với các dấu hiệu khác."
             },
@@ -690,7 +690,7 @@
       "order": 6,
       "required": true,
       "mode": "G5",
-      "title": "Công cụ phát hiện AI — chỉ là bổ trợ",
+      "title": "Công cụ phát hiện AI chỉ là bổ trợ",
       "todo": "Mình cần đọc bản ghi công cụ phát hiện AI anh Khải đã chạy, rồi cân nhắc xem nên tin kết quả đó tới đâu.",
       "npcIntro": "s4_q6_intro",
       "question": "Nhóm đã chạy Hive Moderation cho khung 3 và khung 11. Đọc bản ghi kết quả.",
@@ -763,14 +763,14 @@
             "Dòng chú thích dưới bản ghi nói gì?",
             "Em đã có những bằng chứng nào khác?"
           ],
-          "walkthrough": "Chọn \"Dùng làm bằng chứng bổ trợ, kết hợp các bằng chứng khác\".",
+          "walkthrough": "Chọn \"Dùng làm bằng chứng bổ trợ, kết hợp lỗi thị giác, thiếu nguồn gốc và xác nhận của VTV\".",
           "tool": "detector"
         }
       ],
       "feedback": {
         "correct": "Công cụ phát hiện AI chỉ là một mảnh ghép. Việc không tìm thấy Content Credentials (thông tin nguồn gốc gắn trong ảnh) cũng không cho biết ảnh thật hay giả."
       },
-      "conclusion": "Hive cho khung 3 và 11: 99,9% khả năng ảnh AI, nguồn tạo dự đoán Imagen 4 — dùng làm bằng chứng bổ trợ, kết hợp các bằng chứng khác.",
+      "conclusion": "Hive cho khung 3 và 11: 99,9% khả năng ảnh AI, nguồn tạo dự đoán Imagen 4. Kết quả này chỉ dùng làm bằng chứng bổ trợ, đi cùng các bằng chứng khác.",
       "evidenceCards": [
         "ev_f7"
       ],
@@ -992,7 +992,7 @@
             },
             {
               "id": "b",
-              "text": "Chưa xác định được — đây là giới hạn của hồ sơ kiểm chứng",
+              "text": "Chưa xác định được, hồ sơ kiểm chứng chỉ đi tới đây",
               "correct": true,
               "feedback": "Đúng. Nhóm kiểm chứng chỉ xem được bài đăng qua ảnh chụp màn hình mà báo chí đăng lại, nên không biết giờ đăng gốc."
             },
@@ -1077,7 +1077,7 @@
               "accept": [
                 "recorded"
               ],
-              "feedback": "Có số liệu — nhưng là quy mô tài khoản, không phải số người đã xem."
+              "feedback": "Có số liệu, nhưng đó là quy mô tài khoản chứ không phải số người đã xem."
             },
             {
               "id": "i3",
@@ -1311,7 +1311,7 @@
         }
       ],
       "feedback": {
-        "correct": "Khẳng định điều bằng chứng cho phép, và dừng lại đúng chỗ ở điều chưa biết: đó là chuẩn mực của thẩm định."
+        "correct": "Em khẳng định đúng những gì bằng chứng cho phép, còn điều chưa biết thì để ngỏ."
       },
       "conclusion": "Có thủ đoạn thu hút tương tác; chưa xác định người đứng sau, doanh thu và thời điểm đăng đầu tiên.",
       "evidenceCards": [
@@ -1484,7 +1484,7 @@
               "id": "w1",
               "text": "Công khai tên và nơi ở của người đăng",
               "correct": false,
-              "feedback": "Không doxxing. Việc xử lý thuộc cơ quan chức năng — Công an tỉnh đã xử lý người đăng tin sai."
+              "feedback": "Không doxxing. Việc xử lý thuộc về cơ quan chức năng: Công an tỉnh đã xử lý người đăng tin sai."
             },
             {
               "id": "w2",
@@ -1507,7 +1507,7 @@
         }
       ],
       "feedback": {
-        "correct": "Đính chính nhân văn: không khuếch đại, không gây hại thêm, dựa vào nguồn chính thống."
+        "correct": "Đính chính như vậy không khuếch đại bài giả, không gây hại thêm cho ai và dựa vào nguồn chính thống."
       },
       "conclusion": "Báo cáo, không chia sẻ lại, đính chính bằng nguồn chính thống, làm mờ ảnh giả khi buộc phải dẫn lại; không doxxing, không bấm link lạ.",
       "evidenceCards": [
@@ -1646,7 +1646,7 @@
               "id": "b",
               "text": "\"Có ghi chứ, nhỏ xíu thôi, nhưng ai cũng thấy mà.\"",
               "correct": true,
-              "feedback": "Đúng: \"nhỏ xíu\" mà \"ai cũng thấy\" là tự mâu thuẫn — giống cách báo chí mô tả chú thích hư cấu khó nhìn."
+              "feedback": "Đúng: \"nhỏ xíu\" mà \"ai cũng thấy\" là tự mâu thuẫn, giống cách báo chí mô tả chú thích hư cấu khó nhìn."
             },
             {
               "id": "c",
@@ -1664,7 +1664,7 @@
       "feedback": {
         "correct": "Phát hiện tốt. Nhưng nhớ: lời khai của chú Sáu chỉ để luyện kỹ năng, không phải bằng chứng thật về ai cả."
       },
-      "conclusion": "Lời khai thiếu nguồn và tự mâu thuẫn — chỉ là dữ kiện tham khảo, không đủ để kết luận chủ đích hay danh tính.",
+      "conclusion": "Lời khai thiếu nguồn và tự mâu thuẫn nên chỉ dùng để tham khảo, không đủ để kết luận chủ đích hay danh tính.",
       "evidenceCards": [],
       "unlocks": [],
       "sources": []
@@ -1719,7 +1719,7 @@
             }
           ],
           "hints": [
-            "So tên trang với tên thật của Ban.",
+            "So tên trang với tên thật của quỹ.",
             "Tổ chức thật có nhận quyên góp vào tài khoản cá nhân không?"
           ],
           "walkthrough": "Chọn: sai chính tả, tích xanh giả, trang mới tạo, tài khoản cá nhân, link rút gọn.",
@@ -1917,7 +1917,7 @@
             "id": "attack",
             "text": "Kêu gọi mọi người vào trang đó để công kích.",
             "trap": "ethics",
-            "why": "Đính chính không phải kêu gọi công kích; tập trung vào thông tin."
+            "why": "Bài đính chính chỉ nói về thông tin, không kêu gọi công kích ai."
           }
         ],
         "submit": "Đăng bài đính chính",
@@ -1937,7 +1937,7 @@
     "endings": {
       "A": {
         "title": "Gương mặt trống",
-        "text": "Em đã dùng bằng chứng để chặn tin sai: nội dung là giả và có dấu hiệu chủ đích thu hút tương tác. Trang ẩn danh vẫn chưa lộ mặt, và em không đoán bừa. Kiểm chứng tốt là biết dừng đúng chỗ."
+        "text": "Em đã dùng bằng chứng để chặn tin sai: nội dung là giả và có dấu hiệu chủ đích thu hút tương tác. Trang ẩn danh vẫn chưa lộ mặt, và em không đoán bừa."
       },
       "B": {
         "title": "Buộc tội quá mức",
@@ -2180,7 +2180,7 @@
   "exhibits": {
     "note": "Lưới ảnh là MÔ PHỎNG trừu tượng (khối hình, không có người/mặt người), không phải ảnh gốc. Bảng kết quả công cụ là bản ghi lại theo báo cáo của nhóm, giao diện MÔ PHỎNG.",
     "mpv12": {
-      "title": "Bộ ghép 12 khung — Fanpage M.P.V.",
+      "title": "Bộ ghép 12 khung của fanpage M.P.V.",
       "cols": 4,
       "frames": [
         {
@@ -2243,7 +2243,7 @@
       ]
     },
     "mco9": {
-      "title": "Lưới 9 ảnh — Fanpage M.C.O.",
+      "title": "Lưới 9 ảnh của fanpage M.C.O.",
       "cols": 3,
       "frames": [
         {
@@ -2707,7 +2707,7 @@
       "done": [
         {
           "npc": "npc10",
-          "text": "Danh hiệu là của cháu rồi. Nhớ thói quen dừng lại – kiểm tra – rồi mới chia sẻ nhé.",
+          "text": "Danh hiệu là của cháu rồi. Nhớ thói quen dừng lại, kiểm tra, rồi mới chia sẻ nhé.",
           "mood": "happy"
         }
       ]
@@ -2823,7 +2823,7 @@
               "text": "Họ là người thật bị lấy ảnh, cần công bố danh tính để mọi người biết."
             }
           ],
-          "right": "Chuẩn. Nói đúng đến đâu biết đến đó, và không đem danh tính ai ra bàn khi chưa có dữ liệu.",
+          "right": "Chuẩn. Biết đến đâu nói đến đó, và không đem danh tính ai ra bàn khi chưa có dữ liệu.",
           "wrong": "Cảm xúc của người xem không phải bằng chứng, còn công bố danh tính thì có thể làm tổn thương người vô can. Cháu thử lại nhé."
         },
         {
@@ -2846,7 +2846,7 @@
               "text": "Có, và chắc chắn người đăng làm vậy để kiếm tiền."
             }
           ],
-          "right": "Đúng vậy, và cháu dừng đúng chỗ: còn động cơ thì chưa có dữ liệu nên chưa kết luận.",
+          "right": "Đúng vậy. Còn động cơ thì chưa có dữ liệu, cháu chưa kết luận là phải.",
           "wrong": "Nhớ lại các thủ đoạn cháu đã thấy, và đừng khẳng định điều chưa có dữ liệu như chuyện tiền bạc. Thử lại nhé."
         }
       ],
