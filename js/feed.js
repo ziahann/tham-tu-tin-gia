@@ -6,6 +6,7 @@
 // nhầm bài đúng, bấm link câu tương tác thì mất độ tin cậy của hồ sơ đang làm.
 // Tiến độ: progress.feed[id] = { report, note, reply, bad, wrongReport }, progress.feedSeen[id] = phút trong game lúc
 // bài hiện ra, progress.feedT = số phút trong game đã trôi. Dữ liệu: npc_dialogues.json → feed.
+import { showTip } from './tips.js';
 import { data, t } from './data.js';
 import { state, saveProgress, hasFlag } from './state.js';
 import { sfx } from './audio.js';
@@ -81,6 +82,7 @@ export function feedTick() {
   const fresh = visiblePosts().filter(x => seen[x.id] == null);
   fresh.forEach(x => { seen[x.id] = p.feedT; });
   if (fresh.length) {
+    showTip('feed');
     sfx('click');
     toast(fresh.length === 1 ? t('feed.newOne', { who: fresh[0].author }) : t('feed.newMany', { n: fresh.length }), 4500);
   }

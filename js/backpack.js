@@ -1,4 +1,5 @@
 // Balo: khung dọc bên phải với Sổ tay, Nhiệm vụ + bản đồ nhỏ, Bảng ghim, Lịch sử trò chuyện theo NPC.
+import { showTip } from './tips.js';
 import { data, t, evidenceById, npcById, questById } from './data.js';
 import { state, clearAllStorage, isQuestDone } from './state.js';
 import { questStatus, nextQuestIn, isUnlocked, bossStatus, earnedBadges, caseProgress } from './grading.js';
@@ -160,6 +161,7 @@ const STATUS_LABEL = { done: 'statusDone', active: 'statusActive', locked: 'stat
 
 /** Hồ sơ vụ án: mục tiêu, các hồ sơ chọn làm theo thứ tự tùy ý (nút Theo dõi), Phòng họp, bản đồ nhỏ. */
 function quests() {
+  showTip('track');
   const obj = el('div', 'objective');
   const { text, steps } = objective();
   obj.append(el('h3', null, t('backpack.objective')), el('p', null, text));
@@ -263,6 +265,7 @@ function feed() {
 }
 
 function pinboard() {
+  showTip('board');
   els.body.append(investigationBoard());
 }
 

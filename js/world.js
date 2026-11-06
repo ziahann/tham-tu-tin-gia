@@ -1,5 +1,6 @@
 // Cảnh bản đồ Phaser: bản đồ Tiled, người chơi đi lại, NPC, cửa phòng, khu vực, gợi ý tương tác.
 // Logic chạy trên lưới vuông; hiển thị isometric qua js/iso.js (sprite vật lý ẩn, ảnh hiển thị đặt theo phép chiếu).
+import { showTip } from './tips.js';
 import { data, t } from './data.js';
 import { state, saveProgress, hasFlag } from './state.js';
 import { direction } from './input.js';
@@ -9,7 +10,7 @@ import * as story from './story.js';
 import * as journey from './journey.js';
 import * as dlg from './dialogue.js';
 import { setPlace, updateMeters } from './hud.js';
-import { tickPressure, isLight, caseOpen } from './obstacles.js';
+import { tickPressure, pressure, isLight, caseOpen } from './obstacles.js';
 import { feedPressureRate } from './feed.js';
 import { buildGrid, findPath } from './pathfind.js';
 import { playMusic } from './music.js';
@@ -160,6 +161,7 @@ export class WorldScene extends Phaser.Scene {
     this.savePos();
     this.player.setFrame(idleFrame(this.facing));
     this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+    showTip('move');
     this.physics.add.collider(this.player, this.walls);
     this.physics.add.collider(this.player, this.doors);
     this.buildProps(objs);
@@ -534,7 +536,9 @@ export class WorldScene extends Phaser.Scene {
   /** Nhóm còn chờ được nghe lén (chưa nghe, đủ điều kiện cờ). */
   canEavesdrop(g) {
     const e = g.info.eavesdrop;
-    return !!e && !hasFlag(`heard_${g.id}`) && (e.requires || []).every(hasFlag) && g.members.every(m => !this.npcs.get(m)?.talking);
+    const ok = !!e && !hasFlag(`heard_${g.id}`) && (e.requires || []).every(hasFlag) && g.members.every(m => !this.npcs.get(m)?.talking);
+    if (ok) showTip('eavesdrop');
+    return ok;
   }
 
   /** Câu nói ngắn luân phiên trong nhóm trò chuyện (chỉ khi người chơi ở gần). */
@@ -818,6 +822,7 @@ export class WorldScene extends Phaser.Scene {
   knockback(toY) {
     if (this.time.now < (this.stunUntil || 0)) return;
     this.stunUntil = this.time.now + 700;
+    showTip('crossing');
     this.player.body.reset(this.player.x, toY);
     this.player.setVelocity(0, 0);
     this.cameras.main.shake(180, 0.006);
@@ -1087,6 +1092,7 @@ export class WorldScene extends Phaser.Scene {
       }
       const room = story.trackedRoom();
       if (tickPressure(delta * this.fx().pressure * feedPressureRate(), room)) story.deadlineCall(room);
+      if (pressure() > 10) showTip('pressure');
       if (time - this.lastSave > 1000) {
         this.lastSave = time;
         this.savePos();
