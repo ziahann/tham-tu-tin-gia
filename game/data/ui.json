@@ -1,7 +1,7 @@
 {
   "version": 2,
   "note": "Chữ hiển thị trên giao diện. Sửa nội dung ở đây, không sửa trong code.",
-  "gameTitle": "Thám tử tin giả",
+  "gameTitle": "Truy tìm dấu vết",
   "simulated": "GIẢ LẬP",
   "fakeImage": "ẢNH GIẢ",
   "scoreDisclaimer": "Huy hiệu và chiến thắng chỉ đo kết quả chơi, không chứng minh thông tin đúng hay sai.",
@@ -451,7 +451,7 @@
     "button": "Xuất kết quả (PDF)",
     "hint": "Mở hộp thoại in: chọn \"Lưu dưới dạng PDF\".",
     "docTitle": "Kết quả kiểm chứng: {name}",
-    "title": "Bảng kết quả: Thám tử tin giả",
+    "title": "Bảng kết quả: Truy tìm dấu vết",
     "date": "Ngày xuất",
     "player": "Người chơi",
     "casesClosed": "Hồ sơ đã khép",
