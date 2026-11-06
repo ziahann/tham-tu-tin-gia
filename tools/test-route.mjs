@@ -43,5 +43,6 @@ for (const from of MAPS.filter(m => m !== 'boss')) {
 }
 ok(!bad.length, `không tới được: ${bad.join('; ')}`);
 
+for (const q of JSON.parse(rd('../game/data/quests.json')).quests) ok(typeof q.todo === 'string' && q.todo.length >= 10 && q.todo.length <= 160 && !/F\d|điểm|GIẢ LẬP/i.test(q.todo), `todo của ${q.id} thiếu hoặc không hợp lệ`);
 if (fails) process.exit(1);
 console.log(`✓ route: ${n} ca`);

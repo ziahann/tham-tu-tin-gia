@@ -154,6 +154,7 @@
       "mode": "G2",
       "required": true,
       "title": "Dừng lại: những gì cần thẩm định?",
+      "todo": "Mình cần nhờ Tuệ Lâm đưa hồ sơ, rồi chọn ra những nhóm nội dung đang lan truyền thật sự cần thẩm định.",
       "npcIntro": "s3_q1_intro",
       "question": "Hồ sơ có 6 thẻ. Chọn các nhóm NỘI DUNG LAN TRUYỀN cần thẩm định riêng. Bỏ qua các thẻ là kết luận vội.",
       "resources": [
@@ -233,6 +234,7 @@
       "mode": "G1",
       "required": true,
       "title": "Xác lập sự kiện thật",
+      "todo": "Mình cần đọc các bài báo chính thống để điền lại những dữ kiện kiểm chứng được về vụ tai nạn mà Tuệ Lâm hỏi.",
       "npcIntro": "s3_q2_intro",
       "question": "Mở nguồn báo chí và điền các dữ kiện có thể kiểm chứng về vụ tai nạn. Mỗi câu chị hỏi đều có trong các bài dưới đây.",
       "resources": [
@@ -343,6 +345,7 @@
       "required": true,
       "mode": "G1",
       "title": "Dấu vết đầu tiên: tìm ngược ảnh",
+      "todo": "Mình cần nhờ Khải mở bản ghi tìm ngược ảnh bằng Lens, xem các khung ảnh này có nguồn gốc từ đâu.",
       "npcIntro": "s4_q3_intro",
       "question": "Nhóm đã tìm ngược các khung ảnh bằng Google Lens. Đọc bản ghi kết quả và trả lời anh.",
       "resources": [
@@ -467,6 +470,7 @@
       "required": true,
       "mode": "G3",
       "title": "Kính soi lỗi ảnh AI",
+      "todo": "Mình cần cùng Khải soi từng khung trong bộ 12 ảnh để tìm những chỗ bất thường nhìn thấy được.",
       "npcIntro": "s4_q4_intro",
       "question": "Soi bộ 12 khung. Đánh dấu các khung có dấu hiệu bất thường quan sát được.",
       "steps": [
@@ -574,6 +578,7 @@
       "required": true,
       "mode": "G6",
       "title": "Một ảnh, hai trang",
+      "todo": "Mình cần nhờ Khải đối chiếu hai trang đăng ảnh, xem có phải cùng một bức ảnh xuất hiện ở cả hai nơi không.",
       "npcIntro": "s4_q5_intro",
       "question": "Ảnh người cha cài áo phao cho con (khung 11 của M.P.V.) hình như anh đã thấy ở đâu đó.",
       "resources": [
@@ -686,6 +691,7 @@
       "required": true,
       "mode": "G5",
       "title": "Công cụ phát hiện AI — chỉ là bổ trợ",
+      "todo": "Mình cần đọc bản ghi công cụ phát hiện AI Khải đã chạy, rồi cân nhắc xem nên tin kết quả đó tới đâu.",
       "npcIntro": "s4_q6_intro",
       "question": "Nhóm đã chạy Hive Moderation cho khung 3 và khung 11. Đọc bản ghi kết quả.",
       "resources": [
@@ -783,6 +789,7 @@
       "required": true,
       "mode": "G6",
       "title": "Clip cũ, nhãn mới",
+      "todo": "Mình cần nhờ bác Tín Thư tra xem mấy đoạn clip thật ra quay ở đâu, lúc nào.",
       "npcIntro": "s5_q7_intro",
       "question": "Có những video và ảnh có thật, nhưng bị gắn vào vụ 19/7. Đối chiếu báo chí để tìm chúng thật ra từ đâu.",
       "resources": [
@@ -901,6 +908,7 @@
       "required": true,
       "mode": "G4",
       "title": "Dựng dòng thời gian",
+      "todo": "Mình cần nhờ anh Lịch xếp các mốc vụ việc lên trục thời gian, dựa vào ngày đăng của từng bài báo.",
       "npcIntro": "s6_q8_intro",
       "question": "Xếp các mốc theo đúng thứ tự thời gian. Ngày của mỗi mốc đều có trong các bài báo.",
       "resources": [
@@ -1026,6 +1034,7 @@
       "required": true,
       "mode": "G6",
       "title": "Tác động: đã ghi nhận hay chỉ là nguy cơ?",
+      "todo": "Mình cần gặp chị Cẩn để tách những tác động đã được ghi nhận khỏi những điều mới chỉ là nguy cơ.",
       "npcIntro": "s7_q9_intro",
       "question": "Tách những gì đã được ghi nhận (có số liệu, có phát ngôn) khỏi những gì mới là nguy cơ.",
       "resources": [
@@ -1188,6 +1197,7 @@
       "required": true,
       "mode": "G7",
       "title": "Chủ đích: điều gì chứng minh được?",
+      "todo": "Mình cần cùng chị Cẩn xem điều gì đã có bằng chứng về chủ đích của người đăng và điều gì vẫn chưa biết.",
       "npcIntro": "s7_q10_intro",
       "question": "Có dấu hiệu nào cho thấy người đăng cố ý thu hút tương tác không? Và điều gì ta CHƯA biết?",
       "resources": [
@@ -1325,6 +1335,7 @@
       "required": true,
       "mode": "G8",
       "title": "Phân loại rối loạn thông tin",
+      "todo": "Mình cần nhờ anh Phân hướng dẫn phân loại từng nhóm đối tượng theo khung rối loạn thông tin.",
       "npcIntro": "s8_q11_intro",
       "question": "Dùng khung Information Disorder để phân loại TỪNG nhóm đối tượng.",
       "resources": [
@@ -1440,6 +1451,7 @@
       "required": true,
       "mode": "G9",
       "title": "Ứng xử có trách nhiệm",
+      "todo": "Mình cần cùng anh Phân chọn những cách ứng xử có trách nhiệm khi gặp một bài đăng giả đang lan.",
       "npcIntro": "s8_q12_intro",
       "question": "Em thấy một bài đăng giả đang lan. Em sẽ làm gì?",
       "steps": [
@@ -1516,6 +1528,7 @@
       "required": false,
       "mode": "G9",
       "title": "(Tùy chọn) Trách nhiệm của nền tảng",
+      "todo": "Nếu còn thời gian, mình sẽ trao đổi với anh Phân xem các nền tảng mạng xã hội nên làm gì với nội dung kiểu này.",
       "npcIntro": "s8_q13_intro",
       "question": "Câu hỏi mở, không chấm đúng sai.",
       "steps": [
@@ -1588,6 +1601,7 @@
       "required": false,
       "mode": "G7",
       "title": "(Tùy chọn) Thẩm vấn ở quán cà phê",
+      "todo": "Nếu còn thời gian, mình sẽ ghé quán cà phê hỏi chú Sáu vài câu và tìm chỗ chú tự mâu thuẫn.",
       "npcIntro": "cafe_q10b_intro",
       "question": "Chú Sáu quản trị một nhóm mạng từng đăng lại bộ ảnh. Hỏi chú vài câu, rồi tìm chỗ mâu thuẫn.",
       "steps": [
@@ -1662,6 +1676,7 @@
       "required": false,
       "mode": "G11",
       "title": "(Bonus) Trang mạo danh",
+      "todo": "Nếu còn thời gian, mình sẽ cùng Tuệ Lâm tìm những dấu hiệu cho thấy trang quỹ thiện nguyện kia là mạo danh.",
       "npcIntro": "bonus_intro",
       "question": "Sau vụ việc, xuất hiện một trang mạo danh \"Quỹ Thiện nguyện Hải Đăng\". Hãy tìm các dấu hiệu mạo danh.",
       "steps": [
