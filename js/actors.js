@@ -2,13 +2,13 @@
 // Vị trí logic trên lưới vuông; hướng nhìn tính theo hướng trên màn hình isometric (js/iso.js).
 import { iso } from './iso.js';
 
-// Sprite sheet nhân vật (tools/chibi.mjs): 9 cột (đứng + 8 bước) x 4 hàng (xuống, trái, phải, lên), mỗi khung 64x64,
+// Sprite sheet LPC (tools/lpc.mjs): 9 cột (đứng + 8 bước) x 4 hàng (xuống, trái, phải, lên), mỗi khung 64x64,
 // bàn chân ở y = 62; hàng 5 = ngồi xuống / phải / trái, hàng 6 cột 0 = ngồi quay lưng.
 export const DIRS = ['down', 'left', 'right', 'up'];
 export const FRAME = 64;
 const COLS = 9;
 const FEET_Y = 62;
-// khoảng từ bàn chân tới đỉnh đầu (đo trên sprite nhân vật)
+// khoảng từ bàn chân tới đỉnh đầu (đo trên sprite LPC)
 export const HEAD_TOP = 48;
 export const idleFrame = dir => DIRS.indexOf(dir) * COLS;
 export const SIT_FRAME = { down: 36, right: 37, left: 38, up: 45 };
@@ -30,7 +30,7 @@ export function dirFrom(dx, dy) {
   return Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up');
 }
 
-/** Gắn thân va chạm ở bàn chân (16x10) cho sprite 64x64, gốc ở bàn chân. */
+/** Gắn thân va chạm ở bàn chân (16x10) cho sprite LPC 64x64, gốc ở bàn chân. */
 export function feetBody(sprite) {
   sprite.setOrigin(0.5, FEET_Y / FRAME);
   sprite.body.setSize(16, 10);
