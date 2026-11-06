@@ -11,7 +11,7 @@ import { toolWindow, browseContent, deviceSpeaker } from './tools.js';
 import { targetMap, currentRoute } from './guide.js';
 import { loseCred, easePressure, isLight, roomName, caseOpen, PENALTY } from './obstacles.js';
 import { bossStartShares, feedAlerts } from './feed.js';
-import { journeyTarget, editorWaiting, afterBoss, stage as journeyStage } from './journey.js';
+import { journeyTarget, journeyGoal, editorWaiting, afterBoss, stage as journeyStage } from './journey.js';
 
 let world = null;
 let busy = false;
@@ -64,13 +64,17 @@ export function trackedRoom() {
 }
 
 /** Theo dõi một nhiệm vụ (id, 'boss' hoặc null): mũi tên chỉ tới người giao việc. */
+let lastTodo = null;
 export function track(id, quiet = false) {
   state.progress.tracked = id;
   saveProgress();
   if (id && !quiet) {
     sfx('track');
-    const title = id === 'boss' ? t('backpack.bossCase') : questById(id)?.title;
-    toast(t('dialog.tracking', { title }));
+    const todo = id === 'boss' ? null : questById(id)?.todo;
+    const again = lastTodo?.id === id && Date.now() - lastTodo.at < 60000;
+    if (todo && !again) toast(`${state.progress.heroName}: ${todo}`, 5000);
+    else toast(t('dialog.tracking', { title: id === 'boss' ? t('backpack.bossCase') : questById(id)?.title }));
+    lastTodo = { id, at: Date.now() };
   }
   onChange();
   world?.refresh();
@@ -1129,6 +1133,8 @@ async function roomIntro(npcId) {
 export function objective() {
   const id = state.progress?.tracked;
   const steps = (world && currentRoute(world)) || [];
+  const jg = state.progress && journeyTarget() && journeyGoal();
+  if (jg) return { text: jg, steps };
   if (id === 'boss') return { text: t('backpack.bossOpen'), steps };
   const q = id && questById(id);
   if (q && !isQuestDone(q.id)) {
