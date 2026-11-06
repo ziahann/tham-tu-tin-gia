@@ -507,7 +507,7 @@
     "bus": "Bắt xe khách đi {city}",
     "meet": "Gặp {npc}",
     "device": "Dùng {device} ở {place}",
-    "next": "▶ {step}",
+    "next": "{step}",
     "cities": {
       "hcm": "TP.HCM",
       "street": "Hạ Long"
