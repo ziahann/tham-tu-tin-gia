@@ -37,15 +37,24 @@ export function feetBody(sprite) {
   sprite.body.setOffset(24, FEET_Y - 10);
 }
 
-/** Bong bóng biểu cảm (! ? … ♪) hoặc câu nói ngắn (small) nổi trên đầu một sprite (phía trên nhãn tên) trong ms mili giây. */
-export function showEmote(scene, sprite, ch, ms = 1500, small = false) {
-  const t = scene.add.text(sprite.x, sprite.y - HEAD_TOP - 16, ch, {
+const EMOTE_LIFT = 26; // cao hơn nhãn tên để không che chữ
+/**
+ * Bong bóng biểu cảm (! ? … ♪) hoặc câu nói ngắn (small) nổi trên đầu một sprite trong ms mili giây.
+ * Có `tag` thì bám ngay trên nhãn tên (nhãn có thể bị đẩy lên khi chồng nhãn khác).
+ */
+export function showEmote(scene, sprite, ch, ms = 1500, small = false, tag = null) {
+  const at = () => tag?.visible ? tag.y - tag.height - 2 : sprite.y - HEAD_TOP - EMOTE_LIFT;
+  // '…' của phông VT323 chỉ là một vạch nhỏ, trông như ô trống
+  const t = scene.add.text(sprite.x, at(), ch === '…' ? '...' : ch, {
     fontFamily: 'VT323', fontSize: small ? '16px' : '22px', color: '#0a0e18', backgroundColor: '#e8ecf2', padding: { x: 5, y: 0 }
   }).setOrigin(0.5, 1).setDepth(100002);
-  const follow = () => { if (t.active) t.setPosition(sprite.x, sprite.y - HEAD_TOP - 16); };
+  const follow = () => { if (t.active) t.setPosition(sprite.x, at()); };
+  const end = () => { scene.events.off('update', follow); t.destroy(); if (sprite.emoteEnd === end) sprite.emoteEnd = null; };
+  sprite.emoteEnd?.(); // mỗi người một bong bóng: cái mới thay cái cũ
+  sprite.emoteEnd = end;
   scene.events.on('update', follow);
   scene.tweens.add({ targets: t, y: '-=4', duration: 200, yoyo: true });
-  scene.time.delayedCall(ms, () => { scene.events.off('update', follow); t.destroy(); });
+  scene.time.delayedCall(ms, end);
 }
 
 /**
@@ -56,6 +65,19 @@ export function nameTag(scene, text, kind) {
   const color = { hero: '#7fe3ff', story: '#f2d36b', rumor: '#ff8a8a' }[kind] || '#d6dbe4';
   return scene.add.text(0, 0, text, { fontFamily: 'VT323', fontSize: '15px', color, stroke: '#0f0e17', strokeThickness: 3 })
     .setOrigin(0.5, 1).setDepth(99990).setResolution(2);
+}
+
+/** Đẩy nhãn tên chồng nhau lên trên: nhãn gần máy (y lớn) giữ chỗ, nhãn phía sau nhích lên. */
+export function declutterTags(tags) {
+  const placed = [];
+  for (const t of tags.filter(t => t?.visible).sort((a, b) => b.y - a.y)) {
+    for (let guard = 0; guard < 6; guard++) {
+      const hit = placed.find(p => Math.abs(p.x - t.x) < (p.width + t.width) / 2 + 4 && Math.abs(p.y - t.y) < t.height);
+      if (!hit) break;
+      t.y = hit.y - t.height - 1;
+    }
+    placed.push(t);
+  }
 }
 
 const EMOTES = ['…', '♪', '?', '!'];
@@ -148,7 +170,7 @@ export class Npc {
     this.marker.setPosition(v.x, v.y - (HEAD_TOP + 4) * (v.scaleY || 1) - (this.tag ? 14 : 0) + Math.round(Math.sin(this.scene.time.now / 250) * 2)).setDepth(100000);
     if (this.ambient && !frozen && !this.talking) {
       this.emoteIn -= delta;
-      if (this.emoteIn <= 0) { this.emoteIn = 7000 + Math.random() * 9000; showEmote(this.scene, s.view || s, Phaser.Utils.Array.GetRandom(EMOTES)); }
+      if (this.emoteIn <= 0) { this.emoteIn = 7000 + Math.random() * 9000; showEmote(this.scene, s.view || s, Phaser.Utils.Array.GetRandom(EMOTES), 1500, false, this.tag); }
     }
     if (this.talking || frozen || this.mode === 'idle') { this.stand(); return; }
     // Kẻ tung tin: thấy người chơi thì đuổi theo; bắt kịp thì chặn lại "mời" xem tin giật tít
