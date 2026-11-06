@@ -161,7 +161,13 @@ const STATUS_LABEL = { done: 'statusDone', active: 'statusActive', locked: 'stat
 /** Hồ sơ vụ án: mục tiêu, các hồ sơ chọn làm theo thứ tự tùy ý (nút Theo dõi), Phòng họp, bản đồ nhỏ. */
 function quests() {
   const obj = el('div', 'objective');
-  obj.append(el('h3', null, t('backpack.objective')), el('p', null, objective()));
+  const { text, steps } = objective();
+  obj.append(el('h3', null, t('backpack.objective')), el('p', null, text));
+  if (steps.length) {
+    const ol = el('ol', 'route');
+    steps.forEach((s, i) => ol.append(el('li', i ? null : 'is-now', s)));
+    obj.append(ol);
+  }
   els.body.append(obj, el('h3', null, t('backpack.cases')));
   const tracked = state.progress?.tracked;
   for (const room of data.quests.rooms) {

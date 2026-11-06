@@ -702,7 +702,7 @@ export class WorldScene extends Phaser.Scene {
     });
     this.decoys?.forEach(d => d.marker.setVisible(!hasFlag(`seen_${d.id}`) && caseOpen(data.npcs.decoys?.[d.id]?.room)));
     updateMeters();
-    updateTrackLine();
+    updateTrackLine(this);
   }
 
   /** Toạ độ màn hình (isometric) → toạ độ logic trên nền. */
