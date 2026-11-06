@@ -1,6 +1,7 @@
 // Mẹo cho người mới: thẻ nhỏ hiện một lần mỗi mẹo, xếp hàng, chờ khi đang có cảnh cắt.
 import { data, t } from './data.js';
 import { state, saveSettings } from './state.js';
+import { getWorld } from './story.js'; // vòng import, chỉ gọi lúc chạy
 
 export const TIP_IDS = ['move', 'backpack', 'track', 'notebook', 'hint', 'minimize', 'cred', 'pressure', 'rumor', 'decoy', 'feed', 'board', 'guestCard', 'weather', 'crossing', 'eavesdrop'];
 const SHOW_MS = 12000;
@@ -19,7 +20,7 @@ function next() {
 function show() {
   const box = document.getElementById('tip');
   if (current || !queue.length || !box) return;
-  if (document.body.classList.contains('is-cine')) { setTimeout(show, 1000); return; }
+  if (document.body.classList.contains('is-cine') || getWorld()?.cutscene || document.querySelector('.trip')) { setTimeout(show, 1000); return; }
   const id = queue.shift();
   const tip = data.ui.tips[id]; // t() chỉ trả chuỗi
   if (!tip || state.settings.tips === false) { show(); return; }
