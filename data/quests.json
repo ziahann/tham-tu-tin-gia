@@ -128,7 +128,7 @@
       "boss": true,
       "badge": {
         "name": "Đính chính trực tiếp",
-        "learned": "Phản bác bằng bằng chứng, trả lời bình luận đúng mức và viết đính chính không vượt quá dữ liệu."
+        "learned": "Dùng bằng chứng để phản bác, trả lời bình luận đúng mức và viết đính chính không vượt quá dữ liệu."
       }
     },
     {
@@ -184,20 +184,20 @@
           "id": "c4",
           "text": "Kết luận: vụ lật tàu Vịnh Xanh 58 không có thật",
           "correct": false,
-          "feedback": "Sai và nghiêm trọng: tai nạn là có thật. Thứ cần thẩm định là các nội dung lan truyền đi kèm.",
+          "feedback": "Vụ tai nạn ngày 19/7 là có thật, báo chí chính thống đã đưa tin. Thứ cần thẩm định là ảnh, video và câu chuyện lan truyền đi kèm.",
           "npcReact": "s3_q1_accident_denied"
         },
         {
           "id": "c5",
           "text": "Kết luận: mọi ảnh về vụ việc đều là giả",
           "correct": false,
-          "feedback": "Quá mức. Cần thẩm định từng nhóm nội dung, không gộp chung."
+          "feedback": "Không thể gộp chung như vậy. Mỗi nhóm ảnh phải được thẩm định riêng."
         },
         {
           "id": "c6",
           "text": "Kết luận: mọi người chia sẻ đều cố ý lừa",
           "correct": false,
-          "feedback": "Quá mức. Nhiều người chia sẻ vì thương cảm; chủ đích phải có bằng chứng."
+          "feedback": "Không thể kết luận như vậy. Nhiều người chia sẻ vì thương cảm; muốn nói ai cố ý lừa thì phải có bằng chứng."
         }
       ],
       "hints": [
@@ -207,9 +207,9 @@
       ],
       "walkthrough": "Chọn 3 thẻ mô tả nội dung đang lan truyền: ảnh/câu chuyện AI trên fanpage (VTV), clip bão Yagi và Congo (VnExpress), ảnh nhóm trẻ em năm 2024 (VietnamPlus). Bỏ 3 thẻ bắt đầu bằng \"Kết luận:\".",
       "feedback": {
-        "correct": "Đúng. Ba nhóm nội dung khác nhau cần thẩm định riêng.",
-        "partial": "Gần đúng. Kiểm tra lại: còn thiếu nhóm nội dung hoặc đang chọn nhầm một kết luận vội.",
-        "wrong": "Chưa đạt. Hãy tách nội dung đang lan truyền khỏi các kết luận vội."
+        "correct": "Ba nhóm nội dung khác nhau, mỗi nhóm cần thẩm định riêng.",
+        "partial": "Em kiểm tra lại nhé: còn thiếu một nhóm nội dung, hoặc em đang chọn nhầm một kết luận vội.",
+        "wrong": "Em tách những nội dung đang lan truyền ra khỏi các kết luận vội nhé."
       },
       "conclusion": "Tai nạn là có thật; cần thẩm định riêng từng nhóm nội dung lan truyền đi kèm.",
       "evidenceCards": [
@@ -260,7 +260,7 @@
           "ask": "Theo nguồn, tai nạn xảy ra ngày nào?",
           "hints": [
             "Tìm cụm từ chỉ thời gian ngay câu đầu bài VTV.",
-            "Bài viết \"xảy ra vào chiều.../7 trên Vịnh Hạ Long\".",
+            "Bài viết có câu \"xảy ra vào chiều.../7 trên Vịnh Hạ Long\".",
             "Năm: xem ngày đăng bài (tháng 7/2025)."
           ],
           "walkthrough": "Mở bài VTV → đọc câu đầu tiên của bài → chép phần ngày tháng sau chữ \"chiều\"."
@@ -317,9 +317,9 @@
         }
       ],
       "feedback": {
-        "correct": "Đúng. Ghi sự kiện thật trước để có mốc so với nội dung lan truyền.",
-        "partial": "Một phần. Các ô đánh dấu ✗ cần đọc lại nguồn.",
-        "wrong": "Chưa đạt. Hãy mở nguồn và đọc đoạn mở đầu."
+        "correct": "Ghi lại sự kiện thật trước, mình mới có mốc để so với những nội dung đang lan truyền.",
+        "partial": "Các ô có dấu ✗ chưa khớp với nguồn, em đọc lại nhé.",
+        "wrong": "Em mở nguồn và đọc kỹ đoạn mở đầu nhé."
       },
       "conclusion": "Đây là sự kiện có thật, làm mốc để so với các nội dung lan truyền.",
       "note": "Không hỏi số người trên tàu/được cứu để tránh phụ thuộc số liệu chưa đối chiếu (quyết định 29/10/2026).",
@@ -404,11 +404,11 @@
               "id": "d",
               "text": "Không có kết quả",
               "correct": false,
-              "feedback": "Lens có tìm thấy kết quả, hãy xem loại của chúng."
+              "feedback": "Lens có tìm thấy kết quả. Em xem các kết quả đó thuộc loại nào."
             }
           ],
           "hints": [
-            "Cột bên phải của bản ghi ghi loại kết quả.",
+            "Cột bên phải của bản ghi cho biết loại kết quả.",
             "Các trang trong bản ghi đều đăng cùng một kiểu bài."
           ],
           "walkthrough": "Nhìn cột \"Loại kết quả\": cả 5 dòng đều là bài cảnh báo ảnh giả.",
@@ -423,7 +423,7 @@
               "id": "a",
               "text": "Ảnh chắc chắn do AI tạo",
               "correct": false,
-              "feedback": "Chưa được. Không tìm thấy nguồn gốc KHÔNG tự chứng minh ảnh là AI; cần thêm bằng chứng khác."
+              "feedback": "Chưa được. Không tìm thấy nguồn gốc thì chưa đủ để kết luận ảnh do AI tạo; cần thêm bằng chứng khác."
             },
             {
               "id": "b",
@@ -446,7 +446,7 @@
         }
       ],
       "feedback": {
-        "correct": "Tốt. Không có nguồn hiện trường; kết quả trùng khớp chủ yếu là bài cảnh báo ảnh giả."
+        "correct": "Không có nguồn nào từ hiện trường; các kết quả trùng khớp chủ yếu là bài cảnh báo ảnh giả."
       },
       "conclusion": "Không có nguồn hiện trường cho các ảnh này; kết quả trùng khớp chủ yếu là bài cảnh báo ảnh giả. Chưa đủ để kết luận ảnh do AI tạo.",
       "evidenceCards": [
@@ -554,7 +554,7 @@
         }
       ],
       "feedback": {
-        "correct": "Chuẩn. Dấu hiệu thị giác chỉ là chỉ báo; cần kết hợp với bằng chứng khác. Hồ sơ kiểm chứng còn ghi một dấu hiệu nữa: góc chụp cận cảnh giữa biển lúc tàu chìm, khó có người chụp hợp lý."
+        "correct": "Những dấu hiệu nhìn thấy được chỉ là chỉ báo, phải kết hợp với bằng chứng khác. Hồ sơ kiểm chứng còn ghi thêm một dấu hiệu: góc chụp cận cảnh giữa biển lúc tàu đang chìm, khó có ai chụp được như vậy."
       },
       "conclusion": "Có dấu hiệu AI quan sát được: tàu khác hình dạng giữa các khung, chữ trên áo méo, chi tiết đổi giữa khung 5 và 12. Khung mờ không đánh giá.",
       "evidenceCards": [
@@ -664,7 +664,7 @@
         }
       ],
       "feedback": {
-        "correct": "Rõ rồi. Ảnh được dùng lại ở hai trang, và VTV xác nhận hình ảnh, câu chuyện do AI dựng."
+        "correct": "Ảnh được dùng lại ở hai trang, và VTV đã xác nhận cả hình ảnh lẫn câu chuyện đều do AI dựng."
       },
       "conclusion": "Cùng một ảnh AI xuất hiện ở cả hai bộ ảnh; VTV xác nhận hình ảnh và câu chuyện do AI dựng nên, không trích nguồn chính thống.",
       "evidenceCards": [
@@ -762,7 +762,7 @@
         }
       ],
       "feedback": {
-        "correct": "Chuẩn. Detector chỉ là một mảnh ghép; chưa có Content Credentials cũng không nói lên ảnh thật hay giả."
+        "correct": "Công cụ phát hiện AI chỉ là một mảnh ghép. Việc không tìm thấy Content Credentials (thông tin nguồn gốc gắn trong ảnh) cũng không cho biết ảnh thật hay giả."
       },
       "conclusion": "Hive cho khung 3 và 11: 99,9% khả năng ảnh AI, nguồn tạo dự đoán Imagen 4 — dùng làm bằng chứng bổ trợ, kết hợp các bằng chứng khác.",
       "evidenceCards": [
@@ -879,7 +879,7 @@
         }
       ],
       "feedback": {
-        "correct": "Chính xác. Nhóm không tự tìm ngược các video này mà dựa vào đối chiếu báo chí — cũng là một cách kiểm chứng."
+        "correct": "Nhóm không tự tìm ngược các video này mà dựa vào kết quả đối chiếu của báo chí. Đó cũng là một cách kiểm chứng."
       },
       "conclusion": "Video bão Yagi, tàu chìm ở Congo (10/2024) và ảnh nhóm trẻ em năm 2024 là nội dung thật nhưng bị gắn sai bối cảnh vụ 19/7.",
       "evidenceCards": [
@@ -974,7 +974,7 @@
         {
           "id": "s2",
           "type": "choice",
-          "ask": "Ta có biết chính xác bài đăng sai ĐẦU TIÊN xuất hiện lúc nào không?",
+          "ask": "Mình có biết chính xác bài đăng sai ĐẦU TIÊN xuất hiện lúc nào không?",
           "options": [
             {
               "id": "a",
@@ -986,7 +986,7 @@
               "id": "b",
               "text": "Chưa xác định được — đây là giới hạn của hồ sơ kiểm chứng",
               "correct": true,
-              "feedback": "Đúng. Hồ sơ kiểm chứng chỉ tiếp cận bài đăng qua ảnh chụp màn hình báo chí đăng lại."
+              "feedback": "Đúng. Nhóm kiểm chứng chỉ xem được bài đăng qua ảnh chụp màn hình mà báo chí đăng lại, nên không biết giờ đăng gốc."
             },
             {
               "id": "c",
@@ -996,7 +996,7 @@
             }
           ],
           "hints": [
-            "Hồ sơ kiểm chứng tiếp cận bài đăng gốc bằng cách nào?"
+            "Nhóm kiểm chứng xem bài đăng gốc bằng cách nào?"
           ],
           "walkthrough": "Chọn \"Chưa xác định được\"."
         }
@@ -1163,7 +1163,7 @@
         }
       ],
       "feedback": {
-        "correct": "Tốt. Nói đúng mức tác động cũng là một phần của kiểm chứng."
+        "correct": "Nói đúng mức tác động, không phóng đại, cũng là một phần của kiểm chứng."
       },
       "conclusion": "Đã ghi nhận: số liệu tương tác của một bài, quy mô tài khoản, số bài của fanpage, phát ngôn của ngành du lịch. Mới là nguy cơ: thiệt hại doanh thu, tổn thương của gia đình nạn nhân.",
       "evidenceCards": [
@@ -1189,7 +1189,7 @@
       "mode": "G7",
       "title": "Chủ đích: điều gì chứng minh được?",
       "npcIntro": "s7_q10_intro",
-      "question": "Có dấu hiệu nào cho thấy người đăng cố ý thu hút tương tác không? Và điều gì ta CHƯA biết?",
+      "question": "Có dấu hiệu nào cho thấy người đăng cố ý thu hút tương tác không? Và điều gì mình CHƯA biết?",
       "resources": [
         "thuonghuyen2025",
         "thuthao2025"
@@ -1301,7 +1301,7 @@
         }
       ],
       "feedback": {
-        "correct": "Chuẩn mực thẩm định: khẳng định điều bằng chứng cho phép, dừng đúng chỗ ở điều chưa biết."
+        "correct": "Khẳng định điều bằng chứng cho phép, và dừng lại đúng chỗ ở điều chưa biết: đó là chuẩn mực của thẩm định."
       },
       "conclusion": "Có thủ đoạn thu hút tương tác; chưa xác định người đứng sau, doanh thu và thời điểm đăng đầu tiên.",
       "evidenceCards": [
@@ -1326,7 +1326,7 @@
       "mode": "G8",
       "title": "Phân loại rối loạn thông tin",
       "npcIntro": "s8_q11_intro",
-      "question": "Dùng khung Information Disorder để phân loại TỪNG nhóm đối tượng.",
+      "question": "Dùng khung Rối loạn thông tin (Information Disorder) để phân loại TỪNG nhóm đối tượng.",
       "resources": [
         "wardle2017"
       ],
@@ -1345,7 +1345,7 @@
             },
             {
               "npc": "npc5",
-              "text": "(nhắn tin) Mình đăng lại vì thương nạn nhân thôi mà, vậy là đúng phải không?"
+              "text": "(nhắn tin) Chị đăng lại vì thương nạn nhân thôi mà, vậy là đúng phải không em?"
             },
             {
               "npc": "npc1",
@@ -1413,7 +1413,7 @@
           ],
           "hints": [
             "Hai câu hỏi: nội dung sai hay thật? Có bằng chứng về ý định gây hại / trục lợi không?",
-            "Nhóm clip cũ: ta có biết từng người đăng có cố ý không?"
+            "Nhóm clip cũ: mình có biết từng người đăng có cố ý không?"
           ],
           "walkthrough": "Ảnh AI trên fanpage → Disinformation; clip cũ → Misinformation (hoặc chưa đủ căn cứ); người chia sẻ vì thương cảm → Misinformation; công khai thông tin thật gây hại → Malinformation."
         }
@@ -1491,7 +1491,7 @@
             "Đừng khuếch đại bài giả.",
             "Bảo vệ người xem khỏi ảnh giả, và đừng làm tổn hại người khác."
           ],
-          "walkthrough": "Chọn: báo cáo, không chia sẻ lại, chia sẻ đính chính chính thống, làm mờ/gạch chéo ảnh giả khi buộc phải dẫn lại."
+          "walkthrough": "Chọn: báo cáo, không chia sẻ lại, chia sẻ bài đính chính từ nguồn chính thống, làm mờ/gạch chéo ảnh giả khi buộc phải dẫn lại."
         }
       ],
       "feedback": {
@@ -1570,7 +1570,7 @@
         }
       ],
       "feedback": {
-        "correct": "Cảm ơn ý kiến của bạn. Có một số văn bản quy định liên quan; game không tư vấn pháp lý."
+        "correct": "Cảm ơn ý kiến của em. Có một số văn bản pháp luật liên quan, nhưng ở đây anh không tư vấn pháp lý."
       },
       "conclusion": "Nền tảng có thể gắn nhãn nội dung AI, giảm lan truyền và xử lý tài khoản vi phạm.",
       "evidenceCards": [
@@ -1599,7 +1599,7 @@
             {
               "id": "n1",
               "text": "Chú đăng bộ ảnh này lấy từ đâu?",
-              "answer": "Tôi thấy người ta chia sẻ, tôi đăng lại thôi."
+              "answer": "Chú thấy người ta chia sẻ, chú đăng lại thôi."
             },
             {
               "id": "n2",
@@ -1624,7 +1624,7 @@
           "options": [
             {
               "id": "a",
-              "text": "\"Em thấy người ta chia sẻ, em đăng lại thôi.\"",
+              "text": "\"Chú thấy người ta chia sẻ, chú đăng lại thôi.\"",
               "correct": false,
               "feedback": "Câu này thiếu nguồn, nhưng không tự mâu thuẫn."
             },
@@ -1712,7 +1712,7 @@
         }
       ],
       "feedback": {
-        "correct": "Bạn đã nhận diện được trang mạo danh. Khi nghi ngờ, hãy liên hệ kênh chính thức của tổ chức."
+        "correct": "Em đã nhận diện được trang mạo danh. Khi nghi ngờ, hãy liên hệ kênh chính thức của tổ chức."
       },
       "conclusion": "Dấu hiệu mạo danh: tên sai chính tả, tích xanh giả, trang mới tạo, tài khoản cá nhân, link rút gọn lạ.",
       "evidenceCards": [],
@@ -1908,7 +1908,7 @@
         "submit": "Đăng bài đính chính",
         "missing": "Bài còn thiếu: {list}",
         "defeat": "Bài đính chính đã lên… và lượt chia sẻ của ta đứng lại.",
-        "explain": "Có dấu hiệu chủ đích ≠ biết danh tính ≠ biết động cơ tài chính."
+        "explain": "Thấy dấu hiệu chủ đích chưa có nghĩa là biết người đăng là ai, càng chưa có nghĩa là biết họ làm vì tiền."
       }
     ],
     "trapB": {
@@ -1917,12 +1917,12 @@
         "ev_identity"
       ],
       "text": "Buộc tội động cơ tiền bạc / danh tính khi chưa có dữ liệu",
-      "feedback": "Không có dữ liệu doanh thu hay danh tính. Kết luận vượt bằng chứng có thể gây hại cho người vô can."
+      "feedback": "Không có dữ liệu doanh thu hay danh tính. Kết luận vượt quá bằng chứng có thể gây hại cho người vô can."
     },
     "endings": {
       "A": {
         "title": "Gương mặt trống",
-        "text": "Em chặn được tin sai bằng bằng chứng: nội dung là giả và có dấu hiệu chủ đích thu hút tương tác. Trang ẩn danh vẫn chưa lộ mặt, và em không đoán bừa. Kiểm chứng tốt là biết dừng đúng chỗ."
+        "text": "Em đã dùng bằng chứng để chặn tin sai: nội dung là giả và có dấu hiệu chủ đích thu hút tương tác. Trang ẩn danh vẫn chưa lộ mặt, và em không đoán bừa. Kiểm chứng tốt là biết dừng đúng chỗ."
       },
       "B": {
         "title": "Buộc tội quá mức",
@@ -2395,7 +2395,7 @@
     "replay": "Chơi lại từ đầu",
     "sources": "Xem nguồn",
     "keepPlaying": "Tiếp tục khám phá (màn bonus)",
-    "cards": "Thẻ evidence",
+    "cards": "Thẻ bằng chứng",
     "badges": "Huy hiệu kỹ năng",
     "closed": "Hồ sơ đã khép"
   },
@@ -2435,7 +2435,7 @@
     ]
   },
   "board": {
-    "howto": "Bấm một thẻ evidence rồi bấm mệnh đề mà thẻ đó chứng minh để căng dây đỏ. Thẻ suy đoán không chứng minh được gì.",
+    "howto": "Bấm một thẻ bằng chứng rồi bấm mệnh đề mà thẻ đó chứng minh để căng dây đỏ. Thẻ suy đoán không chứng minh được gì.",
     "claims": [
       {
         "id": "real",
@@ -2509,11 +2509,11 @@
     "wake": [
       {
         "npc": "hero",
-        "text": "Tối rồi... Phải xong bài tập môn Thẩm định tin tức đã. Mà mở máy tính lướt tin một chút xem sao.",
+        "text": "Tối rồi... Mình phải làm xong bài tập môn Thẩm định tin tức đã. Mà thôi, mở máy tính lướt tin một chút xem sao.",
         "mood": "thinking"
       }
     ],
-    "skipAsk": "Em muốn xem phần mở đầu ở TP.HCM, hay tới thẳng Hạ Long?",
+    "skipAsk": "Bạn muốn xem phần mở đầu ở TP.HCM, hay tới thẳng Hạ Long?",
     "skipStory": "Xem phần mở đầu",
     "skipJump": "Bỏ qua, tới thẳng Hạ Long",
     "pc": {
@@ -2565,7 +2565,7 @@
           "mood": "thinking"
         }
       ],
-      "ask": "Em sẽ làm gì với những bài đăng này?",
+      "ask": "Bạn sẽ làm gì với những bài đăng này?",
       "choices": [
         {
           "id": "share",
@@ -2598,12 +2598,12 @@
         },
         {
           "npc": "hero",
-          "text": "Ngồi đây đoán thì không ra. Mình phải tới tận nơi, xem bằng chứng tận mắt.",
+          "text": "Chỉ ngồi đây đoán thì mình không biết được cái nào thật, cái nào giả. Mình phải tới tận nơi, tận mắt xem bằng chứng.",
           "mood": "happy"
         },
         {
           "npc": "hero",
-          "text": "Báo Thanh Niên có nhóm kiểm chứng. Gọi cho tòa soạn ở TP.HCM, xin đi cùng thử xem! Điện thoại để trên bàn đầu giường."
+          "text": "Báo Thanh Niên có nhóm kiểm chứng. Mình thử gọi tòa soạn ở TP.HCM, xin đi cùng xem sao! Điện thoại để trên bàn đầu giường."
         }
       ]
     },
@@ -2650,7 +2650,7 @@
       },
       {
         "npc": "npc10",
-        "text": "Việc của cháu ở Hạ Long là trả lời được ba câu hỏi này, bằng bằng chứng chứ không phải bằng cảm giác:",
+        "text": "Việc của cháu ở Hạ Long là trả lời được ba câu hỏi này, dựa vào bằng chứng chứ không phải cảm giác:",
         "mood": "serious",
         "questions": true
       },
@@ -2698,13 +2698,13 @@
       ]
     },
     "bus": {
-      "ask": "Xe khách liên tỉnh. Em muốn đi đâu?",
+      "ask": "Xe khách liên tỉnh. Bạn muốn đi đâu?",
       "to": {
         "street": "Đi Hạ Long (Quảng Ninh)",
         "hcm": "Về TP.HCM"
       },
       "cancel": "Thôi, chưa đi",
-      "locked": "Chưa có việc ở Hạ Long. Em lên tòa soạn Báo Thanh Niên nhận việc trước đã.",
+      "locked": "Bạn chưa có việc ở Hạ Long. Hãy lên tòa soạn Báo Thanh Niên nhận việc trước đã.",
       "busy": "Trận đính chính đang diễn ra, chưa rời đi được.",
       "wait": "Đứng ở trạm, chờ xe khách tới…",
       "now": "Xe tới rồi! Bấm E / A hoặc chạm để vẫy xe",
@@ -2732,7 +2732,7 @@
       },
       "travelText": {
         "street": "Xe chạy suốt đêm qua nhiều tỉnh thành. Sáng hôm sau, vịnh Hạ Long hiện ra.",
-        "hcm": "Chuyến về dài, đủ để em sắp xếp lại các bằng chứng trong đầu."
+        "hcm": "Chuyến về dài, đủ để bạn sắp xếp lại các bằng chứng trong đầu."
       },
       "arrive": {
         "street": "Thành phố Hạ Long · trạm xe trước Trụ sở Báo Thanh Niên\nBấm phím bất kỳ để bỏ qua",
@@ -2868,7 +2868,7 @@
       {
         "id": "silver",
         "name": "Thẩm định viên",
-        "text": "Chặn được tin sai bằng bằng chứng, giữ vững các bước kiểm chứng.",
+        "text": "Dùng bằng chứng chặn được tin sai, giữ vững các bước kiểm chứng.",
         "minCred": 50,
         "noSkip": true
       },
@@ -2878,7 +2878,7 @@
         "text": "Đã đi hết hành trình. Lần sau thử khép đủ các hồ sơ để rèn thêm kỹ năng nhé."
       }
     ],
-    "phoneEarly": "Gọi ai bây giờ nhỉ? Xem tin trên máy tính trước đã.",
+    "phoneEarly": "Mình gọi ai bây giờ nhỉ? Xem tin trên máy tính trước đã.",
     "phoneLater": "Chú Quốc Trung đang chờ ở tòa soạn trên phố trung tâm. Đi thôi!"
   }
 }

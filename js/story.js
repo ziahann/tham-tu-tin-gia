@@ -301,7 +301,7 @@ async function runCards(q, qs, npc) {
     saveProgress();
     sfx(res.status === 'partial' ? 'partial' : 'wrong');
     for (const c of res.wrong) {
-      await dlg.say(npc, `✗ ${c.text} — ${c.feedback}`);
+      await dlg.say(npc, t('dialog.wrongPick', { item: c.text, feedback: c.feedback }));
       if (c.npcReact) await playScene(c.npcReact);
     }
     if (!res.wrong.length && res.missing) await dlg.say(npc, t('dialog.missingCards', { n: res.missing }));
@@ -738,7 +738,7 @@ Object.assign(STEP_RUNNERS, {
     if (r.help) return 'help';
     qs.answers[step.id] = r.ids;
     const res = checkCards(step, r.ids);
-    for (const c of res.wrong) await dlg.say(npc, `✗ ${c.text} — ${c.feedback}`);
+    for (const c of res.wrong) await dlg.say(npc, t('dialog.wrongPick', { item: c.text, feedback: c.feedback }));
     if (res.status === 'correct') {
       sfx('partial');
       await dlg.say(npc, t('result.correct'));

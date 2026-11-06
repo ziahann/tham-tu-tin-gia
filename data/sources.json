@@ -405,6 +405,51 @@
         ]
       },
       {
+        "file": "feet/boots/basic",
+        "authors": [
+          "JaidynReiman",
+          "bluecarrot16",
+          "Nila122"
+        ],
+        "licenses": [
+          "OGA-BY 3.0",
+          "CC-BY-SA 3.0",
+          "GPL 2.0",
+          "GPL 3.0"
+        ],
+        "urls": [
+          "https://opengameart.org/content/lpc-clothes-and-hair",
+          "https://opengameart.org/content/lpc-expanded-socks-shoes"
+        ],
+        "notes": "original by Nila122, edited for male and v3 bases by bluecarrot16, Jump/Sit/Emote/Run/Revised Combat by JaidynReiman",
+        "usedBy": [
+          "hero_m",
+          "hero_f"
+        ]
+      },
+      {
+        "file": "feet/boots/basic/thin",
+        "authors": [
+          "JaidynReiman",
+          "bluecarrot16",
+          "Nila122"
+        ],
+        "licenses": [
+          "OGA-BY 3.0",
+          "CC-BY-SA 3.0",
+          "GPL 2.0",
+          "GPL 3.0"
+        ],
+        "urls": [
+          "https://opengameart.org/content/lpc-clothes-and-hair",
+          "https://opengameart.org/content/lpc-expanded-socks-shoes"
+        ],
+        "notes": "original by Nila122, edited for v3 bases by bluecarrot16, Jump/Sit/Emote/Run/Revised Combat by JaidynReiman",
+        "usedBy": [
+          "hero_f"
+        ]
+      },
+      {
         "file": "feet/shoes",
         "authors": [
           "JaidynReiman",
@@ -423,8 +468,6 @@
         ],
         "notes": "original by wulax, edited for v3 base by bluecarrot16, Jump/Sit/Emote/Run/Revised Combat by JaidynReiman",
         "usedBy": [
-          "hero_m",
-          "hero_f",
           "npc1",
           "npc2",
           "npc7",
@@ -483,7 +526,6 @@
         ],
         "notes": "original by wulax, edited for female base by Joe White, edited for v3 base by bluecarrot16, Jump/Sit/Emote/Run/Revised Combat by JaidynReiman",
         "usedBy": [
-          "hero_f",
           "npc1",
           "npc8",
           "npc5",
@@ -564,7 +606,6 @@
         ],
         "notes": "",
         "usedBy": [
-          "hero_f",
           "npc1",
           "npc5",
           "amb_vendor",
@@ -617,7 +658,6 @@
         ],
         "notes": "down 4 and 5 added by JaidynReiman; recolors by Joe White; original by Manuel Riecke (MrBeast)",
         "usedBy": [
-          "hero_m",
           "npc7",
           "npc6",
           "amb_guard",
@@ -629,6 +669,46 @@
           "npc10",
           "amb_hcm_student",
           "amb_cafe_a"
+        ]
+      },
+      {
+        "file": "hair/ponytail2",
+        "authors": [
+          "JaidynReiman",
+          "Manuel Riecke (MrBeast)",
+          "Joe White"
+        ],
+        "licenses": [
+          "OGA-BY 3.0",
+          "CC-BY-SA 3.0",
+          "GPL 3.0"
+        ],
+        "urls": [
+          "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+          "https://opengameart.org/content/ponytail-and-plain-hairstyles",
+          "https://opengameart.org/content/lpc-expanded-hair"
+        ],
+        "notes": "",
+        "usedBy": [
+          "hero_f"
+        ]
+      },
+      {
+        "file": "hair/spiked2",
+        "authors": [
+          "Fabzy",
+          "bluecarrot16"
+        ],
+        "licenses": [
+          "CC-BY-SA 3.0"
+        ],
+        "urls": [
+          "https://opengameart.org/content/the-revolution-hair",
+          "https://opengameart.org/content/lpc-hair"
+        ],
+        "notes": "",
+        "usedBy": [
+          "hero_m"
         ]
       },
       {
@@ -813,6 +893,27 @@
         ]
       },
       {
+        "file": "legs/shorts/shorts",
+        "authors": [
+          "ElizaWy",
+          "JaidynReiman",
+          "Johannes Sjölund (wulax)",
+          "Stephen Challener (Redshrike)"
+        ],
+        "licenses": [
+          "OGA-BY 3.0"
+        ],
+        "urls": [
+          "https://github.com/ElizaWy/LPC/tree/main/Characters/Clothing",
+          "https://opengameart.org/content/lpc-expanded-sit-run-jump-more",
+          "https://opengameart.org/content/lpc-expanded-pants"
+        ],
+        "notes": "Original bases by Redshrike, thrust/shoot bases by Wulax, original shorts by ElizaWy, climb/jump/run/sit/emotes/revised combat by JaidynReiman",
+        "usedBy": [
+          "hero_f"
+        ]
+      },
+      {
         "file": "legs/skirts/plain",
         "authors": [
           "bluecarrot16",
@@ -831,13 +932,35 @@
         ],
         "notes": "original by wulax, edited for female base by pvigier, edited for v3 base by bluecarrot16, idle & sit by Ahmad3366, color reduced & female sit/emote by JaidynReiman",
         "usedBy": [
-          "hero_f",
           "npc1",
           "npc8",
           "npc5",
           "amb_clerk2",
           "amb_hcm_reporter",
           "amb_cafe_b"
+        ]
+      },
+      {
+        "file": "neck/scarf",
+        "authors": [
+          "Nila122",
+          "JaidynReiman",
+          "Johannes Sjölund (wulax)",
+          "Stephen Challener (Redshrike)"
+        ],
+        "licenses": [
+          "OGA-SA 3.0",
+          "CC-BY-SA 3.0",
+          "GPL 2.0",
+          "GPL 3.0"
+        ],
+        "urls": [
+          "https://opengameart.org/content/more-lpc-clothes-and-hair"
+        ],
+        "notes": "Original by Nila122, climb/sit/emote/jump/run animations by JaidynReiman",
+        "usedBy": [
+          "hero_m",
+          "hero_f"
         ]
       },
       {
@@ -859,8 +982,6 @@
         ],
         "notes": "original by ElizaWy; spellcast/thrust/shoot/hurt/male adapted from original by JaidynReiman",
         "usedBy": [
-          "hero_m",
-          "hero_f",
           "npc5",
           "amb_vendor",
           "amb_fisher",
@@ -892,6 +1013,7 @@
         ],
         "notes": "original by ElizaWy; spellcast/thrust/shoot/hurt/male adapted from original by JaidynReiman",
         "usedBy": [
+          "hero_m",
           "npc1",
           "npc7",
           "npc9",
@@ -927,6 +1049,28 @@
           "npc8",
           "npc3",
           "amb_elder"
+        ]
+      },
+      {
+        "file": "torso/clothes/longsleeve/longsleeve2_scoop",
+        "authors": [
+          "ElizaWy",
+          "JaidynReiman",
+          "Stephen Challener (Redshrike)",
+          "Johannes Sjölund (wulax)"
+        ],
+        "licenses": [
+          "OGA-BY 3.0"
+        ],
+        "urls": [
+          "http://opengameart.org/content/lpc-revised-character-basics",
+          "https://github.com/ElizaWy/LPC/tree/main/Characters/Clothing",
+          "https://opengameart.org/content/lpc-expanded-sit-run-jump-more",
+          "https://opengameart.org/content/lpc-expanded-simple-shirts"
+        ],
+        "notes": "original by ElizaWy; spellcast/thrust/shoot/hurt/male adapted from original by JaidynReiman",
+        "usedBy": [
+          "hero_f"
         ]
       },
       {
@@ -982,6 +1126,46 @@
           "amb_hcm_student",
           "amb_auntie",
           "amb_hcm_student2"
+        ]
+      },
+      {
+        "file": "torso/clothes/sleeveless/sleeveless2_cardigan",
+        "authors": [
+          "ElizaWy",
+          "JaidynReiman",
+          "Stephen Challener (Redshrike)",
+          "Johannes Sjölund (wulax)"
+        ],
+        "licenses": [
+          "OGA-BY 3.0"
+        ],
+        "urls": [
+          "http://opengameart.org/content/lpc-revised-character-basics",
+          "https://github.com/ElizaWy/LPC/tree/main/Characters/Clothing",
+          "https://opengameart.org/content/lpc-expanded-sit-run-jump-more",
+          "https://opengameart.org/content/lpc-expanded-simple-shirts"
+        ],
+        "notes": "original by ElizaWy; sleeveless adapted from original by JaidynReiman",
+        "usedBy": [
+          "hero_f"
+        ]
+      },
+      {
+        "file": "torso/jacket/collared",
+        "authors": [
+          "bluecarrot16"
+        ],
+        "licenses": [
+          "CC-BY-SA 3.0",
+          "GPL 3.0"
+        ],
+        "urls": [
+          "https://opengameart.org/content/lpc-gentleman",
+          "https://opengameart.org/content/lpc-pirates"
+        ],
+        "notes": "",
+        "usedBy": [
+          "hero_m"
         ]
       }
     ],
