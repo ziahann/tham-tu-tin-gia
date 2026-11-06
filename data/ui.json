@@ -498,5 +498,18 @@
   "eaves": {
     "start": "Đứng lặng gần đó, vờ xem điện thoại và lắng nghe…",
     "noted": "Đã ghi điều nghe được vào sổ tay."
+  },
+  "route": {
+    "exit": "Ra {place}",
+    "enter": "Vào {place}",
+    "elevator": "Đi thang máy tới {floor}",
+    "bus": "Bắt xe khách đi {city}",
+    "meet": "Gặp {npc}",
+    "device": "Dùng {device} ở {place}",
+    "next": "▶ {step}",
+    "cities": {
+      "hcm": "TP.HCM",
+      "street": "Hạ Long"
+    }
   }
 }
