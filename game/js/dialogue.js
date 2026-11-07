@@ -308,8 +308,8 @@ export function choose(options, opts) {
   return new Promise(resolve => {
     prompt(opts);
     const list = document.createElement('div');
-    list.className = 'choice-list';
-    options.forEach((o, i) => list.append(button('btn', `${i + 1}. ${o.text}`, () => {
+    list.className = `choice-list${options.length > 4 ? ' is-many' : ''}`; // nhiều lựa chọn: hai cột cho khỏi phải cuộn; số thứ tự do CSS vẽ
+    options.forEach(o => list.append(button('choice', o.text, () => {
       sfx('click');
       if (!o.silent) logPlayer(o.text, { choiceId: o.id });
       els.extra.innerHTML = '';
