@@ -78,5 +78,14 @@ ok(!/d lượt chịu sai/.test(qd.boss.phases.find(p => p.mode === 'replies').h
 const inputs = [];
 for (const q of qd.quests) { for (const f of q.fields || []) inputs.push([q.id + '.' + f.id, f]); for (const st of q.steps || []) if (st.type === 'input') inputs.push([q.id + '.' + st.id, st]); }
 for (const [id, x] of inputs) ok(x.walkthrough && x.walkthrough.length > 12 && !/^Mở bài|^Mở |→ chép/.test(x.walkthrough), `walkthrough của ${id} phải nêu đáp án`);
+// Độ tin cậy chung (đợt 27): bắt đầu ở 50, danh hiệu theo điểm cuối, huy hiệu danh dự từ 90
+const jr = qd.journey;
+ok(jr.honor?.minCred === 90 && jr.honor.name && jr.honor.text, 'journey.honor thiếu hoặc minCred phải là 90');
+ok(jr.titles.find(x => x.id === 'gold')?.minCred > jr.titles.find(x => x.id === 'silver')?.minCred, 'bậc danh hiệu phải giảm dần theo minCred');
+ok(jr.report.honor?.length && jr.report.honor.every(l => clean(l.text)), 'journey.report.honor thiếu');
+ok(fs.existsSync(new URL('../game/assets/badges/HONOR.png', import.meta.url)), 'thiếu assets/badges/HONOR.png');
+ok(!/trung bình/.test(jr.report.sum), 'journey.report.sum không còn nói "trung bình"');
+for (const k of ['obstacles.credGain', 'title.recordDone', 'title.recordTitle', 'title.recordHonor', 'title.recordBonus', 'journey.honorFile', 'journey.honorStamp', 'journey.honorResult']) ok(k.split('.').reduce((o, p) => o?.[p], uiAll), `ui.${k} thiếu`);
+ok(qd.results.home && qd.ending.home, 'results.home / ending.home thiếu');
 if (fails) process.exit(1);
 console.log(`✓ route: ${n} ca`);

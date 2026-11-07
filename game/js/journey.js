@@ -3,7 +3,7 @@
 // (home → seen → called → briefed → halong → return → done; lượt chơi cũ không có trường này = đang ở Hạ Long).
 import { showTip } from './tips.js';
 import { data, t, fill } from './data.js';
-import { state, saveProgress, setFlag, hasFlag } from './state.js';
+import { state, saveProgress, setFlag, hasFlag, loadRecord, saveRecord } from './state.js';
 import * as dlg from './dialogue.js';
 import { conversation, track, caseCutscene, getWorld, isBusy, withShot } from './story.js';
 import { nextQuestIn, earnedBadges, caseProgress } from './grading.js';
@@ -258,12 +258,26 @@ export function migrate() {
   if (hasFlag('boss_done') && !state.progress.journey && !hasFlag('ending_seen')) state.progress.journey = 'return';
 }
 
-/** Danh hiệu theo kết quả: số hồ sơ khép, uy tín trung bình, có đi tắt tới boss không. */
+/** Danh hiệu theo kết quả: số hồ sơ khép, độ tin cậy cuối cùng, có đi tắt tới boss không. */
 export function titleFor() {
   const flags = state.progress.flags;
   const prog = caseProgress(flags), cred = trustScore();
   const skipped = flags.includes('skipped_to_boss');
   return J().titles.find(x => (x.minDone !== 'all' || prog.done >= prog.total) && cred >= (x.minCred || 0) && !(x.noSkip && skipped));
+}
+
+/** Huy hiệu danh dự: độ tin cậy từ `journey.honor.minCred`, khép đủ hồ sơ bắt buộc, không đi tắt. */
+export function earnsHonor() {
+  const flags = state.progress.flags;
+  const prog = caseProgress(flags);
+  return trustScore() >= J().honor.minCred && prog.done >= prog.total && !flags.includes('skipped_to_boss');
+}
+
+/** Ghi dấu đã hoàn thành game (hiện ở màn hình chính): giữ danh hiệu cao nhất đã đạt, huy hiệu danh dự và màn bonus một khi đã có. */
+export function recordEnding({ title, honor, bonus } = {}) {
+  const order = J().titles.map(x => x.id), old = loadRecord() || {};
+  const better = title && (!old.title || order.indexOf(title.id) < order.indexOf(old.title.id));
+  saveRecord({ done: true, ...(better ? { title } : {}), ...(honor ? { honor: true } : {}), ...(bonus ? { bonus: true } : {}) });
 }
 
 let onEnding = () => {};
@@ -294,6 +308,13 @@ async function report() {
       state.progress.title = { id: title.id, name: title.name };
       saveProgress();
       await caseCutscene('S9', { name: title.name, learned: title.text }, { title: t('journey.titleFile'), stamp: t('journey.titleStamp'), img: `assets/badges/TITLE_${title.id}.png`, cap: t('journey.titleCap', { name: title.name }) });
+      if (earnsHonor()) {
+        const h = J().honor;
+        await lines(r.honor);
+        state.progress.honor = true;
+        saveProgress();
+        await caseCutscene('S9', { name: h.name, learned: h.text }, { title: t('journey.honorFile'), stamp: t('journey.honorStamp'), img: 'assets/badges/HONOR.png', cap: h.name });
+      }
     });
     await dlg.say('system', t('journey.titleCap', { name: title.name }));
     await lines(r.outro);
@@ -302,6 +323,6 @@ async function report() {
   if (!ok) return;
   setFlag('ending_seen');
   setStage('done');
-  await playEndtro('main');
-  onEnding();
+  recordEnding({ title: state.progress.title, honor: !!state.progress.honor });
+  if (await playEndtro('main') !== 'home') onEnding();
 }

@@ -106,6 +106,15 @@ const ICONS = {
     for (let y = 0; y < 13; y++) { const w = y < 5 ? 1 + y : y < 7 ? 12 - (y - 5) * 2 : 4 + Math.abs(y - 9); R(24 - Math.floor(w / 2), 11 + y, w, 1, c); }
     img.set(24, 11, '#ffffff');
   }])),
+  // Huy hiệu danh dự (độ tin cậy từ 90): ngôi sao vàng lớn trong vòng nguyệt quế
+  HONOR: (R, E, img) => {
+    const pt = (a, rad) => [24 + Math.cos(a) * rad, 25 + Math.sin(a) * rad];
+    for (const s of [-1, 1]) for (let i = 0; i < 7; i++) { const [x, y] = pt(Math.PI / 2 + s * (0.55 + i * 0.32), 13); R(Math.round(x) - 1, Math.round(y) - 1, 3, 2, i % 2 ? '#3f9a56' : '#5fb36b'); }
+    const verts = Array.from({ length: 10 }, (_, k) => pt(-Math.PI / 2 + k * Math.PI / 5, k % 2 ? 4.5 : 10));
+    const inside = (x, y) => { let c = false; for (let i = 0, j = 9; i < 10; j = i++) { const [xi, yi] = verts[i], [xj, yj] = verts[j]; if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) c = !c; } return c; };
+    for (let y = 12; y < 38; y++) for (let x = 12; x < 36; x++) if (inside(x + 0.5, y + 0.5)) img.set(x, y, y < 24 ? '#ffe27a' : '#e8b83a');
+    img.set(22, 19, '#ffffff');
+  },
   // Nhận diện mạo danh: thẻ tên với dấu tích giả bị gạch chéo
   BONUS: (R, E, img) => {
     R(10, 14, 28, 18, '#e8ecf2'); R(10, 14, 28, 4, '#2c4a6b'); R(13, 21, 7, 8, '#9fb3c8'); R(22, 21, 13, 1, '#5b5d6e'); R(22, 24, 10, 1, '#5b5d6e');
@@ -118,6 +127,7 @@ const ICONS = {
 const STYLE = {
   S3: ['#c9d1dc', '#c8323c'], S4: ['#9fb3c8', '#2c6a8f'], S5: ['#c49a6c', '#7a4a2a'], S6: ['#c49a6c', '#2c4a6b'],
   S7: ['#e8c66a', '#7a5a20'], S8: ['#e8c66a', '#3aa7a3'], CAFE: ['#7fbf8f', '#2f5a48'], S9: ['#b28cff', '#3b2c4a'], BONUS: ['#7fbf8f', '#c8323c'],
+  HONOR: ['#ffd54a', '#7a3cff'],
   TITLE_gold: ['#e8c66a', '#c8323c'], TITLE_silver: ['#c9d1dc', '#2c4a6b'], TITLE_bronze: ['#c49a6c', '#3a5a3a']
 };
 

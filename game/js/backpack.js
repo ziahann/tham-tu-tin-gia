@@ -3,7 +3,7 @@ import { showTip, TIP_IDS } from './tips.js';
 import { data, t, evidenceById, npcById, questById } from './data.js';
 import { state, clearAllStorage, isQuestDone } from './state.js';
 import { questStatus, nextQuestIn, isUnlocked, bossStatus, earnedBadges, caseProgress } from './grading.js';
-import { credOf, CRED_MAX } from './obstacles.js';
+import { credScore, CRED_MAX } from './obstacles.js';
 import { objective, track, giverOf } from './story.js';
 import { currentRunByNpc, exportLog } from './history.js';
 import { heroTitle } from './dialogue.js';
@@ -92,10 +92,9 @@ export function evidenceCard(ev) {
   return card;
 }
 
-/** Uy tín: trung bình độ tin cậy của các hồ sơ (không tính Phòng họp, hồ sơ tùy chọn). */
+/** Uy tín = độ tin cậy chung của cả game (obstacles.js → credScore). */
 export function trustScore() {
-  const rooms = data.quests.rooms.filter(r => !r.boss && !r.optional);
-  return Math.round(rooms.reduce((s, r) => s + credOf(r.id), 0) / (rooms.length || 1));
+  return credScore();
 }
 
 /** Thẻ sinh viên (mô phỏng): ảnh chân dung, tên, trường (không ghi ngành), uy tín, số huy hiệu / hồ sơ đã khép. */

@@ -3,7 +3,7 @@ import { data, loadAll, t, artCredit } from './data.js';
 import { Bay } from './bay.js';
 import { playMusic, unlockMusic, refreshMusic, musicSupported } from './music.js';
 import { stopAmbience } from './audio.js';
-import { state, loadState, saveSettings, startNewProgress, hasFlag } from './state.js';
+import { state, loadState, saveSettings, startNewProgress, hasFlag, loadRecord } from './state.js';
 import { initInput, on, releaseAll, lockLandscape } from './input.js';
 import * as dlg from './dialogue.js';
 import * as backpack from './backpack.js';
@@ -56,8 +56,21 @@ function refreshUi() {
 
 // ---------------------------------------------------------------- màn hình chính
 
+/** Dấu ✓ đã hoàn thành game + danh hiệu / huy hiệu danh dự đã đạt (lưu riêng, còn nguyên khi chơi lại từ đầu). */
+function renderRecord() {
+  const box = $('title-record'), rec = loadRecord();
+  box.hidden = !rec?.done;
+  if (box.hidden) return;
+  box.replaceChildren(el('b', null, t('title.recordDone')));
+  const badge = (img, text) => { const s = el('span', 'title-record-item'); s.append(Object.assign(el('img'), { src: img, alt: '' }), el('span', null, text)); box.append(s); };
+  if (rec.title) badge(`assets/badges/TITLE_${rec.title.id}.png`, t('title.recordTitle', { name: rec.title.name }));
+  if (rec.honor) badge('assets/badges/HONOR.png', t('title.recordHonor'));
+  if (rec.bonus) box.append(el('span', 'title-record-item', t('title.recordBonus')));
+}
+
 /** Hiện màn hình chính (cảnh báo nội dung, bắt đầu / chơi tiếp). */
 function showTitle() {
+  renderRecord();
   releaseAll();
   backpack.close();
   const has = !!state.progress;
@@ -216,7 +229,7 @@ function openSettings() {
     const row = el('div', 'actions');
     const go = async kind => {
       closeModal();
-      if (kind === 'main') { await playEndtro('main'); showResults(); } else await bonusEnding({ standalone: true });
+      if (kind === 'main') { if (await playEndtro('main') !== 'home') showResults(); } else await bonusEnding({ standalone: true });
     };
     for (const [kind, key] of [['main', 'endingMain'], ['bonus', 'endingBonus']]) {
       const b = el('button', kind === 'main' ? 'btn-primary' : 'btn', t(`settingsPanel.${key}`));
@@ -279,6 +292,7 @@ function showResults() {
   $('results-continue').textContent = r.keepPlaying;
   $('results-sources').textContent = r.sources;
   $('results-replay').textContent = r.replay;
+  $('results-home').textContent = r.home;
   let pdf = $('results-pdf');
   if (!pdf) {
     pdf = el('button', 'btn', t('report.button'));
@@ -316,6 +330,10 @@ function bindEvents() {
     playMusic(game?.scene.getScene('world')?.mapMusic);
   });
   $('results-sources').addEventListener('click', openSources);
+  // Về màn hình chính từ màn kết quả / đoạn kết (ending.js bắn tfd:home)
+  const goHome = () => { $('results').hidden = true; showTitle(); };
+  $('results-home').addEventListener('click', goHome);
+  document.addEventListener('tfd:home', goHome);
   $('results-replay').addEventListener('click', async () => {
     if (!(await confirmBox(t('title.restart'), t('title.restartConfirm')))) return;
     try { localStorage.removeItem('tfd_progress'); } catch { /* bỏ qua */ }
