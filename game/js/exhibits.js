@@ -86,6 +86,7 @@ export function frameGrid(setKey, opts = {}) {
     drawFrame(cv, f);
     if (f.blur) cv.classList.add('is-blur');
     const label = t(setKey === 'mco9' ? 'exhibit.cell' : 'exhibit.frame', { n: f.n });
+    cell.dataset.n = f.n;
     cell.setAttribute('aria-label', t('exhibit.frameAlt', { n: f.n, desc: frameDesc(f) }));
     cell.append(cv, el('span', 'frame-n', label), el('span', 'tag frame-fake', t('exhibit.fakeTag')));
     if (opts.highlight === f.n) cell.classList.add('is-highlight');
