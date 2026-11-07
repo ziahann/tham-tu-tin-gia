@@ -169,8 +169,24 @@ input:not([type]), input[type="text"] {
 .dialog-extra .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .dialog-next { text-align: right; color: var(--muted); font-size: 0.85em; animation: blink 1s steps(2) infinite; }
 @keyframes blink { 50% { opacity: 0.3; } }
-.choice-list { display: flex; flex-direction: column; gap: 6px; }
-.choice-list .btn { width: 100%; }
+/* Thanh chọn: thẻ tối, ô số thứ tự bên trái, lựa chọn đang chọn (rê chuột / phím mũi tên) sáng viền vàng */
+.choice-list { display: grid; grid-template-columns: 1fr; gap: 6px; counter-reset: choice; }
+.choice-list.is-many { grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); }
+.dialog:has(.choice-list.is-many) { --dlg-max: 62dvh; } /* nhiều lựa chọn (thang máy): khung thoại cao hơn để không phải cuộn */
+.choice {
+  counter-increment: choice;
+  display: flex; align-items: center; gap: 10px; width: 100%; min-height: 42px; padding: 3px 12px 3px 3px; line-height: 1.15;
+  text-align: left; color: var(--paper); background: #1b2740;
+  border: var(--px) solid var(--ink); box-shadow: inset 0 calc(var(--px) * -1) 0 rgb(0 0 0 / 0.35), 0 0 0 2px var(--plum);
+}
+.choice::before {
+  content: counter(choice); flex: none; display: grid; place-items: center; width: 32px; height: 32px;
+  background: var(--teal); color: var(--ink); border: 2px solid var(--ink);
+}
+.choice:hover, .choice:focus { background: #2a3a5c; box-shadow: inset 0 calc(var(--px) * -1) 0 rgb(0 0 0 / 0.35), 0 0 0 2px var(--straw); outline: none; }
+.choice:hover::before, .choice:focus::before { background: var(--straw); }
+.choice:active { transform: translateY(1px); }
+.dialog-extra { scrollbar-width: thin; scrollbar-color: var(--teal) var(--night); }
 .card-pick { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 6px; }
 .card-pick button { background: var(--paper); color: var(--ink); text-align: left; border: var(--px) solid var(--ink); padding: 6px 10px; min-height: 44px; }
 .card-pick button[aria-pressed="true"] { background: var(--straw); box-shadow: 0 0 0 3px var(--teal); }
@@ -703,6 +719,9 @@ button.frame:hover { border-color: var(--grey); }
   .hud-track { min-height: 28px; max-width: 32vw; }
   .dialog { bottom: 6px; --dlg-max: 62dvh; --pw: 112px; --ph: 137px; }
   .dialog-box { padding: 6px 10px; gap: 8px; }
+  .choice-list { gap: 4px; }
+  .choice { min-height: 32px; gap: 8px; padding: 2px 10px 2px 2px; }
+  .choice::before { width: 26px; height: 26px; }
   .dialog-text { min-height: 2em; }
   .backpack { width: min(380px, 52vw); }
   body.backpack-open .dialog { width: calc(100vw - min(380px, 52vw) - 24px); --pw: 96px; --ph: 118px; }
