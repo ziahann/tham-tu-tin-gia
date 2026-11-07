@@ -291,9 +291,11 @@ async function report() {
   await conversation('npc10', async () => {
     await lines(r.intro);
     for (const q of r.questions) {
+      const tried = new Set(); // lựa chọn đã sai: hiện sẵn ✗
       for (;;) {
-        const c = await dlg.choose(q.options.map((o, i) => ({ ...o, id: `o${i}` })), { speaker: 'npc10', text: q.ask });
+        const c = await dlg.choose(q.options.map((o, i) => ({ ...o, id: `o${i}`, correct: !!o.ok, wrong: tried.has(`o${i}`) })), { speaker: 'npc10', text: q.ask });
         if (c.ok) { sfx('correct'); dlg.react('good'); if (q.insight) await dlg.say('hero', q.insight, { mood: 'thinking' }); await dlg.say('npc10', q.right, { mood: 'happy' }); break; }
+        tried.add(c.id);
         sfx('wrong'); dlg.react('bad');
         await dlg.say('npc10', q.wrong, { mood: 'serious' });
       }
