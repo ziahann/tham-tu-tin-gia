@@ -199,6 +199,10 @@ function setSpeaker(id, text = '', mood = null) {
   return name;
 }
 
+/** Thời gian giữ màn chấm đúng / sai trên giao diện trả lời trước khi sang lời nhận xét. */
+const revealMs = () => (state.settings.reduceMotion ? 400 : 1300);
+const pause = ms => new Promise(r => setTimeout(r, ms));
+
 /** Hiện chữ dần (tắt khi bật giảm chuyển động); gọi done khi hiện đủ. */
 function typeText(text, done) {
   clearInterval(typingTimer);
@@ -276,8 +280,14 @@ function prompt(opts) {
 export function interactive(opts, mount) {
   return new Promise(resolve => {
     prompt(opts);
-    const finish = value => {
+    // value.grade(): hàm đánh dấu đúng / sai ngay trên giao diện vừa trả lời (khóa nút, giữ một lúc cho kịp nhìn)
+    const finish = async value => {
       if (value.log) logPlayer(value.log);
+      if (value.grade) {
+        value.grade();
+        els.extra.querySelectorAll('button').forEach(b => { b.disabled = true; });
+        await pause(revealMs());
+      }
       els.extra.innerHTML = '';
       resolve(value);
     };
@@ -314,8 +324,9 @@ export function choose(options, opts) {
     options.forEach(o => {
       const b = button('choice', o.text, async () => {
         sfx('click');
+        const forced = opts?.onPick?.(o); // trả về false = tính là sai (ví dụ hết giờ)
         if (o.correct !== undefined) {
-          b.classList.add('is-pick', o.correct ? 'is-right' : 'is-wrong');
+          b.classList.add('is-pick', (forced ?? o.correct) ? 'is-right' : 'is-wrong');
           list.querySelectorAll('button').forEach(x => { x.disabled = true; });
           await new Promise(r => setTimeout(r, state.settings.reduceMotion ? 300 : 900));
         }
@@ -375,7 +386,9 @@ export function input(opts) {
 export function multi(cards, opts) {
   return new Promise(resolve => {
     prompt(opts);
-    const picked = new Set(opts.picked || []);
+    // known: thẻ đã biết đúng / sai ở lượt trước (hiện sẵn ✓ / ✗, khóa); grade(ids) → { id: 'right' | 'wrong' } chấm ngay khi nộp
+    const known = opts.known || { right: [], wrong: [] };
+    const picked = new Set([...(opts.picked || []).filter(id => !known.wrong.includes(id)), ...known.right]);
     const grid = document.createElement('div');
     grid.className = 'card-pick';
     grid.setAttribute('role', 'group');
@@ -385,16 +398,26 @@ export function multi(cards, opts) {
         b.setAttribute('aria-pressed', String(picked.has(c.id)));
         sfx('click');
       });
+      b.dataset.id = c.id;
       b.setAttribute('aria-pressed', String(picked.has(c.id)));
+      if (known.right.includes(c.id) || known.wrong.includes(c.id)) { b.classList.add(known.right.includes(c.id) ? 'is-right' : 'is-wrong'); b.disabled = true; }
       grid.append(b);
     }
     const row = document.createElement('div');
     row.className = 'row';
     row.append(
-      button('btn-primary', opts.submitLabel || t('dialog.submit'), () => {
+      button('btn-primary', opts.submitLabel || t('dialog.submit'), async () => {
         if (!picked.size) { toast(t('dialog.emptyPick')); return; }
         const ids = cards.filter(c => picked.has(c.id)).map(c => c.id);
         logPlayer(cards.filter(c => picked.has(c.id)).map(c => `• ${c.text}`).join('\n'));
+        if (opts.grade) {
+          const g = opts.grade(ids);
+          els.extra.querySelectorAll('button').forEach(b => {
+            if (g[b.dataset.id]) b.classList.add('is-pick', g[b.dataset.id] === 'right' ? 'is-right' : 'is-wrong');
+            b.disabled = true;
+          });
+          await pause(revealMs());
+        }
         els.extra.innerHTML = '';
         resolve({ ids });
       }),

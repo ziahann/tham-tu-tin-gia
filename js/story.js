@@ -296,6 +296,20 @@ function creditHit(n) {
 /** Ô / bước đã sai hoặc đã trả phí xem đáp án: không còn được thưởng "đúng ngay lần đầu". */
 const dirty = (qs, key) => { (qs.dirty ||= {})[key] = true; };
 
+/** Đánh dấu một phần tử giao diện là đúng (✓ xanh) hoặc sai (✗ đỏ). */
+const markEl = (node, ok) => node?.classList.add('is-pick', ok ? 'is-right' : 'is-wrong');
+
+/** Chấm từng thẻ đã chọn theo cờ `correct` (thẻ chưa chọn không đánh dấu, để không lộ đáp án còn thiếu). */
+const gradeCards = quest => ids => Object.fromEntries(ids.map(id => [id, quest.cards.find(c => c.id === id)?.correct ? 'right' : 'wrong']));
+
+/** Nhớ thẻ đã chọn đúng / sai để hiện sẵn khi hỏi lại. */
+function rememberCards(known, quest, ids) {
+  for (const id of ids) {
+    const bucket = quest.cards.find(c => c.id === id)?.correct ? known.right : known.wrong;
+    if (!bucket.includes(id)) bucket.push(id);
+  }
+}
+
 /** Thưởng độ tin cậy khi đúng ngay lần đầu (không sai, không xem đáp án hay xin thêm gợi ý). */
 function rewardFirstTry(qs, key) {
   if (qs.dirty?.[key]) return;
@@ -309,7 +323,8 @@ async function runCards(q, qs, npc) {
   let picked = qs.answers.picked || [];
   let ask = { speaker: npc, text: q.question };
   for (;;) {
-    const r = await dlg.multi(q.cards, { ...ask, picked, submitLabel: q.submitLabel });
+    const known = ((qs.known ||= {})._quest ||= { right: [], wrong: [] });
+    const r = await dlg.multi(q.cards, { ...ask, picked, known, grade: gradeCards(q), submitLabel: q.submitLabel });
     ask = { speaker: npc, text: q.question };
     if (r.help) {
       if (await helpMenu(q, qs, npc, false) === 'later') return 'later';
@@ -317,6 +332,7 @@ async function runCards(q, qs, npc) {
     }
     picked = r.ids;
     qs.answers.picked = picked;
+    rememberCards(known, q, picked);
     const res = checkCards(q, picked);
     reactTo(npc, res.status === 'correct' ? 'good' : 'bad');
     if (res.status === 'correct') { rewardFirstTry(qs, '_quest'); return 'done'; }
@@ -614,7 +630,7 @@ async function timelineStep(step, npc, qs) {
     box.append(pool, note, axis, actionRow(
       dlg.makeButton('btn-primary', t('dialog.orderSubmit'), () => {
         if (placed.some(x => !x)) { toast(t('dialog.sortMissing')); return; }
-        done({ ids: placed.map(it => it.id), log: placed.map((it, i) => `${step.slots[i]}: ${it.text}`).join('\n') });
+        done({ ids: placed.map(it => it.id), log: placed.map((it, i) => `${step.slots[i]}: ${it.text}`).join('\n'), grade: () => [...axis.children].forEach((slot, i) => markEl(slot, placed[i].id === step.answer[i])) });
       }),
       dlg.makeButton('btn', t('dialog.orderReset'), () => { placed.fill(null); picked = null; render(); }),
       dlg.makeButton('btn', t('dialog.help'), help)
@@ -704,7 +720,8 @@ const STEP_RUNNERS = {
         dlg.makeButton('btn-primary', t('exhibit.submitMarks'), () => {
           if (!marked.size) { toast(t('exhibit.emptyMarks')); return; }
           const marks = [...marked].sort((a, b) => a - b);
-          done({ marks, log: `${t('exhibit.marked')}: ${marks.map(n => t('exhibit.frame', { n })).join(', ')}` });
+          const real = new Set([...step.groups.flatMap(g => g.frames), ...(step.bonus?.frames || [])]);
+          done({ marks, log: `${t('exhibit.marked')}: ${marks.map(n => t('exhibit.frame', { n })).join(', ')}`, grade: () => marks.forEach(n => markEl(box.querySelector(`.frame[data-n="${n}"]`), real.has(n))) });
         }),
         dlg.makeButton('btn', t('dialog.help'), help)
       ));
@@ -733,7 +750,7 @@ const STEP_RUNNERS = {
       const box = toolHost(outer, step);
       box.append(singleFrame(step.ref.set, step.ref.frame, t('exhibit.ref', { n: step.ref.frame })));
       box.append(frameGrid(step.exhibit, {
-        onPick: n => done({ pick: n, log: t('dialog.youPicked', { text: t('exhibit.cell', { n }) }) })
+        onPick: n => done({ pick: n, log: t('dialog.youPicked', { text: t('exhibit.cell', { n }) }), grade: () => markEl(box.querySelector(`.frame[data-n="${n}"]`), n === step.answer) })
       }));
       box.append(actionRow(dlg.makeButton('btn', t('dialog.help'), help)));
     });
@@ -768,9 +785,11 @@ Object.assign(STEP_RUNNERS, {
 
   /** Chọn nhiều thẻ: đúng khi chọn đủ thẻ đúng và không chọn thẻ sai. */
   async multi(step, npc, qs) {
-    const r = await dlg.multi(step.cards, { speaker: npc, text: step.ask, exhibit: exhibitOf(step), picked: qs.answers[step.id] || [] });
+    const known = ((qs.known ||= {})[step.id] ||= { right: [], wrong: [] });
+    const r = await dlg.multi(step.cards, { speaker: npc, text: step.ask, exhibit: exhibitOf(step), picked: qs.answers[step.id] || [], known, grade: gradeCards(step) });
     if (r.help) return 'help';
     qs.answers[step.id] = r.ids;
+    rememberCards(known, step, r.ids);
     const res = checkCards(step, r.ids);
     for (const c of res.wrong) await dlg.say(npc, t('dialog.wrongPick', { item: c.text, feedback: c.feedback }));
     if (res.status === 'correct') {
@@ -804,7 +823,7 @@ Object.assign(STEP_RUNNERS, {
       box.append(el('p', 'muted', t('dialog.orderPick')), left, out, actionRow(
         dlg.makeButton('btn-primary', t('dialog.orderSubmit'), () => {
           if (seq.length < step.items.length) { toast(t('dialog.sortMissing')); return; }
-          done({ ids: seq.map(it => it.id), log: seq.map((it, i) => `${i + 1}. ${it.text}`).join('\n') });
+          done({ ids: seq.map(it => it.id), log: seq.map((it, i) => `${i + 1}. ${it.text}`).join('\n'), grade: () => [...out.children].forEach((li, i) => markEl(li, seq[i].id === step.answer[i])) });
         }),
         dlg.makeButton('btn', t('dialog.orderReset'), () => { seq.length = 0; render(); }),
         dlg.makeButton('btn', t('dialog.help'), help)
@@ -826,8 +845,9 @@ Object.assign(STEP_RUNNERS, {
   async sort(step, npc, qs) {
     const choice = { ...(qs.answers[step.id] || {}) };
     const r = await dlg.interactive({ speaker: npc, text: step.ask, exhibit: exhibitOf(step), wide: true }, (box, done, help) => {
+      const rows = {};
       for (const item of step.items) {
-        const row = el('div', 'sort-item');
+        const row = (rows[item.id] = el('div', 'sort-item'));
         const btns = el('div', 'sort-cats');
         btns.setAttribute('role', 'group');
         btns.setAttribute('aria-label', item.text);
@@ -845,7 +865,7 @@ Object.assign(STEP_RUNNERS, {
         dlg.makeButton('btn-primary', t('dialog.sortSubmit'), () => {
           if (step.items.some(it => !choice[it.id])) { toast(t('dialog.sortMissing')); return; }
           const label = id => step.categories.find(c => c.id === id).label;
-          done({ choice, log: step.items.map(it => `${it.text} → ${label(choice[it.id])}`).join('\n') });
+          done({ choice, log: step.items.map(it => `${it.text} → ${label(choice[it.id])}`).join('\n'), grade: () => step.items.forEach(it => markEl(rows[it.id], it.accept.includes(choice[it.id]))) });
         }),
         dlg.makeButton('btn', t('dialog.help'), help)
       ));
@@ -1015,8 +1035,8 @@ export async function deadlineCall(room) {
   await conversation('npc4', async () => {
     await dlg.say('npc4', t('obstacles.deadlineCall', { room: roomName(room) }), { mood: 'surprised' });
     const c = await dlg.choose([
-      { id: 'no', text: t('obstacles.deadlineRefuse') },
-      { id: 'yes', text: t('obstacles.deadlinePublish') }
+      { id: 'no', text: t('obstacles.deadlineRefuse'), correct: true },
+      { id: 'yes', text: t('obstacles.deadlinePublish'), correct: false }
     ], { speaker: 'npc4', text: t('obstacles.deadlineCall', { room: roomName(room) }) });
     state.progress.pressure = 0;
     // thanh đầy mà chưa xong hồ sơ = trễ hạn, dù chọn gì: bài sai trên Vịnh Feed lan thêm (feed.js → deadlineMisses)
@@ -1081,8 +1101,8 @@ export function inspectDecoy(id) {
     }
     showTip('decoy');
     const c = await dlg.choose([
-      { id: 'add', text: t('obstacles.decoyAdd', { room: roomName(d.room) }) },
-      { id: 'check', text: t('obstacles.decoyCheck') }
+      { id: 'add', text: t('obstacles.decoyAdd', { room: roomName(d.room) }), correct: false },
+      { id: 'check', text: t('obstacles.decoyCheck'), correct: true }
     ], { speaker: 'inspect', text: t('obstacles.decoyAsk') });
     setFlag(`seen_${id}`);
     saveProgress();
@@ -1339,7 +1359,9 @@ async function bossCards(ph, shares) {
   const b = data.quests.boss;
   for (;;) {
     const cards = state.progress.evidenceCards.map(evidenceById).filter(Boolean).map(ev => ({ id: ev.id, text: ev.title }));
-    const r = await dlg.multi(cards, { speaker: 'boss', text: ph.claim, submitLabel: t('boss.submit') });
+    // thẻ cốt lõi ✓, thẻ suy đoán ✗; thẻ khác không đánh dấu
+    const grade = ids => Object.fromEntries(ids.filter(id => ph.core.includes(id) || b.trapB.cards.includes(id)).map(id => [id, ph.core.includes(id) ? 'right' : 'wrong']));
+    const r = await dlg.multi(cards, { speaker: 'boss', text: ph.claim, submitLabel: t('boss.submit'), grade });
     if (r.help) { await dlg.say('npc1', ph.explain); continue; }
     if (r.ids.some(id => b.trapB.cards.includes(id))) { shares.bump(400); await bossOverreach(); continue; }
     const core = r.ids.filter(id => ph.core.includes(id));
@@ -1364,11 +1386,11 @@ async function bossReplies(ph, shares) {
   for (let k = 0; k < ph.items.length; k++) {
     const it = ph.items[k];
     await dlg.say('boss', it.comment, { mood: 'smug' });
-    const opts = shuffle(it.options.map((o, j) => ({ id: String(j), text: o.text })));
+    const opts = shuffle(it.options.map((o, j) => ({ id: String(j), text: o.text, correct: !!o.correct })));
     const timer = bossTimer(ph.timer);
-    const c = await dlg.choose(opts, { speaker: 'boss', text: `${t('boss.comment', { n: k + 1, total: ph.items.length, lives })}\n${t('boss.pickReply')}` });
-    const late = timer.left() <= 0;
-    timer.stop();
+    let left = 0; // dừng đồng hồ ngay lúc bấm (không tính thời gian hiện ✓ / ✗); hết giờ thì tính là sai
+    const c = await dlg.choose(opts, { speaker: 'boss', text: `${t('boss.comment', { n: k + 1, total: ph.items.length, lives })}\n${t('boss.pickReply')}`, onPick: () => { left = timer.left(); timer.stop(); return left > 0 ? undefined : false; } });
+    const late = left <= 0;
     if (!late && it.options[+c.id].correct) {
       reactTo('boss', 'good');
       sfx('partial');
@@ -1389,7 +1411,8 @@ async function bossReplies(ph, shares) {
 async function bossCompose(ph, shares) {
   let picked = [];
   for (;;) {
-    const r = await dlg.multi(ph.items.map(it => ({ id: it.id, text: it.text })), { speaker: 'boss', text: ph.howto, picked, submitLabel: ph.submit });
+    const grade = ids => Object.fromEntries(ids.map(id => [id, ph.items.find(it => it.id === id)?.trap ? 'wrong' : 'right']));
+    const r = await dlg.multi(ph.items.map(it => ({ id: it.id, text: it.text })), { speaker: 'boss', text: ph.howto, picked, submitLabel: ph.submit, grade });
     if (r.help) { await dlg.say('npc1', ph.explain); continue; }
     picked = r.ids;
     const chosen = ph.items.filter(it => picked.includes(it.id));

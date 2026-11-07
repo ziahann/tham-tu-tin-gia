@@ -847,3 +847,31 @@ body.backpack-open #btn-backpack { right: calc(min(420px, 100vw) + 12px); }
 .title-record-item { display: inline-flex; align-items: center; gap: 6px; color: var(--paper); }
 .title-record-item img { height: 32px; image-rendering: pixelated; }
 .endtro-home { position: absolute; left: 16px; bottom: 16px; }
+
+/* ---------- Chấm đúng / sai ngay trên giao diện trả lời ---------- */
+button.is-pick:disabled { opacity: 1; }
+.card-pick button.is-right { background: #bfe8c9; box-shadow: 0 0 0 3px var(--green); }
+.card-pick button.is-right::before { content: "✓ "; color: #1d6b3a; }
+.card-pick button.is-wrong { background: #f2c4c8; box-shadow: 0 0 0 3px var(--red); }
+.card-pick button.is-wrong::before { content: "✗ "; color: #a01f2b; }
+.frame.is-right { border-color: var(--green); box-shadow: 0 0 0 3px var(--green); }
+.frame.is-wrong { border-color: var(--red); box-shadow: 0 0 0 3px var(--red); }
+.frame.is-right::after, .frame.is-wrong::after { content: "✓"; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font-size: 2.2em; line-height: 1; color: #fff; text-shadow: 0 0 4px var(--green), 2px 2px 0 var(--ink); }
+.frame.is-wrong::after { content: "✗"; text-shadow: 0 0 4px var(--red), 2px 2px 0 var(--ink); }
+.sort-item.is-right { border-bottom-color: var(--green); }
+.sort-item.is-wrong { border-bottom-color: var(--red); }
+.sort-item.is-right p::before { content: "✓ "; color: var(--green); }
+.sort-item.is-wrong p::before { content: "✗ "; color: var(--red); }
+.sort-item.is-right button[aria-pressed="true"] { background: var(--green); box-shadow: 0 0 0 3px var(--green); }
+.sort-item.is-wrong button[aria-pressed="true"] { background: var(--red); color: var(--paper); box-shadow: 0 0 0 3px var(--red); }
+.sort-item.is-wrong button[aria-pressed="true"]::before { content: "✗ "; }
+.sort-item button:disabled { opacity: 0.8; }
+.order-seq li.is-right { color: var(--green); }
+.order-seq li.is-right::after { content: " ✓"; }
+.order-seq li.is-wrong { color: #ff8a8a; }
+.order-seq li.is-wrong::after { content: " ✗"; }
+.tl-slot.is-right .tl-drop { outline: 3px solid var(--green); }
+.tl-slot.is-wrong .tl-drop { outline: 3px solid var(--red); }
+.tl-slot.is-right .tl-drop::after { content: "✓"; color: var(--green); }
+.tl-slot.is-wrong .tl-drop::after { content: "✗"; color: #ff8a8a; }
+.tl-slot.is-right .tl-card, .tl-slot.is-wrong .tl-card { opacity: 1; }
