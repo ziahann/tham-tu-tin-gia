@@ -87,5 +87,15 @@ ok(fs.existsSync(new URL('../game/assets/badges/HONOR.png', import.meta.url)), '
 ok(!/trung bình/.test(jr.report.sum), 'journey.report.sum không còn nói "trung bình"');
 for (const k of ['obstacles.credGain', 'title.recordDone', 'title.recordTitle', 'title.recordHonor', 'title.recordBonus', 'journey.honorFile', 'journey.honorStamp', 'journey.honorResult']) ok(k.split('.').reduce((o, p) => o?.[p], uiAll), `ui.${k} thiếu`);
 ok(qd.results.home && qd.ending.home, 'results.home / ending.home thiếu');
+// Mọi bước chọn đáp án: đúng một đáp án đúng, các lựa chọn đều có lời giải thích; không còn ô gõ tay trong nhiệm vụ chấm đúng sai
+for (const q of qd.quests) for (const st of q.steps || []) {
+  if (st.type !== 'choice') continue;
+  const id = `${q.id}.${st.id}`;
+  ok(st.options.length >= 2, `${id}: cần từ 2 lựa chọn`);
+  ok(st.options.filter(o => o.correct).length === 1, `${id}: phải có đúng một đáp án đúng`);
+  ok(st.options.every(o => clean(o.feedback)), `${id}: mọi lựa chọn phải có lời giải thích`);
+  ok(new Set(st.options.map(o => o.id)).size === st.options.length, `${id}: id lựa chọn bị trùng`);
+}
+ok(!qd.quests.some(q => q.fields) && !qd.quests.some(q => (q.steps || []).some(s => s.type === 'input')), 'còn ô gõ tay trong nhiệm vụ');
 if (fails) process.exit(1);
 console.log(`✓ route: ${n} ca`);

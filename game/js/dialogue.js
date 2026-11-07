@@ -309,25 +309,37 @@ export function choose(options, opts) {
     prompt(opts);
     const list = document.createElement('div');
     list.className = `choice-list${options.length > 4 ? ' is-many' : ''}`; // nhiều lựa chọn: hai cột cho khỏi phải cuộn; số thứ tự do CSS vẽ
-    options.forEach(o => list.append(button('choice', o.text, () => {
-      sfx('click');
-      if (!o.silent) logPlayer(o.text, { choiceId: o.id });
-      els.extra.innerHTML = '';
-      resolve(o);
-    })));
+    // Lựa chọn có `correct` (true / false) được chấm ngay trên thanh: ✓ xanh hoặc ✗ đỏ, rồi khóa các nút một lúc cho kịp nhìn.
+    // `wrong: true` = đã chọn sai ở lượt trước: hiện sẵn ✗ và không chọn lại được.
+    options.forEach(o => {
+      const b = button('choice', o.text, async () => {
+        sfx('click');
+        if (o.correct !== undefined) {
+          b.classList.add('is-pick', o.correct ? 'is-right' : 'is-wrong');
+          list.querySelectorAll('button').forEach(x => { x.disabled = true; });
+          await new Promise(r => setTimeout(r, state.settings.reduceMotion ? 300 : 900));
+        }
+        if (!o.silent) logPlayer(o.text, { choiceId: o.id });
+        els.extra.innerHTML = '';
+        resolve(o);
+      });
+      if (o.wrong) { b.classList.add('is-wrong'); b.disabled = true; }
+      list.append(b);
+    });
     list.addEventListener('keydown', e => {
-      const btns = [...list.querySelectorAll('button')];
-      const i = btns.indexOf(document.activeElement);
-      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      const on = [...list.querySelectorAll('button:not(:disabled)')];
+      const i = on.indexOf(document.activeElement);
+      if ((e.key === 'ArrowDown' || e.key === 'ArrowUp') && on.length) {
         e.preventDefault();
-        btns[(i + (e.key === 'ArrowDown' ? 1 : -1) + btns.length) % btns.length].focus();
-      } else if (/^[1-9]$/.test(e.key) && btns[+e.key - 1]) {
-        btns[+e.key - 1].click();
+        on[(i + (e.key === 'ArrowDown' ? 1 : -1) + on.length) % on.length].focus();
+      } else if (/^[1-9]$/.test(e.key)) {
+        list.querySelectorAll('button')[+e.key - 1]?.click();
       }
     });
     els.extra.append(list);
     const btns = list.querySelectorAll('button');
-    (btns[opts?.focus >= 0 ? opts.focus : 0] || btns[0])?.focus();
+    const first = btns[opts?.focus >= 0 ? opts.focus : 0];
+    (first && !first.disabled ? first : list.querySelector('button:not(:disabled)'))?.focus();
   });
 }
 

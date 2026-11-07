@@ -662,13 +662,15 @@ const insight = text => realize(`✓ ${String(text || '').replace(/^Đúng[.:,]?
 
 const STEP_RUNNERS = {
   /** Chọn một đáp án; NPC nhận xét theo lựa chọn. */
-  async choice(step, npc) {
-    const options = step.options.map(o => ({ id: o.id, text: o.text, o }));
+  async choice(step, npc, qs) {
+    const tried = ((qs.tried ||= {})[step.id] ||= []); // lựa chọn đã sai: hiện sẵn ✗ khi hỏi lại
+    const options = step.options.map(o => ({ id: o.id, text: o.text, o, correct: !!o.correct, wrong: tried.includes(o.id) }));
     const c = await dlg.choose([...options, { id: '_help', text: t('dialog.help'), silent: true }],
       { speaker: npc, text: step.ask, exhibit: exhibitOf(step) });
     if (c.id === '_help') return 'help';
     sfx(c.o.correct ? 'partial' : 'wrong');
-    if (c.o.correct) await insight(c.o.feedback); else await dlg.say(npc, `✗ ${c.o.feedback}`);
+    if (c.o.correct) await insight(c.o.feedback);
+    else { tried.push(c.id); await dlg.say(npc, `✗ ${c.o.feedback}`); }
     return c.o.correct ? 'ok' : 'wrong';
   },
 
@@ -1048,7 +1050,7 @@ export async function rumorEncounter(id) {
   await conversation(id, async () => {
     await dlg.say(id, t('obstacles.rumorIntro'), { mood: 'happy' });
     await dlg.say(id, r.headline, { mood: 'happy' });
-    const opts = shuffle(r.options.map((o, k) => ({ id: String(k), text: o.text })));
+    const opts = shuffle(r.options.map((o, k) => ({ id: String(k), text: o.text, correct: !!o.correct })));
     const c = await dlg.choose(opts, { speaker: id, text: t('obstacles.rumorAsk') });
     const o = r.options[+c.id];
     if (o.correct) {

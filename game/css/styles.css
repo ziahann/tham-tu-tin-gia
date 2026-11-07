@@ -183,8 +183,14 @@ input:not([type]), input[type="text"] {
   content: counter(choice); flex: none; display: grid; place-items: center; width: 32px; height: 32px;
   background: var(--teal); color: var(--ink); border: 2px solid var(--ink);
 }
-.choice:hover, .choice:focus { background: #2a3a5c; box-shadow: inset 0 calc(var(--px) * -1) 0 rgb(0 0 0 / 0.35), 0 0 0 2px var(--straw); outline: none; }
-.choice:hover::before, .choice:focus::before { background: var(--straw); }
+.choice:not(:disabled):hover, .choice:not(:disabled):focus { background: #2a3a5c; box-shadow: inset 0 calc(var(--px) * -1) 0 rgb(0 0 0 / 0.35), 0 0 0 2px var(--straw); outline: none; }
+.choice:not(:disabled):hover::before, .choice:not(:disabled):focus::before { background: var(--straw); }
+/* chấm ngay trên thanh chọn: đúng = xanh lá ✓, sai = đỏ ✗ (các lựa chọn đã sai ở lượt trước bị mờ đi) */
+.choice.is-right { background: #1d4a33; box-shadow: inset 0 calc(var(--px) * -1) 0 rgb(0 0 0 / 0.35), 0 0 0 2px var(--green); }
+.choice.is-right::before { content: "✓"; background: var(--green); }
+.choice.is-wrong { background: #4a2128; box-shadow: inset 0 calc(var(--px) * -1) 0 rgb(0 0 0 / 0.35), 0 0 0 2px var(--red); }
+.choice.is-wrong::before { content: "✗"; background: var(--red); color: var(--paper); }
+.choice.is-pick:disabled { opacity: 1; }
 .choice:active { transform: translateY(1px); }
 .dialog-extra { scrollbar-width: thin; scrollbar-color: var(--teal) var(--night); }
 .card-pick { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 6px; }

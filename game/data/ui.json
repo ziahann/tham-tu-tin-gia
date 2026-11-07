@@ -303,7 +303,7 @@
       "app": "Máy dò ảnh AI · bản ghi Hive",
       "tutorial": [
         "Hướng dẫn · Máy dò ảnh AI: đọc bản ghi kết quả của công cụ (Hive), gồm phần trăm khả năng ảnh do AI tạo và nguồn tạo dự đoán.",
-        "Gõ con số hoặc tên đúng như trong bản ghi.",
+        "Chọn con số hoặc tên đúng như trong bản ghi; chọn xong sẽ thấy ngay đúng hay sai.",
         "Nhớ: máy dò chỉ là bằng chứng bổ trợ, có thể sai. Luôn kết hợp với nguồn gốc ảnh và chi tiết bất thường."
       ]
     },
@@ -312,7 +312,7 @@
       "app": "Kho báo · tóm tắt các bài đã kiểm tra",
       "tutorial": [
         "Hướng dẫn · Đầu đọc kho báo: mỗi thẻ ở trên là một bài báo đã kiểm tra. Bấm thẻ để đọc tóm tắt.",
-        "Bấm một dòng trong bài để ghi vào sổ tay (balo → Sổ tay). Câu trả lời phải lấy từ bài đã đọc, gõ vào ô bên dưới."
+        "Bấm một dòng trong bài để ghi vào sổ tay (balo → Sổ tay). Câu trả lời phải lấy từ bài đã đọc; chọn đáp án ở bên dưới, chọn xong sẽ thấy ngay đúng hay sai."
       ]
     },
     "timeline": {

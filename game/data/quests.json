@@ -234,90 +234,14 @@
       "mode": "G1",
       "required": true,
       "title": "Xác lập sự kiện thật",
-      "todo": "Mình cần đọc các bài báo chính thống để điền lại những dữ kiện kiểm chứng được về vụ tai nạn mà chị Tuệ Lâm hỏi.",
+      "todo": "Mình cần đọc các bài báo chính thống để xác định những dữ kiện kiểm chứng được về vụ tai nạn mà chị Tuệ Lâm hỏi.",
       "npcIntro": "s3_q2_intro",
-      "question": "Mở nguồn báo chí và điền các dữ kiện có thể kiểm chứng về vụ tai nạn. Mỗi câu chị hỏi đều có trong các bài dưới đây.",
+      "question": "Mở nguồn báo chí và chọn đúng các dữ kiện có thể kiểm chứng về vụ tai nạn. Mỗi câu chị hỏi đều có trong các bài dưới đây.",
       "resources": [
         "thuthao2025",
         "minhkhang2025"
       ],
       "safetyNote": "Đây là thảm kịch có thật. Đọc nguồn với sự tôn trọng người bị nạn và gia đình.",
-      "fields": [
-        {
-          "id": "date",
-          "label": "Ngày xảy ra",
-          "input": "text",
-          "placeholder": "ngày/tháng/năm",
-          "accepts": [
-            "19/7/2025",
-            "19-7-2025",
-            "19.7.2025",
-            "19 thang 7 nam 2025",
-            "19 thang 7 2025",
-            "19/7",
-            "19-7",
-            "19 thang 7"
-          ],
-          "fuzzy": false,
-          "ask": "Theo nguồn, tai nạn xảy ra ngày nào?",
-          "hints": [
-            "Tìm cụm từ chỉ thời gian ngay câu đầu bài VTV.",
-            "Bài viết có câu \"xảy ra vào chiều.../7 trên Vịnh Hạ Long\".",
-            "Năm: xem ngày đăng bài (tháng 7/2025)."
-          ],
-          "walkthrough": "19/7/2025, ngay câu đầu bài VTV (\"xảy ra vào chiều 19/7\")."
-        },
-        {
-          "id": "place",
-          "label": "Địa điểm",
-          "input": "text",
-          "accepts": [
-            "ha long",
-            "quang ninh"
-          ],
-          "ask": "Tai nạn xảy ra ở đâu?",
-          "hints": [
-            "Địa danh nằm ngay trong tiêu đề bài VTV.",
-            "Đó là một vịnh di sản thế giới ở tỉnh Quảng Ninh."
-          ],
-          "walkthrough": "Hạ Long (Quảng Ninh), có trong tiêu đề bài VTV."
-        },
-        {
-          "id": "ship",
-          "label": "Tên tàu (hoặc số hiệu)",
-          "input": "text",
-          "accepts": [
-            "vinh xanh 58",
-            "qn-7105",
-            "qn 7105",
-            "qn7105"
-          ],
-          "ask": "Tên tàu (hoặc số hiệu) là gì?",
-          "hints": [
-            "Tên tàu đứng ngay sau cụm \"vụ lật tàu du lịch\" trong bài VTV.",
-            "Tên gồm hai chữ và một con số; số hiệu trong ngoặc bắt đầu bằng QN."
-          ],
-          "walkthrough": "Vịnh Xanh 58 (số hiệu QN-7105), ở câu \"Vụ lật tàu du lịch...\" của bài VTV."
-        },
-        {
-          "id": "cause",
-          "label": "Nguyên nhân theo nguồn",
-          "input": "text",
-          "accepts": [
-            "giong loc",
-            "dong loc",
-            "giong",
-            "loc"
-          ],
-          "ask": "Theo phát biểu của lãnh đạo tỉnh Quảng Ninh tại họp báo ngày 20/7, nguyên nhân là gì? (Đây là phát biểu, không phải kết luận điều tra.)",
-          "hints": [
-            "Bài VTV không nói nguyên nhân. Hãy mở bài của Báo Sài Gòn Giải Phóng (SGGP).",
-            "Tìm phát biểu của lãnh đạo tỉnh Quảng Ninh tại họp báo ngày 20/7.",
-            "Đó là một hiện tượng thời tiết có gió xoáy mạnh, xuất hiện ngay trong tiêu đề bài SGGP."
-          ],
-          "walkthrough": "Dông lốc (giông lốc), theo bài SGGP: lãnh đạo tỉnh Quảng Ninh nói tại họp báo ngày 20/7."
-        }
-      ],
       "feedback": {
         "correct": "Ghi lại sự kiện thật trước, mình mới có mốc để so với những nội dung đang lan truyền.",
         "partial": "Các ô có dấu ✗ chưa khớp với nguồn, em đọc lại nhé.",
@@ -336,6 +260,142 @@
         "thuthao2025",
         "minhkhang2025",
         "baocao"
+      ],
+      "steps": [
+        {
+          "id": "date",
+          "ask": "Theo nguồn, tai nạn xảy ra ngày nào?",
+          "hints": [
+            "Tìm cụm từ chỉ thời gian ngay câu đầu bài VTV.",
+            "Bài viết có câu \"xảy ra vào chiều.../7 trên Vịnh Hạ Long\".",
+            "Năm: xem ngày đăng bài (tháng 7/2025)."
+          ],
+          "walkthrough": "19/7/2025, ngay câu đầu bài VTV (\"xảy ra vào chiều 19/7\").",
+          "type": "choice",
+          "options": [
+            {
+              "id": "a",
+              "text": "20/7/2025",
+              "feedback": "Ngày 20/7 là ngày họp báo của tỉnh, tai nạn xảy ra trước đó."
+            },
+            {
+              "id": "b",
+              "text": "19/7/2025",
+              "correct": true,
+              "feedback": "Bài VTV ghi tai nạn xảy ra vào chiều 19/7."
+            },
+            {
+              "id": "c",
+              "text": "21/7/2025",
+              "feedback": "Ngày 21/7 là ngày báo chí đưa tin công an xử lý người đăng tin sai, không phải ngày tai nạn."
+            },
+            {
+              "id": "d",
+              "text": "22/7/2025",
+              "feedback": "Ngày 22/7 là ngày VTV đăng bài về ảnh do AI dựng, không phải ngày tai nạn."
+            }
+          ]
+        },
+        {
+          "id": "place",
+          "ask": "Tai nạn xảy ra ở đâu?",
+          "hints": [
+            "Địa danh nằm ngay trong tiêu đề bài VTV.",
+            "Đó là một vịnh di sản thế giới ở tỉnh Quảng Ninh."
+          ],
+          "walkthrough": "Hạ Long (Quảng Ninh), có trong tiêu đề bài VTV.",
+          "type": "choice",
+          "options": [
+            {
+              "id": "a",
+              "text": "Vịnh Nha Trang (Khánh Hòa)",
+              "feedback": "Tiêu đề bài VTV nói rõ vịnh Hạ Long."
+            },
+            {
+              "id": "b",
+              "text": "Vịnh Lan Hạ (Hải Phòng)",
+              "feedback": "Tiêu đề bài VTV nói rõ vịnh Hạ Long, tỉnh Quảng Ninh."
+            },
+            {
+              "id": "c",
+              "text": "Vịnh Hạ Long (Quảng Ninh)",
+              "correct": true,
+              "feedback": "Tiêu đề bài VTV nói tàu lật trên vịnh Hạ Long, Quảng Ninh."
+            },
+            {
+              "id": "d",
+              "text": "Đảo Phú Quốc (Kiên Giang)",
+              "feedback": "Tiêu đề bài VTV nói rõ vịnh Hạ Long."
+            }
+          ]
+        },
+        {
+          "id": "ship",
+          "ask": "Tên tàu (hoặc số hiệu) là gì?",
+          "hints": [
+            "Tên tàu đứng ngay sau cụm \"vụ lật tàu du lịch\" trong bài VTV.",
+            "Tên gồm hai chữ và một con số; số hiệu trong ngoặc bắt đầu bằng QN."
+          ],
+          "walkthrough": "Vịnh Xanh 58 (số hiệu QN-7105), ở câu \"Vụ lật tàu du lịch...\" của bài VTV.",
+          "type": "choice",
+          "options": [
+            {
+              "id": "a",
+              "text": "Vịnh Xanh 85 (QN-7105)",
+              "feedback": "Số 58, không phải 85: tên tàu phải khớp từng chữ với bài VTV."
+            },
+            {
+              "id": "b",
+              "text": "Vịnh Xanh 58 (QN-5107)",
+              "feedback": "Số hiệu trong bài là QN-7105: các chữ số phải khớp đúng."
+            },
+            {
+              "id": "c",
+              "text": "Vịnh Xanh 58 (QN-7105)",
+              "correct": true,
+              "feedback": "Bài VTV ghi vụ lật tàu du lịch Vịnh Xanh 58, số hiệu QN-7105."
+            },
+            {
+              "id": "d",
+              "text": "Vịnh Xanh 68 (QN-7015)",
+              "feedback": "Cả tên lẫn số hiệu đều lệch so với bài VTV (Vịnh Xanh 58, QN-7105)."
+            }
+          ]
+        },
+        {
+          "id": "cause",
+          "ask": "Theo phát biểu của lãnh đạo tỉnh Quảng Ninh tại họp báo ngày 20/7, nguyên nhân là gì? (Đây là phát biểu, không phải kết luận điều tra.)",
+          "hints": [
+            "Bài VTV không nói nguyên nhân. Hãy mở bài của Báo Sài Gòn Giải Phóng (SGGP).",
+            "Tìm phát biểu của lãnh đạo tỉnh Quảng Ninh tại họp báo ngày 20/7.",
+            "Đó là một hiện tượng thời tiết có gió xoáy mạnh, xuất hiện ngay trong tiêu đề bài SGGP."
+          ],
+          "walkthrough": "Dông lốc (giông lốc), theo bài SGGP: lãnh đạo tỉnh Quảng Ninh nói tại họp báo ngày 20/7.",
+          "type": "choice",
+          "options": [
+            {
+              "id": "a",
+              "text": "Bão Yagi",
+              "feedback": "Bão Yagi là năm 2024, không liên quan vụ này."
+            },
+            {
+              "id": "b",
+              "text": "Sương mù dày đặc",
+              "feedback": "Bài SGGP không nhắc tới sương mù."
+            },
+            {
+              "id": "c",
+              "text": "Triều cường",
+              "feedback": "Bài SGGP không nhắc tới triều cường."
+            },
+            {
+              "id": "d",
+              "text": "Dông lốc (giông lốc) rất lớn",
+              "correct": true,
+              "feedback": "Tại họp báo ngày 20/7, lãnh đạo tỉnh nói dông lốc rất lớn chiều 19/7 là nguyên nhân khiến tàu bị lật (đây là phát biểu, không phải kết luận điều tra)."
+            }
+          ]
+        }
       ]
     },
     {
@@ -701,38 +761,72 @@
       "steps": [
         {
           "id": "s1",
-          "type": "input",
+          "type": "choice",
           "exhibit": "hive",
           "ask": "Theo bản ghi, Hive ước tính khả năng khung 3 là ảnh do AI tạo là bao nhiêu phần trăm?",
-          "accepts": [
-            "99,9",
-            "99.9",
-            "99 9"
-          ],
-          "fuzzy": false,
-          "placeholder": "ví dụ: 50%",
           "hints": [
             "Xem hàng đầu tiên của bản ghi Hive.",
             "Con số gần 100%."
           ],
           "walkthrough": "99,9% (hàng \"Khả năng ảnh do AI tạo\", cột \"Khung 3\").",
-          "tool": "detector"
+          "tool": "detector",
+          "options": [
+            {
+              "id": "a",
+              "text": "70%",
+              "feedback": "70% là xác suất nguồn tạo Imagen 4 ở khung 3, không phải khả năng ảnh do AI tạo."
+            },
+            {
+              "id": "b",
+              "text": "99,9%",
+              "correct": true,
+              "feedback": "Hàng \"Khả năng ảnh do AI tạo\", cột \"Khung 3\" ghi 99,9%."
+            },
+            {
+              "id": "c",
+              "text": "0%",
+              "feedback": "0% là ở hàng khả năng deepfake, không phải khả năng ảnh do AI tạo."
+            },
+            {
+              "id": "d",
+              "text": "86,1%",
+              "feedback": "86,1% là xác suất nguồn tạo Imagen 4 ở khung 11, không phải khả năng ảnh do AI tạo."
+            }
+          ]
         },
         {
           "id": "s2",
-          "type": "input",
+          "type": "choice",
           "exhibit": "hive",
           "ask": "Công cụ dự đoán nguồn tạo ảnh nhiều khả năng nhất là gì?",
-          "accepts": [
-            "imagen 4",
-            "imagen"
-          ],
-          "placeholder": "tên mô hình",
           "hints": [
             "Xem hàng \"Nguồn tạo dự đoán #1\"."
           ],
           "walkthrough": "Imagen 4 (hàng \"Nguồn tạo dự đoán #1\", cả hai khung).",
-          "tool": "detector"
+          "tool": "detector",
+          "options": [
+            {
+              "id": "a",
+              "text": "Gemini",
+              "feedback": "Gemini chỉ đứng thứ hai (23,6% ở khung 3, 12,6% ở khung 11)."
+            },
+            {
+              "id": "b",
+              "text": "Content Credentials",
+              "feedback": "Đó là thông tin nguồn gốc gắn trong ảnh; bản ghi ghi \"Không tìm thấy\"."
+            },
+            {
+              "id": "c",
+              "text": "Imagen 4",
+              "correct": true,
+              "feedback": "Hàng \"Nguồn tạo dự đoán #1\": cả hai khung đều là Imagen 4."
+            },
+            {
+              "id": "d",
+              "text": "Deepfake",
+              "feedback": "Khả năng deepfake là 0%, và đó cũng không phải tên một mô hình tạo ảnh."
+            }
+          ]
         },
         {
           "id": "s3",
@@ -799,61 +893,114 @@
       "steps": [
         {
           "id": "s1",
-          "type": "input",
+          "type": "choice",
           "resources": [
             "hoaianh2025"
           ],
           "ask": "Một số video được gắn là vụ 19/7 thật ra quay trong đợt bão nào?",
-          "accepts": [
-            "yagi"
-          ],
-          "placeholder": "tên cơn bão",
           "hints": [
             "Đọc bài VnExpress, đoạn nói về nguồn gốc các video.",
             "Cơn bão lớn đổ bộ miền Bắc năm 2024, tên bốn chữ cái."
           ],
           "walkthrough": "Yagi, ở câu \"Một số video lấy từ đợt bão...\" của bài VnExpress.",
-          "tool": "archive"
+          "tool": "archive",
+          "options": [
+            {
+              "id": "a",
+              "text": "Doksuri",
+              "feedback": "Bài VnExpress nêu bão Yagi, năm 2024."
+            },
+            {
+              "id": "b",
+              "text": "Yagi",
+              "correct": true,
+              "feedback": "Bài VnExpress: một số video lấy từ đợt bão Yagi năm 2024."
+            },
+            {
+              "id": "c",
+              "text": "Noru",
+              "feedback": "Bài VnExpress nêu bão Yagi, năm 2024."
+            },
+            {
+              "id": "d",
+              "text": "Damrey",
+              "feedback": "Bài VnExpress nêu bão Yagi, năm 2024."
+            }
+          ]
         },
         {
           "id": "s2",
-          "type": "input",
+          "type": "choice",
           "resources": [
             "hoaianh2025"
           ],
           "ask": "Video tàu chìm còn lại thật ra quay ở quốc gia nào?",
-          "accepts": [
-            "congo",
-            "cong go"
-          ],
-          "placeholder": "tên quốc gia",
           "hints": [
             "Vẫn trong bài VnExpress, ngay sau đoạn về bão.",
             "Một quốc gia ở châu Phi; sự việc tháng 10/2024."
           ],
           "walkthrough": "Congo, ở câu \"Một số khác là cảnh tàu chìm ở... tháng 10/2024\" của bài VnExpress.",
-          "tool": "archive"
+          "tool": "archive",
+          "options": [
+            {
+              "id": "a",
+              "text": "Indonesia",
+              "feedback": "Bài VnExpress nêu vụ chìm tàu ở Congo, tháng 10/2024."
+            },
+            {
+              "id": "b",
+              "text": "Philippines",
+              "feedback": "Bài VnExpress nêu vụ chìm tàu ở Congo, tháng 10/2024."
+            },
+            {
+              "id": "c",
+              "text": "Congo",
+              "correct": true,
+              "feedback": "Bài VnExpress: cảnh tàu chìm ở Congo, tháng 10/2024."
+            },
+            {
+              "id": "d",
+              "text": "Ấn Độ",
+              "feedback": "Bài VnExpress nêu vụ chìm tàu ở Congo, tháng 10/2024."
+            }
+          ]
         },
         {
           "id": "s3",
-          "type": "input",
+          "type": "choice",
           "resources": [
             "minhthu2025"
           ],
           "ask": "Ảnh nhóm trẻ em tham quan vịnh thật ra được chụp năm nào?",
-          "accepts": [
-            "2024",
-            "8/2024",
-            "thang 8 2024"
-          ],
-          "fuzzy": false,
-          "placeholder": "năm",
           "hints": [
             "Đọc bài VietnamPlus, đoạn chủ ảnh lên tiếng.",
             "Ảnh chụp trong chuyến du lịch của gia đình chủ ảnh, trước vụ tai nạn một năm."
           ],
           "walkthrough": "Năm 2024 (tháng 8/2024), theo bài VietnamPlus: ảnh chụp trong chuyến du lịch Hạ Long của gia đình chủ ảnh.",
-          "tool": "archive"
+          "tool": "archive",
+          "options": [
+            {
+              "id": "a",
+              "text": "2022",
+              "feedback": "Bài VietnamPlus: ảnh chụp trong chuyến du lịch của gia đình chủ ảnh vào tháng 8/2024."
+            },
+            {
+              "id": "b",
+              "text": "2023",
+              "feedback": "Bài VietnamPlus: ảnh chụp trong chuyến du lịch của gia đình chủ ảnh vào tháng 8/2024."
+            },
+            {
+              "id": "c",
+              "text": "2025",
+              "feedback": "Nếu chụp năm 2025 thì có thể là ảnh vụ tai nạn; bài VietnamPlus nói ảnh chụp tháng 8/2024, trước đó một năm."
+            },
+            {
+              "id": "d",
+              "text": "2024",
+              "correct": true,
+              "feedback": "Bài VietnamPlus: ảnh nhóm trẻ em chụp trong chuyến du lịch Hạ Long tháng 8/2024."
+            }
+          ]
         },
         {
           "id": "s4",

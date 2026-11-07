@@ -1,17 +1,13 @@
 // Kiểm tra chấm đáp án gõ tay (game/js/text.js) và tìm đường (game/js/pathfind.js) bằng node, không cần trình duyệt.
 // Chạy ở thư mục gốc repo: node tools/test-grading.mjs
-import fs from 'node:fs';
 import { normalize, matchField } from '../game/js/text.js';
 import { findPath } from '../game/js/pathfind.js';
 
-const quests = JSON.parse(fs.readFileSync(new URL('../game/data/quests.json', import.meta.url), 'utf8')).quests;
-const field = id => {
-  for (const q of quests) for (const f of [...(q.fields || []), ...(q.steps || [])]) if (f.id === id) return f.accepts;
-  throw new Error(`không có trường ${id}`);
-};
-const step = (qid, i) => quests.find(q => q.id === qid).steps[i].accepts;
-const date = field('date'), vessel = field('ship'), cause = field('cause');
-const pct = step('q6_detector', 0), model = step('q6_detector', 1), year = step('q7_oldclips', 2);
+// Bước `input` (gõ tay) hiện chưa có nhiệm vụ nào dùng (đã chuyển sang chọn đáp án): kiểm bằng đáp án mẫu.
+const date = ['19/7/2025', '19-7-2025', '19.7.2025', '19 thang 7 nam 2025', '19 thang 7 2025', '19/7', '19-7', '19 thang 7'];
+const vessel = ['vinh xanh 58', 'qn-7105', 'qn 7105', 'qn7105'];
+const cause = ['giong loc', 'dong loc', 'giong', 'loc'];
+const pct = ['99,9', '99.9', '99 9'], model = ['imagen 4', 'imagen'], year = ['2024', '8/2024', 'thang 8 2024'];
 
 let fails = 0;
 const eq = (got, want, label) => {
