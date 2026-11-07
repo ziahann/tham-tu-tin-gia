@@ -265,7 +265,7 @@
             "Bài viết có câu \"xảy ra vào chiều.../7 trên Vịnh Hạ Long\".",
             "Năm: xem ngày đăng bài (tháng 7/2025)."
           ],
-          "walkthrough": "Mở bài VTV → đọc câu đầu tiên của bài → chép phần ngày tháng sau chữ \"chiều\"."
+          "walkthrough": "19/7/2025, ngay câu đầu bài VTV (\"xảy ra vào chiều 19/7\")."
         },
         {
           "id": "place",
@@ -280,7 +280,7 @@
             "Địa danh nằm ngay trong tiêu đề bài VTV.",
             "Đó là một vịnh di sản thế giới ở tỉnh Quảng Ninh."
           ],
-          "walkthrough": "Mở bài VTV → đọc tiêu đề bài: \"...lật tàu du lịch ở vịnh... để câu view bằng AI\"."
+          "walkthrough": "Hạ Long (Quảng Ninh), có trong tiêu đề bài VTV."
         },
         {
           "id": "ship",
@@ -297,7 +297,7 @@
             "Tên tàu đứng ngay sau cụm \"vụ lật tàu du lịch\" trong bài VTV.",
             "Tên gồm hai chữ và một con số; số hiệu trong ngoặc bắt đầu bằng QN."
           ],
-          "walkthrough": "Mở bài VTV → tìm cụm \"Vụ lật tàu du lịch...\" → chép tên tàu (hoặc số hiệu trong ngoặc)."
+          "walkthrough": "Vịnh Xanh 58 (số hiệu QN-7105), ở câu \"Vụ lật tàu du lịch...\" của bài VTV."
         },
         {
           "id": "cause",
@@ -315,7 +315,7 @@
             "Tìm phát biểu của lãnh đạo tỉnh Quảng Ninh tại họp báo ngày 20/7.",
             "Đó là một hiện tượng thời tiết có gió xoáy mạnh, xuất hiện ngay trong tiêu đề bài SGGP."
           ],
-          "walkthrough": "Mở bài SGGP → đọc tiêu đề \"Tin cảnh báo... được công bố khi tàu Vịnh Xanh 58 đã rời bến\" → tìm câu \"Đây là nguyên nhân khiến tàu Vịnh Xanh 58 bị lật\" và xem câu ngay trước nó."
+          "walkthrough": "Dông lốc (giông lốc), theo bài SGGP: lãnh đạo tỉnh Quảng Ninh nói tại họp báo ngày 20/7."
         }
       ],
       "feedback": {
@@ -376,7 +376,7 @@
             "Nhìn cột \"Loại kết quả\" trong bản ghi.",
             "Đọc dòng ghi chú cuối bản ghi."
           ],
-          "walkthrough": "Đọc dòng cuối bản ghi Lens: \"Không có kết quả nào từ hãng tin, phóng viên hay nhân chứng tại hiện trường.\"",
+          "walkthrough": "Không có. Dòng cuối bản ghi Lens ghi: \"Không có kết quả nào từ hãng tin, phóng viên hay nhân chứng tại hiện trường.\"",
           "tool": "computer"
         },
         {
@@ -414,7 +414,7 @@
             "Cột bên phải của bản ghi cho biết loại kết quả.",
             "Các trang trong bản ghi đều đăng cùng một kiểu bài."
           ],
-          "walkthrough": "Nhìn cột \"Loại kết quả\": cả 5 dòng đều là bài cảnh báo ảnh giả.",
+          "walkthrough": "Bài cảnh báo / đính chính ảnh giả: cả 5 dòng ở cột \"Loại kết quả\" đều như vậy.",
           "tool": "computer"
         },
         {
@@ -665,7 +665,7 @@
             "Tìm trong bài câu có cụm \"AI dựng nên\".",
             "Bài cũng nói về chú thích \"tình tiết hư cấu\" khó nhìn thấy."
           ],
-          "walkthrough": "Mở bài VTV → tìm câu \"Tất cả hình ảnh và câu chuyện đều do AI dựng nên\"."
+          "walkthrough": "\"Đều do AI dựng nên, không trích nguồn chính thống\", theo câu \"Tất cả hình ảnh và câu chuyện đều do AI dựng nên\" của bài VTV."
         }
       ],
       "feedback": {
@@ -715,7 +715,7 @@
             "Xem hàng đầu tiên của bản ghi Hive.",
             "Con số gần 100%."
           ],
-          "walkthrough": "Hàng \"Khả năng ảnh do AI tạo\", cột \"Khung 3\".",
+          "walkthrough": "99,9% (hàng \"Khả năng ảnh do AI tạo\", cột \"Khung 3\").",
           "tool": "detector"
         },
         {
@@ -731,7 +731,7 @@
           "hints": [
             "Xem hàng \"Nguồn tạo dự đoán #1\"."
           ],
-          "walkthrough": "Hàng \"Nguồn tạo dự đoán #1\": cả hai khung đều là Imagen 4.",
+          "walkthrough": "Imagen 4 (hàng \"Nguồn tạo dự đoán #1\", cả hai khung).",
           "tool": "detector"
         },
         {
@@ -812,7 +812,7 @@
             "Đọc bài VnExpress, đoạn nói về nguồn gốc các video.",
             "Cơn bão lớn đổ bộ miền Bắc năm 2024, tên bốn chữ cái."
           ],
-          "walkthrough": "Mở bài VnExpress → tìm câu \"Một số video lấy từ đợt bão...\" → chép tên bão.",
+          "walkthrough": "Yagi, ở câu \"Một số video lấy từ đợt bão...\" của bài VnExpress.",
           "tool": "archive"
         },
         {
@@ -831,7 +831,7 @@
             "Vẫn trong bài VnExpress, ngay sau đoạn về bão.",
             "Một quốc gia ở châu Phi; sự việc tháng 10/2024."
           ],
-          "walkthrough": "Bài VnExpress → câu \"Một số khác là cảnh tàu chìm ở... tháng 10/2024\".",
+          "walkthrough": "Congo, ở câu \"Một số khác là cảnh tàu chìm ở... tháng 10/2024\" của bài VnExpress.",
           "tool": "archive"
         },
         {
@@ -852,7 +852,7 @@
             "Đọc bài VietnamPlus, đoạn chủ ảnh lên tiếng.",
             "Ảnh chụp trong chuyến du lịch của gia đình chủ ảnh, trước vụ tai nạn một năm."
           ],
-          "walkthrough": "Mở bài VietnamPlus → tìm câu \"chụp trong chuyến du lịch Hạ Long của gia đình vào tháng 8/...\".",
+          "walkthrough": "Năm 2024 (tháng 8/2024), theo bài VietnamPlus: ảnh chụp trong chuyến du lịch Hạ Long của gia đình chủ ảnh.",
           "tool": "archive"
         },
         {
@@ -1795,7 +1795,7 @@
         "timer": 20,
         "lives": 3,
         "claim": "Ngươi gỡ được một bài thì sao? Người của ta đang tràn vào bình luận.",
-        "howto": "Bình luận phản công hiện lên liên tục. Chọn câu trả lời đúng, có căn cứ, trước khi hết giờ. Em có 3 lượt chịu sai.",
+        "howto": "Bình luận phản công hiện lên liên tục. Chọn câu trả lời đúng, có căn cứ, trước khi hết giờ.",
         "items": [
           {
             "comment": "\"Video có thật mà, sao các người bảo là giả?\"",

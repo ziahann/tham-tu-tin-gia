@@ -8,6 +8,7 @@ import { exhibitFor, frameGrid, singleFrame } from './exhibits.js';
 import { normalize, containsPhrase } from './text.js';
 import { sfx } from './audio.js';
 import { toast } from './ui.js';
+import { trustScore } from './backpack.js';
 import { playEndtro } from './ending.js';
 import { playMusic } from './music.js';
 import { toolWindow, browseContent, deviceSpeaker } from './tools.js';
@@ -235,11 +236,14 @@ async function helpMenu(q, qs, npc, afterWrong, field = null) {
   const key = field?.id || '_quest';
   qs.hintsBy ||= {};
   const used = qs.hintsBy[key] || 0;
+  // gợi ý đầu của mỗi câu miễn phí; từ gợi ý thứ hai và xem đáp án trừ độ tin cậy (chế độ Nhẹ, hồ sơ đã khép: không trừ)
+  const cost = !isLight() && caseOpen(q.room) ? PENALTY.hint : 0;
+  const tag = cost ? t('dialog.costTag', { n: cost }) : '';
   const options = [
     { id: 'retry', text: afterWrong ? t('dialog.retry') : t('dialog.backToAnswer') },
-    ...(hints.length ? [{ id: 'hint', text: t('dialog.hint', { n: Math.min(used + 1, hints.length), max: hints.length }) }] : []),
+    ...(hints.length ? [{ id: 'hint', text: t('dialog.hint', { n: Math.min(used + 1, hints.length), max: hints.length }) + (used >= 1 && used < hints.length ? tag : '') }] : []),
     ...(resources?.length ? [{ id: 'sources', text: t('dialog.reopenSources') }] : []),
-    ...(walkthrough ? [{ id: 'walk', text: t('dialog.cantFind') }] : []),
+    ...(walkthrough ? [{ id: 'walk', text: t('dialog.cantFind') + tag }] : []),
     { id: 'later', text: t('dialog.later') }
   ];
   if (hints.length) showTip('hint');
@@ -252,13 +256,15 @@ async function helpMenu(q, qs, npc, afterWrong, field = null) {
       qs.hints++; // tổng số gợi ý, dùng để tính điểm
       saveProgress();
       await dlg.say(npc, t('dialog.hintLine', { n: used + 1, max: hints.length, text: hints[used] }));
+      if (used >= 1 && cost && await creditHit(q.room, cost, npc)) return 'later';
     }
   } else if (c.id === 'sources') {
     await showSources(q, npc, t('dialog.openSourcesLine'), resources);
   } else if (c.id === 'walk') {
     qs.walkthrough = true;
     saveProgress();
-    await dlg.say(npc, t('dialog.walkthrough', { text: walkthrough }));
+    await dlg.say(npc, t('dialog.walkthrough', { text: walkthrough.replace(/^Chọn:?s*/, '') }));
+    if (cost && await creditHit(q.room, cost, npc)) return 'later';
   } else if (c.id === 'later') {
     await dlg.say(npc, t('dialog.laterLine'));
     return 'later';
@@ -998,13 +1004,17 @@ export async function deadlineCall(room) {
       { id: 'yes', text: t('obstacles.deadlinePublish') }
     ], { speaker: 'npc4', text: t('obstacles.deadlineCall', { room: roomName(room) }) });
     state.progress.pressure = 0;
+    // thanh đầy mà chưa xong hồ sơ = trễ hạn, dù chọn gì: bài sai trên Vịnh Feed lan thêm (feed.js → deadlineMisses)
+    const late = state.progress.deadlineMisses = (state.progress.deadlineMisses || 0) + 1;
     saveProgress();
     if (c.id === 'no') {
       sfx('partial');
       await dlg.say('npc4', t('obstacles.deadlineRefuseLine'), { mood: 'serious' });
+      await dlg.say('system', t('obstacles.deadlineMissed', { n: late }));
     } else {
       sfx('wrong');
       await dlg.say('system', t('obstacles.deadlinePublishLine'));
+      await dlg.say('system', t('obstacles.deadlineMissed', { n: late }));
       await creditHit(room, PENALTY.publish);
     }
   });
@@ -1333,7 +1343,10 @@ async function bossCards(ph, shares) {
 
 /** Bước 2 — trả lời bình luận: từng bình luận một, chọn câu trả lời có căn cứ trong thời gian ngắn. */
 async function bossReplies(ph, shares) {
-  let lives = ph.lives;
+  // độ tin cậy trung bình từ 80: +1 lượt; dưới 50: −1 lượt
+  const cred = trustScore();
+  let lives = Math.max(1, ph.lives + (cred >= 80 ? 1 : cred < 50 ? -1 : 0));
+  await dlg.say('system', t('boss.lives', { cred, lives }));
   for (let k = 0; k < ph.items.length; k++) {
     const it = ph.items[k];
     await dlg.say('boss', it.comment, { mood: 'smug' });

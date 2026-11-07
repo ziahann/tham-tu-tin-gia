@@ -26,6 +26,8 @@ const fmt = n => Math.round(n).toLocaleString('vi-VN');
 const all = flags => (flags || []).every(hasFlag);
 const posts = () => data.npcs.feed?.posts || [];
 const prog = () => (state.progress.feed ||= {});
+/** Số lần để thanh hạn chót đầy khi chưa xong hồ sơ (story.js → deadlineCall). */
+export const deadlineMisses = () => state.progress?.deadlineMisses || 0;
 
 /** Bài đang hiện: đủ điều kiện `after` (cờ đã có). */
 function visiblePosts() {
@@ -55,7 +57,7 @@ export function feedPressureRate() {
 /** Lượt chia sẻ bài sai ở đầu trận cuối: tăng theo bài sai còn lan, giảm theo ghi chú đã thêm. */
 export function bossStartShares() {
   const notes = Object.values(prog()).filter(m => m.note || m.reply).length;
-  return Math.max(400, 1200 + 500 * spreading().length - 150 * notes);
+  return Math.max(400, 1200 + 500 * spreading().length + 350 * deadlineMisses() - 150 * notes);
 }
 
 /** Lượt chia sẻ: bài sai tăng dần theo thời gian trong game cho tới khi được xử lý thì dừng. */
@@ -65,7 +67,7 @@ function sharesOf(p) {
   const m = prog()[p.id] || {};
   if (m.frozen) return m.frozen;
   const age = Math.max(0, (state.progress.feedT || 0) - (state.progress.feedSeen?.[p.id] ?? 0));
-  return base * (1 + Math.min(2, age / 180));
+  return base * (1 + Math.min(2, age / 180)) * (1 + 0.2 * deadlineMisses());
 }
 
 /** Số bài sai chưa xử lý (chấm đỏ trên tab và nút balo). */
@@ -138,7 +140,7 @@ export function vinhFeed(onChange = () => {}) {
     bar.append(fill);
     heat.classList.toggle('is-hot', h >= 0.5);
     heat.append(el('span', null, t('feed.heat')), bar,
-      el('span', 'feed-heat-txt', h > 0 ? t('feed.heatOn', { n: spreading().length, x: feedPressureRate().toFixed(1).replace('.', ',') }) : t('feed.heatOff')));
+      el('span', 'feed-heat-txt', (h > 0 ? t('feed.heatOn', { n: spreading().length, x: feedPressureRate().toFixed(1).replace('.', ',') }) : t('feed.heatOff')) + (deadlineMisses() ? ` · ${t('feed.late', { n: deadlineMisses() })}` : '')));
   };
 
   const render = () => {
