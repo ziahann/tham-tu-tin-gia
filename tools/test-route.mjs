@@ -70,5 +70,13 @@ ok(ending.bonus?.lines?.length && ending.bonus.lines.every(l => clean(l.text)), 
 for (const k of ['skip', 'close', 'thanks']) ok(clean(ending[k]), `ending.${k} thiếu`);
 for (const k of ['title', 'authors', 'course', 'music', 'art']) ok(clean(ending.credits?.[k]), `ending.credits.${k} thiếu`);
 for (const k of ['ending', 'endingAsk', 'endingMain', 'endingBonus']) ok(uiAll.settingsPanel?.[k], `settingsPanel.${k} thiếu`);
+// Ràng buộc độ tin cậy / hạn chót (đợt 26)
+for (const k of ['dialog.costTag', 'obstacles.deadlineMissed', 'boss.lives', 'feed.late']) ok(k.split('.').reduce((o, p) => o?.[p], uiAll), `ui.${k} thiếu`);
+ok(!/{n}.*{n}/.test(uiAll.dialog?.costTag || ''), 'costTag chỉ có một {n}');
+const qd = JSON.parse(rd('../game/data/quests.json'));
+ok(!/d lượt chịu sai/.test(qd.boss.phases.find(p => p.mode === 'replies').howto), 'howto của bước trả lời bình luận không được ghi cứng số lượt');
+const inputs = [];
+for (const q of qd.quests) { for (const f of q.fields || []) inputs.push([q.id + '.' + f.id, f]); for (const st of q.steps || []) if (st.type === 'input') inputs.push([q.id + '.' + st.id, st]); }
+for (const [id, x] of inputs) ok(x.walkthrough && x.walkthrough.length > 12 && !/^Mở bài|^Mở |→ chép/.test(x.walkthrough), `walkthrough của ${id} phải nêu đáp án`);
 if (fails) process.exit(1);
 console.log(`✓ route: ${n} ca`);

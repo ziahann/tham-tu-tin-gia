@@ -5,7 +5,7 @@ import { data, questById } from './data.js';
 import { state, saveProgress, hasFlag } from './state.js';
 
 export const CRED_MAX = 100;
-export const PENALTY = { wrong: 15, partial: 5, rumor: 10, decoy: 15, publish: 25 };
+export const PENALTY = { wrong: 15, partial: 5, rumor: 10, decoy: 15, publish: 25, hint: 3 };
 const FILL_MS = 150000; // đi lại liên tục 2,5 phút khi đang làm hồ sơ thì thanh hạn chót đầy
 
 /** Chế độ Nhẹ: không hạn chót, kẻ tung tin không đuổi, không mất độ tin cậy. */

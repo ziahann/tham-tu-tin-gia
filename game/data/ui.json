@@ -60,10 +60,10 @@
     "help": "Cần trợ giúp",
     "retry": "Thử lại",
     "hint": "Xin gợi ý ({n}/{max})",
-    "noMoreHints": "Hết gợi ý cho câu này rồi. Em có thể chọn \"Em không tìm được\" để xem hướng dẫn từng bước.",
+    "noMoreHints": "Hết gợi ý cho câu này rồi. Em có thể chọn \"Em không tìm được\" để xem đáp án.",
     "hintLine": "Gợi ý {n}/{max}: {text}",
-    "cantFind": "Em không tìm được",
-    "walkthrough": "Làm theo từng bước nhé: {text}",
+    "cantFind": "Em không tìm được (xem đáp án)",
+    "walkthrough": "Đáp án: {text}",
     "later": "Để sau",
     "laterLine": "Được. Khi nào sẵn sàng thì quay lại nhé, những gì em đã trả lời vẫn được giữ.",
     "backToAnswer": "Quay lại trả lời",
@@ -116,7 +116,8 @@
     "minimized": "▲ Đang trò chuyện với {name} · bấm (hoặc E) để mở lại",
     "timelineDrop": "Thả mốc vào đây",
     "timelinePick": "Đã chọn: {text}. Bấm một ô ngày để đặt.",
-    "next": "Tiếp tục"
+    "next": "Tiếp tục",
+    "costTag": " · −{n} tin cậy"
   },
   "backpack": {
     "title": "Balo",
@@ -252,7 +253,8 @@
     "stopped": "Bài sai dừng ở {n} lượt chia sẻ.",
     "locked": "Phòng phát trực tiếp chưa mở. Hoàn thành các hồ sơ bắt buộc trước đã.",
     "feedStart": "Vịnh Feed: còn {n} bài sai chưa được xử lý nên bài của trang bắt đầu với {shares} lượt chia sẻ.",
-    "feedCalm": "Vịnh Feed: các bài sai đã có ghi chú, bài của trang bắt đầu với {shares} lượt chia sẻ."
+    "feedCalm": "Vịnh Feed: các bài sai đã có ghi chú, bài của trang bắt đầu với {shares} lượt chia sẻ.",
+    "lives": "Độ tin cậy trung bình {cred}/100, nên bạn có {lives} lượt chịu sai ở bước này."
   },
   "results": {
     "disclaimer": "Huy hiệu và chiến thắng chỉ đo kết quả chơi, không chứng minh thông tin đúng hay sai."
@@ -360,7 +362,7 @@
   "progress": "🏅 {badges} · Hồ sơ {done}/{total}",
   "obstacles": {
     "cred": "Tin cậy",
-    "credTitle": "Độ tin cậy của hồ sơ đang theo dõi. Trả lời sai, bị lừa hoặc đăng vội sẽ bị trừ; về 0 thì làm lại hồ sơ.",
+    "credTitle": "Độ tin cậy của hồ sơ đang theo dõi. Trả lời sai, bị lừa, xin thêm gợi ý hoặc đăng vội sẽ bị trừ; về 0 thì làm lại hồ sơ. Trung bình các hồ sơ quyết định số lượt chịu sai ở trận cuối.",
     "pressure": "Hạn chót",
     "pressureTitle": "Áp lực đăng bài: tăng khi bạn đi lại lúc đang làm hồ sơ, giảm khi bạn trả lời đúng.",
     "credLost": "−{n} độ tin cậy · {room}",
@@ -389,7 +391,8 @@
     "barrier": "Vỉa hè đang thi công. Đi vòng qua vạch kẻ đường sang bên kia.",
     "challenge": "Thử thách",
     "challengeFull": "Đầy đủ: hạn chót, kẻ tung tin đuổi theo, mất độ tin cậy",
-    "challengeLight": "Nhẹ: không hạn chót, kẻ tung tin không đuổi, không mất độ tin cậy (hợp khi trình chiếu)"
+    "challengeLight": "Nhẹ: không hạn chót, kẻ tung tin không đuổi, không mất độ tin cậy (hợp khi trình chiếu)",
+    "deadlineMissed": "Trong lúc bạn chậm tay, bài sai trên Vịnh Feed lan thêm (lần trễ hạn thứ {n}). Trận cuối sẽ bắt đầu với nhiều lượt chia sẻ hơn."
   },
   "card": {
     "title": "Thẻ sinh viên",
@@ -449,7 +452,8 @@
     "heatOn": "{n} bài sai đang lan · hạn chót nhanh ×{x}",
     "heatOff": "Đã kiểm soát",
     "newOne": "📱 Vịnh Feed: bài mới từ {who}",
-    "newMany": "📱 Vịnh Feed: {n} bài mới"
+    "newMany": "📱 Vịnh Feed: {n} bài mới",
+    "late": "Trễ hạn {n} lần: bài sai lan thêm."
   },
   "report": {
     "button": "Xuất kết quả (PDF)",
@@ -553,7 +557,7 @@
     "hint": {
       "title": "Gợi ý",
       "lines": [
-        "Bí câu hỏi? Bấm nút gợi ý để được chỉ hướng mà không lộ đáp án."
+        "Bí câu hỏi? Gợi ý đầu tiên của mỗi câu là miễn phí. Xin thêm gợi ý, hoặc chọn xem đáp án, thì mất 3 độ tin cậy."
       ]
     },
     "minimize": {
@@ -566,14 +570,14 @@
       "title": "Độ tin cậy",
       "lines": [
         "Mỗi hồ sơ có độ tin cậy riêng: trả lời sai trừ 15, trả lời một phần trừ 5, bị kẻ tung tin lừa trừ 10.",
-        "Về 0 thì hồ sơ phải làm lại từ đầu."
+        "Về 0 thì hồ sơ phải làm lại từ đầu. Trung bình độ tin cậy còn quyết định số lượt chịu sai ở trận cuối."
       ]
     },
     "pressure": {
       "title": "Hạn chót",
       "lines": [
         "Khi đang có hồ sơ mở, đi lại làm thanh hạn chót đầy dần.",
-        "Đầy thì Phát Vội sẽ gọi giục bạn đăng bài; đăng vội trừ 25 độ tin cậy."
+        "Đầy thì Phát Vội sẽ gọi giục bạn đăng bài; đăng vội trừ 25 độ tin cậy. Từ chối thì không mất gì, nhưng bài sai trên Vịnh Feed sẽ lan thêm."
       ]
     },
     "rumor": {
