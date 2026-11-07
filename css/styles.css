@@ -875,3 +875,10 @@ button.is-pick:disabled { opacity: 1; }
 .tl-slot.is-right .tl-drop::after { content: "✓"; color: var(--green); }
 .tl-slot.is-wrong .tl-drop::after { content: "✗"; color: #ff8a8a; }
 .tl-slot.is-right .tl-card, .tl-slot.is-wrong .tl-card { opacity: 1; }
+
+/* ---------- Nút balo to, có màu (biểu tượng pixel art trong index.html) ---------- */
+#btn-backpack { width: 60px; height: 60px; padding: 5px; }
+@media (max-height: 500px) { #btn-backpack { width: 50px; height: 50px; padding: 4px; } }
+/* khung thoại phủ góc dưới: nút về thanh trên, thu nhỏ cho vừa */
+@media (max-width: 1290px) { body:has(#dialog:not([hidden])) #btn-backpack { width: 42px; height: 42px; padding: 3px; } }
+#btn-backpack.has-alert::after { top: -5px; right: -5px; width: 14px; height: 14px; }
