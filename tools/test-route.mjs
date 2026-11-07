@@ -58,5 +58,17 @@ for (const id of TIP_IDS) {
 ok(uiAll.tips?.move?.linesTouch?.length, 'mẹo move thiếu linesTouch');
 for (const k of ['ok', 'tab', 'controls']) ok(uiAll.tipsUi?.[k], `tipsUi.${k} thiếu`);
 ok(uiAll.settingsPanel?.tips, 'settingsPanel.tips thiếu');
+// Đoạn kết (game/js/ending.js): chữ đủ, không mã F / điểm / GIẢ LẬP
+const ending = JSON.parse(rd('../game/data/quests.json')).ending || {};
+const clean = s => typeof s === 'string' && s.trim().length > 0 && !/F\d|điểm|GIẢ LẬP/i.test(s);
+for (const k of ['main', 'bonus']) {
+  ok(clean(ending[k]?.recapTitle), `ending.${k}.recapTitle thiếu`);
+  ok(ending[k]?.conclusion?.length && ending[k].conclusion.every(clean), `ending.${k}.conclusion thiếu hoặc không hợp lệ`);
+  ok(['calm', 'dusk', 'night', 'dawn'].includes(ending[k]?.scene), `ending.${k}.scene phải là cảnh của bay.js`);
+}
+ok(ending.bonus?.lines?.length && ending.bonus.lines.every(l => clean(l.text)), 'ending.bonus.lines thiếu');
+for (const k of ['skip', 'close', 'thanks']) ok(clean(ending[k]), `ending.${k} thiếu`);
+for (const k of ['title', 'authors', 'course', 'music', 'art']) ok(clean(ending.credits?.[k]), `ending.credits.${k} thiếu`);
+for (const k of ['ending', 'endingAsk', 'endingMain', 'endingBonus']) ok(uiAll.settingsPanel?.[k], `settingsPanel.${k} thiếu`);
 if (fails) process.exit(1);
 console.log(`✓ route: ${n} ca`);

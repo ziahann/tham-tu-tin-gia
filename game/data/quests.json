@@ -1162,7 +1162,7 @@
               "id": "b",
               "text": "Không, đó là quy mô tài khoản, không đồng nghĩa với lượt xem",
               "correct": true,
-              "feedback": "Đúng. Đừng biến quy mô tài khoản thành số người bị ảnh hưởng."
+              "feedback": "Đúng. Quy mô tài khoản không phải số người bị ảnh hưởng."
             }
           ],
           "hints": [
@@ -1311,7 +1311,7 @@
         }
       ],
       "feedback": {
-        "correct": "Em khẳng định đúng những gì bằng chứng cho phép, còn điều chưa biết thì để ngỏ."
+        "correct": "Mình chỉ khẳng định những gì bằng chứng cho phép, còn điều chưa biết thì để ngỏ."
       },
       "conclusion": "Có thủ đoạn thu hút tương tác; chưa xác định người đứng sau, doanh thu và thời điểm đăng đầu tiên.",
       "evidenceCards": [
@@ -1403,7 +1403,7 @@
                 "mis",
                 "unsure"
               ],
-              "feedback": "Chưa có bằng chứng về chủ đích của từng người đăng → Misinformation hoặc \"chưa đủ căn cứ về chủ đích\" đều chấp nhận."
+              "feedback": "Chưa có bằng chứng về chủ đích của từng người đăng → Misinformation, hoặc xếp vào \"chưa đủ căn cứ về chủ đích\"."
             },
             {
               "id": "sharers",
@@ -1583,7 +1583,8 @@
         }
       ],
       "feedback": {
-        "correct": "Cảm ơn ý kiến của em. Có một số văn bản pháp luật liên quan, nhưng ở đây anh không tư vấn pháp lý."
+        "correct": "Cảm ơn ý kiến của em. Có một số văn bản pháp luật liên quan, nhưng ở đây anh không tư vấn pháp lý.",
+        "correctBy": "npc"
       },
       "conclusion": "Nền tảng có thể gắn nhãn nội dung AI, giảm lan truyền và xử lý tài khoản vi phạm.",
       "evidenceCards": [
@@ -1662,7 +1663,7 @@
         }
       ],
       "feedback": {
-        "correct": "Phát hiện tốt. Nhưng nhớ: lời khai của chú Sáu chỉ để luyện kỹ năng, không phải bằng chứng thật về ai cả."
+        "correct": "Lời khai của chú Sáu chỉ để mình luyện cách hỏi, không phải bằng chứng thật về ai cả."
       },
       "conclusion": "Lời khai thiếu nguồn và tự mâu thuẫn nên chỉ dùng để tham khảo, không đủ để kết luận chủ đích hay danh tính.",
       "evidenceCards": [],
@@ -1727,7 +1728,7 @@
         }
       ],
       "feedback": {
-        "correct": "Em đã nhận diện được trang mạo danh. Khi nghi ngờ, hãy liên hệ kênh chính thức của tổ chức."
+        "correct": "Trang này là mạo danh. Lúc nghi ngờ thì cứ liên hệ kênh chính thức của tổ chức."
       },
       "conclusion": "Dấu hiệu mạo danh: tên sai chính tả, tích xanh giả, trang mới tạo, tài khoản cá nhân, link rút gọn lạ.",
       "evidenceCards": [],
@@ -1937,7 +1938,7 @@
     "endings": {
       "A": {
         "title": "Gương mặt trống",
-        "text": "Em đã dùng bằng chứng để chặn tin sai: nội dung là giả và có dấu hiệu chủ đích thu hút tương tác. Trang ẩn danh vẫn chưa lộ mặt, và em không đoán bừa."
+        "text": "Bạn đã dùng bằng chứng để chặn tin sai: nội dung là giả và có dấu hiệu chủ đích thu hút tương tác. Trang ẩn danh vẫn chưa lộ mặt, và bạn không đoán bừa."
       },
       "B": {
         "title": "Buộc tội quá mức",
@@ -2661,7 +2662,7 @@
       },
       {
         "npc": "npc10",
-        "text": "Vụ tai nạn là có thật, đau lòng thật. Nhưng quanh nó đang có rất nhiều thứ không thật: ảnh dựng, câu chuyện dựng, video cũ gắn nhầm."
+        "text": "Vụ tai nạn là có thật, đau lòng thật. Còn mấy thứ đang lan quanh nó thì chưa ai kiểm chứng."
       },
       {
         "npc": "npc10",
@@ -2707,7 +2708,7 @@
       "done": [
         {
           "npc": "npc10",
-          "text": "Danh hiệu là của cháu rồi. Nhớ thói quen dừng lại, kiểm tra, rồi mới chia sẻ nhé.",
+          "text": "Danh hiệu là của cháu rồi. Rảnh thì ghé tòa soạn chơi nhé.",
           "mood": "happy"
         }
       ]
@@ -2802,8 +2803,9 @@
               "text": "Máy phát hiện AI báo cao, thế là đủ kết luận."
             }
           ],
-          "right": "Đúng. Nhiều bằng chứng độc lập cùng chỉ một hướng, máy phát hiện chỉ là phần bổ trợ.",
-          "wrong": "Lượt chia sẻ hay một con số từ máy không chứng minh được gì. Cháu nhớ lại các bằng chứng đã đối chiếu xem."
+          "right": "Tốt lắm.",
+          "wrong": "Lượt chia sẻ hay một con số từ máy không chứng minh được gì. Cháu nhớ lại các bằng chứng đã đối chiếu xem.",
+          "insight": "Nhiều bằng chứng độc lập cùng chỉ về một hướng, còn máy phát hiện chỉ là phần bổ trợ thôi ạ."
         },
         {
           "ask": "Nhân vật trong các câu chuyện có phải nạn nhân thật không?",
@@ -2823,8 +2825,9 @@
               "text": "Họ là người thật bị lấy ảnh, cần công bố danh tính để mọi người biết."
             }
           ],
-          "right": "Chuẩn. Biết đến đâu nói đến đó, và không đem danh tính ai ra bàn khi chưa có dữ liệu.",
-          "wrong": "Cảm xúc của người xem không phải bằng chứng, còn công bố danh tính thì có thể làm tổn thương người vô can. Cháu thử lại nhé."
+          "right": "Chuẩn.",
+          "wrong": "Cảm xúc của người xem không phải bằng chứng, còn công bố danh tính thì có thể làm tổn thương người vô can. Cháu thử lại nhé.",
+          "insight": "Biết đến đâu cháu nói đến đó. Chưa có dữ liệu thì cháu không đem danh tính ai ra bàn."
         },
         {
           "ask": "Cách trình bày có khiến người xem hiểu nhầm không?",
@@ -2846,8 +2849,9 @@
               "text": "Có, và chắc chắn người đăng làm vậy để kiếm tiền."
             }
           ],
-          "right": "Đúng vậy. Còn động cơ thì chưa có dữ liệu, cháu chưa kết luận là phải.",
-          "wrong": "Nhớ lại các thủ đoạn cháu đã thấy, và đừng khẳng định điều chưa có dữ liệu như chuyện tiền bạc. Thử lại nhé."
+          "right": "Đúng vậy, thế là phải.",
+          "wrong": "Nhớ lại các thủ đoạn cháu đã thấy, và đừng khẳng định điều chưa có dữ liệu như chuyện tiền bạc. Thử lại nhé.",
+          "insight": "Còn động cơ thì chưa có dữ liệu, nên cháu chưa kết luận ạ."
         }
       ],
       "sum": "Cháu khép {done}/{total} hồ sơ, nhận {badges} huy hiệu, uy tín trung bình {cred}/100.",
@@ -2861,12 +2865,12 @@
       "outro": [
         {
           "npc": "npc10",
-          "text": "Danh hiệu chỉ là kỷ niệm thôi. Thứ quý nhất cháu mang về là thói quen: dừng lại, kiểm tra, rồi mới chia sẻ.",
+          "text": "Danh hiệu chỉ là kỷ niệm thôi. Chuyến này cháu mang về được gì?",
           "mood": "happy"
         },
         {
           "npc": "hero",
-          "text": "Dạ, cháu cảm ơn chú. Cháu sẽ nhớ ạ!",
+          "text": "Dạ, chắc là thói quen: dừng lại, kiểm tra, rồi mới chia sẻ. Cháu cảm ơn chú ạ!",
           "mood": "happy"
         }
       ]
@@ -2895,5 +2899,49 @@
     ],
     "phoneEarly": "Mình gọi ai bây giờ nhỉ? Xem tin trên máy tính trước đã.",
     "phoneLater": "Chú Quốc Trung đang chờ ở tòa soạn trên phố trung tâm. Đi thôi!"
+  },
+  "ending": {
+    "note": "Hoạt cảnh kết (js/ending.js). main: sau khi nhận danh hiệu, trước màn kết quả; bonus: sau khi khép hồ sơ trang mạo danh. Phần nhắc lại của main lấy từ verificationQuestions + đáp án đúng trong journey.report; ghi công lấy từ ui.json / sources.json.",
+    "skip": "Bỏ qua",
+    "close": "Tiếp tục",
+    "thanks": "Cảm ơn bạn đã chơi!",
+    "credits": {
+      "title": "Ghi công",
+      "authors": "Tác giả",
+      "course": "Môn học",
+      "music": "Nhạc nền",
+      "art": "Hình nhân vật"
+    },
+    "main": {
+      "scene": "dusk",
+      "recapTitle": "Ba câu hỏi của chú Quốc Trung",
+      "conclusion": [
+        "Vụ tai nạn là có thật.",
+        "Những gương mặt lan truyền quanh nó thì không.",
+        "Dừng lại, kiểm tra, rồi mới chia sẻ."
+      ]
+    },
+    "bonus": {
+      "scene": "dawn",
+      "lines": [
+        {
+          "text": "Vậy là hồ sơ cuối cùng cũng khép. Em đã chỉ ra đủ dấu hiệu của trang mạo danh.",
+          "mood": "happy"
+        },
+        {
+          "text": "Trang đó mượn tên quỹ thật, chỉ thêm một chữ g. Người đang thương nạn nhân thì rất dễ chuyển tiền mà không để ý.",
+          "mood": "serious"
+        },
+        {
+          "text": "Cảm ơn em đã đi cùng nhóm kiểm chứng tới tận hồ sơ cuối.",
+          "mood": "happy"
+        }
+      ],
+      "recapTitle": "Dấu hiệu của một trang mạo danh",
+      "conclusion": [
+        "Sau một thảm kịch, thường có kẻ lợi dụng lòng tốt của người đọc.",
+        "Muốn giúp thật thì kiểm tra kênh chính thức trước khi chuyển tiền."
+      ]
+    }
   }
 }

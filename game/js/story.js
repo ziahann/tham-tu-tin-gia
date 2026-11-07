@@ -8,6 +8,8 @@ import { exhibitFor, frameGrid, singleFrame } from './exhibits.js';
 import { normalize, containsPhrase } from './text.js';
 import { sfx } from './audio.js';
 import { toast } from './ui.js';
+import { playEndtro } from './ending.js';
+import { playMusic } from './music.js';
 import { toolWindow, browseContent, deviceSpeaker } from './tools.js';
 import { targetMap, currentRoute } from './guide.js';
 import { loseCred, easePressure, isLight, roomName, caseOpen, PENALTY } from './obstacles.js';
@@ -169,7 +171,9 @@ export async function talkTo(npcId, room = null) {
       const i = said[npcId] || 0;
       said[npcId] = i + 1;
       saveProgress();
-      await dlg.say(npcId, amb[i % amb.length]);
+      const a = amb[i % amb.length];
+      await dlg.say(npcId, a.text ?? a);
+      if (a.hero) await realize(fill(a.hero, { hero: state.progress.heroName }));
       return;
     }
     if (!e) return;
@@ -635,6 +639,10 @@ function spreadAxis(step) {
 }
 
 // Mỗi loại bước trả về 'ok' | 'partial' | 'wrong' | 'help'.
+/** Nhân vật chính tự nhận ra điều vừa kiểm chứng (thay cho NPC giảng giải khi người chơi làm đúng). */
+const realize = text => dlg.say('hero', text, { mood: 'thinking' });
+const insight = text => realize(`✓ ${String(text || '').replace(/^Đúng[.:,]?\s*/, '')}`.trim());
+
 const STEP_RUNNERS = {
   /** Chọn một đáp án; NPC nhận xét theo lựa chọn. */
   async choice(step, npc) {
@@ -643,7 +651,7 @@ const STEP_RUNNERS = {
       { speaker: npc, text: step.ask, exhibit: exhibitOf(step) });
     if (c.id === '_help') return 'help';
     sfx(c.o.correct ? 'partial' : 'wrong');
-    await dlg.say(npc, `${c.o.correct ? '✓' : '✗'} ${c.o.feedback}`);
+    if (c.o.correct) await insight(c.o.feedback); else await dlg.say(npc, `✗ ${c.o.feedback}`);
     return c.o.correct ? 'ok' : 'wrong';
   },
 
@@ -687,10 +695,10 @@ const STEP_RUNNERS = {
     const m = new Set(r.marks);
     let all = true, any = false;
     for (const g of step.groups) {
-      if (g.frames.filter(n => m.has(n)).length >= g.min) { any = true; await dlg.say(npc, `✓ ${g.found}`); }
+      if (g.frames.filter(n => m.has(n)).length >= g.min) { any = true; await realize(`✓ ${g.found}`); }
       else { all = false; await dlg.say(npc, `? ${g.missing}`); }
     }
-    if (step.bonus && step.bonus.frames.every(n => m.has(n))) await dlg.say(npc, `✓ ${step.bonus.text}`);
+    if (step.bonus && step.bonus.frames.every(n => m.has(n))) await realize(`✓ ${step.bonus.text}`);
     const trapped = step.traps.frames.some(n => m.has(n));
     if (trapped) await dlg.say(npc, `✗ ${step.traps.text}`);
     const known = new Set([...step.groups.flatMap(g => g.frames), ...step.traps.frames]);
@@ -713,7 +721,7 @@ const STEP_RUNNERS = {
     if (r.help) return 'help';
     if (r.pick === step.answer) {
       sfx('partial');
-      await dlg.say(npc, `✓ ${t('dialog.matchRight', { n: r.pick })}`);
+      await realize(`✓ ${t('dialog.matchRight', { n: r.pick })}`);
       return 'ok';
     }
     await dlg.say(npc, `✗ ${step.wrong?.[r.pick] || t('dialog.matchWrong')}`);
@@ -829,7 +837,7 @@ Object.assign(STEP_RUNNERS, {
     for (const item of step.items) {
       if (item.accept.includes(r.choice[item.id])) {
         ok++;
-        await dlg.say(npc, t('dialog.sortRight', { item: item.text, feedback: item.feedback }));
+        await realize(t('dialog.sortRight', { item: item.text, feedback: item.feedback }));
       } else {
         await dlg.say(npc, t('dialog.sortWrong', { item: item.text }));
       }
@@ -933,8 +941,9 @@ async function completeQuest(q, qs, npc) {
   saveProgress();
   onChange();
   sfx('correct');
-  await dlg.say(npc, `${t('result.correct')} ${q.feedback.correct}`);
-  await dlg.say(npc, t('dialog.conclusion', { text: q.conclusion }));
+  if (q.feedback.correctBy === 'npc') await dlg.say(npc, `${t('result.correct')} ${q.feedback.correct}`);
+  else await insight(q.feedback.correct);
+  await realize(t('dialog.conclusion', { text: q.conclusion }));
   for (const ev of (q.evidenceCards || []).map(evidenceById).filter(Boolean)) {
     sfx('unlock');
     toast(t('dialog.newCard', { fact: ev.fact, title: ev.title }));
@@ -948,6 +957,7 @@ async function completeQuest(q, qs, npc) {
     saveProgress();
     if (sceneById(`${room.toLowerCase()}_done`)) await playScene(`${room.toLowerCase()}_done`);
     await awardBadge(room);
+    if (room === 'BONUS') await bonusEnding();
   }
   // Xong mọi hồ sơ bắt buộc: Kẻ Dệt Chuyện xuất hiện, mũi tên chỉ tới Phòng họp.
   if (bossStatus(state.progress.flags) === 'open' && !hasFlag('boss_announced')) {
@@ -1020,7 +1030,7 @@ export async function rumorEncounter(id) {
     const o = r.options[+c.id];
     if (o.correct) {
       sfx('correct');
-      await dlg.say('system', `✓ ${o.why}`);
+      await insight(o.why);
       await dlg.say(id, t('obstacles.rumorWin'), { mood: 'serious' });
     } else {
       sfx('wrong');
@@ -1053,7 +1063,8 @@ export function inspectDecoy(id) {
     saveProgress();
     if (c.id === 'check') {
       sfx('correct');
-      await dlg.say('inspect', `✓ ${t('obstacles.decoyChecked')} ${d.why}`);
+      await dlg.say('inspect', `✓ ${t('obstacles.decoyChecked')}`);
+      await realize(d.why);
     } else {
       sfx('wrong');
       await dlg.say('inspect', `✗ ${t('obstacles.decoyAdded')} ${d.why}`);
@@ -1109,6 +1120,17 @@ export function skipToBoss() {
   track('boss', true);
   onChange();
   world?.travel('boss', 'spawn_from_street', 'up');
+}
+
+/**
+ * Kết thúc màn bonus: chị Tuệ Lâm khép lại rồi phát hoạt cảnh kết. standalone: tự mở cuộc trò chuyện (nút thử trong Cài đặt);
+ * mặc định gọi trong cuộc trò chuyện đang mở lúc khép hồ sơ.
+ */
+export async function bonusEnding({ standalone = false } = {}) {
+  const say = async () => { for (const l of data.quests.ending.bonus.lines) await dlg.say('npc1', l.text, { mood: l.mood }); };
+  if (standalone) await conversation('npc1', say); else await say();
+  await playEndtro('bonus');
+  playMusic(world?.mapMusic);
 }
 
 /** Thông báo một câu của hệ thống (cửa khóa, khu chưa mở...). */
@@ -1221,7 +1243,7 @@ export async function runBoss() {
       onChange();
       bossBar(b.phases.length - i - 1, b.phases.length);
       await dlg.say('boss', ph.defeat, { mood: 'cracked' });
-      await dlg.say('system', ph.explain);
+      await realize(ph.explain);
     }
     shares.stop();
     await dlg.say('system', t('boss.stopped', { n: shares.value().toLocaleString('vi-VN') }));
@@ -1323,7 +1345,7 @@ async function bossReplies(ph, shares) {
     if (!late && it.options[+c.id].correct) {
       reactTo('boss', 'good');
       sfx('partial');
-      await dlg.say('system', `✓ ${it.why}`);
+      await insight(it.why);
       continue;
     }
     sfx('wrong');

@@ -746,3 +746,49 @@ body::before { top: 0; }
 body::after { bottom: 0; }
 body.is-cine::before, body.is-cine::after { height: 9vh; }
 @media (prefers-reduced-motion: reduce) { body::before, body::after { transition: none; } }
+
+/* ---------- Hoạt cảnh kết (js/ending.js) ---------- */
+.endtro { position: fixed; inset: 0; z-index: 80; overflow: hidden; background: #05060a; color: var(--paper); opacity: 0; transition: opacity 0.9s; }
+.endtro.is-in, .endtro.is-static { opacity: 1; }
+.endtro.is-out { opacity: 0; transition-duration: 0.5s; }
+.endtro-bay { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; image-rendering: pixelated; }
+.endtro-shade { position: absolute; inset: 0; background: linear-gradient(rgb(5 6 10 / 0.55), rgb(5 6 10 / 0.82)); }
+.endtro-stage { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 24px 16px 72px; text-align: center; }
+.endtro-stage > section, .endtro-credits { position: absolute; left: 50%; width: min(820px, calc(100% - 32px)); transform: translateX(-50%); opacity: 0; transition: opacity 0.9s; }
+.endtro-stage > section.is-on { opacity: 1; }
+.endtro-stage > section.is-off { opacity: 0; }
+.endtro-recap h2 { color: var(--straw); font-size: 34px; margin: 0 0 18px; text-shadow: 3px 3px 0 var(--ink); }
+.endtro-recap ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; text-align: left; }
+.endtro-recap li { opacity: 0; transform: translateY(8px); transition: opacity 0.7s, transform 0.7s; background: rgb(14 20 34 / 0.8); border: var(--px) solid var(--ink); box-shadow: 0 0 0 2px var(--plum); padding: 8px 14px; font-size: 21px; line-height: 1.25; }
+.endtro-recap li.is-on { opacity: 1; transform: none; }
+.endtro-recap li b { display: block; color: var(--teal); font-weight: normal; }
+.endtro-recap li span::before { content: "✓ "; color: var(--green); }
+.endtro-conclusion p { margin: 0 0 14px; font-size: clamp(28px, 4.6vw, 46px); line-height: 1.15; text-shadow: 3px 3px 0 var(--ink); opacity: 0; transition: opacity 1s; }
+.endtro-conclusion p.is-on { opacity: 1; }
+.endtro-conclusion p:last-child { color: var(--straw); }
+.endtro-credits { top: 100%; opacity: 1; }
+.endtro-credits.is-on { animation: endtro-roll 20s linear forwards; }
+/* cuộn từ dưới mép màn hình lên hết khỏi mép trên */
+@keyframes endtro-roll { from { top: 100%; transform: translate(-50%, 0); } to { top: 0; transform: translate(-50%, -100%); } }
+.endtro-final .endtro-game { font-size: clamp(40px, 7vw, 72px); }
+.endtro-game { font-size: 48px; color: var(--straw); margin: 0; text-shadow: 3px 3px 0 var(--ink); }
+.endtro-case { margin: 0 0 22px; color: var(--grey); font-size: 22px; }
+.endtro-credits section { margin: 0 0 18px; }
+.endtro-credits h3 { margin: 0 0 4px; font-size: 20px; font-weight: normal; color: var(--teal); text-transform: uppercase; letter-spacing: 1px; }
+.endtro-credits p { margin: 0; font-size: 20px; line-height: 1.25; }
+.endtro-thanks { margin: 10px 0 0; font-size: 34px; color: var(--paper); text-shadow: 3px 3px 0 var(--ink); }
+.endtro-skip, .endtro-close { position: absolute; right: 16px; bottom: 16px; }
+/* giảm chuyển động: mọi phần hiện ngay, xếp dọc, cuộn được */
+.endtro.is-static .endtro-stage { display: block; overflow-y: auto; padding-bottom: 80px; }
+.endtro.is-static .endtro-stage > section, .endtro.is-static .endtro-credits { position: static; transform: none; opacity: 1; margin: 0 auto 28px; animation: none; }
+.endtro.is-static .endtro-recap li, .endtro.is-static .endtro-conclusion p { opacity: 1; transform: none; }
+@media (max-height: 500px) {
+  .endtro-recap h2 { font-size: 26px; margin-bottom: 8px; }
+  .endtro-recap ol { gap: 6px; }
+  .endtro-recap li { font-size: 16px; padding: 4px 10px; }
+  .endtro-conclusion p { font-size: 26px; margin-bottom: 8px; }
+  .endtro-game { font-size: 34px; }
+  .endtro-credits p, .endtro-credits h3 { font-size: 16px; }
+  .endtro-credits section { margin-bottom: 8px; }
+  .endtro-thanks { font-size: 24px; }
+}

@@ -10,6 +10,7 @@ import { nextQuestIn, earnedBadges, caseProgress } from './grading.js';
 import { trustScore } from './backpack.js';
 import { sfx } from './audio.js';
 import { toast } from './ui.js';
+import { playEndtro } from './ending.js';
 
 const J = () => data.quests.journey;
 
@@ -278,7 +279,7 @@ async function report() {
     for (const q of r.questions) {
       for (;;) {
         const c = await dlg.choose(q.options.map((o, i) => ({ ...o, id: `o${i}` })), { speaker: 'npc10', text: q.ask });
-        if (c.ok) { sfx('correct'); dlg.react('good'); await dlg.say('npc10', q.right, { mood: 'happy' }); break; }
+        if (c.ok) { sfx('correct'); dlg.react('good'); if (q.insight) await dlg.say('hero', q.insight, { mood: 'thinking' }); await dlg.say('npc10', q.right, { mood: 'happy' }); break; }
         sfx('wrong'); dlg.react('bad');
         await dlg.say('npc10', q.wrong, { mood: 'serious' });
       }
@@ -301,5 +302,6 @@ async function report() {
   if (!ok) return;
   setFlag('ending_seen');
   setStage('done');
+  await playEndtro('main');
   onEnding();
 }
