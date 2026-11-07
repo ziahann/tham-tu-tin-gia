@@ -3,7 +3,7 @@
 import { data, t, questById, evidenceById, artCredit } from './data.js';
 import { state } from './state.js';
 import { earnedBadges, caseProgress } from './grading.js';
-import { credOf, CRED_MAX } from './obstacles.js';
+import { credScore, CRED_MAX } from './obstacles.js';
 import { boardProgress } from './board.js';
 
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
@@ -30,14 +30,13 @@ export function reportHtml() {
   const sources = data.sources.sources.filter(s => !s.internal && used.has(s.id));
   const feed = Object.values(p.feed || {});
   const r = data.quests.results;
-  const trust = Math.round(rooms.reduce((s, x) => s + credOf(x.id), 0) / (rooms.length || 1));
+  const trust = credScore();
 
   const caseBlocks = rooms.map(room => `
     <section class="case">
       <h3>${esc(room.name)} ${flags.includes(`done_${room.id}`) ? '<span class="ok">✓ ' + esc(t('report.closed')) + '</span>' : ''}</h3>
       <table><thead><tr><th>${esc(t('report.quest'))}</th><th>${esc(t('report.status'))}</th><th class="n">${esc(t('report.fails'))}</th><th class="n">${esc(t('report.hints'))}</th></tr></thead>
       <tbody>${room.quests.map(questRow).join('')}</tbody></table>
-      <p class="muted">${esc(t('report.cred'))}: ${credOf(room.id)}/${CRED_MAX}</p>
     </section>`).join('');
 
   return `<!doctype html><html lang="vi"><head><meta charset="utf-8"><title>${esc(t('report.docTitle', { name: p.heroName }))}</title>
@@ -73,6 +72,7 @@ export function reportHtml() {
   <div>${esc(t('report.casesClosed'))}<b>${cp.done}/${cp.total}</b></div>
   <div>${esc(t('report.badges'))}<b>${badges.length}</b></div>
   ${p.title ? `<div>${esc(t('journey.resultsTitle'))}: <b>${esc(p.title.name)}</b></div>` : ''}
+  ${p.honor ? `<div>${esc(t('journey.honorResult'))}: <b>✓</b></div>` : ''}
   <div>${esc(t('report.trust'))}<b>${trust}/${CRED_MAX}</b></div>
   <div>${esc(t('report.board'))}<b>${bp.done}/${bp.total}</b></div>
 </div>

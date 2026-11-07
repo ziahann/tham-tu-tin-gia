@@ -2,7 +2,7 @@
 import { t } from './data.js';
 import { state } from './state.js';
 import { earnedBadges, caseProgress } from './grading.js';
-import { credOf, pressure, caseOpen, isLight, CRED_MAX } from './obstacles.js';
+import { credScore, pressure, caseOpen, isLight, CRED_MAX } from './obstacles.js';
 import { questById } from './data.js';
 
 /** Hiện tên khu vực đang đứng. */
@@ -28,28 +28,28 @@ export function showClock() {
   box.textContent = `${icon} ${String(h).padStart(2, '0')}:${String(mm).padStart(2, '0')}`;
 }
 
-/** Thanh độ tin cậy (hồ sơ đang theo dõi) và thanh hạn chót; ẩn khi không có hồ sơ đang làm. */
+/** Thanh độ tin cậy (chung cả game, luôn hiện) và thanh hạn chót (chỉ khi đang làm hồ sơ, không có ở chế độ Nhẹ). */
 export function updateMeters() {
   const box = document.getElementById('hud-meters');
   if (!box) return;
-  const id = state.progress?.tracked;
-  const room = id && id !== 'boss' ? questById(id)?.room : null;
-  const on = caseOpen(room);
-  box.hidden = !on;
-  if (!on) return;
-  const cred = credOf(room), p = Math.round(pressure());
+  box.hidden = !state.progress;
+  if (!state.progress) return;
+  const id = state.progress.tracked;
+  const on = caseOpen(id && id !== 'boss' ? questById(id)?.room : null);
+  const cred = credScore(), p = Math.round(pressure());
   const set = (sel, v, warn) => {
     const m = box.querySelector(sel);
     m.querySelector('i').style.width = `${v}%`;
     m.classList.toggle('is-warn', warn);
   };
-  set('.meter-cred', (cred / CRED_MAX) * 100, cred <= 30);
-  set('.meter-press', p, p >= 75);
-  box.querySelector('.meter-press').hidden = isLight();
+  set('.meter-cred', (cred / CRED_MAX) * 100, cred < 30);
+  const press = box.querySelector('.meter-press');
+  press.hidden = !on || isLight();
+  if (!press.hidden) set('.meter-press', p, p >= 75);
   box.querySelector('.meter-cred').title = `${t('obstacles.credTitle')} (${cred}/${CRED_MAX})`;
 }
 
-/** Dòng "đang theo dõi": người giao hồ sơ và nơi gặp. on = có hồ sơ đang theo dõi. */
+/** Đặt chữ thanh theo dõi trên cùng. */
 export function setTrack(text, on) {
   const el = document.getElementById('hud-track');
   el.textContent = text;

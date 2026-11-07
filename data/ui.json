@@ -47,7 +47,11 @@
     "namePlaceholder": "Nhập tên nhân vật",
     "nameRequired": "Hãy nhập tên nhân vật để bắt đầu.",
     "pickTitle": "Nhân vật của bạn",
-    "back": "◂ Quay lại"
+    "back": "◂ Quay lại",
+    "recordDone": "✓ Đã hoàn thành game",
+    "recordTitle": "Danh hiệu: {name}",
+    "recordHonor": "Huy hiệu danh dự",
+    "recordBonus": "✓ Đã hoàn thành màn bonus"
   },
   "hud": {
     "musicUnsupported": "trình duyệt này không phát được nhạc MP3",
@@ -254,7 +258,7 @@
     "locked": "Phòng phát trực tiếp chưa mở. Hoàn thành các hồ sơ bắt buộc trước đã.",
     "feedStart": "Vịnh Feed: còn {n} bài sai chưa được xử lý nên bài của trang bắt đầu với {shares} lượt chia sẻ.",
     "feedCalm": "Vịnh Feed: các bài sai đã có ghi chú, bài của trang bắt đầu với {shares} lượt chia sẻ.",
-    "lives": "Độ tin cậy trung bình {cred}/100, nên bạn có {lives} lượt chịu sai ở bước này."
+    "lives": "Độ tin cậy của bạn là {cred}/100, nên bạn có {lives} lượt chịu sai ở bước này."
   },
   "results": {
     "disclaimer": "Huy hiệu và chiến thắng chỉ đo kết quả chơi, không chứng minh thông tin đúng hay sai."
@@ -362,11 +366,10 @@
   "progress": "🏅 {badges} · Hồ sơ {done}/{total}",
   "obstacles": {
     "cred": "Tin cậy",
-    "credTitle": "Độ tin cậy của hồ sơ đang theo dõi. Trả lời sai, bị lừa, xin thêm gợi ý hoặc đăng vội sẽ bị trừ; về 0 thì làm lại hồ sơ. Trung bình các hồ sơ quyết định số lượt chịu sai ở trận cuối.",
+    "credTitle": "Độ tin cậy của bạn, bắt đầu ở 50. Tăng khi trả lời đúng ngay lần đầu; giảm khi trả lời sai, bị lừa, xin thêm gợi ý hoặc đăng vội. Quyết định danh hiệu cuối game và số lượt chịu sai ở trận cuối.",
     "pressure": "Hạn chót",
     "pressureTitle": "Áp lực đăng bài: tăng khi bạn đi lại lúc đang làm hồ sơ, giảm khi bạn trả lời đúng.",
-    "credLost": "−{n} độ tin cậy · {room}",
-    "caseReset": "Độ tin cậy của hồ sơ \"{room}\" đã về 0: kết quả không còn đáng tin. Làm lại hồ sơ này từ bước đầu nhé.",
+    "credLost": "−{n} độ tin cậy",
     "deadlineCall": "[Điện thoại] Trang khác đăng rồi kìa! Đăng luôn bản nháp hồ sơ \"{room}\" đi, kiểm chứng sau!",
     "deadlineRefuse": "Chưa kiểm chứng xong thì chưa đăng.",
     "deadlinePublish": "Ừ, đăng luôn cho kịp.",
@@ -392,7 +395,8 @@
     "challenge": "Thử thách",
     "challengeFull": "Đầy đủ: hạn chót, kẻ tung tin đuổi theo, mất độ tin cậy",
     "challengeLight": "Nhẹ: không hạn chót, kẻ tung tin không đuổi, không mất độ tin cậy (hợp khi trình chiếu)",
-    "deadlineMissed": "Trong lúc bạn chậm tay, bài sai trên Vịnh Feed lan thêm (lần trễ hạn thứ {n}). Trận cuối sẽ bắt đầu với nhiều lượt chia sẻ hơn."
+    "deadlineMissed": "Trong lúc bạn chậm tay, bài sai trên Vịnh Feed lan thêm (lần trễ hạn thứ {n}). Trận cuối sẽ bắt đầu với nhiều lượt chia sẻ hơn.",
+    "credGain": "+{n} độ tin cậy"
   },
   "card": {
     "title": "Thẻ sinh viên",
@@ -401,7 +405,7 @@
     "faculty": "Trường Đại học Văn Lang",
     "sim": "",
     "trust": "Uy tín",
-    "trustNote": "Trung bình độ tin cậy của các hồ sơ (bị trừ khi trả lời sai, bị lừa hoặc đăng vội).",
+    "trustNote": "Độ tin cậy chung: bắt đầu ở 50, tăng khi trả lời đúng ngay lần đầu, giảm khi trả lời sai, bị lừa hoặc đăng vội.",
     "badges": "Huy hiệu",
     "cases": "Hồ sơ đã khép"
   },
@@ -445,8 +449,7 @@
     "reportUser": "Đã báo cáo. Người đăng chỉ chia sẻ vô tình, một lời nhắc nhẹ kèm nguồn thường hiệu quả hơn.",
     "reportWrong": "Bài này đúng. Kiểm tra trước khi báo cáo.",
     "bait": "Bạn vừa bấm link \"đọc tiếp\" dẫn ra một trang web bên ngoài. Đây là thủ đoạn câu tương tác, và đường link có thể tiềm ẩn nguy cơ.",
-    "credLost": "(Độ tin cậy hồ sơ {room} −{n})",
-    "credReset": "(Độ tin cậy hồ sơ {room} về 0, hồ sơ làm lại từ đầu.)",
+    "credLost": "(Độ tin cậy −{n})",
     "classTitle": "Phân loại:",
     "heat": "Độ lan truyền",
     "heatOn": "{n} bài sai đang lan · hạn chót nhanh ×{x}",
@@ -474,7 +477,6 @@
     "status": "Trạng thái",
     "fails": "Lần sai",
     "hints": "Gợi ý",
-    "cred": "Độ tin cậy cuối",
     "closed": "đã khép",
     "done": "Hoàn thành",
     "skipped": "Bỏ qua (tới thẳng boss)",
@@ -503,7 +505,10 @@
     "resultsTitle": "Danh hiệu",
     "skipPrologue": "Bỏ qua phần mở đầu",
     "skipPrologueConfirm": "Tới thẳng Hạ Long? Bạn vẫn nhận thẻ cộng tác viên và ba câu hỏi xác minh.",
-    "shared": "lượt chia sẻ"
+    "shared": "lượt chia sẻ",
+    "honorFile": "TÒA SOẠN TRAO TẶNG",
+    "honorStamp": "DANH DỰ",
+    "honorResult": "Huy hiệu danh dự"
   },
   "eaves": {
     "start": "Bạn đứng lặng gần đó, vờ xem điện thoại và lắng nghe…",
@@ -569,8 +574,8 @@
     "cred": {
       "title": "Độ tin cậy",
       "lines": [
-        "Mỗi hồ sơ có độ tin cậy riêng: trả lời sai trừ 15, trả lời một phần trừ 5, bị kẻ tung tin lừa trừ 10.",
-        "Về 0 thì hồ sơ phải làm lại từ đầu. Trung bình độ tin cậy còn quyết định số lượt chịu sai ở trận cuối."
+        "Độ tin cậy của bạn bắt đầu ở 50. Trả lời đúng ngay lần đầu thì tăng; trả lời sai trừ 15, một phần trừ 5, bị kẻ tung tin lừa trừ 10.",
+        "Thấp thì hạn chót đầy nhanh hơn và trận cuối ít lượt chịu sai hơn. Từ 90 trở lên, cuối game bạn nhận huy hiệu danh dự."
       ]
     },
     "pressure": {

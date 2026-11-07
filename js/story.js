@@ -13,9 +13,9 @@ import { playEndtro } from './ending.js';
 import { playMusic } from './music.js';
 import { toolWindow, browseContent, deviceSpeaker } from './tools.js';
 import { targetMap, currentRoute } from './guide.js';
-import { loseCred, easePressure, isLight, roomName, caseOpen, PENALTY } from './obstacles.js';
+import { loseCred, gainCred, easePressure, isLight, roomName, caseOpen, PENALTY, GAIN } from './obstacles.js';
 import { bossStartShares, feedAlerts } from './feed.js';
-import { journeyTarget, journeyGoal, editorWaiting, afterBoss, stage as journeyStage } from './journey.js';
+import { journeyTarget, journeyGoal, editorWaiting, afterBoss, recordEnding, stage as journeyStage } from './journey.js';
 
 let world = null;
 let busy = false;
@@ -256,7 +256,8 @@ async function helpMenu(q, qs, npc, afterWrong, field = null) {
       qs.hints++; // tổng số gợi ý, dùng để tính điểm
       saveProgress();
       await dlg.say(npc, t('dialog.hintLine', { n: used + 1, max: hints.length, text: hints[used] }));
-      if (used >= 1 && cost && await creditHit(q.room, cost, npc)) return 'later';
+      if (used >= 1) dirty(qs, key);
+      if (used >= 1 && cost) creditHit(cost);
     }
   } else if (c.id === 'sources') {
     await showSources(q, npc, t('dialog.openSourcesLine'), resources);
@@ -264,7 +265,8 @@ async function helpMenu(q, qs, npc, afterWrong, field = null) {
     qs.walkthrough = true;
     saveProgress();
     await dlg.say(npc, t('dialog.walkthrough', { text: walkthrough.replace(/^Chọn:?s*/, '') }));
-    if (cost && await creditHit(q.room, cost, npc)) return 'later';
+    dirty(qs, key);
+    if (cost) creditHit(cost);
   } else if (c.id === 'later') {
     await dlg.say(npc, t('dialog.laterLine'));
     return 'later';
@@ -279,23 +281,27 @@ function reactTo(npc, kind) {
   world?.emote('hero', kind === 'good' ? '✓' : '?');
 }
 
-/**
- * Trả lời sai / một phần: trừ độ tin cậy của hồ sơ. Về 0 thì hồ sơ đặt lại từ đầu: báo cho người chơi và trả về true
- * (nhiệm vụ đang chạy phải dừng ngay).
- */
-async function penalize(q, npc, status) {
-  return creditHit(q.room, status === 'partial' ? PENALTY.partial : PENALTY.wrong, npc);
+/** Trả lời sai / một phần: trừ độ tin cậy chung. */
+function penalize(status) {
+  creditHit(status === 'partial' ? PENALTY.partial : PENALTY.wrong);
 }
 
-/** Trừ độ tin cậy của một hồ sơ, hiện thông báo; trả về true nếu hồ sơ vừa bị đặt lại. */
-async function creditHit(room, n, speaker = 'system') {
-  const res = loseCred(room, n);
+/** Trừ độ tin cậy chung và báo cho người chơi. */
+function creditHit(n) {
+  if (!loseCred(n)) return;
   onChange();
-  if (res === 'lost') toast(t('obstacles.credLost', { n, room: roomName(room) }));
-  if (res !== 'reset') return false;
-  await dlg.say(speaker, t('obstacles.caseReset', { room: roomName(room) }), { mood: 'serious' });
-  world?.refresh();
-  return true;
+  toast(t('obstacles.credLost', { n }));
+}
+
+/** Ô / bước đã sai hoặc đã trả phí xem đáp án: không còn được thưởng "đúng ngay lần đầu". */
+const dirty = (qs, key) => { (qs.dirty ||= {})[key] = true; };
+
+/** Thưởng độ tin cậy khi đúng ngay lần đầu (không sai, không xem đáp án hay xin thêm gợi ý). */
+function rewardFirstTry(qs, key) {
+  if (qs.dirty?.[key]) return;
+  gainCred(GAIN.step);
+  onChange();
+  toast(t('obstacles.credGain', { n: GAIN.step }), 2200);
 }
 
 /** G2: chọn các thẻ mệnh đề cần thẩm định. */
@@ -313,8 +319,9 @@ async function runCards(q, qs, npc) {
     qs.answers.picked = picked;
     const res = checkCards(q, picked);
     reactTo(npc, res.status === 'correct' ? 'good' : 'bad');
-    if (res.status === 'correct') return 'done';
+    if (res.status === 'correct') { rewardFirstTry(qs, '_quest'); return 'done'; }
     qs.fails++;
+    dirty(qs, '_quest');
     saveProgress();
     sfx(res.status === 'partial' ? 'partial' : 'wrong');
     for (const c of res.wrong) {
@@ -323,7 +330,7 @@ async function runCards(q, qs, npc) {
     }
     if (!res.wrong.length && res.missing) await dlg.say(npc, t('dialog.missingCards', { n: res.missing }));
     await dlg.say(npc, `${t(`result.${res.status}`)} ${q.feedback[res.status]}`);
-    if (await penalize(q, npc, res.status)) return 'later';
+    penalize(res.status);
     if (await helpMenu(q, qs, npc, true) === 'later') return 'later';
   }
 }
@@ -350,16 +357,18 @@ async function runFields(q, qs, npc) {
       reactTo(npc, res !== 'wrong' ? 'good' : 'bad');
       if (res !== 'wrong') {
         qs.fieldOk[f.id] = true;
+        rewardFirstTry(qs, f.id);
         saveProgress();
         sfx('partial');
         await dlg.say(npc, res === 'right' ? `✓ ${t('dialog.fieldRight')}` : `✓ ${t('dialog.fieldAlmost', { answer: r.value })}`);
         break;
       }
       qs.fails++;
+      dirty(qs, f.id);
       saveProgress();
       sfx('wrong');
       await dlg.say(npc, `✗ ${t('dialog.fieldWrong')}`);
-      if (await penalize(q, npc, 'wrong')) return 'later';
+      penalize('wrong');
       if (await helpMenu(q, qs, npc, true, f) === 'later') return 'later';
     }
   }
@@ -410,16 +419,18 @@ async function runSteps(q, qs, npc, device = null) {
       if (r === 'ok') {
         reactTo(speaker, 'good');
         qs.stepOk[step.id] = true;
+        if (step.type !== 'say') rewardFirstTry(qs, step.id);
         easePressure(20);
         saveProgress();
         onChange();
         break;
       }
       qs.fails++;
+      dirty(qs, step.id);
       saveProgress();
       sfx(r === 'partial' ? 'partial' : 'wrong');
       reactTo(speaker, 'bad');
-      if (await penalize(q, speaker, r)) return 'later';
+      penalize(r);
       if (await helpMenu(q, qs, speaker, true, step) === 'later') return 'later';
     }
   }
@@ -944,8 +955,10 @@ async function awardBadge(roomId) {
 async function completeQuest(q, qs, npc) {
   qs.status = 'done';
   (q.evidenceCards || []).forEach(addEvidence);
+  gainCred(GAIN.quest);
   saveProgress();
   onChange();
+  toast(t('obstacles.credGain', { n: GAIN.quest }), 2200);
   sfx('correct');
   if (q.feedback.correctBy === 'npc') await dlg.say(npc, `${t('result.correct')} ${q.feedback.correct}`);
   else await insight(q.feedback.correct);
@@ -1015,7 +1028,7 @@ export async function deadlineCall(room) {
       sfx('wrong');
       await dlg.say('system', t('obstacles.deadlinePublishLine'));
       await dlg.say('system', t('obstacles.deadlineMissed', { n: late }));
-      await creditHit(room, PENALTY.publish);
+      creditHit(PENALTY.publish);
     }
   });
 }
@@ -1046,7 +1059,7 @@ export async function rumorEncounter(id) {
       sfx('wrong');
       await dlg.say('system', `✗ ${o.why}`);
       await dlg.say('system', t('obstacles.rumorLose'));
-      if (caseOpen(room)) await creditHit(room, PENALTY.rumor);
+      creditHit(PENALTY.rumor);
     }
     saveProgress();
   });
@@ -1078,7 +1091,7 @@ export function inspectDecoy(id) {
     } else {
       sfx('wrong');
       await dlg.say('inspect', `✗ ${t('obstacles.decoyAdded')} ${d.why}`);
-      await creditHit(d.room, PENALTY.decoy);
+      creditHit(PENALTY.decoy);
     }
   }, 'obj_paper');
   world?.refresh();
@@ -1138,9 +1151,8 @@ export function skipToBoss() {
  */
 export async function bonusEnding({ standalone = false } = {}) {
   const say = async () => { for (const l of data.quests.ending.bonus.lines) await dlg.say('npc1', l.text, { mood: l.mood }); };
-  if (standalone) await conversation('npc1', say); else await say();
-  await playEndtro('bonus');
-  playMusic(world?.mapMusic);
+  if (standalone) await conversation('npc1', say); else { recordEnding({ bonus: true }); await say(); }
+  if (await playEndtro('bonus') !== 'home') playMusic(world?.mapMusic);
 }
 
 /** Thông báo một câu của hệ thống (cửa khóa, khu chưa mở...). */

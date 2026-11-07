@@ -10,7 +10,7 @@ import * as story from './story.js';
 import * as journey from './journey.js';
 import * as dlg from './dialogue.js';
 import { setPlace, updateMeters } from './hud.js';
-import { tickPressure, pressure, isLight, caseOpen } from './obstacles.js';
+import { tickPressure, pressure, isLight, caseOpen, credChaseRate } from './obstacles.js';
 import { feedPressureRate } from './feed.js';
 import { buildGrid, findPath } from './pathfind.js';
 import { playMusic } from './music.js';
@@ -811,7 +811,10 @@ export class WorldScene extends Phaser.Scene {
   canChase() { return !isLight(); }
 
   /** Hiệu ứng thời tiết đang có ở bản đồ này (trong nhà: không có). */
-  fx() { return WEATHER_FX[this.weather?.dark ? 'night' : this.weather?.kind] || WEATHER_FX.clear; }
+  fx() {
+    const f = WEATHER_FX[this.weather?.dark ? 'night' : this.weather?.kind] || WEATHER_FX.clear;
+    return { ...f, chase: f.chase * credChaseRate() };
+  }
 
   /** Xong lượt gặp kẻ tung tin: một lúc sau mới đuổi tiếp. */
   rumorDone(id) {

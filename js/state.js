@@ -2,6 +2,7 @@
 
 const PROGRESS_KEY = 'tfd_progress';
 const SETTINGS_KEY = 'tfd_settings';
+const RECORD_KEY = 'tfd_record';
 const SCHEMA = 2;
 
 const defaultSettings = () => ({
@@ -87,6 +88,12 @@ export function saveProgress() {
 /** Lưu cài đặt. */
 export function saveSettings() {
   writeJson(SETTINGS_KEY, state.settings);
+}
+
+/** Bản ghi đã hoàn thành game (tfd_record): { done, title, honor, bonus }. Chơi lại từ đầu không xóa; "Xóa dữ liệu đã lưu" xóa. */
+export const loadRecord = () => readJson(RECORD_KEY) || null;
+export function saveRecord(patch) {
+  writeJson(RECORD_KEY, { ...(loadRecord() || {}), ...patch });
 }
 
 /** Bắt đầu lượt mới (xóa tiến trình cũ, giữ cài đặt). */

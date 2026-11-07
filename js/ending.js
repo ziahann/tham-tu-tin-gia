@@ -66,7 +66,10 @@ export function playEndtro(kind = 'main') {
   const close = el('button', 'btn-primary endtro-close', E.close);
   close.type = 'button';
   close.hidden = !reduce;
-  wrap.append(canvas, shade, stage, skip, close);
+  const home = el('button', 'btn endtro-home', E.home);
+  home.type = 'button';
+  home.hidden = !reduce;
+  wrap.append(canvas, shade, stage, skip, close, home);
   document.body.append(wrap);
 
   const bay = new Bay(canvas);
@@ -76,22 +79,23 @@ export function playEndtro(kind = 'main') {
 
   return new Promise(resolve => {
     let ended = false;
-    const finish = () => {
+    const finish = result => {
       if (ended) return;
       ended = true;
       ctrl.abort();
       document.removeEventListener('keydown', onKey, true);
       bay.stop();
       wrap.classList.add('is-out');
-      setTimeout(() => { wrap.remove(); resolve(); }, reduce ? 0 : 500);
+      setTimeout(() => { wrap.remove(); resolve(result); }, reduce ? 0 : 500);
     };
     const onKey = e => {
       if (e.key === 'Escape' || (!close.hidden && (e.key === 'Enter' || e.key === ' '))) { e.preventDefault(); e.stopPropagation(); finish(); }
     };
     document.addEventListener('keydown', onKey, true);
-    skip.addEventListener('click', finish);
-    close.addEventListener('click', finish);
-    if (reduce) { skip.hidden = true; close.focus(); return; }
+    skip.addEventListener('click', () => finish());
+    close.addEventListener('click', () => finish());
+    home.addEventListener('click', () => { finish('home'); document.dispatchEvent(new CustomEvent('tfd:home')); });
+    if (reduce) { skip.hidden = true; home.hidden = false; close.focus(); return; }
     skip.focus();
 
     // dòng thời gian của hoạt cảnh (bấm Bỏ qua thì dừng ở bất kỳ bước nào)
@@ -112,6 +116,7 @@ export function playEndtro(kind = 'main') {
       if (s.aborted) return;
       skip.hidden = true;
       close.hidden = false;
+      home.hidden = false;
       close.focus();
     })();
   });

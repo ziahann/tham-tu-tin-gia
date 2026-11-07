@@ -11,8 +11,8 @@ import { data, t } from './data.js';
 import { state, saveProgress, hasFlag } from './state.js';
 import { sfx } from './audio.js';
 import { toast } from './ui.js';
-import { loseCred, easePressure, caseOpen, PENALTY, roomName } from './obstacles.js';
-import { track, trackedRoom } from './story.js';
+import { loseCred, gainCred, easePressure, caseOpen, PENALTY, GAIN, roomName } from './obstacles.js';
+import { track } from './story.js';
 import { nextQuestIn } from './grading.js';
 
 function el(tag, cls, text) {
@@ -92,12 +92,11 @@ export function feedTick() {
   return fresh;
 }
 
-/** Hồ sơ chịu trừ độ tin cậy khi xử lý sai trên feed: hồ sơ đang theo dõi, nếu không thì hồ sơ của bài. */
+/** Xử lý sai trên feed: trừ độ tin cậy chung. */
 function penalize(post, n, why) {
-  const room = [trackedRoom(), post.case].find(caseOpen);
-  const r = room ? loseCred(room, n) : null;
+  const lost = loseCred(n);
   sfx('wrong');
-  toast(r === 'reset' ? `${why} ${t('feed.credReset', { room: roomName(room) })}` : r ? `${why} ${t('feed.credLost', { n, room: roomName(room) })}` : why, 7000);
+  toast(lost ? `${why} ${t('feed.credLost', { n })}` : why, 7000);
 }
 
 /** Ảnh trong bài: khối pixel trừu tượng, ảnh giả gắn nhãn ẢNH GIẢ (không có hình nạn nhân). */
@@ -264,6 +263,7 @@ export function vinhFeed(onChange = () => {}) {
       m.frozen = Math.round(sharesOf(p));
       delete m.bad;
       easePressure(25);
+      gainCred(GAIN.step);
       sfx(kind === 'note' ? 'partial' : 'correct');
       toast(`${t(kind === 'note' ? 'feed.noteDone' : 'feed.replyDone')} ${o.why || ''}`, 6000);
     } else if (o.vague) {

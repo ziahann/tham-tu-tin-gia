@@ -2413,7 +2413,8 @@
     "keepPlaying": "Tiếp tục khám phá (màn bonus)",
     "cards": "Thẻ bằng chứng",
     "badges": "Huy hiệu kỹ năng",
-    "closed": "Hồ sơ đã khép"
+    "closed": "Hồ sơ đã khép",
+    "home": "Về màn hình chính"
   },
   "building": {
     "note": "Trụ sở Báo Thanh Niên (tên thật theo yêu cầu của nhóm). Nhân vật và sự việc trong tòa nhà là GIẢ LẬP. Mỗi tầng là một bản đồ; đi bằng thang máy.",
@@ -2854,7 +2855,7 @@
           "insight": "Còn động cơ thì chưa có dữ liệu, nên cháu chưa kết luận ạ."
         }
       ],
-      "sum": "Cháu khép {done}/{total} hồ sơ, nhận {badges} huy hiệu, uy tín trung bình {cred}/100.",
+      "sum": "Cháu khép {done}/{total} hồ sơ, nhận {badges} huy hiệu, độ tin cậy {cred}/100.",
       "award": [
         {
           "npc": "npc10",
@@ -2873,22 +2874,29 @@
           "text": "Dạ, chắc là thói quen: dừng lại, kiểm tra, rồi mới chia sẻ. Cháu cảm ơn chú ạ!",
           "mood": "happy"
         }
+      ],
+      "honor": [
+        {
+          "npc": "npc10",
+          "text": "Độ tin cậy của cháu cao thế này thì chú trao thêm một thứ nữa. Huy hiệu này chú ít khi trao lắm.",
+          "mood": "happy"
+        }
       ]
     },
     "titles": [
       {
         "id": "gold",
         "name": "Thẩm định viên xuất sắc",
-        "text": "Khép mọi hồ sơ bắt buộc, giữ uy tín cao và không đi tắt.",
+        "text": "Khép mọi hồ sơ bắt buộc, giữ độ tin cậy cao và không đi tắt.",
         "minDone": "all",
-        "minCred": 80,
+        "minCred": 70,
         "noSkip": true
       },
       {
         "id": "silver",
         "name": "Thẩm định viên",
         "text": "Dùng bằng chứng chặn được tin sai, giữ vững các bước kiểm chứng.",
-        "minCred": 50,
+        "minCred": 40,
         "noSkip": true
       },
       {
@@ -2898,7 +2906,13 @@
       }
     ],
     "phoneEarly": "Mình gọi ai bây giờ nhỉ? Xem tin trên máy tính trước đã.",
-    "phoneLater": "Chú Quốc Trung đang chờ ở tòa soạn trên phố trung tâm. Đi thôi!"
+    "phoneLater": "Chú Quốc Trung đang chờ ở tòa soạn trên phố trung tâm. Đi thôi!",
+    "honor": {
+      "id": "honor",
+      "name": "Huy hiệu danh dự",
+      "text": "Độ tin cậy từ 90 trở lên, khép mọi hồ sơ bắt buộc và không đi tắt: mỗi bước đều dựa vào bằng chứng.",
+      "minCred": 90
+    }
   },
   "ending": {
     "note": "Hoạt cảnh kết (js/ending.js). main: sau khi nhận danh hiệu, trước màn kết quả; bonus: sau khi khép hồ sơ trang mạo danh. Phần nhắc lại của main lấy từ verificationQuestions + đáp án đúng trong journey.report; ghi công lấy từ ui.json / sources.json.",
@@ -2942,6 +2956,7 @@
         "Sau một thảm kịch, thường có kẻ lợi dụng lòng tốt của người đọc.",
         "Muốn giúp thật thì kiểm tra kênh chính thức trước khi chuyển tiền."
       ]
-    }
+    },
+    "home": "Về màn hình chính"
   }
 }

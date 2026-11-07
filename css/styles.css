@@ -814,3 +814,11 @@ body.backpack-open #btn-backpack { right: calc(min(420px, 100vw) + 12px); }
   body:has(#dialog:not([hidden])) #btn-backpack { position: static; }
 }
 @media (max-width: 1100px) { body:has(#dialog:not([hidden])) .hud-place { display: none; } }
+
+/* ---------- Dấu hoàn thành game ở màn hình chính + nút về màn hình chính ở đoạn kết ---------- */
+.title-record { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px 14px; margin: 8px 0; padding: 6px 12px; background: rgb(14 20 34 / 0.85); border: var(--px) solid var(--ink); box-shadow: 0 0 0 2px var(--green); }
+.title-record[hidden] { display: none; }
+.title-record > b { color: var(--green); font-weight: normal; }
+.title-record-item { display: inline-flex; align-items: center; gap: 6px; color: var(--paper); }
+.title-record-item img { height: 32px; image-rendering: pixelated; }
+.endtro-home { position: absolute; left: 16px; bottom: 16px; }
