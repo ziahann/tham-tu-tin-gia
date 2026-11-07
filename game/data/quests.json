@@ -1579,7 +1579,7 @@
       "feedback": {
         "correct": "Phân loại đúng từng nhóm. Gộp tất cả thành \"tin giả cố ý\" là sai về phương pháp."
       },
-      "conclusion": "Ảnh AI trên fanpage: Disinformation. Clip cũ gắn sai: Misinformation / chưa đủ căn cứ về chủ đích. Người chia sẻ vì thương cảm: Misinformation.",
+      "conclusion": "Ảnh AI trên fanpage: Disinformation (nội dung bịa, tự ghi hư cấu nhưng giấu đi, kèm link câu tương tác; động cơ cụ thể và người đứng sau chưa rõ). Clip cũ gắn sai: Misinformation / chưa đủ căn cứ về chủ đích. Người chia sẻ vì thương cảm: Misinformation.",
       "evidenceCards": [
         "ev_class"
       ],

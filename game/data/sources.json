@@ -63,8 +63,9 @@
       "apa": "Phạm Phước Dũng. (2025, ngày 23 tháng 7). Dàn dựng clip giả vụ lật tàu ở Hạ Long, hành vi phá hoại ngành du lịch cần xử lý. Phụ Nữ Online.",
       "outlet": "Phụ Nữ Online (Tuổi Trẻ)",
       "url": "https://tuoitre.vn/phunuonline/dan-dung-clip-gia-vu-lat-tau-o-ha-long-hanh-vi-pha-hoai-nganh-du-lich-can-xu-ly-1101555777.htm",
-      "urlStatus": "live",
-      "checked": "2026-10-29"
+      "urlStatus": "verified",
+      "checked": "2026-11-07",
+      "verifiedContent": "Đăng 23/7/2025: video tàu chìm ở Congo và các đợt bão cũ bị gắn mác vụ lật tàu Hạ Long; gọi là \"câu view bất chấp\"; nhận định hành vi phát tán tin giả liên quan tai nạn đã được quy định trong Luật An ninh mạng; nền tảng không thể đứng ngoài cuộc; người dùng không chia sẻ nội dung chưa rõ thực hư; nguy cơ du khách e dè (chưa có số liệu)."
     },
     {
       "id": "manh2025",
@@ -81,7 +82,9 @@
       "outlet": "Lao Động",
       "url": "https://laodong.vn/van-hoa-giai-tri/khong-the-de-thong-tin-gia-tiep-tuc-long-hanh-1545079.ldo",
       "urlStatus": "live",
-      "checked": "2026-10-29"
+      "checked": "2026-11-07",
+      "internal": true,
+      "note": "Không đọc được nội dung (trang trả về rỗng) ngày 07/11/2026; không dùng trong game và báo cáo."
     },
     {
       "id": "dangkhoa2025",
@@ -116,8 +119,10 @@
       "apa": "Minh Anh. (2025, ngày 25 tháng 7). Báo động vấn nạn \"đạo đức số\". Báo Văn Hóa.",
       "outlet": "Báo Văn Hóa",
       "url": "https://baovanhoa.vn/bao-chi/bao-dong-van-nan-dao-duc-so-155983.html",
-      "urlStatus": "live",
-      "checked": "2026-10-29"
+      "urlStatus": "dead",
+      "checked": "2026-11-07",
+      "internal": true,
+      "note": "Link trả về 404 ngày 07/11/2026; không dùng trong game và báo cáo."
     },
     {
       "id": "google_lens",
