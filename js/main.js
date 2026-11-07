@@ -7,7 +7,8 @@ import { state, loadState, saveSettings, startNewProgress, hasFlag } from './sta
 import { initInput, on, releaseAll, lockLandscape } from './input.js';
 import * as dlg from './dialogue.js';
 import * as backpack from './backpack.js';
-import { setOnChange, setOnEnding, skipToBoss } from './story.js';
+import { setOnChange, setOnEnding, skipToBoss, bonusEnding } from './story.js';
+import { playEndtro } from './ending.js';
 import { earnedBadges, caseProgress } from './grading.js';
 import { updateScore } from './hud.js';
 import { WorldScene } from './world.js';
@@ -206,6 +207,27 @@ function openSettings() {
     skipToBoss();
   });
   actions.append(toBoss);
+  // Xem đoạn kết để thử (không đổi tiến trình đã lưu)
+  const toEnd = el('button', 'btn', t('settingsPanel.ending'));
+  toEnd.type = 'button';
+  toEnd.hidden = !game;
+  toEnd.addEventListener('click', () => {
+    const wrap = el('div');
+    const row = el('div', 'actions');
+    const go = async kind => {
+      closeModal();
+      if (kind === 'main') { await playEndtro('main'); showResults(); } else await bonusEnding({ standalone: true });
+    };
+    for (const [kind, key] of [['main', 'endingMain'], ['bonus', 'endingBonus']]) {
+      const b = el('button', kind === 'main' ? 'btn-primary' : 'btn', t(`settingsPanel.${key}`));
+      b.type = 'button';
+      b.addEventListener('click', () => go(kind));
+      row.append(b);
+    }
+    wrap.append(el('p', null, t('settingsPanel.endingAsk')), row);
+    openModal(t('settingsPanel.ending'), wrap);
+  });
+  actions.append(toEnd);
   // Bỏ qua phần mở đầu ở TP.HCM (chỉ hiện khi đang ở phần mở đầu)
   const skipIntro = el('button', 'btn', t('journey.skipPrologue'));
   skipIntro.type = 'button';

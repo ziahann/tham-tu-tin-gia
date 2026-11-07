@@ -448,8 +448,9 @@
           "text": "Ngươi chặn được bài này… nhưng ngươi vẫn chẳng biết ta là ai."
         },
         {
-          "npc": "npc1",
-          "text": "Đúng chuẩn thẩm định: đủ căn cứ về nội dung và thủ đoạn, chưa đủ căn cứ về danh tính. Mình dừng đúng chỗ."
+          "npc": "hero",
+          "text": "Nội dung và thủ đoạn thì đã đủ căn cứ. Còn ai đứng sau thì chưa, nên mình dừng ở đó.",
+          "mood": "thinking"
         }
       ],
       "B": [
@@ -517,11 +518,20 @@
       "lines": [
         {
           "id": "s1_reply_share_l1",
-          "text": "Khoan đã. Tin sai lan nhanh hơn bản đính chính. Bài đã chia sẻ rồi thì có xóa đi cũng không thu hồi được."
+          "text": "Khoan đã. Em thử nghĩ xem: nếu bài đó sai thì sao?",
+          "mood": "serious"
         },
         {
           "id": "s1_reply_share_l2",
-          "text": "Bài càng đánh vào cảm xúc thì mình càng phải chậm lại."
+          "npc": "hero",
+          "text": "…Thì mình đã góp tay cho nó lan rồi. Có xóa đi cũng không thu lại được những lượt đã chia sẻ.",
+          "mood": "thinking"
+        },
+        {
+          "id": "s1_reply_share_l3",
+          "npc": "hero",
+          "text": "Bài càng đánh vào cảm xúc thì mình càng phải chậm lại.",
+          "mood": "thinking"
         }
       ],
       "choices": [
@@ -559,7 +569,13 @@
       "lines": [
         {
           "id": "s3_intro_l1",
-          "text": "Đây là Phòng Hồ sơ. Trước khi đi tìm cái giả, mình phải nắm chắc cái thật, rồi mới khoanh vùng những gì cần thẩm định."
+          "text": "Đây là Phòng Hồ sơ. Trước khi đụng tới mấy bức ảnh, em xem lại hồ sơ đã."
+        },
+        {
+          "id": "s3_intro_l2",
+          "npc": "hero",
+          "text": "Muốn biết cái nào giả thì trước hết phải nắm chắc cái thật.",
+          "mood": "thinking"
         }
       ],
       "choices": [],
@@ -585,7 +601,14 @@
       "lines": [
         {
           "id": "s3_q1_accident_denied_l1",
-          "text": "Tai nạn là có thật, báo chí chính thống đã đưa tin. Bảo một thảm kịch là \"không có thật\" sẽ làm tổn thương người trong cuộc. Mình phải dựa vào nguồn."
+          "text": "Em chắc chứ? Báo chí đưa tin thế nào?",
+          "mood": "serious"
+        },
+        {
+          "id": "s3_q1_accident_denied_l2",
+          "npc": "hero",
+          "text": "À… báo chính thống đã đưa tin, tai nạn là có thật. Gọi nó là \"không có thật\" thì người trong cuộc sẽ tổn thương lắm.",
+          "mood": "thinking"
         }
       ],
       "choices": [],
@@ -611,7 +634,9 @@
       "lines": [
         {
           "id": "s3_done_l1",
-          "text": "Hồ sơ đã có mốc sự thật. Từ đây mình có thể so các nội dung lan truyền với sự kiện thật."
+          "npc": "hero",
+          "text": "Hồ sơ đã có mốc sự thật. Có mốc này thì mới so được với những gì đang lan truyền.",
+          "mood": "thinking"
         },
         {
           "id": "s3_done_l2",
@@ -645,7 +670,7 @@
         },
         {
           "id": "npc2_idle_l2",
-          "text": "Mẹo nhỏ: ảnh càng làm mình xúc động, càng nên phóng to thêm chút nữa trước khi tin."
+          "text": "Cứ thấy ảnh nào lạ là anh lại muốn phóng to thêm chút nữa."
         }
       ],
       "choices": [],
@@ -688,7 +713,7 @@
       "lines": [
         {
           "id": "s4_q3_intro_l1",
-          "text": "Bước đầu tiên khi gặp một bức ảnh lạ: tìm xem nó từng xuất hiện ở đâu."
+          "text": "Việc đầu tiên: em xem mấy khung ảnh này từng xuất hiện ở đâu."
         }
       ],
       "choices": [],
@@ -701,7 +726,7 @@
       "lines": [
         {
           "id": "s4_q4_intro_l1",
-          "text": "Giờ tới phần anh thích nhất: phóng to thêm chút nữa. Ảnh AI hay để lại lỗi nhỏ."
+          "text": "Giờ tới phần anh thích nhất: phóng to thêm chút nữa. Em soi từng khung xem có gì lạ không."
         }
       ],
       "choices": [],
@@ -727,7 +752,7 @@
       "lines": [
         {
           "id": "s4_q6_intro_l1",
-          "text": "Cuối cùng là công cụ phát hiện AI. Hữu ích, nhưng đừng coi là phán quyết."
+          "text": "Cuối cùng là công cụ phát hiện AI. Nhóm chạy xong rồi, em đọc bản ghi thử xem."
         }
       ],
       "choices": [],
@@ -740,7 +765,7 @@
       "lines": [
         {
           "id": "npc2_after_s4_l1",
-          "text": "Nhớ nhé: đừng dựa vào một bằng chứng duy nhất, nhất là một con số từ công cụ."
+          "text": "Anh soi nốt mấy khung còn lại đây. Có ảnh nào lạ thì cứ mang qua cho anh."
         }
       ],
       "choices": [],
@@ -753,7 +778,9 @@
       "lines": [
         {
           "id": "s4_done_l1",
-          "text": "Đủ bằng chứng về ảnh rồi: thiếu nguồn gốc, lỗi thị giác, ảnh dùng lại, VTV xác nhận, và công cụ bổ trợ."
+          "npc": "hero",
+          "text": "Về mấy bức ảnh thì đủ rồi: thiếu nguồn gốc, lỗi thị giác, ảnh dùng lại, VTV xác nhận, cộng thêm kết quả công cụ.",
+          "mood": "thinking"
         },
         {
           "id": "s4_done_l2",
@@ -826,7 +853,7 @@
       "lines": [
         {
           "id": "s6_q8_intro_l1",
-          "text": "Xếp đúng thứ tự thì mới thấy tin sai đi nhanh tới mức nào."
+          "text": "Mấy mốc này đang lộn xộn quá. Em xếp lại theo đúng thứ tự giúp anh."
         }
       ],
       "choices": [],
@@ -1660,7 +1687,10 @@
   "ambientLines": {
     "note": "Người qua đường: nói lần lượt từng câu, không giao nhiệm vụ, không đưa dữ kiện mới ngoài F1–F16. Nhân vật GIẢ LẬP.",
     "amb_guard": [
-      "Ai vào đây cũng phải trình thẻ. Tin trên mạng cũng nên vậy: hỏi xem nó từ đâu tới.",
+      {
+        "text": "Ai vào đây cũng phải trình thẻ, chú không cho ai lên tay không.",
+        "hero": "Tin trên mạng chắc cũng nên bắt \"trình thẻ\": hỏi xem nó từ đâu tới."
+      },
       "Trời mưa thì đi chậm thôi cháu, sàn sảnh trơn lắm."
     ],
     "amb_worker": [
@@ -1681,14 +1711,20 @@
     ],
     "amb_fisher": [
       "Mấy chục năm sống cạnh biển, chú chỉ tin người tận mắt thấy hoặc thông báo chính thức.",
-      "Cá cắn câu thì giật, còn tin \"giật gân\" thì đừng vội cắn câu."
+      {
+        "text": "Cá cắn câu là chú giật liền, chậm một nhịp là nó chạy mất.",
+        "hero": "Tin \"giật gân\" thì ngược lại: mình mà vội là mắc câu."
+      }
     ],
     "amb_student": [
       "{anhchi} đeo thẻ gì vậy ạ? {anhchi} làm ở báo hả? Mấy hôm nay ở lớp em ai cũng bàn vụ lật tàu.",
       "Nhóm lớp em đang chuyền cái ảnh em bé mặc áo phao, đứa nào cũng thả tim… Em suýt bấm chia sẻ rồi. Ảnh đó thật không {anhchi}?"
     ],
     "amb_elder": [
-      "Hồi xưa tin đồn đi bằng miệng, giờ đi bằng điện thoại. Nhanh hơn, nên càng phải chậm lại.",
+      {
+        "text": "Hồi xưa tin đồn đi bằng miệng, giờ đi bằng điện thoại. Nhanh lắm.",
+        "hero": "Tin đi càng nhanh thì mình càng phải đọc chậm lại."
+      },
       "Ông không rành mạng, nhưng ông biết hỏi cháu ông: \"Báo nào đăng?\""
     ],
     "amb_jogger": [
@@ -1700,15 +1736,24 @@
       "Tuần trước có người uống theo một \"bài thuốc\" trên mạng, phải vào cấp cứu. Anh sợ nhất mấy bài kiểu đó."
     ],
     "amb_nurse": [
-      "Mời em ngồi chờ một lát. Đọc được tin gì về sức khỏe thì hỏi nhân viên y tế trước nhé.",
-      "Ảnh \"bệnh nhân\" lan trên mạng nhiều khi không phải người thật đâu."
+      {
+        "text": "Mời em ngồi chờ một lát. Dạo này nhiều người cầm điện thoại vào hỏi \"tin này đúng không\" lắm.",
+        "hero": "Tin sức khỏe trên mạng thì hỏi thẳng nhân viên y tế là chắc nhất."
+      },
+      {
+        "text": "Hôm trước có người đưa chị xem ảnh một \"bệnh nhân\" trên mạng, hỏi có phải ở đây không. Chị chưa gặp người đó bao giờ.",
+        "hero": "Ảnh \"bệnh nhân\" lan trên mạng chưa chắc đã là người thật."
+      }
     ],
     "amb_patient": [
       "Con cháu gửi ông đủ thứ tin trên điện thoại, ông mang lên hỏi bác sĩ cho chắc."
     ],
     "amb_clerk": [
       "Công ty anh có quy định: tin chưa xác minh thì không đăng lên trang chính thức.",
-      "Lại phải đính chính một bài đăng vội tuần trước. Đăng chậm mà đúng vẫn hơn."
+      {
+        "text": "Lại phải đính chính một bài đăng vội tuần trước. Mệt thật.",
+        "hero": "Đăng chậm mà đúng vẫn đỡ hơn phải đính chính."
+      }
     ],
     "amb_clerk2": [
       "Chị làm truyền thông nội bộ. Ảnh nào đưa lên bản tin cũng phải ghi nguồn và ngày chụp.",
@@ -1743,7 +1788,10 @@
     ],
     "amb_cafe_a": [
       "Anh chỉ ngồi uống cà phê thôi mà… Ừ, đang bàn mấy cái clip trên mạng.",
-      "Xem clip thì dễ, biết clip quay ở đâu, lúc nào mới khó."
+      {
+        "text": "Xem clip thì dễ. Hỏi clip quay ở đâu, lúc nào thì chẳng ai trả lời được.",
+        "hero": "Muốn biết clip thật hay không thì phải tìm ra nơi quay và lúc quay."
+      }
     ],
     "amb_cafe_b": [
       "Chị có thói quen xem ngày đăng trước khi tin một đoạn video.",
