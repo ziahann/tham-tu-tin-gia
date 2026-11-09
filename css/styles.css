@@ -882,3 +882,46 @@ button.is-pick:disabled { opacity: 1; }
 /* khung thoại phủ góc dưới: nút về thanh trên, thu nhỏ cho vừa */
 @media (max-width: 1290px) { body:has(#dialog:not([hidden])) #btn-backpack { width: 42px; height: 42px; padding: 3px; } }
 #btn-backpack.has-alert::after { top: -5px; right: -5px; width: 14px; height: 14px; }
+
+/* Hoạt cảnh mở đầu (js/opening.js): dùng lại khung .endtro */
+.opening-beat { text-align: center; }
+.opening-date { display: inline-block; margin: 0 0 16px; padding: 2px 14px; color: var(--ink); background: var(--straw); font-size: clamp(24px, 3.6vw, 36px); }
+.opening-line { margin: 0 0 10px; font-size: clamp(28px, 4.4vw, 46px); line-height: 1.15; text-shadow: 3px 3px 0 var(--ink); }
+.opening-posts { display: grid; gap: 12px; margin: 0 auto 22px; max-width: 640px; text-align: left; }
+.opening-post { display: flex; gap: 14px; align-items: center; padding: 10px; background: rgb(14 20 34 / 0.9); border: var(--px) solid var(--ink); box-shadow: 0 0 0 2px var(--plum); opacity: 0; }
+.opening-beat.is-on .opening-post { animation: opening-up 0.6s calc(var(--i) * 0.9s + 0.3s) both; }
+.opening-tile { position: relative; flex: none; width: 96px; height: 68px; background: repeating-conic-gradient(#46536f 0 25%, #2c3a5c 0 50%) 0 0 / 24px 24px; }
+.opening-tile span { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-10deg); padding: 0 6px; color: #fff; background: #c2263a; white-space: nowrap; font-size: 20px; }
+.opening-post-body { flex: 1; min-width: 0; }
+.opening-post-body p { margin: 0 0 6px; font-size: 24px; line-height: 1.1; }
+.opening-share { position: relative; height: 20px; background: #1d2638; }
+.opening-share i { position: absolute; inset: 0 auto 0 0; width: 0; background: #c2263a; }
+.opening-beat.is-on .opening-share i { animation: opening-share 4.5s calc(var(--i, 0) * 0.9s + 0.6s) linear forwards; }
+.opening-share span { position: absolute; left: 8px; top: -3px; font-size: 18px; color: var(--paper); }
+.opening-tags { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin: 0 0 24px; }
+.opening-tags span { padding: 6px 16px; color: var(--ink); background: var(--straw); border: var(--px) solid var(--ink); box-shadow: 4px 4px 0 var(--plum); font-size: clamp(24px, 3.2vw, 34px); opacity: 0; }
+.opening-beat.is-on .opening-tags span { animation: opening-pop 0.4s calc(var(--i) * 0.8s + 0.3s) both; }
+.opening-heroes { display: flex; justify-content: center; gap: 8px; margin: 0 0 12px; }
+.opening-beat.is-on .opening-heroes { animation: opening-walk 3.3s linear both; }
+.opening-hero { width: 192px; height: 192px; background-size: 1728px 1152px; background-position: 0 -384px; image-rendering: pixelated; }
+.opening-beat.is-on .opening-hero { animation: opening-steps 0.66s steps(8) 5; }
+.opening-name { margin: 0 0 12px; color: var(--straw); font-size: clamp(56px, 11vw, 120px); font-weight: normal; line-height: 1; text-shadow: 6px 6px 0 var(--ink); }
+.opening-beat.is-on .opening-name { animation: opening-pop 0.5s both; }
+.opening.is-static .opening-beat { margin-bottom: 24px; }
+.opening.is-static .opening-post, .opening.is-static .opening-tags span { opacity: 1; }
+.opening.is-static .opening-share i { width: 70%; }
+@keyframes opening-up { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+@keyframes opening-pop { from { opacity: 0; transform: scale(1.6); } to { opacity: 1; transform: none; } }
+@keyframes opening-share { to { width: 100%; } }
+@keyframes opening-walk { from { transform: translateX(-70vw); } to { transform: none; } }
+@keyframes opening-steps { from { background-position-x: -192px; } to { background-position-x: -1728px; } }
+@media (max-height: 500px) {
+  .opening-post { padding: 5px; }
+  .opening-posts { gap: 5px; margin-bottom: 8px; }
+  .opening-tile { width: 64px; height: 44px; }
+  .opening-post-body p { font-size: 18px; margin-bottom: 3px; }
+  .opening-line { font-size: 26px; }
+  .opening-hero { width: 128px; height: 128px; background-size: 1152px 768px; background-position: 0 -256px; }
+  .opening-beat.is-on .opening-hero { animation-name: opening-steps-sm; }
+}
+@keyframes opening-steps-sm { from { background-position-x: -128px; } to { background-position-x: -1152px; } }

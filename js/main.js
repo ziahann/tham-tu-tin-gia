@@ -3,6 +3,7 @@ import { data, loadAll, t, artCredit } from './data.js';
 import { Bay } from './bay.js';
 import { playMusic, unlockMusic, refreshMusic, musicSupported } from './music.js';
 import { stopAmbience } from './audio.js';
+import { playOpening } from './opening.js';
 import { state, loadState, saveSettings, startNewProgress, hasFlag, loadRecord } from './state.js';
 import { initInput, on, releaseAll, lockLandscape } from './input.js';
 import * as dlg from './dialogue.js';
@@ -312,7 +313,7 @@ function showResults() {
 function bindEvents() {
   // điện thoại: bấm nút ở màn hình chính thì vào toàn màn hình, khóa ngang
   ['title-start', 'title-continue', 'title-restart'].forEach(id => $(id).addEventListener('click', lockLandscape));
-  $('title-start').addEventListener('click', startIntro);
+  $('title-start').addEventListener('click', async () => { $('title').hidden = true; await playOpening(); startIntro(); });
   $('intro-back').addEventListener('click', showTitle);
   $('intro-name').addEventListener('submit', e => {
     e.preventDefault();

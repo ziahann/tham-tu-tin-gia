@@ -3061,6 +3061,20 @@
       "minCred": 90
     }
   },
+  "opening": {
+    "note": "Hoạt cảnh mở đầu (js/opening.js), phát khi bấm Bắt đầu, trước màn chọn nhân vật. Tên bài đăng lấy theo Vịnh Feed; không có số liệu, không có hình tàu hay nạn nhân.",
+    "beats": [
+      { "scene": "dusk", "ms": 5000, "date": "Chiều 19/7/2025", "lines": ["Tàu du lịch Vịnh Xanh 58 bị lật trên vịnh Hạ Long."] },
+      { "scene": "night", "ms": 7000, "kind": "feed", "share": "lượt chia sẻ", "posts": [
+        { "stamp": "ẢNH GIẢ", "text": "Câu chuyện khiến cả triệu người rơi nước mắt…" },
+        { "stamp": "ẢNH GIẢ", "text": "XÓT XA!!! Bộ ảnh “khoảnh khắc cuối cùng”…" },
+        { "stamp": "CLIP CŨ", "text": "VIDEO CẬN CẢNH: sóng lớn đánh dạt tàu…" }
+      ], "lines": ["Ngay tối hôm đó, ảnh và câu chuyện về “nạn nhân” bắt đầu lan trên mạng."] },
+      { "scene": "night", "ms": 5500, "kind": "tags", "tags": ["Ảnh do AI tạo", "Video cũ gắn nhãn mới", "Chia sẻ vì thương cảm"], "lines": ["Mỗi bài sai theo một kiểu khác nhau."] },
+      { "scene": "dawn", "ms": 6000, "kind": "hero", "lines": ["Một sinh viên Văn Lang quyết định đi tìm hiểu.", "Người đó là bạn."] },
+      { "scene": "calm", "ms": 3800, "kind": "title", "lines": ["Chỉ kết luận điều đã kiểm chứng được."] }
+    ]
+  },
   "ending": {
     "note": "Hoạt cảnh kết (js/ending.js). main: sau khi nhận danh hiệu, trước màn kết quả; bonus: sau khi khép hồ sơ trang mạo danh. Phần nhắc lại của main lấy từ verificationQuestions + đáp án đúng trong journey.report; ghi công lấy từ ui.json / sources.json.",
     "skip": "Bỏ qua",
